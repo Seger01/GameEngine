@@ -1,2 +1,5 @@
 Date,Time,Duration(in hours),Activity
-2024-09-01, 08:00, 1   , nothing at all
+2024-09-02, 9:00, 1.5, introductary class
+2024-09-02, 10:30, 0.5, group discussion on first steps
+2024-09-03, 9:15, 2.25, group discussion on first steps / code guidelines
+2024-09-03, 15:00, 1.5, first project lecture
