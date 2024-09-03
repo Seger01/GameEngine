@@ -1,8 +1,8 @@
 Date,Time,Duration(in hours),Activity
-2024-09-01, 08:00, 1   ,Reading a book
-2024-09-01, 09:00, 0.5 ,Exercise
-2024-09-01, 09:30, 2   ,Work on project
-2024-09-01, 11:45, 1   ,Lunch
-2024-09-01, 12:45, 3   ,Meeting
-2024-09-01, 03:45, 1.5 ,Emails
-2024-09-01, 05:15, 0.75,Wrap up work
+2024-09-01, 08:00, 1   , Reading a book
+2024-09-01, 09:00, 0.5 , Exercise
+2024-09-01, 09:30, 2   , Work on project
+2024-09-01, 11:45, 1   , Lunch
+2024-09-01, 12:45, 3   , Meeting
+2024-09-01, 03:45, 1.5 , Emails
+2024-09-01, 05:15, 0.75, Wrap up work
