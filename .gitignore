@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# latex files
+*.pdf
+*.synctex.gz
+
 build/
 
 .vscode/
