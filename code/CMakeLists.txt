@@ -8,6 +8,17 @@ project(Engine-BRAVO VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Set the build type to Debug if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# Add debug options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("Debug mode enabled")
+    add_compile_options(-g -O0)
+endif()
+
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
