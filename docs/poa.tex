@@ -55,18 +55,40 @@
     \section{Quality}
     Vermeld overal bij welke tools worden gebruikt (en waarom)
     \subsection{Documentation}
+    The following points will be applied to ensure the documentation’s quality:
+    \begin{itemize}
+        \item All documents are written in English.
+        \item All documents are written in the present perfect
+        \item All diagrams are in the UML style.
+    \end{itemize}
     Wordt markdown gebruikt voor alle documenten (heeft goede compatibiliteit met version control)? Of zijn er betere alternatieven?
-    Welke taal worden de documenten in geschreven?
-    Wordt voor diagrammen UML aangehouden?
-    Wat voor code comments worden er geschreven? (Doxygen?)
     \subsection{Technical}
-    Welke taal worden variabele namen en comments etc. geschreven?
-    Wordt er een code standaard aangehouden? Welke en waarom?
-    Welke OS en IDE worden er gebruikt? Iedereen dezelfde? (C++ BS course adviseert CLion + CMake, vanwege cross platform mogelijkheden. Welke OS hebben Angel en Ronan?)
-    Welke codestyle wordt er aangehouden? (automatische style tool?)
+    \begin{itemize}
+        \item Code is written in english.
+        \item Code is written in c++23.
+        \item Doxygen is used for code documentation, except for the setters and getters
+        \item Codestandard is written in ./codestandard.tex.
+        \item Text editor of choice can be used.
+        \item Cmake is used to build the code.
+        \item Clangformat is used for code formatting.
+        \item cpp check is used for code checking.
+        \item valgrind is used for memory leak checking.
+        \item gtest testing framework is used for testing.
+        \item Unit test are written for every function except for setters without validation and getters.
+        \item Third party libraries must be discussed with the whole team.
+        \item One person must check git commits before merging.
+    \end{itemize}
+
     Wat is het beleid voor versiemanagement? (welke tool(s), hoe / wanneer worden branches gemaakt, PRs reviewen etc.)
     Hoe wordt er getest? Unit tests, integratietest etc. Test framework voor gebruiken? Statische code check?
     \subsection{tools}
+    \begin{itemize}
+        \item Git is used for version management.
+        \item Github is used to store the git repo.
+        \item latex is used as default text editor. This is used so git can be used as version conrol.
+        \item plantuml is used for UML diagrams. This is used so git can be used as version conrol.
+        
+    \end{itemize}
     \newpage
 
     \section{project orginisation}
