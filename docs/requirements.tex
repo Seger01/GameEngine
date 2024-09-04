@@ -1,0 +1,34 @@
+% This is a simple sample document.  For more complicated documents take a look in the exercise tab. Note that everything that comes after a % symbol is treated as comment and ignored when the code is compiled.
+
+\documentclass{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
+
+\usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
+\usepackage{booktabs} % For better looking tables
+\usepackage{geometry} % To adjust margins
+\usepackage{tabularx} % For tables that auto-adjust to the page width
+
+\title{Requirements} % Sets article title
+\author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
+\date{\today} % Sets date for date compiled
+\newpage
+
+% The preamble ends with the command \begin{document}
+\begin{document} % All begin commands must be paired with an end command somewhere
+    \maketitle % creates title using information in preamble (title, author, date)
+    \newpage
+
+    \section{Requirements}
+    \begin{table}[h!]
+        \centering
+        \begin{tabularx}{\textwidth}{|X|X|X|X|}
+        \hline
+        \textbf{Requirement Number} & \textbf{Requirement Type (MoSCoW)} & \textbf{Requirement Name} & \textbf{Definition of Done} \\ \hline
+        S1 & Should Have & Online or LAN multiplayer support & \\ \hline
+        S2 & Should Have & FPS can be fixed at a maximum & \\ \hline
+        \end{tabularx}
+        \caption{Requirements Table}
+        \label{tab:requirements}
+        \end{table}
+    \newpage
+
+\end{document} % This is the end of the document
