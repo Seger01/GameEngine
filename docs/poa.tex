@@ -179,27 +179,27 @@
     The following points will be applied to ensure the documentation’s quality:
     \begin{itemize}
         \item All documents are written in English.
-        \item All documents are written in the present perfect
+        \item All documents are written in the present perfect.
         \item All diagrams are in the UML style.
-        \item Headers in the research document do not contain questions
-        \item No choices are made in the research document
+        \item Headers in the research document do not contain questions. The research question is literally stated in the body of the research.
+        \item No architecture or design choices are made in the research document.
+        \item Every design choice in the corresponding document is explicitly motivated.
     \end{itemize}
-    Wordt markdown gebruikt voor alle documenten (heeft goede compatibiliteit met version control)? Of zijn er betere alternatieven?
     \subsection{Technical}
     \begin{itemize}
-        \item Code is written in english.
-        \item Code is written in c++23.
-        \item Doxygen is used for code documentation, except for the setters and getters
-        \item Codestandard is written in ./codestandard.tex.
+        \item Code is written in English.
+        \item Code is written in C++23.
+        \item Doxygen is used for code documentation. All classes, methods, namespaces and files are documented, with the exception of setters without validation and getters.
+        \item All code is written in accordance with the codestandard document.
         \item Text editor of choice can be used.
         \item Cmake is used to build the code.
         \item Clangformat is used for code formatting.
-        \item cpp check is used for code checking.
+        \item cpp check is used for static code checking.
         \item valgrind is used for memory leak checking.
         \item gtest testing framework is used for testing.
         \item Unit test are written for every function except for setters without validation and getters.
-        \item Third party libraries must be discussed with the whole team.
-        \item One person must check git commits before merging.
+        \item Usage of third party libraries must be discussed with the whole team.
+        \item At least one team member must approve pull requests before merging.
         \item Only code which can be compiled may be commited to git.
     \end{itemize}
 
