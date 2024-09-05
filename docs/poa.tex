@@ -29,38 +29,78 @@
     \newpage
 
     \section{version control}
+    All information in this document is subject to change. \\
+    \begin{tabularx}{\textwidth}{|X|X|X|}
+        \hline
+        \textbf{Version number} & \textbf{Date} & \textbf{Change} \\ \hline
+        V0.1 & 02-09-2024 & Initial draft \\ \hline
+        V0.2 & 04-09-2024 & Created general planning and version control \\ \hline
+        \end{tabularx}
     \newpage
             
     \section{Project}
-    The following optional user stories shall be implemented
+    % The following optional user stories shall be implemented
+    % \begin{itemize}
+    %     \item Multiplayer / internet connection
+    % \end{itemize}
+    \subsection{Problem analysis}
+    CodedFun Games is a company that wants to scale its business, therefore
+    the owner wants a custom-made game engine which can be maintained and expanded by a developer working 1 day a week.
+    The engine is looking for a custom game engine that is easily maintainable, extendable and user-friendly, while also being well documented.
+    The client has previous experience with Unity and wants the game engine to function and be accessible in a similar structure and API.
+    \newline \newline
+    Besides the game engine the client needs a simple validation game, so the client can test every feature and see how they are meant to be used.
+
+    \subsection{Goal}
+    The objective of this project is to create a game engine that the client can use for creating games at his company.
+    The engine is designed to satisfy all requirements as stated in the requirements document enabling the client to make games with a custom engine without learning an entirely new game engine structure.
+
+    \subsection{Scope}
+    The game engine will be made to function on computers running a Linux operating system, because every developer uses a Linux operating system.
+    \newline\newline
+    The following is a list of items which will not be focused on while working on this project:  
     \begin{itemize}
-        \item Multiplayer / internet connection
+        \item Graphical user interface for making a game.
+        \item Direct compatibility with scripts from other game engines
+        \item Advanced AI systems 
+        \item Cross-platform compatibility
+        \item High-End Graphics features
+        \item In-Depth animation systems
     \end{itemize}
-    \subsection{problem analysis}
-    \subsection{scope}
-    \subsection{goal}
-    \subsection{result}
+
+    \subsection{Result}
+    The result of this project is a user-friendly game engine that follows the API structure of the Unity game engine. 
+    The engine is easily understood, maintained and extendable by an engine engineer working one day a week.
+    \newline\newline
+    Besides the game engine a simple validation game is created to show all the functions of the engine.
     \newpage
 
     \section{General planning} % creates a section
-    Per week vastleggen wat er gedaan moet worden (zie papierwerk docu op BS)?
-
+    Deadlines in \textbf{bold} are mandated by school, all other deadlines are set by the team (and therefore theoretically flexible).
+    Unless a specific day is specified, all deadlines are on friday, 17:00.
     \begin{tabularx}{\textwidth}{|X|X|X|X|}
     \hline
-    \textbf{Week number} & \textbf{Activity} & \textbf{Finished this week} \\ \hline
-    1 & Begin working on plan of attack & First plan of attack draft \\ \hline
-      & Begin researching various potential features & Research document draft (1 feature per member) \\ \hline
-    2 & Conduct further research on potential features &  \\ \hline
+    \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
+    1 & Begin working on plan of attack & PoA V1 (friday) \\ \hline
+      & Research potential features & Research draft (1st feature per member) \\ \hline
+    2 & Research potential features & Research draft (2nd feature per member) \\ \hline
       & Determine future tasks based off research &  \\ \hline
-      & Begin work on first POC & \\ \hline
-    3 & Should Have &  \\ \hline
-    4 & Should Have &  \\ \hline
-    5 & Should Have &  \\ \hline
-    6 & Should Have &  \\ \hline
-    7 & Should Have &  \\ \hline
-    8 & Should Have &  \\ \hline
+      & Work on POCs & \\ \hline
+    3 & Update PoA according to feedback &  \textbf{PoA (sunday)} \\ \hline
+      & Work on POCs & Finish first POCs \\ \hline
+      & Research potential features & \\ \hline
+    4 & Research potential features & Research V1 \\ \hline
+      & Start drafting architecture + design &  \\ \hline
+      & Work on POCs & Finish second POCs \\ \hline
+    5 & Write and implement research feedback & Research feedack implemented \\ \hline
+     & Work on POCs &  \\ \hline
+      & Update architecture + design &  \\ \hline
+    6 & Update architecture + design & Architecture V1 finished \\ \hline
+      & Create demos from POCs & \\ \hline
+    7 & Present POCs / demos to class &  \\ \hline
+    8 & Update PoA &  \\ \hline
     9 & Should Have &  \\ \hline
-    10 & Should Have &  \\ \hline
+    10 & Should Have & \textbf{All work first period} \\ \hline
     11 & Should Have &  \\ \hline
     12 & Should Have &  \\ \hline
     12 & Should Have &  \\ \hline
@@ -72,16 +112,65 @@
     19 & Should Have &  \\ \hline
     20 & Should Have &  \\ \hline
     \end{tabularx}
-    \label{tab:requirements}
     \newpage
 
     \section{Document inventory}
-    Welke docus zijn er en wat staat daarin?
+    \begin{itemize}
+        \item \textbf{Plan of Attack}
+        \\
+        A document containing information about the project's operational procedures and planning.
+        \item \textbf{Requirements}
+        \\
+        A document containing information about the project requirements in a MoSCoW format
+        \item \textbf{Research}
+        \\
+        A document containing research conducted for the project.
+        \item \textbf {Design}
+        \\
+        A document outlining the design choices made for the project.
+        \item \textbf {Test plan}
+        \\
+        A document providing information about the tests that are conducted.
+        \item \textbf {Test results}
+        \\
+        A document containing the outcomes of tests that are conducted
+    \end{itemize}
+
     \newpage
 
     \section{Communication}
-    Hoe wordt er onderling gecommuniceerd (Whatsapp)
-    Hoe vaak komt de groep samen? Op vaste momenten?
+    Communication between team members is done using whatsapp.
+    \\
+    Communication between the team and the Bob van der Putten 
+    will be done using email, Teams or in person during the scheduled project meetings.
+    \\\\
+    Collaboration with code and documents is done using GitHub.
+    When a team member wants to merge code, the code is reviewed by at least one other team member.
+    \\\\
+    Every wednesday at 9:15 the team is getting together to do a standup-meeting
+     and work on the project.
+    \\\\
+    The team is working with a yellow and red card system.
+    A yellow card means a warning. If two yellow cards are received by a teammember,
+    they will be disqualified from participating in the project.
+    The team is unable to issue a yellow card directly, but a recommendation to issue a card
+     will be given to Bob van der Putten.
+    \\
+    A recommendation for a yellow card can only be issued when the following procedures have been followed:
+    \begin{enumerate}
+        \item A teammember is underperforming. This is the case when these conditions are met:
+        \begin{itemize}
+            \item A teammember has worked fewer hours than expected on the project.
+            \item The quality of the submitted work is too low.
+            \item A teammember has not communicated about issues they are facing within the project on time.
+        \end{itemize}
+        \item The team will make an arrangement with the underperforming teammember about the work that should be submitted.
+              An email about this arrangement will also be sent to Bob van der Putten
+        \item After one week, the arrangement is not met by the underperforming teammember.
+    \end{enumerate}
+    In case these procedures have all taken place, a recommendation for a yellow card will be given.
+
+
     \newpage
 
     \section{Quality}
