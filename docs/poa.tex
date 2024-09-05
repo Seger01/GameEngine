@@ -3,6 +3,9 @@
 \documentclass{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
 
 \usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
+\usepackage{booktabs} % For better looking tables
+\usepackage{geometry} % To adjust margins
+\usepackage{tabularx} % For tables that auto-adjust to the page width
 
 \title{Plan of Attack} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -26,6 +29,13 @@
     \newpage
 
     \section{version control}
+    All information in this document is subject to change. \\
+    \begin{tabularx}{\textwidth}{|X|X|X|}
+        \hline
+        \textbf{Version number} & \textbf{Date} & \textbf{Change} \\ \hline
+        V0.1 & 02-09-2024 & Initial draft \\ \hline
+        V0.2 & 04-09-2024 & Created general planning and version control \\ \hline
+        \end{tabularx}
     \newpage
             
     \section{Project}
@@ -66,33 +76,143 @@
     \newpage
 
     \section{General planning} % creates a section
-    Per week vastleggen wat er gedaan moet worden (zie papierwerk docu op BS)? 
+    Deadlines in \textbf{bold} are mandated by school, all other deadlines are set by the team (and therefore theoretically flexible).
+    Unless a specific day is specified, all deadlines are on friday, 17:00.
+    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+    \hline
+    \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
+    1 & Begin working on plan of attack & PoA V1 (friday) \\ \hline
+      & Research potential features & Research draft (1st feature per member) \\ \hline
+    2 & Research potential features & Research draft (2nd feature per member) \\ \hline
+      & Determine future tasks based off research &  \\ \hline
+      & Work on POCs & \\ \hline
+    3 & Update PoA according to feedback &  \textbf{PoA (sunday)} \\ \hline
+      & Work on POCs & Finish first POCs \\ \hline
+      & Research potential features & \\ \hline
+    4 & Research potential features & Research V1 \\ \hline
+      & Start drafting architecture + design &  \\ \hline
+      & Work on POCs & Finish second POCs \\ \hline
+    5 & Write and implement research feedback & Research feedack implemented \\ \hline
+     & Work on POCs &  \\ \hline
+      & Update architecture + design &  \\ \hline
+    6 & Update architecture + design & Architecture V1 finished \\ \hline
+      & Create demos from POCs & \\ \hline
+    7 & Present POCs / demos to class &  \\ \hline
+    8 & Update PoA &  \\ \hline
+    9 & Should Have &  \\ \hline
+    10 & Should Have & \textbf{All work first period} \\ \hline
+    11 & Should Have &  \\ \hline
+    12 & Should Have &  \\ \hline
+    12 & Should Have &  \\ \hline
+    14 & Should Have &  \\ \hline
+    15 & Should Have &  \\ \hline
+    16 & Should Have &  \\ \hline
+    17 & Should Have &  \\ \hline
+    18 & Should Have &  \\ \hline
+    19 & Should Have &  \\ \hline
+    20 & Should Have &  \\ \hline
+    \end{tabularx}
     \newpage
 
     \section{Document inventory}
-    Welke docus zijn er en wat staat daarin?
+    \begin{itemize}
+        \item \textbf{Plan of Attack}
+        \\
+        A document containing information about the project's operational procedures and planning.
+        \item \textbf{Requirements}
+        \\
+        A document containing information about the project requirements in a MoSCoW format
+        \item \textbf{Research}
+        \\
+        A document containing research conducted for the project.
+        \item \textbf {Design}
+        \\
+        A document outlining the design choices made for the project.
+        \item \textbf {Test plan}
+        \\
+        A document providing information about the tests that are conducted.
+        \item \textbf {Test results}
+        \\
+        A document containing the outcomes of tests that are conducted
+    \end{itemize}
+
     \newpage
 
     \section{Communication}
-    Hoe wordt er onderling gecommuniceerd (Whatsapp)
-    Hoe vaak komt de groep samen? Op vaste momenten?
+    Communication between team members is done using whatsapp.
+    \\
+    Communication between the team and the Bob van der Putten 
+    will be done using email, Teams or in person during the scheduled project meetings.
+    \\\\
+    Collaboration with code and documents is done using GitHub.
+    When a team member wants to merge code, the code is reviewed by at least one other team member.
+    \\\\
+    Every wednesday at 9:15 the team is getting together to do a standup-meeting
+     and work on the project.
+    \\\\
+    The team is working with a yellow and red card system.
+    A yellow card means a warning. If two yellow cards are received by a teammember,
+    they will be disqualified from participating in the project.
+    The team is unable to issue a yellow card directly, but a recommendation to issue a card
+     will be given to Bob van der Putten.
+    \\
+    A recommendation for a yellow card can only be issued when the following procedures have been followed:
+    \begin{enumerate}
+        \item A teammember is underperforming. This is the case when these conditions are met:
+        \begin{itemize}
+            \item A teammember has worked fewer hours than expected on the project.
+            \item The quality of the submitted work is too low.
+            \item A teammember has not communicated about issues they are facing within the project on time.
+        \end{itemize}
+        \item The team will make an arrangement with the underperforming teammember about the work that should be submitted.
+              An email about this arrangement will also be sent to Bob van der Putten
+        \item After one week, the arrangement is not met by the underperforming teammember.
+    \end{enumerate}
+    In case these procedures have all taken place, a recommendation for a yellow card will be given.
+
+
     \newpage
 
     \section{Quality}
     Vermeld overal bij welke tools worden gebruikt (en waarom)
     \subsection{Documentation}
+    The following points will be applied to ensure the documentation’s quality:
+    \begin{itemize}
+        \item All documents are written in English.
+        \item All documents are written in the present perfect
+        \item All diagrams are in the UML style.
+        \item Headers in the research document do not contain questions
+        \item No choices are made in the research document
+    \end{itemize}
     Wordt markdown gebruikt voor alle documenten (heeft goede compatibiliteit met version control)? Of zijn er betere alternatieven?
-    Welke taal worden de documenten in geschreven?
-    Wordt voor diagrammen UML aangehouden?
-    Wat voor code comments worden er geschreven? (Doxygen?)
     \subsection{Technical}
-    Welke taal worden variabele namen en comments etc. geschreven?
-    Wordt er een code standaard aangehouden? Welke en waarom?
-    Welke OS en IDE worden er gebruikt? Iedereen dezelfde? (C++ BS course adviseert CLion + CMake, vanwege cross platform mogelijkheden. Welke OS hebben Angel en Ronan?)
-    Welke codestyle wordt er aangehouden? (automatische style tool?)
+    \begin{itemize}
+        \item Code is written in english.
+        \item Code is written in c++23.
+        \item Doxygen is used for code documentation, except for the setters and getters
+        \item Codestandard is written in ./codestandard.tex.
+        \item Text editor of choice can be used.
+        \item Cmake is used to build the code.
+        \item Clangformat is used for code formatting.
+        \item cpp check is used for code checking.
+        \item valgrind is used for memory leak checking.
+        \item gtest testing framework is used for testing.
+        \item Unit test are written for every function except for setters without validation and getters.
+        \item Third party libraries must be discussed with the whole team.
+        \item One person must check git commits before merging.
+        \item Only code which can be compiled may be commited to git.
+    \end{itemize}
+
     Wat is het beleid voor versiemanagement? (welke tool(s), hoe / wanneer worden branches gemaakt, PRs reviewen etc.)
     Hoe wordt er getest? Unit tests, integratietest etc. Test framework voor gebruiken? Statische code check?
     \subsection{tools}
+    \begin{itemize}
+        \item Git is used for version management.
+        \item Github is used to store the git repo.
+        \item latex is used as default text editor. This is used so git can be used as version conrol.
+        \item plantuml is used for UML diagrams. This is used so git can be used as version conrol.
+        
+    \end{itemize}
     \newpage
 
     \section{project orginisation}
