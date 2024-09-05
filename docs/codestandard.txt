@@ -137,4 +137,7 @@ Lambda's that are too big for a single line are indented like this:
 							   return e.id() == id;
 						   });
 -Don't use MyConstructor = delete.
--Every function uses an enum return to determin if the functions succeeded or failed. The enum can be extended with different options.
+-Every function uses exceptions when error handeling is needed
+-Use enum class and not the standard enum
+-Use the C++ libraries and not the C libraries. So cmath instead of math.h
+-Use smart pointers instead of "normal" pointers
