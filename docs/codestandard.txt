@@ -17,7 +17,7 @@
 		Includes from that library (in alphabetical order)
 -The include of the .h-file belonging to this .cpp file is always at the top.
 -Do not define static variables in a function. Use (static) class member variables instead.
-???Everything must be const correct.
+-Everything must be const correct, i.e. every method must be const, unless it specifically cannot be.
 -Names of variables and functions should be descriptive. Long names are no problem, undescriptive names are. Only use abbreviations if they are very clear and commonly known.
 The first letter of classes, structs and enum type names is a capital. Variables and functions start without a capital. Each further word in a name starts with a captical. Do not use underscores ( _ ) in variable names. So like this:
 		class MyClass
