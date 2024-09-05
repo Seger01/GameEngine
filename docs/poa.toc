@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}work division}{3}{}%
+\contentsline {section}{\numberline {2}version control}{4}{}%
+\contentsline {section}{\numberline {3}Project}{5}{}%
+\contentsline {subsection}{\numberline {3.1}Problem analysis}{5}{}%
+\contentsline {subsection}{\numberline {3.2}Goal}{5}{}%
+\contentsline {subsection}{\numberline {3.3}Scope}{5}{}%
+\contentsline {subsection}{\numberline {3.4}Result}{5}{}%
+\contentsline {section}{\numberline {4}General planning}{6}{}%
+\contentsline {section}{\numberline {5}Document inventory}{7}{}%
+\contentsline {section}{\numberline {6}Communication}{8}{}%
+\contentsline {section}{\numberline {7}Quality}{9}{}%
+\contentsline {subsection}{\numberline {7.1}Documentation}{9}{}%
+\contentsline {subsection}{\numberline {7.2}Technical}{9}{}%
+\contentsline {subsection}{\numberline {7.3}tools}{9}{}%
+\contentsline {section}{\numberline {8}project orginisation}{10}{}%
+\contentsline {section}{\numberline {9}Risk analysis}{11}{}%
