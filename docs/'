@@ -30,7 +30,7 @@
     Different computers have different internals and thus run games with differing performance.
     One computer might be able to run the games at 60FPS, but another can only run the game at 30FPS.
     How can you make sure that both users have the exact same experience despite the difference in render speed.
-    A difference in render speed is shown in the figure below.
+    A difference in render speed is show in the figure below.
     \begin{figure}[h!]
         \centering
         \includegraphics[width=0.8\textwidth]{time_between_frames.png}
@@ -61,16 +61,16 @@
     There are two common solutions that help alleviate this problem, adjusting the movement speed relative to the FPS or making sure to handle movement in a fixed update loop that is guaranteed to run at a certain amount of cycles each second.
 
     \subsubsection{Fixed update}
-    A solution to the differing movement speeds between computers, is to create a lightweight time based interrupt, often referred to as FixedUpdate, to handle all movement.
-    It is important that the FixedUpdate function is very small, otherwise the FixedUpdate could be too slow to be called at a constant rate each frame, defeating the purpose of the FixedUpdate.
-    In the figure below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
+    A solution to the differing movement speeds between computers, is to create a lightweight time based interrupt, often referred to as FixedUpdate, to handle all the movement.
+
     \begin{figure}[h!]
         \centering
         \includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
         \caption{Fixed update view}
     \end{figure}
+    \newline
     \subsubsection{Delta time}
-    
+    Delta time
     \newline
     
 
