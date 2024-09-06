@@ -35,6 +35,8 @@
 *.pdf
 *.synctex.gz
 *.aux
+*.toc
+*.log
 
 build/
 
