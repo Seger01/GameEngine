@@ -30,3 +30,40 @@ set(SOURCES
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
+
+# =====================
+# Google Test Integration
+# =====================
+
+# FetchContent module to download GTest
+include(FetchContent)
+
+# Download and configure GTest
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip  # You can use the latest release
+)
+
+# Download GTest during configuration step
+FetchContent_MakeAvailable(googletest)
+
+# Enable testing in the project
+enable_testing()
+
+# Add the test source files
+set(TEST_SOURCES
+    test/test_main.cpp    # Your test source files
+    # Add more test files here
+)
+
+# Create an executable for tests
+add_executable(tests ${TEST_SOURCES})
+
+# Link GTest and GTest Main to the test executable
+target_link_libraries(tests gtest gtest_main)
+
+# Add test execution
+add_test(NAME engine_BRAVO_tests COMMAND tests)
+
+# Optionally, set up test include directories
+#target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
