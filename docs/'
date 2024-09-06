@@ -30,7 +30,7 @@
     Different computers have different internals and thus run games with differing performance.
     One computer might be able to run the games at 60FPS, but another can only run the game at 30FPS.
     How can you make sure that both users have the exact same experience despite the difference in render speed.
-    A difference in render speed is shown in the figure below.
+    A difference in render speed is show in the figure below.
     \begin{figure}[h!]
         \centering
         \includegraphics[width=0.8\textwidth]{time_between_frames.png}
@@ -61,97 +61,97 @@
     There are two common solutions that help alleviate this problem, adjusting the movement speed relative to the FPS or making sure to handle movement in a fixed update loop that is guaranteed to run at a certain amount of cycles each second.
 
     \subsubsection{Fixed update}
-    A solution to the differing movement speeds between computers, is to create a lightweight time based interrupt, often referred to as FixedUpdate, to handle all movement.
-    It is important that the FixedUpdate function is very small, otherwise the FixedUpdate could be too slow to be called at a constant rate each frame, defeating the purpose of the FixedUpdate.
-    In the figure below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
+    A solution to the differing movement speeds between computers, is to create a lightweight time based interrupt, often referred to as FixedUpdate, to handle all the movement.
+
     \begin{figure}[h!]
         \centering
         \includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
         \caption{Fixed update view}
     \end{figure}
+    \newline
     \subsubsection{Delta time}
-    
+    Delta time
     \newline
     
 
 \newpage
 \section{sean}
-\subsection{Multiplayer}
-Whhich are frequently used multiplayer structures?
-\subsection{input}
-How do game engines handle input?
-controller
-\subsection{ai}
-What kind of ai do game engines usually have?
-pathfinding?
+    \subsection{Multiplayer}
+    Whhich are frequently used multiplayer structures?
+    \subsection{input}
+    How do game engines handle input?
+    controller
+    \subsection{ai}
+    What kind of ai do game engines usually have?
+    pathfinding?
 \newpage
 
 \section{siem}
-\subsection{audio}
-How is audio played on linux?
-multiple audio sources
-directional audio
-\subsection{save data}
-What are common save data structures?
-encryptie?
+    \subsection{audio}
+    How is audio played on linux?
+    multiple audio sources
+    directional audio
+    \subsection{save data}
+    What are common save data structures?
+    encryptie?
 \newpage
 
 \section{angel}
-\subsection{particles}
-What are particles in games?
-What are common methods game engines use to render particles?
-\subsection{physics}
-What are physics in games?
+    \subsection{particles}
+    What are particles in games?
+    What are common methods game engines use to render particles?
+    \subsection{physics}
+    What are physics in games?
 
-common physics engines
-
+    common physics engines
+    
 \newpage
 
 \section{ronan}
-\subsection{levels}
-What is a level in a video game?
-How are transitions between levels done?
-what are scenes?
-How are levels saved/stored?
-\subsection{gameobject}
-What is a gameobject in a game engine?
-How are components added to gameobjects?
+    \subsection{levels}
+    What is a level in a video game?
+    How are transitions between levels done?
+    what are scenes?
+    How are levels saved/stored?
+    \subsection{gameobject}
+    What is a gameobject in a game engine?
+    How are components added to gameobjects?
 
 \newpage
 
 \section{temp}
-bullet hell engine
+    bullet hell engine
+    \\
+    2d engine.
+    \\
+    wow factor: veel entiteiten op het scherm. gamepseed ver kunnen verogen.
+    performance tot de max.
 \\
-2d engine.
-\\
-wow factor: veel entiteiten op het scherm. gamepseed ver kunnen verogen.
-performance tot de max.
-\\
-seger:
-gamespeed
-2d rendering
-sprites (animatie + matrix berkeningen(rotere, schalen etc))
-\\
-sean:
-Multiplayer
-hoe connecten naar elkaar (ip adres, username?)
-wie host? Central? peer to peer?
-\\
-input + controller support
-ai
-\\
-siem:
-audio + adaptive music
-data opslaan (voortgang, levels, statistieken, unlocks, achievements, etc)
-\\
-angel:
-particles?
-physics
-\\
-ronan:
-levels + levels switchen + scenes + hud
-gameobject
-
-
+    seger:
+    gamespeed                                   
+    2d rendering 
+    sprites (animatie + matrix berkeningen(rotere, schalen etc)) 
+    \\
+    sean:
+    Multiplayer
+    hoe connecten naar elkaar (ip adres, username?)
+    wie host? Central? peer to peer?
+    \\
+    input + controller support
+    ai
+    \\
+    siem:
+    audio + adaptive music 
+    data opslaan (voortgang, levels, statistieken, unlocks, achievements, etc)
+    \\
+    angel:
+    particles?
+    physics
+    \\
+    ronan:
+    levels + levels switchen + scenes + hud
+    gameobject
+    
+    
 \newpage
 \end{document} % This is the end of the document
