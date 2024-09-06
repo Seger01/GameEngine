@@ -6,6 +6,7 @@
 \usepackage{booktabs} % For better looking tables
 \usepackage{geometry} % To adjust margins
 \usepackage{tabularx} % For tables that auto-adjust to the page width
+\usepackage{longtable} % For tables across multiple pages
 
 \title{Plan of Attack} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -35,6 +36,7 @@
         \textbf{Version number} & \textbf{Date} & \textbf{Change} \\ \hline
         V0.1 & 02-09-2024 & Initial draft \\ \hline
         V0.2 & 04-09-2024 & Created general planning and version control \\ \hline
+        V0.3 & 06-09-2024 & Finished the initial version of risk analysis and project organisation \\ \hline
         \end{tabularx}
     \newpage
             
@@ -78,17 +80,29 @@
     \section{General planning} % creates a section
     Deadlines in \textbf{bold} are mandated by school, all other deadlines are set by the team (and therefore theoretically flexible).
     Unless a specific day is specified, all deadlines are on friday, 17:00.
-    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+    \begin{longtable}{|l|p{0.4\textwidth}|p{0.4\textwidth}|}
     \hline
     \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
-    1 & Begin working on plan of attack & PoA V1 (friday) \\ \hline
-      & Research potential features & Research draft (1st feature per member) \\ \hline
-    2 & Research potential features & Research draft (2nd feature per member) \\ \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
+    \endhead
+
+    \hline \multicolumn{3}{r}{\textit{Continued on the next page}} \\ \hline
+    \endfoot
+
+    \hline
+    \endlastfoot
+
+    1 & Begin working on plan of attack & PoA V1 \\ \hline
+      & Research potential features & \\ \hline
+    2 & Research potential features & Research draft (1st feature per member) \\ \hline
       & Determine future tasks based off research &  \\ \hline
       & Work on POCs & \\ \hline
     3 & Update PoA according to feedback &  \textbf{PoA (sunday)} \\ \hline
       & Work on POCs & Finish first POCs \\ \hline
-      & Research potential features & \\ \hline
+      & Research potential features & Research draft (2nd feature per member) \\ \hline
     4 & Research potential features & Research V1 \\ \hline
       & Start drafting architecture + design &  \\ \hline
       & Work on POCs & Finish second POCs \\ \hline
@@ -97,21 +111,35 @@
       & Update architecture + design &  \\ \hline
     6 & Update architecture + design & Architecture V1 finished \\ \hline
       & Create demos from POCs & \\ \hline
+      & Set up automated testing systems & Automated testing systems set up \\ \hline
     7 & Present POCs / demos to class &  \\ \hline
+      & Write test plan & \\ \hline
+      & Write design & \\ \hline
     8 & Update PoA &  \\ \hline
-    9 & Should Have &  \\ \hline
-    10 & Should Have & \textbf{All work first period} \\ \hline
-    11 & Should Have &  \\ \hline
-    12 & Should Have &  \\ \hline
-    12 & Should Have &  \\ \hline
-    14 & Should Have &  \\ \hline
-    15 & Should Have &  \\ \hline
-    16 & Should Have &  \\ \hline
-    17 & Should Have &  \\ \hline
-    18 & Should Have &  \\ \hline
-    19 & Should Have &  \\ \hline
-    20 & Should Have &  \\ \hline
-    \end{tabularx}
+      & Write design & Design V1 \\ \hline
+    9 & Write engine implementation &  \\ \hline
+    10 & Write engine implementation &  \\ \hline
+       & Review all work first period & \textbf{All work first period} \\ \hline
+    11 & Write test plan & Test plan finished \\ \hline
+       & Write engine implementation & \\ \hline
+    12 & Write engine implementation &  \\ \hline
+       & Review and update design & \\ \hline
+       & Validation app design & \\ \hline
+    13 & Write engine implementation & \\ \hline
+       & Write test plan & \textbf{Present testplan} \\ \hline
+       & Validation app design & Validation app design \\ \hline
+    14 & Write engine implementation &  \\ \hline
+       & Write validation app & \\ \hline
+    15 & Write engine implementation & Engine V1 (all test cases passed) \\ \hline
+       & Write validation app & \\ \hline
+    16 & Optimize / refine engine &  \\ \hline
+       & Write validation app & Finish vlaidation app \\ \hline
+    17 & Optimize / refine engine & Engine finalized \\ \hline
+       & & Showcase engine and validation app \\ \hline
+    18 &  &  \\ \hline
+    19 &  &  \\ \hline
+    20 &  &  \\ \hline
+    \end{longtable}
     \newpage
 
     \section{Document inventory}
@@ -218,19 +246,19 @@
     \section{project orginisation}
     
     \subsection{Parties}
-    
+    The project contains different parties consisting of developers and a customer. The following section provides information about the different parties, people involved within the parties and what their task is within the project.
     \subsubsection{Customer and school supervisor}
     
-    Bob van der Putten is the main customer of the project being the customer which the engine is built for to be used for developing games. Besides this, Bob is the school supervisor of the project and functions as a 
+    Bob van der Putten is the main customer of the project and provides general demands and requirements for the engine. Besides the role of customer, Bob functions as the school supervisor and gives lectures regarding the general project and its factors. Finally, Bob  serves as the main talking point when it comes to discussing project progress.
     
-    \subsubsection{Project leader}
-    
-    Siem Vermeulen is the project leader and manages the planning of meetings and sending weekly progress the emails to the customer.
-    
-    \subsubsection{Developers}
+   	\subsubsection{Developers}
     
     The software developers of the project are Sean Groenenboom, Siem Vermeulen, Angel Villanueva, and Ronan vlak. Developers have the responsibility of defining the project, researching solutions and developing and delivering the final product to the customer.
     
+    
+    \subsubsection{Project leader}
+    
+    Siem Vermeuelen has the role of project leader and oversees the project from within the developer team. The project leader is responsible for planning meetings, handing in documents and sending the weekly progress email to Bob van der Putten.
     
     \newpage
 
