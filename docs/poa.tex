@@ -21,14 +21,6 @@
 \tableofcontents % creates a table of contents
 \newpage
 
-\section{work division}
-sean: Quality
-siem: General planning
-Seger:Project
-Angel: project orginisation, risk analysis
-Ronan:Document inventory, communication
-\newpage
-
 \section{version control}
 All information in this document is subject to change. \\
 \begin{tabularx}{\textwidth}{|X|X|X|}
@@ -37,6 +29,7 @@ All information in this document is subject to change. \\
     V0.1                    & 02-09-2024    & Initial draft                                                          \\ \hline
     V0.2                    & 04-09-2024    & Created general planning and version control                           \\ \hline
     V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organisation \\ \hline
+    V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
 \end{tabularx}
 \newpage
 
@@ -47,20 +40,20 @@ All information in this document is subject to change. \\
 % \end{itemize}
 \subsection{Problem analysis}
 CodedFun Games is a company that wants to scale its business, therefore
-the owner wants a custom-made game engine which can be maintained and expanded by a developer working 1 day a week.
-The engine is looking for a custom game engine that is easily maintainable, extendable and user-friendly, while also being well documented.
+the owner wants a custom-made game engine which can be maintained and expanded by a developer working once a week.
+The engine is looking for a custom game engine that is easily maintainable, extendable and user-friendly, while also being well-documented.
 The client has previous experience with Unity and wants the game engine to function and be accessible in a similar structure and API.
 \newline \newline
 Besides the game engine the client needs a simple validation game, so the client can test every feature and see how they are meant to be used.
 
 \subsection{Goal}
-The objective of this project is to create a game engine that the client can use for creating games at his company.
+The objective of this project is to create a game engine that the client can use for creating games at their company.
 The engine is designed to satisfy all requirements as stated in the requirements document enabling the client to make games with a custom engine without learning an entirely new game engine structure.
 
 \subsection{Scope}
-The game engine will be made to function on computers running a Linux operating system, because every developer uses a Linux operating system.
+The game engine is made to function on computers running a Linux operating system, because every developer uses and is experienced with a Linux operating system.
 \newline\newline
-The following is a list of items which will not be focused on while working on this project:
+The following is a list of items which lay outside of the scope of this project:
 \begin{itemize}
     \item Graphical user interface for making a game.
     \item Direct compatibility with scripts from other game engines
@@ -79,7 +72,7 @@ Besides the game engine a simple validation game is created to show all the func
 
 \section{General planning} % creates a section
 Deadlines in \textbf{bold} are mandated by school, all other deadlines are set by the team (and therefore theoretically flexible).
-Unless a specific day is specified, all deadlines are on friday, 17:00.
+Unless a specific day and/or time is specified, all deadlines are on friday, 17:00.
 \begin{longtable}{|l|p{0.4\textwidth}|p{0.4\textwidth}|}
     \hline
     \textbf{Week number} & \textbf{Activity}                         & \textbf{Deadlines}                      \\ \hline
@@ -175,8 +168,7 @@ will be done using email, Teams or in person during the scheduled project meetin
 Collaboration with code and documents is done using GitHub.
 When a team member wants to merge code, the code is reviewed by at least one other team member.
 \\\\
-Every wednesday at 9:15 the team is getting together to do a standup-meeting
-and work on the project.
+There is a standup-meeting every wednesday at 9:15, which is simultaneously an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
 \\\\
 The team is working with a yellow and red card system.
 A yellow card means a warning. If two yellow cards are received by a teammember,
@@ -212,21 +204,14 @@ The following points are applied to ensure the documentation’s quality:
     \item Headers in the research document do not contain questions
     \item No choices are made in the research document
     \item latex is used as default text editor. This is used so git can be used as version conrol.
-    \item plantuml is used for UML diagrams. This is used so git can be used as version conrol.
 \end{itemize}
 \subsection{Technical}
 the following points are applied to ensure the technical quality of the project:
 \begin{itemize}
     \item Code is written in english.
     \item Code is written in c++23.
-    \item Doxygen is used for code documentation, except for the setters and getters
     \item Codestandard is written in ./codestandard.tex.
     \item Text editor of choice can be used.
-    \item Cmake is used to build the code.
-    \item Clangformat is used for code formatting.
-    \item cpp check is used for code checking.
-    \item valgrind is used for memory leak checking.
-    \item gtest testing framework is used for testing.
     \item Unit test are written for every function except for setters without validation and getters.
     \item Third party libraries must be discussed with the whole team.
     \item One person must check git commits before merging.
@@ -238,6 +223,13 @@ the following tools are used to ensure the quality of the project:
 \begin{itemize}
     \item Git is used for version management.
     \item Github is used to store the git repo.
+    \item Doxygen is used for code documentation, except for the setters and getters
+    \item Cmake is used to build the code.
+    \item Clangformat is used for code formatting.
+    \item Cppcheck is used for code checking.
+    \item valgrind is used for memory leak checking.
+    \item Gtest testing framework is used for testing.
+    \item plantuml is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
 \end{itemize}
 \newpage
 
