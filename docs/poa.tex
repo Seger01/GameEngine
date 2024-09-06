@@ -6,6 +6,7 @@
 \usepackage{booktabs} % For better looking tables
 \usepackage{geometry} % To adjust margins
 \usepackage{tabularx} % For tables that auto-adjust to the page width
+\usepackage{longtable} % For tables across multiple pages
 
 \title{Plan of Attack} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -78,9 +79,21 @@
     \section{General planning} % creates a section
     Deadlines in \textbf{bold} are mandated by school, all other deadlines are set by the team (and therefore theoretically flexible).
     Unless a specific day is specified, all deadlines are on friday, 17:00.
-    \begin{tabularx}{\textwidth}{|l|X|X|}
+    \begin{longtable}{|l|p{0.4\textwidth}|p{0.4\textwidth}|}
     \hline
     \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Week number} & \textbf{Activity} & \textbf{Deadlines} \\ \hline
+    \endhead
+
+    \hline \multicolumn{3}{r}{\textit{Continued on the next page}} \\ \hline
+    \endfoot
+
+    \hline
+    \endlastfoot
+
     1 & Begin working on plan of attack & PoA V1 \\ \hline
       & Research potential features & \\ \hline
     2 & Research potential features & Research draft (1st feature per member) \\ \hline
@@ -122,7 +135,7 @@
     18 &  &  \\ \hline
     19 &  &  \\ \hline
     20 &  &  \\ \hline
-    \end{tabularx}
+    \end{longtable}
     \newpage
 
     \section{Document inventory}
