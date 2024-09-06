@@ -10,3 +10,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-06, 11:00, 0.5, Updated PoA planning (second quarter)
 2024-09-06, 11:30, 0.5, Added requirements up to user story 6
 2024-09-06, 17:00, 0.5, Implement small bits of feedback on PoA
+2024-09-06, 18:30, 1, Added gtest to project, gtest can now be used to run automatic tests
