@@ -6,6 +6,7 @@
 \usepackage{booktabs} % For better looking tables
 \usepackage{geometry} % To adjust margins
 \usepackage{tabularx} % For tables that auto-adjust to the page width
+\usepackage{longtable} % For tables across multiple pages
 
 \title{Requirements} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -17,22 +18,37 @@
     \maketitle % creates title using information in preamble (title, author, date)
     \newpage
 
-    \section{Requirements}
-    \begin{table}[h!]
-        \centering
-        \begin{tabularx}{\textwidth}{|X|X|X|X|}
-        \hline
-        \textbf{Requirement Number} & \textbf{Requirement Type (MoSCoW)} & \textbf{Requirement Name} & \textbf{Definition of Done} \\ \hline
-        M1 & Must Have & Levels support & The engine shall support multiple regions (levels) in which the game can be played. \\ \hline
-        M2 & Must Have & Scenes support & The engine shall support multiple scenes (sections in the game which are significantly different from each other e.g. menu, gameplay, credits). \\ \hline
-        M3 & Must Have & Keyboard support & The engine can use inputs from all keys of a 75\% size keyboard to use in the game. \textit{\textbf{Is 75\% reasonable? Or should we pick something else?}} \\ \hline
-        M4 & Must Have & Mouse support & The engine can use the following inputs from a computer mouse: horizontal and vertical movement, left, right and middle mouse button and scroll wheel. \\ \hline
-        S1 & Should Have & Online or LAN multiplayer support & \\ \hline
-        S2 & Should Have & FPS can be fixed at a maximum & \\ \hline
-        \end{tabularx}
-        \caption{Requirements Table}
-        \label{tab:requirements}
-        \end{table}
+\section{Requirements}
+\centering
+\begin{longtable}{|p{0.14\textwidth}|p{0.15\textwidth}|p{0.11\textwidth}|p{0.16\textwidth}|p{0.44\textwidth}|}
+\hline
+\textbf{Requirement Number} & \textbf{Requirement Type (MoSCoW)} & \textbf{Userstory} & \textbf{Requirement Name} & \textbf{Definition of Done} \\ \hline
+\endfirsthead
+
+\hline
+\textbf{Requirement Number} & \textbf{Requirement Type (MoSCoW)} & \textbf{Userstory} & \textbf{Requirement Name} & \textbf{Definition of Done} \\ \hline
+\endhead
+
+\hline \multicolumn{5}{r}{\textit{Continued on the next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+        M1 & Must Have & U01 & Levels support & The engine shall support multiple regions (levels) in which the game can be played. \\ \hline
+        M2 & Must Have & U02 & Scenes support & The engine shall support multiple scenes (sections in the game which are significantly different from each other e.g. menu, gameplay, credits). \\ \hline
+        M3 & Must Have & U03 & Keyboard support & The engine can use inputs from all keys of a 75\% size keyboard to use in the game. \textit{\textbf{Is 75\% reasonable? Or should we pick something else?}} \\ \hline
+        M4 & Must Have & U03 & Mouse support & The engine can use the following inputs from a computer mouse: horizontal and vertical movement, left, right and middle mouse button and scroll wheel. \\ \hline
+        M5 & Must Have & U04 & FPS counter & The engine shall provide a FPS counter in the top right corner of the screen, which can be toggled on and off \\ \hline
+        M6 & Must Have & U05 & Object creation & A game object can be created using a single method call \\ \hline
+        M7 & Must Have & U05 & Object deletion & A game objet can be removed using a single method call \\ \hline
+        M8 & Must Have & U06 & Game speed increase & The game engine can be sped up from its default speed up to 10 times, in steps of 0.1. \\ \hline
+        M9 & Must Have & U06 & Game speed increase button & The game engine can be sped up using the pg up button on the keyboard. \\ \hline
+        M10 & Must Have & U06 & Game speed decrease & The game engine can be slowed down from its default speed up to 10 times, in steps of 0.01. \\ \hline
+        M11 & Must Have & U06 & Game speed decrease button & The game engine can be sped up using the pg down button on the keyboard. \\ \hline
+        S1 & Should Have & U106 & Online or LAN multiplayer support & \\ \hline
+        S2 & Should Have &  & FPS can be fixed at a maximum & \\ \hline
+        \end{longtable}
     \newpage
 
 \end{document} % This is the end of the document
