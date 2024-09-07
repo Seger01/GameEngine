@@ -91,6 +91,105 @@ What kind of ai do game engines usually have?
 pathfinding?
 \newpage
 
+\section{multiplayer}
+Multiplayer is an important aspect of gaming. It is not necessary for a game to work, but it can greatly enhance the experience.
+\subsection{models}
+There are multiple multipayer models each with their own advantages and disadvantages.
+
+\subsubsection{Client-Server Model}
+The \textit{client-server} model is one of the most widely used architectures for multiplayer games. In this model, a server hosts the game world, and clients (players) connect to it. The server is considered authoritative, managing the game state and ensuring consistency across all clients.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Ensures a consistent and authoritative game state.
+    \item Reduces the risk of cheating, as the server controls the game logic.
+    \item Scalable for large games (e.g., MMOs).
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Requires a reliable and performant server, which adds complexity and cost.
+    \item Introduces latency between clients and the server, which can affect gameplay responsiveness.
+\end{itemize}
+
+\subsubsection{Peer-to-Peer (P2P) Model}
+In the \textit{peer-to-peer} model, all players (peers) are directly connected to each other, and the game state is shared among them. Each peer has equal authority over the game, which can make synchronization and consistency more difficult to maintain.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Simple to implement for small-scale games with a limited number of players.
+    \item No need for a dedicated server, reducing costs.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Difficult to ensure game state consistency across peers.
+    \item Susceptible to cheating, as each peer has authority.
+    \item Latency and synchronization issues are harder to manage.
+\end{itemize}
+
+\subsubsection{Authoritative Server with Client-Side Prediction}
+This model combines the \textit{client-server} approach with \textit{client-side prediction}. The server remains authoritative, but clients predict the outcome of their actions while awaiting confirmation from the server. This reduces the apparent latency for the player.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Provides a smoother and more responsive experience for players.
+    \item Retains the security and consistency of a server-authoritative system.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
+    \item Still subject to latency, although mitigated by prediction.
+\end{itemize}
+
+\subsubsection{State Synchronization}
+In \textit{state synchronization}, the server periodically sends the full game state to clients, ensuring that all players have a consistent view of the game world.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
+    \item Ensures that all clients are synchronized with the server.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Can be bandwidth-intensive, especially for games with a large or complex game state.
+    \item Latency can lead to noticeable delays in the game state being updated on clients.
+\end{itemize}
+
+\subsubsection{Event-Driven Networking}
+\textit{Event-driven networking} focuses on sending specific events (e.g., player actions) rather than the entire game state. Clients process these events and update their local game state accordingly.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item More efficient in terms of bandwidth, as only small packets of information are transmitted.
+    \item Suitable for games with frequent, small state changes, such as mobile or social games.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Requires careful ordering and processing of events to ensure consistency.
+    \item Can be difficult to implement for games with complex interactions.
+\end{itemize}
+
+\subsubsection{Hybrid Models}
+Many games use a \textit{hybrid} approach, combining aspects of different multiplayer models to optimize performance, scalability, and security. For example, a game might use the client-server model for general game logic but implement peer-to-peer connections for specific tasks like voice chat or trading.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Offers flexibility to tailor the multiplayer system to different aspects of the game.
+    \item Allows for optimization of performance and scalability where needed.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Increases complexity, requiring careful design to ensure all components work seamlessly together.
+    \item May require more effort to maintain and debug.
+\end{itemize}
+
+\newpage
+
 \section{siem}
 \subsection{audio}
 How is audio played on linux?

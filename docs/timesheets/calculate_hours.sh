@@ -16,7 +16,7 @@ do
   total_hours=0
 
   # Read the CSV file
-  while IFS=',' read -r date time duration activity
+  while IFS=',' read -r date time duration activity || [ -n "$date" ]
   do
     # Skip the header line (assuming the header has "Duration" as a column name)
     if [[ "$duration" == "Duration(in hours)" ]]; then
