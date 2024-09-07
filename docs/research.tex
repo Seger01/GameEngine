@@ -2,6 +2,14 @@
 
 \usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
 \usepackage{graphicx} % allows for images to be added to the latex document
+
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex} %Imports biblatex package
+\addbibresource{references.bib} %Import the bibliography file
+
 \graphicspath{{../pdf/}{./research_images}}
 
 \title{Research} % Sets article title
@@ -137,18 +145,26 @@ wie host? Central? peer to peer?
 input + controller support
 ai
 \\
-siem:
-audio + adaptive music
-data opslaan (voortgang, levels, statistieken, unlocks, achievements, etc)
+siem:\\
+audio + adaptive music\\
+data opslaan (voortgang, levels, statistieken, unlocks, achievements, etc)\\
 \\
-angel:
-particles?
-physics
+angel:\\
+particles?\\
+physics\\
 \\
-ronan:
-levels + levels switchen + scenes + hud
+ronan:\\
+levels + levels switchen + scenes + hud \\
 gameobject
+\\
+
+example of a reference \cite{author2020} like this test.
 
 
 \newpage
+
+\section{Bibliography}
+\printbibliography %Prints bibliography
+\newpage
+
 \end{document} % This is the end of the document
