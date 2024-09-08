@@ -37,6 +37,7 @@
 *.aux
 *.toc
 *.log
+*.bbl
 
 build/
 
