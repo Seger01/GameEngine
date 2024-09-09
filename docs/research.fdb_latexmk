@@ -1,11 +1,11 @@
 # Fdb version 3
-["biber research"] 1725879011 "research.bcf" "research.bbl" "research" 1725879015
+["biber research"] 1725879011 "research.bcf" "research.bbl" "research" 1725879154
   "references.bib" 1725878914 401 9d08ce893b2865aca4147e191533d215 ""
-  "research.bcf" 1725879015 107105 b5dc0e47a3eb9cf87504eefc9ece247c "pdflatex"
+  "research.bcf" 1725879154 107105 b5dc0e47a3eb9cf87504eefc9ece247c "pdflatex"
   (generated)
   "research.bbl"
   "research.blg"
-["pdflatex"] 1725879014 "research.tex" "research.pdf" "research" 1725879015
+["pdflatex"] 1725879153 "research.tex" "research.pdf" "research" 1725879154
   "/etc/texmf/web2c/texmf.cnf" 1725353786 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/angel/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk" 1725444265 11524 f0687c612661ef46c6b7ada4925f9f5f ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -104,12 +104,12 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1725353789 125915 807ff72f6023b33a59c427bfd156a3d1 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1725353792 1405644 17baf78b7cbe5c79922f89d4c834775e ""
-  "research.aux" 1725879015 5951 950ec34da3eb9281b41ed82160427011 "pdflatex"
+  "research.aux" 1725879154 6516 d947348580dadaaf7f1b32b2cdde8cf4 "pdflatex"
   "research.bbl" 1725879012 2777 34f36b078f20830af663a6c9f270a4ac "biber research"
-  "research.out" 1725879015 4100 e85945ef6cdd5435c9e829c9d2b916b6 "pdflatex"
-  "research.run.xml" 1725879015 2339 5b2f43d82ddb0f7511c00f93e5217a1e "pdflatex"
-  "research.tex" 1725879010 13231 fbb3fd6756a4300dd7a4d64034e36f42 ""
-  "research.toc" 1725879015 2685 6e0f776053f999963c99e7e774d0777e "pdflatex"
+  "research.out" 1725879154 4528 2db8bafe7a17c807181235bae0aad7e3 "pdflatex"
+  "research.run.xml" 1725879154 2339 5b2f43d82ddb0f7511c00f93e5217a1e "pdflatex"
+  "research.tex" 1725879150 14492 81bb42236ff2c554e1f0982c27b9b9e6 ""
+  "research.toc" 1725879154 2982 3b1bbe6a18adf687d09bed1c04065a6a "pdflatex"
   "research_images/difference_in_distance.png" 1725872271 102333 6f220773b06c70032b4109a9041cda5c ""
   "research_images/fixed_update_explanation.png" 1725872271 153688 7e21a2477bde4f6107de73e340017c5c ""
   "research_images/time_between_frames.png" 1725872271 163533 50071313fb408f65e5ec9d1c4f78162f ""
