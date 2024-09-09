@@ -1,0 +1,31 @@
+[0] Config.pm:307> INFO - This is Biber 2.17
+[0] Config.pm:310> INFO - Logfile is 'research.blg'
+<<<<<<< HEAD
+[53] biber:340> INFO - === Mon Sep  9, 2024, 12:50:12
+[63] Biber.pm:418> INFO - Reading 'research.bcf'
+[110] Biber.pm:972> INFO - Found 2 citekeys in bib section 0
+[119] Biber.pm:4383> INFO - Processing section 0
+[126] Biber.pm:4574> INFO - Looking for bibtex file 'references.bib' for section 0
+[127] bibtex.pm:1713> INFO - LaTeX decoding ...
+[129] bibtex.pm:1518> INFO - Found BibTeX data source 'references.bib'
+[158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[158] Biber.pm:4203> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
+[158] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[164] bbl.pm:654> INFO - Writing 'research.bbl' with encoding 'UTF-8'
+[165] bbl.pm:757> INFO - Output to research.bbl
+=======
+[116] biber:340> INFO - === Mon Sep  9, 2024, 11:48:10
+[139] Biber.pm:418> INFO - Reading 'research.bcf'
+[252] Biber.pm:972> INFO - Found 1 citekeys in bib section 0
+[271] Biber.pm:4383> INFO - Processing section 0
+[290] Biber.pm:4574> INFO - Looking for bibtex file 'references.bib' for section 0
+[292] bibtex.pm:1713> INFO - LaTeX decoding ...
+[296] bibtex.pm:1518> INFO - Found BibTeX data source 'references.bib'
+[354] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[354] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[354] Biber.pm:4203> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
+[355] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[357] bbl.pm:654> INFO - Writing 'research.bbl' with encoding 'UTF-8'
+[358] bbl.pm:757> INFO - Output to research.bbl
+>>>>>>> 616976ffe5dcbb61509fe175fd7b7197d1e23c6c
