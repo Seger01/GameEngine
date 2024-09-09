@@ -3,6 +3,8 @@
 \usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
 \usepackage{graphicx} % allows for images to be added to the latex document
 
+\usepackage[T1]{fontenc}
+
 \usepackage{hyperref} % allows for hyperlinks to be added to the document
 \hypersetup{
     colorlinks,
@@ -414,14 +416,41 @@ Below are some commonly used tools for networking in C++ game projects.
 
 \newpage
 
-\section{siem}
-\subsection{audio}
-How is audio played on linux?
-multiple audio sources
-directional audio
-\subsection{save data}
+\section{Audio}
+Sound can be considered to be an unmissable part of any video game. It is therefore important for any video game engine to 
+support audio playback, and optionally to play multiple audio sources simultaneously and to give these audio sources a sense of physical direction.
+\subsection{Audio on Linux}
+Firstly, the following question must be answered: how is audio played on Linux through C++? The answer to this question can be divided into two types:
+playing audio by directly interfacing with the operating system, or using third-party software to manage the audio playback.
+Because of the lack of sources on the former, only the latter is considered in this research.
+
+There are many audio libraries available for C++ on Linux, some of the most popular of which (intended for usafe in video games) are \cite{Szanto_2018}:
+\begin{itemize}
+    \item FMOD
+    \item IrrKlang
+    \item OpenAL
+    \item SDL2 \footnote{SDL 2 is "a cross-platform development library designed to provide low level access to audio" \cite{sdl2}. It is therefore not strictly designed for just audio playback, but it is extensively used across the industry \cite{sdl2games}.}
+\end{itemize}
+
+\subsubsection{FMOD} is a proprietary \footnote{Its tools are free for teams with a revenue of < \$200.000 \cite{fmodStudio}.} sound engine used (mainly) in video games.
+It is "widely used within the gaming industry", and "is globally regarded as the leading tools for the creation and playback of interactive audio" \cite{dolbyFmod}.
+
+FMOD provides four different products:
+\begin{enumerate}
+    \item FMOD Studio: the software used to create and adding sound and music to a game. In-game, these sounds are played using the FMOD Engine \cite{fmodStudio}.
+    \item FMOD for Unity: similar to FMOD Studio, but integrated into the Unity engine \cite{fmodUnity}.
+    \item FMOD Core: a more low-level alternative to FMOD Studio. As opposed to FMOD Studio, which has a GUI, Core is only available through an API \cite{fmodCore}.
+    \item FMOD.io: a library of various sound effects / files \cite{fmodIo}.
+\end{enumerate}
+
+
+\subsection{Multiple audio sources}
+How can multiple sounds be played simultaneously?
+\subsection{Directional audio}
+How can stereo headphones be used to create directional audio?
+\section{save data}
 What are common save data structures?
-encryptie?
+encryptie? 
 \newpage
 
 \section{angel}
