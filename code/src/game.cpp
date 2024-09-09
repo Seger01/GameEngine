@@ -1,5 +1,10 @@
 #include "game.h"
 #include <iostream>
+#include "player.h"
+#include <slikenet/BitStream.h>
+#include <slikenet/MessageIdentifiers.h>
+#include <cstdlib> // For rand()
+#include <ctime>   // For seeding rand()
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -7,23 +12,30 @@ const int BLOCK_SIZE = 50;
 #define SERVER_PORT 60000
 #define SERVER_IP "127.0.0.1"
 
-enum GameMessages
-{
-    ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1
-};
-
 Game::Game()
-    : window(NULL), renderer(NULL), quit(false), frameDelay(1000 / 60), peer(NULL), isServer(false) {}
+    : window(NULL), renderer(NULL), quit(false), frameDelay(1000 / 60), peer(NULL), isServer(false), clientPlayerIndex(-1)
+{ // Seed the random number generator
+    std::srand(std::time(0));
+}
 
 bool Game::init()
 {
+    std::string windowName;
+    if (isServer)
+    {
+        windowName = "Server mode";
+    }
+    else
+    {
+        windowName = "Client mode";
+    }
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
     }
 
-    window = SDL_CreateWindow("SDL2 Multiplayer Block Control", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -37,20 +49,16 @@ bool Game::init()
         return false;
     }
 
-    // Initialize players
-    players.push_back(Player(100, 100, {255, 0, 0})); // Red block
-    players.push_back(Player(400, 300, {0, 0, 255})); // Blue block
-
     // Initialize SLikeNet
     peer = SLNet::RakPeerInterface::GetInstance();
     SLNet::SocketDescriptor sd;
     if (isServer)
     {
-        Game::startServer(peer);
+        startServer(peer);
     }
     else
     {
-        Game::startClient(peer);
+        startClient(peer);
     }
 
     return true;
@@ -95,16 +103,34 @@ void Game::handleEvents()
         }
     }
 
-    // Handle input for both players
-    players[0].handleInput(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT);
-    players[1].handleInput(SDL_SCANCODE_W, SDL_SCANCODE_S, SDL_SCANCODE_A, SDL_SCANCODE_D);
+    if (!isServer)
+    {
+        // Handle input for the client player
+        players[0].handleInput(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT);
+    }
 }
 
 void Game::update()
 {
-    for (auto &player : players)
+    if (isServer)
     {
-        player.update();
+        for (auto &player : players)
+        {
+            player.update();
+        }
+
+        // Send game state to clients
+        SLNet::BitStream bsOut;
+        bsOut.Write((SLNet::MessageID)ID_GAME_STATE);
+        for (const auto &player : players)
+        {
+            bsOut.Write(player.getX());
+            bsOut.Write(player.getY());
+            bsOut.Write(player.getColor().r);
+            bsOut.Write(player.getColor().g);
+            bsOut.Write(player.getColor().b);
+        }
+        peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
     }
 }
 
@@ -128,13 +154,71 @@ void Game::handleNetwork()
         switch (packet->data[0])
         {
         case ID_NEW_INCOMING_CONNECTION:
-            std::cout << "A connection is incoming.\n";
+            if (isServer)
+            {
+                std::cout << "A connection is incoming.\n";
+                // Generate random color for the new player
+                Uint8 r = rand() % 256;
+                Uint8 g = rand() % 256;
+                Uint8 b = rand() % 256;
+                // Add a new player for the incoming connection with a random color
+                players.push_back(Player(100, 100, {r, g, b}));
+                int playerIndex = players.size() - 1;
+                playerIndices[packet->systemAddress] = playerIndex;
+
+                // Send the player index to the client
+                SLNet::BitStream bsOut;
+                bsOut.Write((SLNet::MessageID)ID_ASSIGN_PLAYER_INDEX);
+                bsOut.Write(playerIndex);
+                peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
+            }
             break;
         case ID_CONNECTION_REQUEST_ACCEPTED:
-            std::cout << "Our connection request has been accepted.\n";
+            if (!isServer)
+            {
+                std::cout << "Our connection request has been accepted.\n";
+            }
             break;
-        case ID_GAME_MESSAGE_1:
-            std::cout << "Received a game message.\n";
+        case ID_ASSIGN_PLAYER_INDEX:
+            if (!isServer)
+            {
+                SLNet::BitStream bsIn(packet->data, packet->length, false);
+                bsIn.IgnoreBytes(sizeof(SLNet::MessageID));
+                bsIn.Read(clientPlayerIndex);
+                std::cout << "Assigned player index: " << clientPlayerIndex << std::endl;
+            }
+            break;
+        case ID_PLAYER_INPUT:
+            if (isServer)
+            {
+                SLNet::BitStream bsIn(packet->data, packet->length, false);
+                bsIn.IgnoreBytes(sizeof(SLNet::MessageID));
+                int playerIndex;
+                int x, y;
+                bsIn.Read(playerIndex);
+                bsIn.Read(x);
+                bsIn.Read(y);
+                players[playerIndex].setPosition(x, y);
+            }
+            break;
+        case ID_GAME_STATE:
+            if (!isServer)
+            {
+                SLNet::BitStream bsIn(packet->data, packet->length, false);
+                bsIn.IgnoreBytes(sizeof(SLNet::MessageID));
+                for (auto &player : players)
+                {
+                    int x, y;
+                    Uint8 r, g, b;
+                    bsIn.Read(x);
+                    bsIn.Read(y);
+                    bsIn.Read(r);
+                    bsIn.Read(g);
+                    bsIn.Read(b);
+                    player.setPosition(x, y);
+                    player.setColor({r, g, b});
+                }
+            }
             break;
         default:
             std::cout << "Received a message with identifier " << packet->data[0] << std::endl;
@@ -142,12 +226,17 @@ void Game::handleNetwork()
         }
     }
 
-    // Send a game message to the server
-    SLNet::BitStream bsOut;
-    bsOut.Write((SLNet::MessageID)ID_GAME_MESSAGE_1);
-    peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    if (!isServer && clientPlayerIndex != -1)
+    {
+        // Send player input to the server
+        SLNet::BitStream bsOut;
+        bsOut.Write((SLNet::MessageID)ID_PLAYER_INPUT);
+        bsOut.Write(clientPlayerIndex); // Send the player index
+        bsOut.Write(players[clientPlayerIndex].getX());
+        bsOut.Write(players[clientPlayerIndex].getY());
+        peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    }
 }
-
 void Game::startServer(SLNet::RakPeerInterface *server)
 {
     SLNet::SocketDescriptor sd(SERVER_PORT, 0);
@@ -155,25 +244,6 @@ void Game::startServer(SLNet::RakPeerInterface *server)
     server->SetMaximumIncomingConnections(10);
 
     std::cout << "Server started and listening on port " << SERVER_PORT << std::endl;
-
-    while (true)
-    {
-        for (SLNet::Packet *packet = server->Receive(); packet; server->DeallocatePacket(packet), packet = server->Receive())
-        {
-            switch (packet->data[0])
-            {
-            case ID_NEW_INCOMING_CONNECTION:
-                std::cout << "A connection is incoming.\n";
-                break;
-            case ID_GAME_MESSAGE_1:
-                std::cout << "Received a game message.\n";
-                break;
-            default:
-                std::cout << "Received a message with identifier " << packet->data[0] << std::endl;
-                break;
-            }
-        }
-    }
 }
 
 void Game::startClient(SLNet::RakPeerInterface *client)
@@ -184,27 +254,11 @@ void Game::startClient(SLNet::RakPeerInterface *client)
 
     std::cout << "Client started and connecting to server at " << SERVER_IP << ":" << SERVER_PORT << std::endl;
 
-    while (true)
-    {
-        for (SLNet::Packet *packet = client->Receive(); packet; client->DeallocatePacket(packet), packet = client->Receive())
-        {
-            switch (packet->data[0])
-            {
-            case ID_CONNECTION_REQUEST_ACCEPTED:
-                std::cout << "Our connection request has been accepted.\n";
-                break;
-            case ID_GAME_MESSAGE_1:
-                std::cout << "Received a game message.\n";
-                break;
-            default:
-                std::cout << "Received a message with identifier " << packet->data[0] << std::endl;
-                break;
-            }
-        }
+    // Generate random color for the client player
+    Uint8 r = rand() % 256;
+    Uint8 g = rand() % 256;
+    Uint8 b = rand() % 256;
 
-        // Send a game message to the server
-        SLNet::BitStream bsOut;
-        bsOut.Write((SLNet::MessageID)ID_GAME_MESSAGE_1);
-        client->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-    }
+    // Add a player for the client
+    players.push_back(Player(100, 100, {r, g, b}));
 }
