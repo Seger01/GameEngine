@@ -77,7 +77,29 @@ In the figure below it is shown how times between different rendered frames can 
 	\includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
 	\caption{Fixed update view}
 \end{figure}
+\newline
+If you were to use the same formula to calculate the player movement as before, it would now show constant movement between computers.
+
 \subsubsection{Delta time}
+Another solution to the differing speeds between computers, is to make the added distance when moving the player relative to the last time distance was added to the player.
+Keeping track of every time movement is added to an object is not very efficient so this is solved in a slightly different manner.
+So this means the formula would look like this:
+\newline
+playerPosition.x = playerPosition.x + (10 * deltaTime)
+\newline
+This uses the deltaTime variable to make the movement relative to the last time the movement was calculated.
+\newline\newline
+The deltaTime variable is calculated by the game engine and is globally accessible.
+The game engine measures the time between the previous frame and the frame before, then assigns that value to the deltaTime variable.
+This process is shown in the image below where the black square is the place deltaTime is used and the 0.14 is the time it took for the previous frame to render.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{used_deltatime_when_using_variable.png}
+	\caption{deltaTime value when using variable}
+\end{figure}
+\newline
+Because deltaTime is used while rendering a frame, it is not possible to know how long it takes to render the rest of the frame.
+This is why the value for the previous frame is used, although this means the deltaTime value lags behind by one frame, the delay is not noticable in most situations.
 
 \newpage
 \section{sean}
@@ -101,15 +123,15 @@ The \textit{client-server} model is one of the most widely used architectures fo
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Ensures a consistent and authoritative game state.
-    \item Reduces the risk of cheating, as the server controls the game logic.
-    \item Scalable for large games (e.g., MMOs).
+	\item Ensures a consistent and authoritative game state.
+	\item Reduces the risk of cheating, as the server controls the game logic.
+	\item Scalable for large games (e.g., MMOs).
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Requires a reliable and performant server, which adds complexity and cost.
-    \item Introduces latency between clients and the server, which can affect gameplay responsiveness.
+	\item Requires a reliable and performant server, which adds complexity and cost.
+	\item Introduces latency between clients and the server, which can affect gameplay responsiveness.
 \end{itemize}
 
 \subsubsection{Peer-to-Peer (P2P) Model}
@@ -117,15 +139,15 @@ In the \textit{peer-to-peer} model, all players (peers) are directly connected t
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Simple to implement for small-scale games with a limited number of players.
-    \item No need for a dedicated server, reducing costs.
+	\item Simple to implement for small-scale games with a limited number of players.
+	\item No need for a dedicated server, reducing costs.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Difficult to ensure game state consistency across peers.
-    \item Susceptible to cheating, as each peer has authority.
-    \item Latency and synchronization issues are harder to manage.
+	\item Difficult to ensure game state consistency across peers.
+	\item Susceptible to cheating, as each peer has authority.
+	\item Latency and synchronization issues are harder to manage.
 \end{itemize}
 
 \subsubsection{Authoritative Server with Client-Side Prediction}
@@ -133,14 +155,14 @@ This model combines the \textit{client-server} approach with \textit{client-side
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Provides a smoother and more responsive experience for players.
-    \item Retains the security and consistency of a server-authoritative system.
+	\item Provides a smoother and more responsive experience for players.
+	\item Retains the security and consistency of a server-authoritative system.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
-    \item Still subject to latency, although mitigated by prediction.
+	\item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
+	\item Still subject to latency, although mitigated by prediction.
 \end{itemize}
 
 \subsubsection{State Synchronization}
@@ -148,14 +170,14 @@ In \textit{state synchronization}, the server periodically sends the full game s
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
-    \item Ensures that all clients are synchronized with the server.
+	\item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
+	\item Ensures that all clients are synchronized with the server.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Can be bandwidth-intensive, especially for games with a large or complex game state.
-    \item Latency can lead to noticeable delays in the game state being updated on clients.
+	\item Can be bandwidth-intensive, especially for games with a large or complex game state.
+	\item Latency can lead to noticeable delays in the game state being updated on clients.
 \end{itemize}
 
 \subsubsection{Event-Driven Networking}
@@ -163,14 +185,14 @@ In \textit{state synchronization}, the server periodically sends the full game s
 
 \textbf{Advantages}
 \begin{itemize}
-    \item More efficient in terms of bandwidth, as only small packets of information are transmitted.
-    \item Suitable for games with frequent, small state changes, such as mobile or social games.
+	\item More efficient in terms of bandwidth, as only small packets of information are transmitted.
+	\item Suitable for games with frequent, small state changes, such as mobile or social games.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Requires careful ordering and processing of events to ensure consistency.
-    \item Can be difficult to implement for games with complex interactions.
+	\item Requires careful ordering and processing of events to ensure consistency.
+	\item Can be difficult to implement for games with complex interactions.
 \end{itemize}
 
 \subsubsection{Hybrid Models}
@@ -178,14 +200,14 @@ Many games use a \textit{hybrid} approach, combining aspects of different multip
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Offers flexibility to tailor the multiplayer system to different aspects of the game.
-    \item Allows for optimization of performance and scalability where needed.
+	\item Offers flexibility to tailor the multiplayer system to different aspects of the game.
+	\item Allows for optimization of performance and scalability where needed.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Increases complexity, requiring careful design to ensure all components work seamlessly together.
-    \item May require more effort to maintain and debug.
+	\item Increases complexity, requiring careful design to ensure all components work seamlessly together.
+	\item May require more effort to maintain and debug.
 \end{itemize}
 
 \newpage
