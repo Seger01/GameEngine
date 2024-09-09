@@ -29,18 +29,16 @@ file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 add_executable(engine_BRAVO ${SOURCES})
 
 # =====================
-# SDL2 Integration
+# SDL2 and SDL2_image Integration
 # =====================
 
-# Find SDL2
-find_package(SDL2 REQUIRED)
+INCLUDE(FindPkgConfig)
 
-# Include SDL2 headers
-include_directories(${SDL2_INCLUDE_DIRS})
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-# Link SDL2 to the executable
-target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES})
-
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/SDL/include ${SDL2IMAGE_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES(engine_BRAVO ${PROJECT_SOURCE_DIR}/SDL/build/build ${SDL2IMAGE_LIBRARIES})
 # =====================
 # Google Test Integration
 # =====================
