@@ -1,15 +1,15 @@
 [0] Config.pm:307> INFO - This is Biber 2.17
 [0] Config.pm:310> INFO - Logfile is 'research.blg'
-[123] biber:340> INFO - === Mon Sep  9, 2024, 10:15:33
-[147] Biber.pm:418> INFO - Reading 'research.bcf'
-[257] Biber.pm:972> INFO - Found 1 citekeys in bib section 0
-[277] Biber.pm:4383> INFO - Processing section 0
-[295] Biber.pm:4574> INFO - Looking for bibtex file 'references.bib' for section 0
-[296] bibtex.pm:1713> INFO - LaTeX decoding ...
-[301] bibtex.pm:1518> INFO - Found BibTeX data source 'references.bib'
-[368] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[369] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[369] Biber.pm:4203> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
-[369] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
-[373] bbl.pm:654> INFO - Writing 'research.bbl' with encoding 'UTF-8'
-[375] bbl.pm:757> INFO - Output to research.bbl
+[53] biber:340> INFO - === Mon Sep  9, 2024, 12:50:12
+[63] Biber.pm:418> INFO - Reading 'research.bcf'
+[110] Biber.pm:972> INFO - Found 2 citekeys in bib section 0
+[119] Biber.pm:4383> INFO - Processing section 0
+[126] Biber.pm:4574> INFO - Looking for bibtex file 'references.bib' for section 0
+[127] bibtex.pm:1713> INFO - LaTeX decoding ...
+[129] bibtex.pm:1518> INFO - Found BibTeX data source 'references.bib'
+[158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[158] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[158] Biber.pm:4203> INFO - Sorting list 'ynt/global//global/global' of type 'entry' with template 'ynt' and locale 'en-US'
+[158] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[164] bbl.pm:654> INFO - Writing 'research.bbl' with encoding 'UTF-8'
+[165] bbl.pm:757> INFO - Output to research.bbl
