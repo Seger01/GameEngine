@@ -3,6 +3,15 @@
 \usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
 \usepackage{graphicx} % allows for images to be added to the latex document
 
+\usepackage{hyperref} % allows for hyperlinks to be added to the document
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
 \usepackage[
 backend=biber,
 style=alphabetic,
@@ -40,9 +49,9 @@ One computer might be able to run the games at 60FPS, but another can only run t
 How can you make sure that both users have the exact same experience despite the difference in render speed.
 A difference in render speed is shown in the figure below.
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.8\textwidth]{time_between_frames.png}
-	\caption{Time between frames displayed}
+    \centering
+    \includegraphics[width=0.8\textwidth]{time_between_frames.png}
+    \caption{Time between frames displayed}
 \end{figure}
 
 \subsection{Potential problems}
@@ -60,9 +69,9 @@ So the player with 60FPS is considerably faster than the one with 30FPS.
 This is of course, not ideal, as a game developer you want everyone to move at the same speed despite the computer it is run on.
 The difference in elapsed distance is also shown in the figure below.
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.8\textwidth]{difference_in_distance.png}
-	\caption{Difference in elapsed distance}
+    \centering
+    \includegraphics[width=0.8\textwidth]{difference_in_distance.png}
+    \caption{Difference in elapsed distance}
 \end{figure}
 
 \subsection{Possible solutions}
@@ -73,9 +82,9 @@ A solution to the differing movement speeds between computers, is to create a li
 It is important that the FixedUpdate function is very small, otherwise the FixedUpdate could be too slow to be called at a constant rate each frame, defeating the purpose of the FixedUpdate.
 In the figure below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
-	\caption{Fixed update view}
+    \centering
+    \includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
+    \caption{Fixed update view}
 \end{figure}
 \newline
 If you were to use the same formula to calculate the player movement as before, it would now show constant movement between computers.
