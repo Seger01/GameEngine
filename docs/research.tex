@@ -47,12 +47,12 @@ Movement is a very important part of any game, but how is movement calculated ac
 Different computers have different internals and thus run games with differing performance.
 One computer might be able to run the games at 60FPS, but another can only run the game at 30FPS.
 How can you make sure that both users have the exact same experience despite the difference in render speed.
-A difference in render speed is shown in figure \autoref{TimeBetweenFramesDisplayed} below.
+A difference in render speed is shown in figure \autoref{fig:TimeBetweenFramesDisplayed} below.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{time_between_frames.png}
 	\caption{Time between frames displayed}
-	\label{TimeBetweenFramesDisplayed}
+	\label{fig:TimeBetweenFramesDisplayed}
 \end{figure}
 
 \subsection{Potential problems}
@@ -68,12 +68,12 @@ If this formula would be used to move the player, when running at 60PFS, the pla
 But if the game was running at 30FPS, the player would only move 300 units each second.
 So the player with 60FPS is considerably faster than the one with 30FPS.
 This is of course, not ideal, as a game developer you want everyone to move at the same speed despite the computer it is run on.
-The difference in elapsed distance is also shown in the \autoref{DifferenceInElapsedDistance} below.
+The difference in elapsed distance is also shown in the \autoref{fig:DifferenceInElapsedDistance} below.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{difference_in_distance.png}
 	\caption{Difference in elapsed distance}
-	\label{DifferenceInElapsedDistance}
+	\label{fig:DifferenceInElapsedDistance}
 \end{figure}
 
 \subsection{Possible solutions}
@@ -82,11 +82,12 @@ There are two common solutions that help alleviate this problem, adjusting the m
 \subsubsection{Fixed update}
 A solution to the differing movement speeds between computers, is to create a lightweight time based interrupt, often referred to as FixedUpdate, to handle all movement.
 It is important that the FixedUpdate function is very small, otherwise the FixedUpdate could be too slow to be called at a constant rate each frame, defeating the purpose of the FixedUpdate.
-In the figure below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
+In the \autoref{fig:FixedUpdateView} below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
 	\caption{Fixed update view}
+	\label{fig:FixedUpdateView}
 \end{figure}
 \newline
 If you were to use the same formula to calculate the player movement as before, it would now show constant movement between computers.
