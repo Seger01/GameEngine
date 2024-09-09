@@ -34,6 +34,12 @@
 # latex files
 *.pdf
 *.synctex.gz
+*.aux
+*.toc
+*.log
+*.bbl
+*.blg
+.fdb_latexmk
 
 build/
 
