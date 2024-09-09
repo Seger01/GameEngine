@@ -38,6 +38,8 @@
 *.toc
 *.log
 *.bbl
+*.blg
+.fdb_latexmk
 
 build/
 
