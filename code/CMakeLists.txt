@@ -22,14 +22,31 @@ endif()
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-# Specify the source files
-set(SOURCES
-    src/main.cpp
-    # Add more source files here
+# Include SLikeNet headers
+include_directories(${PROJECT_SOURCE_DIR}/slikenet/Source)
+
+# Automatically search for source files
+file(GLOB_RECURSE SOURCES
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
+    ${PROJECT_SOURCE_DIR}/slikenet/Source/src/*.cpp
 )
+
+# Find SDL2
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
+# # Find SLikeNet
+# find_package(SLikeNet REQUIRED)
+# include_directories(${SLikeNet_INCLUDE_DIRS})
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
+
+# # Link SDL2 and SLikeNet libraries
+# target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES} ${SLikeNet_LIBRARIES})
+
+# Link SDL2 libraries
+target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES})
 
 # =====================
 # Google Test Integration
@@ -50,10 +67,9 @@ FetchContent_MakeAvailable(googletest)
 # Enable testing in the project
 enable_testing()
 
-# Add the test source files
-set(TEST_SOURCES
-    test/test_main.cpp    # Your test source files
-    # Add more test files here
+# Automatically search for test source files
+file(GLOB_RECURSE TEST_SOURCES
+    ${PROJECT_SOURCE_DIR}/test/*.cpp
 )
 
 # Create an executable for tests

@@ -1,12 +1,29 @@
+#include "game.h"
 #include <iostream>
+#include <cstring>
 
-#include "test.h"
+int main(int argc, char *args[])
+{
+  Game game;
 
-int main() {
-  for (int i = 0; i < 10; i++) {
-    std::cout << "Hello, World!" << std::endl;
+  // Check command-line arguments
+  if (argc > 1 && std::strcmp(args[1], "server") == 0)
+  {
+    game.isServer = true;
+  }
+  else
+  {
+    game.isServer = false;
   }
 
-  test();
+  if (!game.init())
+  {
+    std::cerr << "Failed to initialize the game." << std::endl;
+    return -1;
+  }
+
+  game.run();
+  game.cleanup();
+
   return 0;
 }
