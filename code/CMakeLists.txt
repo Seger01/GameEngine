@@ -32,6 +32,24 @@ set(SOURCES
 add_executable(engine_BRAVO ${SOURCES})
 
 # =====================
+# FMOD Integration
+# =====================
+
+# Path to the FMOD library and include directories
+set(FMOD_DIR "~/fmod/fmodstudioapi20223linux/api/core")  # Replace this with the path where you unpacked FMOD
+set(FMOD_INCLUDE_DIR "${FMOD_DIR}/inc")
+set(FMOD_LIB_DIR "${FMOD_DIR}/lib/x86_64")
+
+# Include the FMOD headers
+include_directories(${FMOD_INCLUDE_DIR})
+
+# Link FMOD library (.so for dynamic linking)
+target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.so)
+
+# Optionally, if you want static linking, use this:
+# target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
+
+# =====================
 # Google Test Integration
 # =====================
 
