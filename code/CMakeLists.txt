@@ -22,14 +22,24 @@ endif()
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-# Specify the source files
-set(SOURCES
-    src/main.cpp
-    # Add more source files here
-)
+# Automatically search for source files in the src directory
+file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
+
+# =====================
+# SDL2 Integration
+# =====================
+
+# Find SDL2
+find_package(SDL2 REQUIRED)
+
+# Include SDL2 headers
+include_directories(${SDL2_INCLUDE_DIRS})
+
+# Link SDL2 to the executable
+target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES})
 
 # =====================
 # Google Test Integration
@@ -50,11 +60,8 @@ FetchContent_MakeAvailable(googletest)
 # Enable testing in the project
 enable_testing()
 
-# Add the test source files
-set(TEST_SOURCES
-    test/test_main.cpp    # Your test source files
-    # Add more test files here
-)
+# Automatically search for test files in the test directory
+file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
 
 # Create an executable for tests
 add_executable(tests ${TEST_SOURCES})
@@ -66,4 +73,5 @@ target_link_libraries(tests gtest gtest_main)
 add_test(NAME engine_BRAVO_tests COMMAND tests)
 
 # Optionally, set up test include directories
-#target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+# target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+
