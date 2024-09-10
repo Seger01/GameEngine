@@ -11,6 +11,6 @@ Date,Time,Duration(in hours),Activity
 2024-09-06, 11:30, 0.5, Added requirements up to user story 6
 2024-09-06, 17:00, 0.5, Implement small bits of feedback on PoA
 2024-09-06, 18:30, 1, Added gtest to project, gtest can now be used to run automatic tests
-2024-09-06, 11:00, 0.5, Standup
-2024-09-06, 11:30, 2.5, Audio research
-
+2024-09-09, 11:00, 0.5, Standup
+2024-09-09, 11:30, 2.5, Audio research
+2024-09-09, 20:30, 1, Audio POC

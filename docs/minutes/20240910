@@ -1,0 +1,20 @@
+Plan van Aanpak:
+- Doorlopen hoofdstukken
+- Vragen feedback (planning in order?)
+
+Onderzoek:
+- Verdeling (iedereen benoemen waarmee die bezig is)
+- Vraag: waarom sdl2 geadviseerd? Ervaringen vorige groepjes?
+
+Engine wow factor:
+- Veel entities en particles
+- Hoge framerate
+
+
+Extra's
+- Hoogste prio: multiplayer
+- Advies testen multiplayer?
+- Wat is de uitdaging binnen multiplayer (ervaring vorige groepjes)(zelf maken of library)?
+- Iets mindere focus: particles
+- Adaptieve muziek / audio
+- Evt. benoemen Jenkins automation
