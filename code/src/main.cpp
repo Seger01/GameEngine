@@ -34,7 +34,7 @@ int main(int argc, char *args[]) {
   SDL_Rect renderQuad;
   renderQuad.x = 100; // X position
   renderQuad.y = 50;  // Y position
-  renderQuad.w = 200; // Width of the image
+  renderQuad.w = 100; // Width of the image
   renderQuad.h = 150; // Height of the image
 
   while (!quit) {
