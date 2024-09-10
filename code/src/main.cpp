@@ -122,7 +122,7 @@ bool init(SDL_Window **window, SDL_Renderer **renderer) {
 bool loadMedia(SDL_Renderer *renderer, SDL_Texture **texture) {
   // Load PNG texture
   std::string path =
-      "monkey.png"; // Make sure this path points to a valid PNG file
+      "player.png"; // Make sure this path points to a valid PNG file
   SDL_Surface *loadedSurface = IMG_Load(path.c_str());
   if (loadedSurface == nullptr) {
     std::cout << "Unable to load image " << path
