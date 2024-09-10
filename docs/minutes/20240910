@@ -15,6 +15,9 @@ Extra's
 - Hoogste prio: multiplayer
 - Advies testen multiplayer?
 - Wat is de uitdaging binnen multiplayer (ervaring vorige groepjes)(zelf maken of library)?
+    - Antwoord: weinig groepjes doen het. Vaak kunnen ze snel elkaar zien
+    - Pijnpunt: hoe worden synchronisatie en deadlocks geregeld?
+    - Libraries of niet: er worden op zijn minst libraries gebruikt om berichten over en weer te sturen
 - Iets mindere focus: particles
 - Adaptieve muziek / audio
 - Evt. benoemen Jenkins automation
@@ -22,3 +25,8 @@ Extra's
 POC's
 - poc audio laten zien
 - poc multiplayer laten zien
+
+______________________________________________________________________________________
+antwoord vraag:
+- overleg met klant wat die wil. Antwoord: heeft een maximum levelgroottte van 9 schermen (ongeveer 3x3). Moeten onderzoeken of het daarbij nodig is om de optimalisaties te doen. 
+- Beoordeling is op engine: we moeten zelf aangeven waar de mooie onderdelen zitten, ook wanneer het niet in de validatieapp voorkomt
