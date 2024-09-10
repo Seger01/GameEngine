@@ -108,16 +108,10 @@ The deltaTime variable is calculated by the game engine and is globally accessib
 The game engine measures the time between the previous frame and the frame before, then assigns that value to the deltaTime variable.
 This process is shown in \autoref{fig:DeltaTimeValueWhenUsingVariable}  below where the black square is the place deltaTime is used and the 0.14 is the time it took for the previous frame to render.
 \begin{figure}[h!]
-<<<<<<< HEAD
-    \centering
-    \includegraphics[width=0.6\textwidth]{used_deltatime_when_using_variable.png}
-    \caption{deltaTime value when using variable}
-=======
 	\centering
 	\includegraphics[width=0.6\textwidth]{used_deltatime_when_using_variable.png}
 	\caption{deltaTime value when using variable}
 	\label{fig:DeltaTimeValueWhenUsingVariable}
->>>>>>> origin/documents
 \end{figure}
 \newline
 Because deltaTime is used while rendering a frame, it is not possible to know how long it takes to render the rest of the frame.
@@ -475,15 +469,36 @@ common physics engines
 
 \newpage
 
-\section{ronan}
-\subsection{levels}
-What is a level in a video game?
-How are transitions between levels done?
-what are scenes?
-How are levels saved/stored?
-\subsection{gameobject}
-What is a gameobject in a game engine?
-How are components added to gameobjects?
+\section{Levels (Ronan)}
+\subsection{Levels in videogames}
+A level in a videogame is a space available to a player during 
+the completion of an objective. Levels are designed to present a challenge, 
+objective, or puzzle that players must overcome to advance. 
+There are a few aspects that might make up a level in a videogame:
+\begin{itemize}
+	\item Progression
+	\item Design/Environment
+	\item Objectives
+	\item Difficulty
+	\item Possible story advancement
+\end{itemize}
+
+\subsection{Level transitions}
+Level transitions allow a player from level to another.
+Level transitions can be one or two way.
+A two way level transition can be used so a player can travel back and forth between connected levels.
+One way level transitions prevent players from the traveling back to previous levels.
+There a few common ways to manage the transition between levels:
+\begin {itemize}
+	\item
+\end{itemize}
+\subsection{Scenes}
+\subsection{Storing levels}
+\subsection{Third party level editors}
+
+\section{Game objects (Ronan)}
+\subsection{Game objects in a game engines}
+\subsection{Adding components to game objects}
 
 \newpage
 
