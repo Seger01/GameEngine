@@ -448,24 +448,44 @@ encryptie?
 \newpage
 
 \section{angel}
-\subsection{particles}
+\section{particles}
 
 Jeff Lander coins the term "Fuzzy" as a way of describing a type of object which lacks well-defined surfaces such as smoke or fire. \cite{Lander_1998} These objects contain a set of characteristics which makes it difficult to model as an object due to its random and chaotic nature. To solve this problem game engines make use of particle systems to generate particles/objects in a chaotic and controlled environment to recreate these effects.
 
-\subsubsection{What is a particle system}
+\subsection{What is a particle system}
 
 Compared to regular objects, Particle systems create objects which undergo a complete lifecycle. Within the life cycle, particles are created, change direction or properties, and dissappear again. Through the use of parameters controlling properties such as direction and duration a particle can appear random and natural while still following a set of determined rules to follow.
 
-\subsubsection{Examples of particle systems}
+\subsection{Examples of particle systems}
 
 
 
 What are particles in games?
 What are common methods game engines use to render particles?
-\subsection{physics}
-What are physics in games?
 
-common physics engines
+\newpage
+
+\section{Physics}
+
+Physics within games are a key component when it comes to creating realism between the interaction of objects and their physical properties such as velocity, density etc. 
+
+\subsection{The use of physics engines}
+
+Within video games, physics engines make use of mathematical algorithms and models to realistically calculate the physical behaviour of objects within a game \cite{Ipacs_2023}. The data produced by these engines can then be used to animate objects and detect collision between objects. This method saves time and creates more realism when animating objects.
+
+\subsection{Examples of physics engines}
+
+\subsubsection{Box2D}
+
+Box2D is currently one of the most popular 2D physics libraries on github and describes itself as a "2D rigid body simulation library for games" \cite{Catto_2024}.
+
+\subsubsection{LiquidFun}
+
+LiquidFun is an expansion on the previously mentioned Box2D (reference to previous section). It contains the original features of Box2D but expands on it by adding "particle based fluid and soft body simulation" \cite{Miles_2014}.
+
+\subsubsection{Chipmunk2D}
+
+Chipmunk2D aims to provide "a simple, lightweight, fast and portable 2D rigid body physics library" \cite{Slembcke_2023}.
 
 \newpage
 
@@ -484,7 +504,7 @@ There are a few aspects that might make up a level in a videogame:
 \end{itemize}
 
 \subsection{Level transitions}
-Level transitions allow a player from level to another.
+/Level transitions allow a player from level to another.*8
 Level transitions can be one or two way.
 A two way level transition can be used so a player can travel back and forth between connected levels.
 One way level transitions prevent players from the traveling back to previous levels.
