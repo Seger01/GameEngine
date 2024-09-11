@@ -37,14 +37,6 @@ sorting=ynt
 \tableofcontents % creates a table of contents
 \newpage
 
-\section{Seger}
-\subsection{gamespeed}
-How do game engines handle game speed?
-\subsection{2d rendering}
-How do game engines render 2d graphics?
-\subsection{sprites}
-How do game engines handle sprites?
-\newpage
 \section{Game speed}
 Movement is a very important part of any game, but how is movement calculated accurately across different computers?
 Different computers have different internals and thus run games with differing performance.
@@ -52,10 +44,10 @@ One computer might be able to run the games at 60FPS, but another can only run t
 How can you make sure that both users have the exact same experience despite the difference in render speed.
 A difference in render speed is shown in \autoref{fig:TimeBetweenFramesDisplayed} below.
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\textwidth]{time_between_frames.png}
-    \caption{Time between frames displayed}
-    \label{fig:TimeBetweenFramesDisplayed}
+	\centering
+	\includegraphics[width=0.8\textwidth]{time_between_frames.png}
+	\caption{Time between frames displayed}
+	\label{fig:TimeBetweenFramesDisplayed}
 \end{figure}
 
 \subsection{Potential problems}
@@ -73,10 +65,10 @@ So the player with 60FPS is considerably faster than the one with 30FPS.
 This is of course, not ideal, as a game developer you want everyone to move at the same speed despite the computer it is run on.
 The difference in elapsed distance is also shown in \autoref{fig:DifferenceInElapsedDistance} below.
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\textwidth]{difference_in_distance.png}
-    \caption{Difference in elapsed distance}
-    \label{fig:DifferenceInElapsedDistance}
+	\centering
+	\includegraphics[width=0.8\textwidth]{difference_in_distance.png}
+	\caption{Difference in elapsed distance}
+	\label{fig:DifferenceInElapsedDistance}
 \end{figure}
 
 \subsection{Possible solutions}
@@ -87,10 +79,10 @@ A solution to the differing movement speeds between computers, is to create a li
 It is important that the FixedUpdate function is very small, otherwise the FixedUpdate could be too slow to be called at a constant rate each frame, defeating the purpose of the FixedUpdate.
 In \autoref{fig:FixedUpdateView} below it is shown how times between different rendered frames can vary, while the FixedUpdate is called at a constant rate, where the small black bar represents the duration of the FixedUpdate function.
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
-    \caption{Fixed update view}
-    \label{fig:FixedUpdateView}
+	\centering
+	\includegraphics[width=0.6\textwidth]{fixed_update_explanation.png}
+	\caption{Fixed update view}
+	\label{fig:FixedUpdateView}
 \end{figure}
 \newline
 If you were to use the same formula to calculate the player movement as before, it would now show constant movement between computers.
@@ -108,16 +100,10 @@ The deltaTime variable is calculated by the game engine and is globally accessib
 The game engine measures the time between the previous frame and the frame before, then assigns that value to the deltaTime variable.
 This process is shown in \autoref{fig:DeltaTimeValueWhenUsingVariable}  below where the black square is the place deltaTime is used and the 0.14 is the time it took for the previous frame to render.
 \begin{figure}[h!]
-<<<<<<< HEAD
-    \centering
-    \includegraphics[width=0.6\textwidth]{used_deltatime_when_using_variable.png}
-    \caption{deltaTime value when using variable}
-=======
 	\centering
 	\includegraphics[width=0.6\textwidth]{used_deltatime_when_using_variable.png}
 	\caption{deltaTime value when using variable}
 	\label{fig:DeltaTimeValueWhenUsingVariable}
->>>>>>> origin/documents
 \end{figure}
 \newline
 Because deltaTime is used while rendering a frame, it is not possible to know how long it takes to render the rest of the frame.
@@ -132,20 +118,87 @@ The game engine will support 2D games, but how does the game engine render image
 
 \subsection{SDL2}
 A simple way to get graphics working in you own custom application is to use a graphics library.
-One of the most used simple 2D graphics libraries is SDL2.
+One of the most used simple 2D graphics libraries is SDL2 \cite{sdl2}.
 SDL2 is a library written in C that allows the user to have very easy and lightweight cross-platform rendering capabilities.
 SDL2 handles most things, so the user can start SDL2 and load and display images, without having to deal with the OS or GPU.
 SDL2 does not only handle rendering images but is also capable of managing audio, keyboard, mouse and joystick, allowing for easy user input and audio management across different platforms.
 
+\subsubsection{SDL2 POC}
+For the purpose of research a SDL2 POC was created. In this POC the basics of window, renderer and texture creation are covered.
+The POC is an application in which an image could be moved across the screen by using the w,a,s and d, keys.
+A screenshot of the POC can be seen in \autoref{fig:poc_SDL2}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{pos_SDL2_screenshot.png}
+	\caption{Screenshot of SDL2 POC}
+	\label{fig:poc_SDL2}
+\end{figure}
+
 \subsection{Cairo}
-Like SDL2 Cairo offers a library written in C that allows the user to render text and images to the screen in a simple way.
-Unlike SDL2 Cairo does not offer any access to sound, keyboar, mouse and joystick.
+Like SDL2 Cairo \cite{cairo}  offers a library written in C that allows the user to render text and images to the screen in a simple way.
+Unlike SDL2 Cairo does not offer any access to sound, keyboard, mouse and joystick.
 Cairo does not offer these features because the library is meant to be graphics only and as small as possible.
 
-\section{raw doggen met OPENGL}
-pijn
+\subsection{OPENGL}
+OPENGL \cite{opengl} is not a graphics library but is a shader language, which means that is it a programming language that is compiled to run on the GPU for rendering graphics.
+Libraries like SDL2 \cite{sdl2} use OPENGL to render the textures to the screen.
+Directly working with OPENGL gives the developer exact control over the render process, textures and effects on screen.
+But this exact control comes with way more needed knowledge and development time than using SDL2 which has all the GPU related code under the hood.
+
 \newpage
 
+
+\section{Sprites and Textures}
+Sprites and textures are very important in games, they convey the location and look of most in-game objects.
+They are responsible for animations in most 2D games, by showing sprites in a certain order to mimic movement and thereby showing animations and transformations.
+
+\subsection{Storing sprites and animations}
+Sprites are usually stored in .png files because they allow for transparent pixels and have lossless compression.
+When storing a large amount of sprites of similar size and function, they are usually grouped into sprite sheets, which are large png images that consist of all sprites set beside each other in a grid pattern.
+Sprite sheets have animations for certain objects grouped together so they are accessible by consecutive grid coordinates.
+Sprite sheets also have the added benefit of less files in a project, because an entire characters sprites can be on a single sprite sheet.
+An example of a simple sprite sheet was given below in \autoref{fig:example_sprite_sheet}, in the figure a running animation of the character is depicted.
+So in this example a large amount of sprites were created to create a smooth running animation but because they are all on the same sprite sheet the entire animation is stored in a single file.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.2\textwidth]{example_sprite_sheet.png}
+	\caption{Example sprite sheet}
+	\label{fig:example_sprite_sheet}
+\end{figure}
+
+\subsection{Sprite sheet grid structure}
+Sprite sheets are organized in a grid pattern.
+Because all sprites are the same size the image can be divided into grid coordinates by dividing the image width by the sprite width.
+In this way all sprites are able to be selected by choosing x and y coordinates and then extracting that certain part of the image.
+A clear grid structure is also shown in \autoref{fig:example_sprite_sheet}.
+
+\subsection{Showing animations}
+When trying to show the animation depicted in \autoref{fig:example_sprite_sheet} it is important that the image shown to the player alternates between the images in the sprite sheet.
+The speed of alternating between the images is dependent on how fast the animation is supposed to be playing.
+Often times when movement between individual frames is low, the time between frames is also low.
+Because objects like a player require more animations like standing, walking and jumping, it is important that more than one animation can be linked to an object and that it is possible to switch between those animations.
+In extensive game engines switching between animations is handled by an animation system, animations systems are explained further in the Animation systems section.
+
+\subsection{Animation systems}
+An animation system in a game engine is the system that manages the transitions between different animations on the same object.
+An engine like Unity \cite{unity} has an entire graphical animation system built into the engine like shown in \autoref{fig:unity_animation_system_overview}.
+With the graphical animation system that Unity possesses it is possible to define animations, drag and drop them into the animation controller and set transition conditions.
+After the initial setup, the animation system switches the shown animation and sprite automatically.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{unity_animation_system_overview.png}
+	\caption{Unity animation system overview}
+	\label{fig:unity_animation_system_overview}
+\end{figure}
+
+\subsection{Sprite atlases}
+A sprite atlas class is a software component designed to handle and manage sprite sheets.
+This class enables the dissection of a sprite sheet into individual sprites or animations by taking the sheet as input and logically dividing it based on specified parameters like frame width, height, and animation sequences.
+By organizing and extracting these individual frames, the sprite atlas class simplifies the process of managing multiple sprites for character animations, user interface elements, or other game assets.
+
+\newpage
 
 \section{sean}
 \subsection{Multiplayer}
@@ -168,15 +221,15 @@ The \textit{client-server} model is one of the most widely used architectures fo
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Ensures a consistent and authoritative game state.
-    \item Reduces the risk of cheating, as the server controls the game logic.
-    \item Scalable for large games (e.g., MMOs).
+	\item Ensures a consistent and authoritative game state.
+	\item Reduces the risk of cheating, as the server controls the game logic.
+	\item Scalable for large games (e.g., MMOs).
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Requires a reliable and performant server, which adds complexity and cost.
-    \item Introduces latency between clients and the server, which can affect gameplay responsiveness.
+	\item Requires a reliable and performant server, which adds complexity and cost.
+	\item Introduces latency between clients and the server, which can affect gameplay responsiveness.
 \end{itemize}
 
 \subsubsection{Peer-to-Peer (P2P) Model}
@@ -184,15 +237,15 @@ In the \textit{peer-to-peer} model, all players (peers) are directly connected t
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Simple to implement for small-scale games with a limited number of players.
-    \item No need for a dedicated server, reducing costs.
+	\item Simple to implement for small-scale games with a limited number of players.
+	\item No need for a dedicated server, reducing costs.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Difficult to ensure game state consistency across peers.
-    \item Susceptible to cheating, as each peer has authority.
-    \item Latency and synchronization issues are harder to manage.
+	\item Difficult to ensure game state consistency across peers.
+	\item Susceptible to cheating, as each peer has authority.
+	\item Latency and synchronization issues are harder to manage.
 \end{itemize}
 
 \subsubsection{Authoritative Server with Client-Side Prediction}
@@ -200,14 +253,14 @@ This model combines the \textit{client-server} approach with \textit{client-side
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Provides a smoother and more responsive experience for players.
-    \item Retains the security and consistency of a server-authoritative system.
+	\item Provides a smoother and more responsive experience for players.
+	\item Retains the security and consistency of a server-authoritative system.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
-    \item Still subject to latency, although mitigated by prediction.
+	\item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
+	\item Still subject to latency, although mitigated by prediction.
 \end{itemize}
 
 \subsubsection{State Synchronization}
@@ -215,14 +268,14 @@ In \textit{state synchronization}, the server periodically sends the full game s
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
-    \item Ensures that all clients are synchronized with the server.
+	\item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
+	\item Ensures that all clients are synchronized with the server.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Can be bandwidth-intensive, especially for games with a large or complex game state.
-    \item Latency can lead to noticeable delays in the game state being updated on clients.
+	\item Can be bandwidth-intensive, especially for games with a large or complex game state.
+	\item Latency can lead to noticeable delays in the game state being updated on clients.
 \end{itemize}
 
 \subsubsection{Event-Driven Networking}
@@ -230,14 +283,14 @@ In \textit{state synchronization}, the server periodically sends the full game s
 
 \textbf{Advantages}
 \begin{itemize}
-    \item More efficient in terms of bandwidth, as only small packets of information are transmitted.
-    \item Suitable for games with frequent, small state changes, such as mobile or social games.
+	\item More efficient in terms of bandwidth, as only small packets of information are transmitted.
+	\item Suitable for games with frequent, small state changes, such as mobile or social games.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Requires careful ordering and processing of events to ensure consistency.
-    \item Can be difficult to implement for games with complex interactions.
+	\item Requires careful ordering and processing of events to ensure consistency.
+	\item Can be difficult to implement for games with complex interactions.
 \end{itemize}
 
 \subsubsection{Hybrid Models}
@@ -245,14 +298,14 @@ Many games use a \textit{hybrid} approach, combining aspects of different multip
 
 \textbf{Advantages}
 \begin{itemize}
-    \item Offers flexibility to tailor the multiplayer system to different aspects of the game.
-    \item Allows for optimization of performance and scalability where needed.
+	\item Offers flexibility to tailor the multiplayer system to different aspects of the game.
+	\item Allows for optimization of performance and scalability where needed.
 \end{itemize}
 
 \textbf{Challenges}
 \begin{itemize}
-    \item Increases complexity, requiring careful design to ensure all components work seamlessly together.
-    \item May require more effort to maintain and debug.
+	\item Increases complexity, requiring careful design to ensure all components work seamlessly together.
+	\item May require more effort to maintain and debug.
 \end{itemize}
 
 \subsection{Tools}
@@ -270,14 +323,14 @@ and it provides several options for multiplayer networking.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Extensive documentation and community support.
-    \item Tight integration with Unity's development workflow.
-    \item Multiple networking solutions, including Netcode for GameObjects (official) and Mirror (open-source).
+	\item Extensive documentation and community support.
+	\item Tight integration with Unity's development workflow.
+	\item Multiple networking solutions, including Netcode for GameObjects (official) and Mirror (open-source).
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Limited scalability for very large multiplayer projects.
-    \item Mirror, while simple, may require additional setup for complex use cases.
+	\item Limited scalability for very large multiplayer projects.
+	\item Mirror, while simple, may require additional setup for complex use cases.
 \end{itemize}
 
 \paragraph{Unreal Engine} (with Unreal Networking) Unreal Engine,
@@ -285,28 +338,28 @@ a high-end game engine used in AAA titles, includes built-in support for multipl
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Built-in support for replication and remote procedure calls (RPCs).
-    \item Highly scalable, suitable for large multiplayer games.
-    \item Excellent graphics and physics, suitable for visually intensive games.
+	\item Built-in support for replication and remote procedure calls (RPCs).
+	\item Highly scalable, suitable for large multiplayer games.
+	\item Excellent graphics and physics, suitable for visually intensive games.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Steep learning curve, especially for new developers.
-    \item Resource-intensive, requiring powerful hardware for development.
+	\item Steep learning curve, especially for new developers.
+	\item Resource-intensive, requiring powerful hardware for development.
 \end{itemize}
 
 \paragraph{Photon Engine} is a cloud-based multiplayer framework designed to scale from small indie games to large multiplayer experiences.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Cloud-hosted and scalable.
-    \item Supports both authoritative server and peer-to-peer networking models.
-    \item Easy integration with Unity and Unreal Engine.
+	\item Cloud-hosted and scalable.
+	\item Supports both authoritative server and peer-to-peer networking models.
+	\item Easy integration with Unity and Unreal Engine.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Requires a Photon cloud subscription for larger projects.
-    \item May add latency depending on the geographical location of servers.
+	\item Requires a Photon cloud subscription for larger projects.
+	\item May add latency depending on the geographical location of servers.
 \end{itemize}
 
 \paragraph{Godot} (with ENet or Nakama) Godot is a free,
@@ -315,28 +368,28 @@ It has a lightweight networking stack using libraries such as ENet or Nakama.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Free and open-source, ideal for indie developers.
-    \item Lightweight and fast, especially for 2D games.
-    \item Community-driven development and support.
+	\item Free and open-source, ideal for indie developers.
+	\item Lightweight and fast, especially for 2D games.
+	\item Community-driven development and support.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Lacks the advanced tools found in Unity or Unreal for larger games.
-    \item Smaller community compared to other engines.
+	\item Lacks the advanced tools found in Unity or Unreal for larger games.
+	\item Smaller community compared to other engines.
 \end{itemize}
 
 \paragraph{PlayFab} is a backend service for multiplayer games that provides tools like player authentication, leaderboards, and matchmaking.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Fully managed backend service, reducing server-side complexity.
-    \item Integrates with multiple game engines.
-    \item Scales for small and large games.
+	\item Fully managed backend service, reducing server-side complexity.
+	\item Integrates with multiple game engines.
+	\item Scales for small and large games.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Requires an active subscription for large-scale use.
-    \item May not offer the same level of control as self-hosted solutions.
+	\item Requires an active subscription for large-scale use.
+	\item May not offer the same level of control as self-hosted solutions.
 \end{itemize}
 
 \subsubsection{Multiplayer Tools for C++ Student Developers}
@@ -348,76 +401,76 @@ Below are some commonly used tools for networking in C++ game projects.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Lightweight and easy to integrate.
-    \item Provides reliable UDP, packet sequencing, and fragmentation.
-    \item Perfect for real-time, fast-paced multiplayer games.
+	\item Lightweight and easy to integrate.
+	\item Provides reliable UDP, packet sequencing, and fragmentation.
+	\item Perfect for real-time, fast-paced multiplayer games.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Does not offer high-level features such as matchmaking or player authentication.
-    \item Requires manual implementation of game-specific features like lag compensation.
+	\item Does not offer high-level features such as matchmaking or player authentication.
+	\item Requires manual implementation of game-specific features like lag compensation.
 \end{itemize}
 
 \paragraph{RakNet} (or SLikeNet) is a feature-rich networking engine designed for multiplayer games. SLikeNet is its actively maintained fork.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Supports advanced features such as NAT punch-through, RPCs, and object replication.
-    \item Cross-platform, with easy integration into various game engines.
-    \item Highly suitable for both small and large multiplayer games.
+	\item Supports advanced features such as NAT punch-through, RPCs, and object replication.
+	\item Cross-platform, with easy integration into various game engines.
+	\item Highly suitable for both small and large multiplayer games.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item More complex to learn and use compared to simpler libraries like ENet.
-    \item RakNet’s development has slowed, although SLikeNet remains maintained.
+	\item More complex to learn and use compared to simpler libraries like ENet.
+	\item RakNet’s development has slowed, although SLikeNet remains maintained.
 \end{itemize}
 
 \paragraph{asio} (Boost.Asio or standalone) is a general-purpose C++ networking library that supports both TCP and UDP communication and focuses on asynchronous I/O.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item Powerful and flexible, allowing developers to build custom networking solutions.
-    \item Works well for both small-scale and large-scale projects.
-    \item Supports asynchronous programming, which is crucial for multiplayer games.
+	\item Powerful and flexible, allowing developers to build custom networking solutions.
+	\item Works well for both small-scale and large-scale projects.
+	\item Supports asynchronous programming, which is crucial for multiplayer games.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Low-level, so developers need to implement most game-specific networking logic.
-    \item Steeper learning curve due to its focus on concurrency and asynchronous programming.
+	\item Low-level, so developers need to implement most game-specific networking logic.
+	\item Steeper learning curve due to its focus on concurrency and asynchronous programming.
 \end{itemize}
 
 \paragraph{KCP} (A Fast and Reliable UDP Protocol) KCP is a reliable and efficient UDP-based protocol for low-latency multiplayer games.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item High-performance, optimized for low-latency environments.
-    \item Easy to integrate with existing networking systems.
+	\item High-performance, optimized for low-latency environments.
+	\item Easy to integrate with existing networking systems.
 \end{itemize}
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item Lacks higher-level features such as matchmaking, lobbies, or session management.
-    \item Requires developers to implement their own game logic on top of the protocol.
+	\item Lacks higher-level features such as matchmaking, lobbies, or session management.
+	\item Requires developers to implement their own game logic on top of the protocol.
 \end{itemize}
 
 \paragraph{Steamworks SDK} is a set of tools and services provided by Valve for games that are distributed via the Steam platform. It provides networking solutions as well as other features such as achievements, leaderboards, and user authentication.
 \\
 \textbf{Advantages}:
 \begin{itemize}
-    \item \textbf{Integration with Steam}: Provides seamless integration with the Steam platform, including achievements, leaderboards, and Steam Cloud.
-    \item \textbf{Peer-to-peer and server-based networking}: Supports both peer-to-peer connections and server-authoritative networking models.
-    \item \textbf{Matchmaking and lobbies}: Built-in support for lobbies, matchmaking, and friend invites, making it easier to manage multiplayer game sessions.
+	\item \textbf{Integration with Steam}: Provides seamless integration with the Steam platform, including achievements, leaderboards, and Steam Cloud.
+	\item \textbf{Peer-to-peer and server-based networking}: Supports both peer-to-peer connections and server-authoritative networking models.
+	\item \textbf{Matchmaking and lobbies}: Built-in support for lobbies, matchmaking, and friend invites, making it easier to manage multiplayer game sessions.
 \end{itemize}
 
 \textbf{Disadvantages}:
 \begin{itemize}
-    \item \textbf{Limited to Steam}: Only useful for games distributed via Steam, limiting its use for cross-platform or non-Steam games.
-    \item \textbf{Requires Steam API knowledge}: Developers need to be familiar with Steam's API, which adds complexity to the development process.
+	\item \textbf{Limited to Steam}: Only useful for games distributed via Steam, limiting its use for cross-platform or non-Steam games.
+	\item \textbf{Requires Steam API knowledge}: Developers need to be familiar with Steam's API, which adds complexity to the development process.
 \end{itemize}
 
 \newpage
 
 \section{Audio}
-Sound can be considered to be an unmissable part of any video game. It is therefore important for any video game engine to 
+Sound can be considered to be an unmissable part of any video game. It is therefore important for any video game engine to
 support audio playback, and optionally to play multiple audio sources simultaneously and to give these audio sources a sense of physical direction.
 \subsection{Audio on Linux}
 Firstly, the following question must be answered: how is audio played on Linux through C++? The answer to this question can be divided into two types:
@@ -426,10 +479,10 @@ Because of the lack of sources on the former, only the latter is considered in t
 
 There are many audio libraries available for C++ on Linux, some of the most popular of which (intended for usafe in video games) are \cite{Szanto_2018}:
 \begin{itemize}
-    \item FMOD
-    \item IrrKlang
-    \item OpenAL
-    \item SDL2 \footnote{SDL 2 is "a cross-platform development library designed to provide low level access to audio" \cite{sdl2}. It is therefore not strictly designed for just audio playback, but it is extensively used across the industry \cite{sdl2games}.}
+	\item FMOD
+	\item IrrKlang
+	\item OpenAL
+	\item SDL2 \footnote{SDL 2 is "a cross-platform development library designed to provide low level access to audio" \cite{sdl2}. It is therefore not strictly designed for just audio playback, but it is extensively used across the industry \cite{sdl2games}.}
 \end{itemize}
 
 \subsubsection{FMOD} is a proprietary \footnote{Its tools are free for teams with a revenue of < \$200.000 \cite{fmodStudio}.} sound engine used (mainly) in video games.
@@ -437,10 +490,10 @@ It is "widely used within the gaming industry", and "is globally regarded as the
 
 FMOD provides four different products:
 \begin{enumerate}
-    \item FMOD Studio: the software used to create and adding sound and music to a game. In-game, these sounds are played using the FMOD Engine \cite{fmodStudio}.
-    \item FMOD for Unity: similar to FMOD Studio, but integrated into the Unity engine \cite{fmodUnity}.
-    \item FMOD Core: a more low-level alternative to FMOD Studio. As opposed to FMOD Studio, which has a GUI, Core is only available through an API \cite{fmodCore}.
-    \item FMOD.io: a library of various sound effects / files \cite{fmodIo}.
+	\item FMOD Studio: the software used to create and adding sound and music to a game. In-game, these sounds are played using the FMOD Engine \cite{fmodStudio}.
+	\item FMOD for Unity: similar to FMOD Studio, but integrated into the Unity engine \cite{fmodUnity}.
+	\item FMOD Core: a more low-level alternative to FMOD Studio. As opposed to FMOD Studio, which has a GUI, Core is only available through an API \cite{fmodCore}.
+	\item FMOD.io: a library of various sound effects / files \cite{fmodIo}.
 \end{enumerate}
 
 
@@ -450,7 +503,7 @@ How can multiple sounds be played simultaneously?
 How can stereo headphones be used to create directional audio?
 \section{save data}
 What are common save data structures?
-encryptie? 
+encryptie?
 \newpage
 
 \section{angel}
