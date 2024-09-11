@@ -23,7 +23,7 @@ int main() {
 
     // 3. Load a sound file (sound will be loaded into memory)
     FMOD::Sound* sound = nullptr;
-    result = system->createSound("../../resources/engine.mp3", FMOD_3D, 0, &sound); // Load your sound
+    result = system->createSound("../../resources/guitar_C3_very-long_forte_normal.mp3", FMOD_3D, 0, &sound); // Load your sound
     ERRCHECK(result);
 
     // Set the sound as 3D
@@ -33,6 +33,7 @@ int main() {
     FMOD::Channel* channel = nullptr;
     result = system->playSound(sound, 0, false, &channel); // Play the sound immediately
     ERRCHECK(result);
+    channel->setVolume(4.5);
 
     // Listener position, facing forward
     FMOD_VECTOR listenerPos = {0.0f, 0.0f, 0.0f};
@@ -48,8 +49,8 @@ int main() {
     system->set3DSettings(dopplerScale, distanceFactor, rolloffScale);
 
     // Sound source position
-    FMOD_VECTOR soundPos = {10.0f, 5.0f, 0.0f}; // 10 units in x direction
-    FMOD_VECTOR soundVel = {5.0f, 0.0f, 0.0f}; // Not moving
+    FMOD_VECTOR soundPos = {0.0f, 5.0f, 0.0f}; // 10 units in x direction
+    FMOD_VECTOR soundVel = {0.0f, 0.0f, 0.0f}; // Not moving
     channel->set3DAttributes(&soundPos, &soundVel);
 
     // 5. Loop to keep FMOD updating and sound playing
