@@ -11,8 +11,8 @@ void ERRCHECK(FMOD_RESULT result) {
     }
 }
 
-int main() {
-    // 1. Create an FMOD system object
+void fmod() {
+   // 1. Create an FMOD system object
     FMOD::System* system = nullptr;
     FMOD_RESULT result = FMOD::System_Create(&system); // Create the main system object.
     ERRCHECK(result);
@@ -103,6 +103,8 @@ int main() {
     ERRCHECK(result);
     result = system->release(); // Release the FMOD system object
     ERRCHECK(result);
+}
 
-    return 0;
+int main() {
+    fmod();
 }
