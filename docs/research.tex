@@ -499,8 +499,11 @@ FMOD provides four different products:
 A small PoC using fmod core has been created to test and showcase playing a sound.
 
 \subsubsection{IrrKlang}
-IrrKlang is an open-source audio library with support for 2D and 3D audio for Windows, Linux and MacOS.
+IrrKlang is an open-source audio library with support for 2D and 3D audio for Windows, Linux and MacOS \cite{IrrKlang}.
 
+An attempt was made to create a PoC for playing audio through this library. This was however quickly dropped, because of the amount of extra libraries required to get irrklang to perform basic functionalities.
+
+\subsubsection{OpenAL}
 \subsection{Multiple audio sources}
 How can multiple sounds be played simultaneously?
 \subsection{Directional audio}
@@ -511,7 +514,7 @@ How can stereo headphones be used to create directional audio?
     \begin{tabularx}{\textwidth}{|c|X|X|X|} \hline
         \textbf{Engine} & \textbf{Ease of use} & \textbf{Documentation} & \textbf{Features} \\ \hline
         Fmod & Not optimal; requries a significant amount of code to play audio. & Extensive, but not always comprehensible & Very extensive support for 2D and 3D mixing, metadata etc. \\ \hline
-        IrrKlang & & & \\ \hline
+        IrrKlang & Very poor, required (multiple) libraries to perform basic tasks such as playing .mp3 audio files & \textit{Not researched} & \textit{Not researches} \\ \hline
     \end{tabularx}
     \caption{Comparison between multiple audio libraries}
 	\label{fig:audioLibComparison}
