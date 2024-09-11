@@ -22,18 +22,32 @@ int main() {
     ERRCHECK(result);
 
     // 3. Load a sound file (sound will be loaded into memory)
-    FMOD::Sound* sound = nullptr;
-    result = system->createSound("../../resources/guitar_C3_very-long_forte_normal.mp3", FMOD_3D, 0, &sound); // Load your sound
+    FMOD::Sound* soundC = nullptr;
+    result = system->createSound("../../resources/guitar_C3_very-long_forte_normal.mp3", FMOD_3D, 0, &soundC); // Load your sound
+    ERRCHECK(result);
+    FMOD::Sound* soundE = nullptr;
+    result = system->createSound("../../resources/guitar_E3_very-long_forte_normal.mp3", FMOD_3D, 0, &soundE); // Load your sound
+    ERRCHECK(result);
+    FMOD::Sound* soundG = nullptr;
+    result = system->createSound("../../resources/guitar_G3_very-long_forte_normal.mp3", FMOD_3D, 0, &soundG); // Load your sound
     ERRCHECK(result);
 
     // Set the sound as 3D
-    sound->set3DMinMaxDistance(1.0f, 1000.0f);
+    soundC->set3DMinMaxDistance(1.0f, 1000.0f);
+    soundE->set3DMinMaxDistance(1.0f, 1000.0f);
+    soundG->set3DMinMaxDistance(1.0f, 1000.0f);
 
     // 4. Play the sound
-    FMOD::Channel* channel = nullptr;
-    result = system->playSound(sound, 0, false, &channel); // Play the sound immediately
+    FMOD::Channel* channelL = nullptr;
+    FMOD::Channel* channelR = nullptr;
+    result = system->playSound(soundC, 0, false, &channelL); // Play the sound immediately
     ERRCHECK(result);
-    channel->setVolume(4.5);
+    result = system->playSound(soundE, 0, false, &channelR); // Play the sound immediately
+    ERRCHECK(result);
+    result = system->playSound(soundG, 0, false, &channelR); // Play the sound immediately
+    ERRCHECK(result);
+    channelL->setVolume(4.5);
+    channelR->setVolume(4.5);
 
     // Listener position, facing forward
     FMOD_VECTOR listenerPos = {0.0f, 0.0f, 0.0f};
@@ -49,9 +63,12 @@ int main() {
     system->set3DSettings(dopplerScale, distanceFactor, rolloffScale);
 
     // Sound source position
-    FMOD_VECTOR soundPos = {0.0f, 5.0f, 0.0f}; // 10 units in x direction
-    FMOD_VECTOR soundVel = {0.0f, 0.0f, 0.0f}; // Not moving
-    channel->set3DAttributes(&soundPos, &soundVel);
+    FMOD_VECTOR soundLPos = {-3.0f, 0.0f, 0.0f}; // 10 units in x direction
+    FMOD_VECTOR soundLVel = {0.0f, 0.0f, 0.0f}; // Not moving
+    channelL->set3DAttributes(&soundLPos, &soundLVel);
+    FMOD_VECTOR soundRPos = {3.0f, 0.0f, 0.0f}; // 10 units in x direction
+    FMOD_VECTOR soundRVel = {0.0f, 0.0f, 0.0f}; // Not moving
+    channelR->set3DAttributes(&soundRPos, &soundRVel);
 
     // 5. Loop to keep FMOD updating and sound playing
     bool isPlaying = true;
@@ -59,21 +76,28 @@ int main() {
         system->update(); // Regular FMOD updates
 
         // Update location
-        soundPos.x -= soundVel.x * 0.1f;
-        channel->set3DAttributes(&soundPos, &soundVel);
+        soundLPos.x -= soundLVel.x * 0.1f;
+        soundRPos.x -= soundRVel.x * 0.1f;
+        channelL->set3DAttributes(&soundLPos, &soundLVel);
+        channelR->set3DAttributes(&soundRPos, &soundRVel);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // Check if the sound is still playing
         bool playing = false;
-        channel->isPlaying(&playing);
+        channelL->isPlaying(&playing);
+        channelR->isPlaying(&playing);
         if (!playing) {
             isPlaying = false; // Stop the loop when the sound ends
         }
     }
 
     // 6. Clean up
-    result = sound->release(); // Release the sound resource
+    result = soundC->release(); // Release the sound resource
+    ERRCHECK(result);
+    result = soundE->release(); // Release the sound resource
+    ERRCHECK(result);
+    result = soundG->release(); // Release the sound resource
     ERRCHECK(result);
     result = system->close();  // Close the FMOD system
     ERRCHECK(result);
