@@ -1,5 +1,9 @@
 #include "player.h"
 
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+const int BLOCK_SIZE = 50;
+
 Player::Player(int x, int y, SDL_Color color)
     : x(x), y(y), color(color), speed(5) {}
 
@@ -26,7 +30,23 @@ void Player::handleInput(SDL_Scancode up, SDL_Scancode down, SDL_Scancode left, 
 
 void Player::update()
 {
-    // Update player state if needed
+    // Ensure the player does not go out of bounds
+    if (x < 0)
+    {
+        x = 0;
+    }
+    if (x + BLOCK_SIZE > SCREEN_WIDTH)
+    {
+        x = SCREEN_WIDTH - BLOCK_SIZE;
+    }
+    if (y < 0)
+    {
+        y = 0;
+    }
+    if (y + BLOCK_SIZE > SCREEN_HEIGHT)
+    {
+        y = SCREEN_HEIGHT - BLOCK_SIZE;
+    }
 }
 
 void Player::render(SDL_Renderer *renderer)
