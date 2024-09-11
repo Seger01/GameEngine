@@ -1,10 +1,21 @@
 Plan van Aanpak:
 - Doorlopen hoofdstukken
 - Vragen feedback (planning in order?)
+    - Feedback: 'dat zal moeten blijken'
+    - Feedback 2: 'Zijn jullie er tevreden mee?'. Belangrijk: PvA is om op terug te vallen wanneer samenwerking binnen de groep niet goed gaat.
+    - Inhoudsopgave: typfout
+    - Project organisation: vermijd onnodige informatie (benoemd onnodige fluff bij parties involved)
+    - 'Ik denk dat jullie er best wel wat belangrijke dingen in hebben staan.'
 
 Onderzoek:
 - Verdeling (iedereen benoemen waarmee die bezig is)
 - Vraag: waarom sdl2 geadviseerd? Ervaringen vorige groepjes?
+    - Grootste voordeel van sdl2: de hoeveelheid beschikbare informatie, veel meer dan alternatieven.
+    - Blijft volledig eigen keuze, maar kan een grotere uitdaging zijn.
+- Evt opfrissen wat betreft multiplayer: tcp/udp
+- Hoeveelheid onderzoek in dit stadium: 'Zeker in dit stadium mis ik niks'. 
+- Antwoord op 'missen we iets?' -'Ik denk het niet'.
+- fmod: geen herinnering aan groepen die fmod gebruiken
 
 Engine wow factor:
 - Veel entities en particles
@@ -15,6 +26,21 @@ Extra's
 - Hoogste prio: multiplayer
 - Advies testen multiplayer?
 - Wat is de uitdaging binnen multiplayer (ervaring vorige groepjes)(zelf maken of library)?
+    - Antwoord: weinig groepjes doen het. Vaak kunnen ze snel elkaar zien
+    - Pijnpunt: hoe worden synchronisatie en deadlocks geregeld?
+    - Libraries of niet: er worden op zijn minst libraries gebruikt om berichten over en weer te sturen
+    - Gebruik van multiplayer systeem van engines (e.g. unity, unreal) is niet te adviseren
+    - Bob komt hier later op terug, gaat terugkijken wat vorige groepen hebben gedaan.
 - Iets mindere focus: particles
 - Adaptieve muziek / audio
 - Evt. benoemen Jenkins automation
+- Bob vindt dynamische verlichting gaaf
+
+POC's
+- poc audio laten zien
+- poc multiplayer laten zien
+
+______________________________________________________________________________________
+antwoord vraag:
+- overleg met klant wat die wil. Antwoord: heeft een maximum levelgroottte van 9 schermen (ongeveer 3x3). Moeten onderzoeken of het daarbij nodig is om de optimalisaties te doen. 
+- Beoordeling is op engine: we moeten zelf aangeven waar de mooie onderdelen zitten, ook wanneer het niet in de validatieapp voorkomt
