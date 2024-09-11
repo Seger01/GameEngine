@@ -50,6 +50,25 @@ target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.so)
 # target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
 
 # =====================
+# IrrKlang Integration
+# =====================
+
+# Path to the FMOD library and include directories
+set(IRRKLANG_DIR "~/IrrKlang/irrKlang-64bit-1.6.0")  # Replace this with the path where you unpacked FMOD
+set(IRRKLANG_INCLUDE_DIR "${IRRKLANG_DIR}/include")
+set(IRRKLANG_LIB_DIR "${IRRKLANG_DIR}/bin/linux-gcc-64")
+
+# Include the FMOD headers
+include_directories(${IRRKLANG_INCLUDE_DIR})
+
+# Link FMOD library (.so for dynamic linking)
+target_link_libraries(engine_BRAVO ${IRRKLANG_LIB_DIR}/libIrrKlang.so)
+# target_link_libraries(engine_BRAVO ${IRRKLANG_LIB_DIR}/ikpMP3.so) Does not work   
+
+# Optionally, if you want static linking, use this:
+# target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
+
+# =====================
 # Google Test Integration
 # =====================
 

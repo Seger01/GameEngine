@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <irrKlang.h>
 
 void ERRCHECK(FMOD_RESULT result) {
     if (result != FMOD_OK) {
@@ -105,6 +106,29 @@ void fmod() {
     ERRCHECK(result);
 }
 
+void IrrKlang() {
+    // Create the engine
+    irrklang::ISoundEngine *engine = irrklang::createIrrKlangDevice();
+    if (!engine)
+    {
+        std::cout << "Could not startup irrklang engine" << std::endl;
+        return;
+    }
+
+    // Play a sound file, looped
+    engine->play2D("../../resources/guitar_C3_very-long_forte_normal.mp3", true);
+
+char c;
+    do {
+        std::cout << "Waiting to press key" << std::endl;
+        std::cin >> c;
+    } while (c != 'q');
+
+    // Delete the engine
+    engine->drop();
+}
+
 int main() {
-    fmod();
+    //fmod();
+    IrrKlang();
 }
