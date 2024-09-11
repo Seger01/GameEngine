@@ -4,6 +4,8 @@
 \usepackage{graphicx} % allows for images to be added to the latex document
 \usepackage{tabularx}
 \usepackage[T1]{fontenc}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage[australian,american]{babel}
 
 \usepackage{hyperref} % allows for hyperlinks to be added to the document
 \hypersetup{
@@ -504,6 +506,8 @@ IrrKlang is an open-source audio library with support for 2D and 3D audio for Wi
 An attempt was made to create a PoC for playing audio through this library. This was however quickly dropped, because of the amount of extra libraries required to get irrklang to perform basic functionalities.
 
 \subsubsection{OpenAL}
+"OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications. \cite{OpenAL}"
+
 \subsection{Multiple audio sources}
 How can multiple sounds be played simultaneously?
 \subsection{Directional audio}
@@ -640,6 +644,8 @@ example of a reference \cite{Gambetta_2024} like this test.
 \newpage
 
 \section{Annex}
-\printbibliography %Prints bibliography
+\begin{otherlanguage}{australian}
+	\printbibliography
+\end{otherlanguage}
 
 \end{document} % This is the end of the document
