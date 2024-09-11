@@ -2,7 +2,7 @@
 
 \usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
 \usepackage{graphicx} % allows for images to be added to the latex document
-
+\usepackage{tabularx}
 \usepackage[T1]{fontenc}
 
 \usepackage{hyperref} % allows for hyperlinks to be added to the document
@@ -437,11 +437,27 @@ FMOD provides four different products:
     \item FMOD.io: a library of various sound effects / files \cite{fmodIo}.
 \end{enumerate}
 
+A small PoC using fmod core has been created to test and showcase playing a sound.
+
+\subsubsection{IrrKlang}
+IrrKlang is an open-source audio library with support for 2D and 3D audio for Windows, Linux and MacOS.
 
 \subsection{Multiple audio sources}
 How can multiple sounds be played simultaneously?
 \subsection{Directional audio}
 How can stereo headphones be used to create directional audio?
+\subsection{Library comparison}
+\begin{figure}[h!]
+	\centering
+    \begin{tabularx}{\textwidth}{|c|X|X|X|} \hline
+        \textbf{Engine} & \textbf{Ease of use} & \textbf{Documentation} & \textbf{Features} \\ \hline
+        Fmod & Not optimal; requries a significant amount of code to play audio. & Extensive, but not always comprehensible & Very extensive support for 2D and 3D mixing, metadata etc. \\ \hline
+        IrrKlang & & & \\ \hline
+    \end{tabularx}
+    \caption{Comparison between multiple audio libraries}
+	\label{fig:audioLibComparison}
+\end{figure}
+
 \section{save data}
 What are common save data structures?
 encryptie? 
