@@ -118,7 +118,7 @@ This is why the value for the previous frame is used, although this means the de
 The game engine has to be able to display and render images on screen.
 The game engine will support 2D games, but how does the game engine render images to the screen?
 
-\subsection{SDL2}
+\subsection{SDL2} \label{SDL2}
 A simple way to get graphics working in you own custom application is to use a graphics library.
 One of the most used simple 2D graphics libraries is SDL2 \cite{sdl2}.
 SDL2 is a library written in C that allows the user to have very easy and lightweight cross-platform rendering capabilities.
@@ -506,7 +506,12 @@ IrrKlang is an open-source audio library with support for 2D and 3D audio for Wi
 An attempt was made to create a PoC for playing audio through this library. This was however quickly dropped, because of the amount of extra libraries required to get irrklang to perform basic functionalities.
 
 \subsubsection{OpenAL}
-"OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications. \cite{OpenAL}"
+"OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications." It is advertised is being similar in usage to the OpenGL graphics library \cite{OpenAL}.
+Experience has taught that OpenGL is cumbersome to work with, and because of its advertised similarity, OpenAL is not further considered.
+
+\subsubsection{SDL2}
+SDL2 is introduced in \ref{SDL2}. It can additionally be used to play basic audio files, using its audiostream API \cite{SDLaudioStream}.
+Because of the lack of support for multiple channels or surround sound, the SDL mixer library has added this functionality \cite{SDLmixer}.
 
 \subsection{Multiple audio sources}
 How can multiple sounds be played simultaneously?
@@ -518,7 +523,8 @@ How can stereo headphones be used to create directional audio?
     \begin{tabularx}{\textwidth}{|c|X|X|X|} \hline
         \textbf{Engine} & \textbf{Ease of use} & \textbf{Documentation} & \textbf{Features} \\ \hline
         Fmod & Not optimal; requries a significant amount of code to play audio. & Extensive, but not always comprehensible & Very extensive support for 2D and 3D mixing, metadata etc. \\ \hline
-        IrrKlang & Very poor, required (multiple) libraries to perform basic tasks such as playing .mp3 audio files & \textit{Not researched} & \textit{Not researches} \\ \hline
+        IrrKlang & Very poor, required (multiple) libraries to perform basic tasks such as playing .mp3 audio files & \textit{Not researched} & \textit{Not researched} \\ \hline
+		OpenAL & Very poor, advertised as similar to OpenGL graphics library & \textit{Not researched} & \textit{Not researched} \\ \hline
     \end{tabularx}
     \caption{Comparison between multiple audio libraries}
 	\label{fig:audioLibComparison}
