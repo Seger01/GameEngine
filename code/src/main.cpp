@@ -1,154 +1,122 @@
+#include <string>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <iostream>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 
-// Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-const int MOVE_SPEED = 10; // Speed of movement in pixels per keypress
-
-bool init(SDL_Window **window, SDL_Renderer **renderer);
-bool loadMedia(SDL_Renderer *renderer, SDL_Texture **texture);
-void close(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *texture);
-
-int main(int argc, char *args[]) {
-  SDL_Window *window = nullptr;
-  SDL_Renderer *renderer = nullptr;
-  SDL_Texture *texture = nullptr;
-
-  if (!init(&window, &renderer)) {
-    std::cout << "Failed to initialize!\n";
-    return -1;
-  }
-
-  if (!loadMedia(renderer, &texture)) {
-    std::cout << "Failed to load media!\n";
-    return -1;
-  }
-
-  // Main loop flag
-  bool quit = false;
-  SDL_Event e;
-
-  // Define the rectangle for rendering the texture
-  SDL_Rect renderQuad;
-  renderQuad.x = 100; // X position
-  renderQuad.y = 50;  // Y position
-  renderQuad.w = 100; // Width of the image
-  renderQuad.h = 150; // Height of the image
-
-  while (!quit) {
-    while (SDL_PollEvent(&e) != 0) {
-      if (e.type == SDL_QUIT) {
-        quit = true;
-      }
-
-      // Handle key press events
-      if (e.type == SDL_KEYDOWN) {
-        switch (e.key.keysym.sym) {
-        case SDLK_w: // Move up
-          renderQuad.y -= MOVE_SPEED;
-          break;
-        case SDLK_s: // Move down
-          renderQuad.y += MOVE_SPEED;
-          break;
-        case SDLK_a: // Move left
-          renderQuad.x -= MOVE_SPEED;
-          break;
-        case SDLK_d: // Move right
-          renderQuad.x += MOVE_SPEED;
-          break;
-        }
-      }
+int initSDL(SDL_Window*& window, SDL_Renderer*& renderer) {
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return -1;
     }
 
-    // Make sure the image stays within screen bounds
-    if (renderQuad.x < 0)
-      renderQuad.x = 0;
-    if (renderQuad.x + renderQuad.w > SCREEN_WIDTH)
-      renderQuad.x = SCREEN_WIDTH - renderQuad.w;
-    if (renderQuad.y < 0)
-      renderQuad.y = 0;
-    if (renderQuad.y + renderQuad.h > SCREEN_HEIGHT)
-      renderQuad.y = SCREEN_HEIGHT - renderQuad.h;
+    // Create window
+    window = SDL_CreateWindow("SDL2 Sprite Sheet", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
+                              SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
 
-    // Clear screen
-    SDL_RenderClear(renderer);
+    // Create renderer
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
 
-    // Render the texture to the specified rectangle
-    SDL_RenderCopy(renderer, texture, NULL, &renderQuad);
-
-    // Update screen
-    SDL_RenderPresent(renderer);
-  }
-
-  close(window, renderer, texture);
-  return 0;
+    return 0;
 }
 
-bool init(SDL_Window **window, SDL_Renderer **renderer) {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError()
-              << "\n";
-    return false;
-  }
+void unloadTexture(SDL_Texture*& texture) { SDL_DestroyTexture(texture); }
 
-  *window = SDL_CreateWindow("SDL2 PNG Example", SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                             SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-  if (*window == nullptr) {
-    std::cout << "Window could not be created! SDL_Error: " << SDL_GetError()
-              << "\n";
-    return false;
-  }
+SDL_Texture* loadTexture(SDL_Renderer*& renderer, std::string filePath) {
+    // Load image
+    SDL_Surface* tempSurface = IMG_Load(filePath.c_str());
+    if (tempSurface == NULL) {
+        printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
+        return nullptr;
+    }
 
-  *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-  if (*renderer == nullptr) {
-    std::cout << "Renderer could not be created! SDL_Error: " << SDL_GetError()
-              << "\n";
-    return false;
-  }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+    SDL_FreeSurface(tempSurface);
 
-  int imgFlags = IMG_INIT_PNG;
-  if (!(IMG_Init(imgFlags) & imgFlags)) {
-    std::cout << "SDL_image could not initialize! SDL_image Error: "
-              << IMG_GetError() << "\n";
-    return false;
-  }
-
-  return true;
+    return texture;
 }
 
-bool loadMedia(SDL_Renderer *renderer, SDL_Texture **texture) {
-  // Load PNG texture
-  std::string path =
-      "player.png"; // Make sure this path points to a valid PNG file
-  SDL_Surface *loadedSurface = IMG_Load(path.c_str());
-  if (loadedSurface == nullptr) {
-    std::cout << "Unable to load image " << path
-              << "! SDL_image Error: " << IMG_GetError() << "\n";
-    return false;
-  }
-
-  *texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-  if (*texture == nullptr) {
-    std::cout << "Unable to create texture from " << path
-              << "! SDL_Error: " << SDL_GetError() << "\n";
-    return false;
-  }
-
-  SDL_FreeSurface(loadedSurface);
-  return true;
+void deInitSDL(SDL_Window*& window, SDL_Renderer*& renderer) {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
-void close(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *texture) {
-  SDL_DestroyTexture(texture);
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  texture = nullptr;
-  renderer = nullptr;
-  window = nullptr;
+int main(int argc, char* args[]) {
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
 
-  IMG_Quit();
-  SDL_Quit();
+    initSDL(window, renderer);
+
+    bool quit = false;
+    SDL_Event event;
+
+    SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
+
+    // Variables for animation timing and sprite movement
+    Uint32 lastTime = 0;            // Time of the last frame change
+    int frame = 0;                  // Current frame (sprite in the sprite sheet)
+    const int spriteWidth = 16;     // Width of each sprite
+    const int spriteHeight = 25;    // Height of each sprite
+    const int frameCount = 6;       // Total number of frames in the sprite sheet
+    const int animationSpeed = 200; // Time between frames in milliseconds (200 ms)
+
+    while (!quit) {
+        // Event handling
+        while (SDL_PollEvent(&event) != 0) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        // Get the current time in milliseconds
+        Uint32 currentTime = SDL_GetTicks();
+
+        // Check if 200 ms have passed
+        if (currentTime > lastTime + animationSpeed) {
+            // Update to the next frame
+            frame = (frame + 1) % frameCount; // Loops back to 0 after the last frame
+
+            // Update the last frame change time
+            lastTime = currentTime;
+        }
+
+        // Clear screen
+        SDL_RenderClear(renderer);
+
+        // Define the sprite sheet source rect
+        SDL_Rect srcRect;
+        srcRect.x = (frame * spriteWidth) + 22; // Move horizontally in the sprite sheet
+        srcRect.y = 187;          // Keep the vertical position constant (you can change this for vertical movement)
+        srcRect.w = spriteWidth;  // The width of the sprite
+        srcRect.h = spriteHeight; // The height of the sprite
+
+        // Define the destination rect where the image will be drawn
+        SDL_Rect destRect;
+        destRect.x = 100;    // The x position on the screen
+        destRect.y = 100;    // The y position on the screen
+        destRect.w = 18 * 4; // The width of the drawn image (scaling)
+        destRect.h = 26 * 4; // The height of the drawn image (scaling)
+
+        // Copy part of the sprite sheet to the renderer
+        SDL_RenderCopy(renderer, spriteSheetTexture, &srcRect, &destRect);
+
+        // Update the screen
+        SDL_RenderPresent(renderer);
+    }
+
+    // Clean up
+    unloadTexture(spriteSheetTexture);
+    deInitSDL(window, renderer);
+    return 0;
 }
