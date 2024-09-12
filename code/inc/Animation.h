@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 // struct spriteCoords {
 //     int spriteStart = 0;
