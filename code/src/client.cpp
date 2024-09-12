@@ -1,5 +1,5 @@
 #include "client.h"
-#include "game.h"
+#include "gameClient.h"
 
 #include <iostream>
 #include <cstdlib> // For rand()
@@ -89,7 +89,7 @@ void Client::init()
 void Client::run()
 {
     // Start game
-    Game game(false, peer);
+    GameClient game(peer);
     game.init();
     game.run();
     game.cleanup();

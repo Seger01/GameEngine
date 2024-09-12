@@ -1,5 +1,5 @@
 #include "server.h"
-#include "game.h"
+#include "gameServer.h"
 
 #include <iostream>
 
@@ -24,7 +24,7 @@ void Server::init()
 void Server::run()
 {
     // Start game
-    Game game(true, peer);
+    GameServer game(peer);
     game.init();
     game.run();
     game.cleanup();
