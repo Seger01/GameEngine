@@ -101,7 +101,6 @@ enum GameMessages
 
 struct PlayerInput
 {
-    int playerId;
     bool up;
     bool down;
     bool left;
@@ -146,7 +145,6 @@ protected:
     SDL_Renderer *renderer;
     bool quit;
     int frameDelay;
-    int playerID;
 
     std::vector<Player> players;
 

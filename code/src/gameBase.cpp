@@ -14,7 +14,7 @@ const int SCREEN_HEIGHT = 480;
 const int BLOCK_SIZE = 50;
 
 GameBase::GameBase(SLNet::RakPeerInterface *peer)
-    : window(NULL), renderer(NULL), quit(false), frameDelay(1000 / 60), playerID(-1)
+    : window(NULL), renderer(NULL), quit(false), frameDelay(1000 / 60)
 {
     this->peer = peer;
 }

@@ -90,7 +90,8 @@ void GameServer::handleNetwork()
             SLNet::BitStream bsIn(packet->data, packet->length, false);
             bsIn.IgnoreBytes(sizeof(SLNet::MessageID));
             bsIn.Read(playerInput);
-            std::cout << "player ID: " << playerInput.playerId << std::endl;
+            SLNet::RakNetGUID clientGUID = packet->guid;
+
             std::cout << "player up: " << playerInput.up << std::endl;
             std::cout << "player down: " << playerInput.down << std::endl;
             std::cout << "player left: " << playerInput.left << std::endl;
@@ -99,9 +100,11 @@ void GameServer::handleNetwork()
 
             for (int i = 0; i < players.size(); i++) // Server updates all player locations
             {
-                if (i == playerInput.playerId)
+                auto clientID = clientIds.find(clientGUID);
+                if (clientID != clientIds.end())
                 {
-                    players[i].handleInput(playerInput.up, playerInput.down, playerInput.left, playerInput.right);
+                    int playerIndex = clientID->second;
+                    players[playerIndex].handleInput(playerInput.up, playerInput.down, playerInput.left, playerInput.right);
                 }
             }
 
@@ -125,10 +128,15 @@ void GameServer::handleNetwork()
         case ID_PLAYER_INIT:
         {
             std::cout << "Received a message with identifier ID_PLAYER_INIT" << std::endl;
+
             PlayerInit playerInit;
+
             SLNet::BitStream bsIn(packet->data, packet->length, false);
             bsIn.IgnoreBytes(sizeof(SLNet::MessageID));
             bsIn.Read(playerInit);
+
+            SLNet::RakNetGUID clientGUID = packet->guid;
+            clientIds[clientGUID] = nextClientId++; // Add to map and increment nextClientId
             std::cout << "player colorRed: " << playerInit.colorRed << std::endl;
             std::cout << "player colorGreen: " << playerInit.colorGreen << std::endl;
             std::cout << "player colorBlue: " << playerInit.colorBlue << std::endl;

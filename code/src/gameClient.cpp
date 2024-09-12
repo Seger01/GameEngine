@@ -110,8 +110,6 @@ bool GameClient::init()
                 std::cout << "player posX: " << playerState.posX << std::endl;
                 std::cout << "player posY: " << playerState.posY << "\n"
                           << std::endl;
-
-                this->playerID = playerState.playerId;
                 break;
             }
             default:
@@ -137,7 +135,6 @@ void GameClient::handleEvents()
     // Client reads all key inputs
     const Uint8 *currentKeyStates = SDL_GetKeyboardState(NULL);
     PlayerInput playerInput;
-    playerInput.playerId = this->playerID;
     playerInput.up = currentKeyStates[SDL_SCANCODE_UP];
     playerInput.down = currentKeyStates[SDL_SCANCODE_DOWN];
     playerInput.left = currentKeyStates[SDL_SCANCODE_LEFT];

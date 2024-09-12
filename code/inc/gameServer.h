@@ -15,7 +15,7 @@ protected:
     void handleNetwork() override;
 
 protected:
-    std::map<SLNet::SystemAddress, int> clientIds;
+    std::map<SLNet::RakNetGUID, int> clientIds;
     int nextClientId;
 };
 #endif // GAME_SERVER_H
