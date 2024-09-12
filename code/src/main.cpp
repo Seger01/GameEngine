@@ -5,8 +5,7 @@
 #include <thread>
 #include <irrKlang.h>
 #include <SDL2/SDL.h>
-
-#include "sdl2.h"
+#include <SDL2/SDL_mixer.h>
 
 void ERRCHECK(FMOD_RESULT result) {
     if (result != FMOD_OK) {
@@ -131,53 +130,59 @@ char c;
     engine->drop();
 }
 
+void audio_callback(void *userdata, Uint8 *stream, int len) {
+    // Cast userdata to a Uint8 pointer to access the audio buffer
+    Uint8 *audio_pos = (Uint8 *)userdata;
+
+    // If there's less audio remaining than we need, fill with silence (0s)
+    if (len > (int)(*(Uint32 *)userdata)) {
+        len = *(Uint32 *)userdata;
+    }
+
+    // Copy the audio data to the stream (output buffer)
+    SDL_memcpy(stream, audio_pos, len);
+
+    // Move the audio pointer and adjust the length of remaining audio
+    audio_pos += len;
+    *(Uint32 *)userdata -= len;
+}
+
 void sdlMixer() {
-    using std::cerr;
-    using std::endl;
-
-        auto sys = sdl2::make_sdlsystem(SDL_INIT_EVERYTHING);
-    if (!sys) {
-        cerr << "Error creating SDL2 system: " << SDL_GetError() << endl;
-        return 1;
+    // Initialize SDL with audio support
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return;
     }
 
-    auto win = sdl2::make_window("Hello World!", 100, 100, 620, 387, SDL_WINDOW_SHOWN);
-    if (!win) {
-        cerr << "Error creating window: " << SDL_GetError() << endl;
-        return 1;
+    // Initialize SDL_mixer
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+        return;
     }
 
-    auto ren
-        = sdl2::make_renderer(win.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!ren) {
-        cerr << "Error creating renderer: " << SDL_GetError() << endl;
-        return 1;
+    // Load the MP3 file
+    Mix_Music *music = Mix_LoadMUS("sound.mp3");
+    if (music == NULL) {
+        printf("Failed to load MP3 file! SDL_mixer Error: %s\n", Mix_GetError());
+        return;
     }
 
-    auto file = SDL_RWFromFile(IMGDIR "grumpy-cat.bmp", "rb");
-    if (file == nullptr) {
-        cerr << "Error reading file: " << SDL_GetError() << endl;
-        return 1;
+    // Play the music (-1 means loop infinitely, 0 means play once)
+    if (Mix_PlayMusic(music, 1) == -1) {
+        printf("Failed to play music! SDL_mixer Error: %s\n", Mix_GetError());
+        Mix_FreeMusic(music);
+        return;
     }
 
-    auto bmp = sdl2::make_bmp(file);
-    if (!bmp) {
-        cerr << "Error creating surface: " << SDL_GetError() << endl;
-        return 1;
+    // Wait until the music has finished playing
+    while (Mix_PlayingMusic()) {
+        SDL_Delay(100); // Sleep for 100 ms
     }
 
-    auto tex = sdl2::make_texture(ren.get(), bmp.get());
-    if (!tex) {
-        cerr << "Error creating texture: " << SDL_GetError() << endl;
-        return 1;
-    }
-
-    for (int i = 0; i < 20; i++) {
-        SDL_RenderClear(ren.get());
-        SDL_RenderCopy(ren.get(), tex.get(), nullptr, nullptr);
-        SDL_RenderPresent(ren.get());
-        SDL_Delay(100);
-    }
+    // Clean up
+    Mix_FreeMusic(music);
+    Mix_CloseAudio();
+    SDL_Quit();
 }
 
 int main() {

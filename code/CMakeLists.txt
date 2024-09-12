@@ -69,6 +69,27 @@ target_link_libraries(engine_BRAVO ${IRRKLANG_LIB_DIR}/libIrrKlang.so)
 # target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
 
 # =====================
+# SDL2 Integration
+# =====================
+INCLUDE(FindPkgConfig)
+ 
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+PKG_SEARCH_MODULE(SDL2_mixer REQUIRED SDL2_mixer)
+
+find_library(SDL_MIXER_LIBRARY
+  NAMES SDL2_mixer
+  HINTS
+    ENV SDLMIXERDIR
+    ENV SDLDIR
+  PATH_SUFFIXES lib
+)
+ 
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES(engine_BRAVO ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+
+
+# =====================
 # Google Test Integration
 # =====================
 
