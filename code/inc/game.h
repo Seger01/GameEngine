@@ -61,15 +61,6 @@ private:
     void handleNetwork();
     void update();
     void render();
-    void handleNetwork();
-    void startServer(SLNet::RakPeerInterface *server);
-    void startClient(SLNet::RakPeerInterface *client);
-
-    bool isServer;
-    SLNet::RakPeerInterface *peer;
-    std::vector<Player> players;
-    std::deque<PlayerInput> inputHistory; // History of inputs for reconciliation
-    int sequenceNumber;                   // Sequence number for inputs
 
 private:
     SDL_Window *window;
