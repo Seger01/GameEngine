@@ -7,7 +7,7 @@ class Player
 {
 public:
     Player(int x, int y, SDL_Color color);
-    void handleInput(SDL_Scancode up, SDL_Scancode down, SDL_Scancode left, SDL_Scancode right);
+    void handleInput(bool up, bool down, bool left, bool right);
     void update();
     void render(SDL_Renderer *renderer);
     int getX() const;

@@ -4,33 +4,34 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int BLOCK_SIZE = 50;
 
+// Constructor to initialize player position, color, and speed
 Player::Player(int x, int y, SDL_Color color)
     : x(x), y(y), color(color), speed(5) {}
 
-void Player::handleInput(SDL_Scancode up, SDL_Scancode down, SDL_Scancode left, SDL_Scancode right)
+// Handle player input for movement
+void Player::handleInput(bool up, bool down, bool left, bool right)
 {
-    const Uint8 *currentKeyStates = SDL_GetKeyboardState(NULL);
-    if (currentKeyStates[up])
+    if (up)
     {
         y -= speed;
     }
-    if (currentKeyStates[down])
+    if (down)
     {
         y += speed;
     }
-    if (currentKeyStates[left])
+    if (left)
     {
         x -= speed;
     }
-    if (currentKeyStates[right])
+    if (right)
     {
         x += speed;
     }
 }
 
+// Update player position and ensure it stays within bounds
 void Player::update()
 {
-    // Ensure the player does not go out of bounds
     if (x < 0)
     {
         x = 0;
@@ -49,34 +50,40 @@ void Player::update()
     }
 }
 
+// Render the player on the screen
 void Player::render(SDL_Renderer *renderer)
 {
-    SDL_Rect fillRect = {x, y, 50, 50};
+    SDL_Rect fillRect = {x, y, BLOCK_SIZE, BLOCK_SIZE};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
     SDL_RenderFillRect(renderer, &fillRect);
 }
 
+// Get the player's X position
 int Player::getX() const
 {
     return x;
 }
 
+// Get the player's Y position
 int Player::getY() const
 {
     return y;
 }
 
+// Set the player's position
 void Player::setPosition(int x, int y)
 {
     this->x = x;
     this->y = y;
 }
 
+// Get the player's color
 SDL_Color Player::getColor() const
 {
     return color;
 }
 
+// Set the player's color
 void Player::setColor(SDL_Color color)
 {
     this->color = color;
