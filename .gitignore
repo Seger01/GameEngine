@@ -38,8 +38,11 @@
 *.toc
 *.log
 *.bbl
+*.bcf
 *.blg
-.fdb_latexmk
+*.fdb_latexmk
+*.fls
+*.run.xml
 
 build/
 

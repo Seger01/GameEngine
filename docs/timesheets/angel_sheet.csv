@@ -1,8 +1,12 @@
 Date,Time,Duration(in hours),Activity
-2024-09-02, 9:00, 1.5, Introduction to project
+2024-09-02, 09:00, 1.5, Introduction to project
 2024-09-02, 10:30, 0.5, Group setup
 2024-09-03, 10:00, 1.5, Team meeting for coding guidelines and setup of project
 2024-09-03, 15:00, 1.5, First project class
-2024-09-04, 11:00, 2.0, Team meeting on start of poa, requirements and planning 
+2024-09-04, 11:00, 2.0, Team meeting on start of poa and requirements and planning 
 2024-09-05, 12:00, 2.0, First version of POA risk analsys and project organisation finished
 2024-09-06, 13:00, 1.5, Finished POA and risk analisys and reviewed POA
+2024-09-09, 11:00, 4.0, Started research on particle engine and configured example sdl project
+2024-09-10, 12:30, 1.5, Pre project meeting in preparation for later bob meeting
+2024-09-10, 15:00, 1.0, Start of physics engine research
+2024-09-11, 09:00, 2.5, Continued physics engine research and morning standup
