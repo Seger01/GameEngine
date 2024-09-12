@@ -7,17 +7,58 @@
 #include <slikenet/BitStream.h>
 #include <slikenet/PacketLogger.h>
 #include <vector>
-#include <map>
+#include <deque>
 #include "player.h"
+
+enum GameMessages
+{
+    ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1,
+    ID_PLAYER_INPUT,
+    ID_PLAYER_STATE,
+    ID_PLAYER_INIT,
+    ID_GAME_READY,
+    ID_SEND_PLAYERS,
+    ID_SEND_PLAYER_ID
+};
+
+struct PlayerInput
+{
+    int playerId;
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+    uint32_t inputSequenceNumber; // Helps for client prediction
+};
+
+struct PlayerState
+{
+    int playerId;
+    int posX;
+    int posY;
+    uint32_t inputSequenceNumber; // Helps for client prediction
+};
+
+struct PlayerInit
+{
+    uint8_t colorRed;
+    uint8_t colorGreen;
+    uint8_t colorBlue;
+    int posX;
+    int posY;
+};
 
 class Game
 {
 public:
-    Game();
+    Game(bool isServer, SLNet::RakPeerInterface *peer);
     bool init();
     void run();
     void cleanup();
+
+private:
     void handleEvents();
+    void handleNetwork();
     void update();
     void render();
 
@@ -26,7 +67,12 @@ private:
     SDL_Renderer *renderer;
     bool quit;
     int frameDelay;
+
+    int playerID;
     std::vector<Player> players;
+
+    bool isServer;
+    SLNet::RakPeerInterface *peer;
 };
 
 #endif // GAME_H

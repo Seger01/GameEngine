@@ -1,19 +1,25 @@
-#include "game.h"
+#include "server.h"
+#include "client.h"
 #include <iostream>
 #include <cstring>
 
 int main(int argc, char *args[])
 {
-  Game game;
 
-  if (!game.init())
+  if (argc > 1 && strcmp(args[1], "server") == 0)
   {
-    std::cerr << "Failed to initialize the game." << std::endl;
-    return -1;
+    Server server;
+    server.init();
+    server.run();
+    server.cleanup();
   }
-
-  game.run();
-  game.cleanup();
+  else
+  {
+    Client client;
+    client.init();
+    client.run();
+    client.cleanup();
+  }
 
   return 0;
 }
