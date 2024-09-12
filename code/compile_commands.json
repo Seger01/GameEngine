@@ -1,0 +1,20 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I/home/seger/projects/engine/code/inc",
+      "-I/usr/local/include/SDL2",
+      "-g",
+      "-g",
+      "-O0",
+      "-std=gnu++17",
+      "-c",
+      "-o",
+      "CMakeFiles/engine_BRAVO.dir/src/SpriteAtlas.cpp.o",
+      "/home/seger/projects/engine/code/src/SpriteAtlas.cpp"
+    ],
+    "directory": "/home/seger/projects/engine/code/build",
+    "file": "/home/seger/projects/engine/code/src/SpriteAtlas.cpp",
+    "output": "/home/seger/projects/engine/code/build/CMakeFiles/engine_BRAVO.dir/src/SpriteAtlas.cpp.o"
+  }
+]
