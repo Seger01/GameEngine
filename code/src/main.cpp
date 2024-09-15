@@ -10,7 +10,14 @@ void readTest(SaveGame saveGame) {
 	}
 }
 
+void writeTest(SaveGame saveGame) {
+	saveGame.setLevelStatus("Miserable");
+	saveGame.setPlayerLevel(0);
+	saveGame.write();
+}
+
 int main() {
 	SaveGame saveGame("saveFile.json");
 	readTest(saveGame);
+	writeTest(saveGame);
 }

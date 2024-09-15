@@ -8,7 +8,8 @@ class SaveGame {
     public:
         SaveGame(std::string path);
         void readFile();
-        void writeFile();
+        void write();
+
     public: //Setters
         void setLevelNr(int);
         void setLevelStatus(std::string);
@@ -20,6 +21,7 @@ class SaveGame {
         int getPlayerLevel() const;
         std::vector<unsigned> getInventory() const;
     private:
+        std::string mPath;
         nlohmann::json jsonData;
         int levelNr;
         std::string levelStatus;
