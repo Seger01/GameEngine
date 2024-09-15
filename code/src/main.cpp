@@ -1,12 +1,16 @@
 #include <iostream>
+#include "SaveGame.hpp"
 
-#include "test.h"
+void readTest(SaveGame saveGame) {
+	std::cout << "Level number: " << saveGame.getLevelNr() << std::endl;
+	std::vector<unsigned> inventory = saveGame.getInventory();
+	std::cout << "Inventory items:" << std::endl;
+	for (unsigned item : inventory) {
+		std::cout << item << std::endl;
+	}
+}
 
 int main() {
-  for (int i = 0; i < 10; i++) {
-    std::cout << "Hello, World!" << std::endl;
-  }
-
-  test();
-  return 0;
+	SaveGame saveGame("saveFile.json");
+	readTest(saveGame);
 }

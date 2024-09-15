@@ -25,11 +25,23 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 # Specify the source files
 set(SOURCES
     src/main.cpp
+    src/SaveGame.cpp
     # Add more source files here
 )
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
+
+# Fetch nlohmann::json from GitHub
+include(FetchContent)
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.2  # Use the latest stable version
+)
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(engine_BRAVO PRIVATE nlohmann_json::nlohmann_json)
 
 # =====================
 # Google Test Integration
