@@ -2,10 +2,10 @@
 
 Animation::Animation() {}
 
-Animation::Animation(SDL_Texture*& aSourceTexture, SDL_Rect aStartingFrame, int aAmountOfFrames)
-    : sourceTexture(aSourceTexture) {
+Animation::Animation(Texture*& aSourceTexture, Rectangle aStartingFrame, int aAmountOfFrames)
+    : mSourceTexture(aSourceTexture) {
     for (int i = 0; i < aAmountOfFrames; i++) {
-        SDL_Rect frame;
+        Rectangle frame;
 
         frame.x = aStartingFrame.x + (i * aStartingFrame.w);
         frame.y = aStartingFrame.y;
@@ -21,9 +21,9 @@ Animation::~Animation() {
     return;
 }
 
-SDL_Texture*& Animation::getTexture() { return this->sourceTexture; }
+Texture*& Animation::getTexture() { return this->mSourceTexture; }
 
-SDL_Rect& Animation::getCurrentFrame() {
+Rectangle& Animation::getCurrentFrame() {
     // Get the current time in milliseconds
     Uint32 currentTime = SDL_GetTicks();
 

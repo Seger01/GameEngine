@@ -1,9 +1,13 @@
 #include "SpriteAtlas.h"
 
-SpriteAtlas::SpriteAtlas(SDL_Renderer*& renderer) : renderer{renderer} { textureIsLoaded = false; }
+// SpriteAtlas::SpriteAtlas(SDL_Renderer*& renderer) : renderer{renderer} { textureIsLoaded = false; }
 
-SpriteAtlas::SpriteAtlas(SDL_Renderer*& renderer, std::string filePath) : renderer{renderer} {
-    this->loadTexture(filePath);
+// SpriteAtlas::SpriteAtlas(SDL_Renderer*& renderer, std::string filePath) : renderer{renderer} {
+//     this->loadTexture(filePath);
+// }
+
+SpriteAtlas::SpriteAtlas(Renderer*& aRenderer, std::string aFilePath) : mRenderer{aRenderer} {
+    this->loadTexture(aFilePath);
 }
 
 SpriteAtlas::~SpriteAtlas() {
@@ -12,15 +16,18 @@ SpriteAtlas::~SpriteAtlas() {
 }
 
 void SpriteAtlas::loadTexture(std::string aFilePath) {
-    // Load image
-    SDL_Surface* tempSurface = IMG_Load(aFilePath.c_str());
-    if (tempSurface == NULL) {
-        printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
-        return;
-    }
+    // // Load image
+    // SDL_Surface* tempSurface = IMG_Load(aFilePath.c_str());
+    // if (tempSurface == NULL) {
+    //     printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
+    //     return;
+    // }
+    //
+    // loadedTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+    // SDL_FreeSurface(tempSurface);
 
-    loadedTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
-    SDL_FreeSurface(tempSurface);
+    mTexture = new Texture(mRenderer);
+    mTexture->load(aFilePath);
 
     textureIsLoaded = true;
 
@@ -29,10 +36,10 @@ void SpriteAtlas::loadTexture(std::string aFilePath) {
 
 void SpriteAtlas::unloadTexture() { SDL_DestroyTexture(loadedTexture); }
 
-Animation& SpriteAtlas::getAnimation(SDL_Rect aStartingFrame, int aAmountOfFrames) {
+Animation& SpriteAtlas::getAnimation(Rectangle aStartingFrame, int aAmountOfFrames) {
     std::cout << "getAnimation() " << mCreatedAnimations.size() << std::endl;
 
-    mCreatedAnimations.push_back(Animation(loadedTexture, aStartingFrame, aAmountOfFrames));
+    mCreatedAnimations.push_back(Animation(mTexture, aStartingFrame, aAmountOfFrames));
 
     return mCreatedAnimations[mCreatedAnimations.size() - 1];
 }
