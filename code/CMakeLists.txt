@@ -23,63 +23,19 @@ endif()
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
 # Include SLikeNet headers
-include_directories(${PROJECT_SOURCE_DIR}/slikenet/Source)
+include_directories(${PROJECT_SOURCE_DIR}/slikenet/source/slikenet/Source)
 
 # Automatically search for source files
 file(GLOB_RECURSE SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/slikenet/Source/src/*.cpp
 )
 
 # Find SDL2
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
-# # Find SLikeNet
-# find_package(SLikeNet REQUIRED)
-# include_directories(${SLikeNet_INCLUDE_DIRS})
-
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
 
-# # Link SDL2 and SLikeNet libraries
-# target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES} ${SLikeNet_LIBRARIES})
-
 # Link SDL2 libraries
-target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES})
-
-# =====================
-# Google Test Integration
-# =====================
-
-# FetchContent module to download GTest
-include(FetchContent)
-
-# Download and configure GTest
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip  # You can use the latest release
-)
-
-# Download GTest during configuration step
-FetchContent_MakeAvailable(googletest)
-
-# Enable testing in the project
-enable_testing()
-
-# Automatically search for test source files
-file(GLOB_RECURSE TEST_SOURCES
-    ${PROJECT_SOURCE_DIR}/test/*.cpp
-)
-
-# Create an executable for tests
-add_executable(tests ${TEST_SOURCES})
-
-# Link GTest and GTest Main to the test executable
-target_link_libraries(tests gtest gtest_main)
-
-# Add test execution
-add_test(NAME engine_BRAVO_tests COMMAND tests)
-
-# Optionally, set up test include directories
-#target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+target_link_libraries(engine_BRAVO ${SDL2_LIBRARIES} ${PROJECT_SOURCE_DIR}/slikenet/cmake/Lib/DLL/libRakNetDLL.so)

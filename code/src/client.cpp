@@ -54,7 +54,7 @@ void Client::init()
                 break;
             case ID_CONNECTION_ATTEMPT_FAILED:
                 std::cerr << "Connection attempt failed." << std::endl;
-                isConnected = true; // Break the loop, since connection failed
+                exit(EXIT_FAILURE);
                 break;
             default:
                 break;
