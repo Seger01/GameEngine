@@ -34,7 +34,7 @@ void SpriteAtlas::loadTexture(std::string aFilePath) {
     return;
 }
 
-void SpriteAtlas::unloadTexture() { SDL_DestroyTexture(loadedTexture); }
+void SpriteAtlas::unloadTexture() { SDL_DestroyTexture(mTexture->getSDL_Texture()); }
 
 Animation& SpriteAtlas::getAnimation(Rectangle aStartingFrame, int aAmountOfFrames) {
     std::cout << "getAnimation() " << mCreatedAnimations.size() << std::endl;
