@@ -13,3 +13,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-11,  9:15, 0.5 , Meeting with team
 2024-09-11, 10:00, 4   , Spent time researching sprites; dealing with stupid sprite sheets; and creating the first animation poc
 2024-09-12, 09:00, 1   , Spent time restructuring animation poc to use a sprite atlas
+2024-09-12, 09:00, 6   , Did research on facade pattern and how people use it in game engines; also spent time creating a poc where there very little SDL structs used anymore

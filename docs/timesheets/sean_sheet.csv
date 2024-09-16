@@ -15,3 +15,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-10, 13:30, 0.5, meeting Bob
 2024-09-11, 8:30, 8.5, POC multiplayer
 2024-09-11, 10:00, 7.5, POC multiplayer and freaking raspberry pi
+2024-09-16, 10:00, 6, poc multiplayer; research AI; Worked on issues with Cmake build system; Tested multiplayer across different laptops.
