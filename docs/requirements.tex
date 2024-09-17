@@ -53,14 +53,29 @@
     M16 & Must Have & U09 & Spritesheets & The user can insert spritesheets to use for animating drawable game objects \\ \hline
     M17 & Must Have & U09 & Spritesheet vertical size & Spritesheets shall not contain vertically stacked sprites \\ \hline
     M18 & Must Have & U09 & Spritesheet horizontal size & Spritesheets shall contain no more than 50 horizontally stacked sprites \\ \hline
-    M19 & Must have & U09 & Spritesheet image dimension & Sprites (either in spritesheets or regular) have a maximum resolution of 1000x1000 pixels \\ \hline
+    M19 & Must Have & U09 & Spritesheet image dimension & Sprites (either in spritesheets or regular) have a maximum resolution of 1000x1000 pixels \\ \hline
     M20 & Must Have & U10 & Sprite scale amount & A sprite size (for both regular sprites and spritesheets) can be scaled between -10000 and 10000 times \\ \hline
     M21 & Must Have & U10 & Sprite scale axis & A sprite (both regular sprites and spritesheets) can be scaled indepedently over the horizontal and vertical axis \\ \hline
     M22 & Must Have & U10 & Sprite rotation & A sprite (both regular sprites and spritesheets) can be rotated \\ \hline
     M23 & Must Have & U10 & Sprite rotation position & A sprite (both regular sprites and spritesheets) can be rotated from any coordinate inside or outside the sprite \\ \hline
-    M23 & Must have & U10 & Sprite translation & A sprite (both regular sprites and spritesheets) can be translated indepedently over the horizontal and vertical axis \\ \hline
-    S1                          & Should Have                        &                & Online or LAN multiplayer support &                                                                                                                                                             \\ \hline
-    S2                          & Should Have                        &                    & FPS can be fixed at a maximum     &                                                                                                                                                             \\ \hline
+    M24 & Must Have & U10 & Sprite translation & A sprite (both regular sprites and spritesheets) can be translated indepedently over the horizontal and vertical axis \\ \hline
+    M25 & Must Have & U11 & Save game files & Any number of save game files can be created, written to and read from \\ \hline
+    M26 & Must Have & U11 & Save file interaction & Fields can be added to save files using a key-value pair \\ \hline
+    M27 & Must Have & U11 & Save file field count & Any number of fields can be added to save files \\ \hline
+    M28 & Must have & U12 & Music track scenes & A music track can be played during any scene or level \\ \hline
+    M30 & Must Have & U12 & Audio effects & Up to 10 sound effects can be played simultaneously (excluding the music track) \\ \hline
+    M29 & Must Have & U12 & Audio switching & Every playing sound can be enabled or disabled at any moment \\ \hline
+    M31 & Must Have & U12 & Audio volume & The volume of each sound can be individually modified from 0\% to 200\% of the original track \\ \hline
+    S3 & Should Have & U12 & Audio position & It is possible to switch between mono and stereo audio output \\ \hline
+    S4 & Should Have & U12 & Audio position & When in stereo mode, every sound track can have an individual horizontal position \\ \hline
+    S5 & Should Have & U12 & Audio position & When in stereo mode, every sound track can have an individual vertical position \\ \hline
+    M32 & Must Have & U13 & AI: Move to position & Movable game objects can be set to move in the direction of any other game object \\ \hline
+    M33 & Must Have & U13 & AI: Shortest path & Movable game objects can be set to move toward any other game object, using the shortest route and taking into account obstacles \\ \hline
+    M34 & Must Have & U14 & Collision handling & Any game objects can be set to interact (or not interact) with any other game object to prevent collision \\ \hline
+    M35 & Must Have & U14 & Momentum & Any movable game object can be set to simulate momentum \\ \hline
+    S1 & Should Have             & U106 & Multiplayer support & Up to four players can connect to a server to view the same level / scene simultaneously \\ \hline
+    S6 & Should Have & U106 & Multiplayer connection & All multiplayer participants are connected on the same LAN \\ \hline
+    S2       & Should Have & U04 & FPS fix  & FPS can be fixed at a maximum  \\ \hline
 \end{longtable}
 \newpage
 
