@@ -1,11 +1,22 @@
 \section{AI}
 \subsection{Commonly Used AI Techniques in Games}
 
-Artificial Intelligence (AI) plays an essential role in game design, affecting the behavior of enemies, NPCs, and other dynamic entities in a game world. Different genres of games utilize AI techniques that cater to specific needs, such as pathfinding, decision-making, and adapting to player behaviors. This chapter explores some of the most commonly used AI techniques in modern games, ranging from simple, rule-based systems to more advanced, machine-learning-based approaches.
+Artificial Intelligence (AI) plays an essential role in game design,
+affecting the behavior of enemies, NPCs, and other dynamic entities in a game world.
+Different genres of games utilize AI techniques that cater to specific needs,
+such as pathfinding, decision-making, and adapting to player behaviors.
+This chapter explores some of the most commonly used AI techniques in modern games,
+ranging from simple, rule-based systems to more advanced,
+machine-learning-based approaches.
 
 \subsubsection{Finite State Machines (FSM)}
 
-Finite State Machines (FSMs) are one of the most basic but widely used AI techniques in game development. They define a set of states and transitions between them based on events or inputs. For example, an enemy NPC might have states like \textit{idling}, \textit{attacking}, and \textit{fleeing}. When a specific condition is met, such as the player coming within range, the FSM triggers a transition from one state to another.
+Finite State Machines (FSMs) are one of the most basic but widely used AI techniques in game development.
+They define a set of states and transitions between them based on events or inputs.
+For example, an enemy NPC might have states like \textit{idling}, \textit{attacking},
+and \textit{fleeing}. When a specific condition is met,
+such as the player coming within range,
+the FSM triggers a transition from one state to another \cite{Mike_2020}.
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -21,7 +32,10 @@ Finite State Machines (FSMs) are one of the most basic but widely used AI techni
 
 \subsubsection{Behavior Trees}
 
-Behavior Trees extend FSMs by introducing a hierarchical decision-making process. They allow for more structured and flexible AI behavior, where agents can prioritize tasks based on conditions, making them well-suited for more sophisticated AI.
+Behavior Trees extend FSMs by introducing a hierarchical decision-making process.
+They allow for more structured and flexible AI behavior,
+where agents can prioritize tasks based on conditions,
+making them well-suited for more sophisticated AI \cite{Simpson_2023}.
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -38,7 +52,10 @@ Behavior Trees extend FSMs by introducing a hierarchical decision-making process
 
 \subsubsection{Pathfinding Algorithms}
 
-Pathfinding is a crucial AI component, especially for games with complex environments. The \textit{A*} algorithm is the most popular for real-time games, efficiently finding the shortest path between two points by evaluating the cost of traversing different nodes.
+Pathfinding is a crucial AI component,
+especially for games with complex environments.
+The \textit{A*} algorithm is the most popular for real-time games,
+efficiently finding the shortest path between two points by evaluating the cost of traversing different nodes \cite{Amit_2024}.
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -54,7 +71,9 @@ Pathfinding is a crucial AI component, especially for games with complex environ
 
 \subsubsection{Dynamic Difficulty Adjustment (DDA)}
 
-Dynamic Difficulty Adjustment (DDA) modifies the difficulty of the game in real-time based on player performance. This technique ensures players remain engaged without feeling frustrated or bored, as it adjusts factors like enemy strength or spawn rate.
+Dynamic Difficulty Adjustment (DDA) modifies the difficulty of the game in real-time based on player performance.
+This technique ensures players remain engaged without feeling frustrated or bored,
+as it adjusts factors like enemy strength or spawn rate \cite{Zohaib_2018}.
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -70,7 +89,11 @@ Dynamic Difficulty Adjustment (DDA) modifies the difficulty of the game in real-
 
 \subsubsection{Fuzzy Logic Systems}
 
-Fuzzy Logic Systems introduce a degree of uncertainty and imprecision into AI decision-making, allowing NPCs to make more human-like decisions. Rather than working with strict true/false conditions (like FSMs), fuzzy logic allows for various degrees of truth, which can be useful for situations like deciding an NPC's reaction to danger based on proximity or player actions.
+Fuzzy Logic Systems introduce a degree of uncertainty and imprecision into AI decision-making,
+allowing NPCs to make more human-like decisions.
+Rather than working with strict true/false conditions (like FSMs),
+fuzzy logic allows for various degrees of truth,
+which can be useful for situations like deciding an NPC's reaction to danger based on proximity or player actions \cite{Pirovano_2012}.
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -472,3 +495,10 @@ Developing a 2D bullet hell shooter in C++ requires robust AI behavior libraries
     \item Lacks advanced machine learning or adaptive behavior capabilities.
     \item More suited for predefined or semi-dynamic behavior, limiting its use in more advanced AI.
 \end{itemize}
+
+\subsubsection{recastnavigation}
+https://github.com/recastnavigation/recastnavigation
+
+\subsubsection{todo}
+https://github.com/digint/tinyfsm
+https://github.com/BehaviorTree/BehaviorTree.CPP
