@@ -1,3 +1,24 @@
-\section{Game objects (Ronan)}
-\subsection{Game objects in a game engines}
+\section{GameObjects(Ronan)}
+
+\subsection{GameObjects in a game engine}
+GameObjects are the fundamental entities that represent characters, props, lights, enemies and scenery.
+GameObjects are essentially containers for components, which implement the GameObject's functionality.
+\\\\
+\noindent A few examples of components a GameObject might have are:
+\begin{itemize}
+    \item \textbf{Transform component:}
+          A component handling the position, rotation and scale of a GameObject.
+    \item \textbf{Render component:}
+          A component to display a GameObject.
+    \item \textbf{Physics component:}
+          A component to add physics to a GameObject, for example velocity and mass.
+    \item \textbf{Script component:}
+          A component to define the behaviour of a GameObject.
+    \item \textbf{Collider component:}
+          A component to detect and respond to collisions with the GameObject.
+\end{itemize}
+
+\noindent GameObjects are always part of a scene and can interact with each other through the added components.
+
 \subsection{Adding components to game objects}
+A GameObject is just an empty vessel that needs components to be attached to it.

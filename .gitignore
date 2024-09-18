@@ -49,3 +49,7 @@ build/
 .vscode/
 
 code/slikenet/**
+
+code/tinyxml2/**
+code/zlib/**
+code/zstd/**
