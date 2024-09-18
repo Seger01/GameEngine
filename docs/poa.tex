@@ -8,6 +8,17 @@
 \usepackage{tabularx} % For tables that auto-adjust to the page width
 \usepackage{longtable} % For tables across multiple pages
 
+\usepackage{hyperref} % allows for hyperlinks to be added to the document
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+    pdftitle={Research},
+    pdfpagemode=FullScreen
+}
+
 \title{Plan of Attack} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
 \date{\today} % Sets date for date compiled
@@ -28,7 +39,7 @@ All information in this document is subject to change. \\
     \textbf{Version number} & \textbf{Date} & \textbf{Change}                                                        \\ \hline
     V0.1                    & 02-09-2024    & Initial draft                                                          \\ \hline
     V0.2                    & 04-09-2024    & Created general planning and version control                           \\ \hline
-    V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organisation \\ \hline
+    V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organization \\ \hline
     V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
 \end{tabularx}
 \newpage
@@ -99,7 +110,7 @@ Unless a specific day and/or time is specified, all deadlines are on friday, 17:
     4                    & Research potential features               & Research V1                             \\ \hline
                          & Start drafting architecture + design      &                                         \\ \hline
                          & Work on POCs                              & Finish second POCs                      \\ \hline
-    5                    & Write and implement research feedback     & Research feedack implemented            \\ \hline
+    5                    & Write and implement research feedback     & Research feedback implemented           \\ \hline
                          & Work on POCs                              &                                         \\ \hline
                          & Update architecture + design              &                                         \\ \hline
     6                    & Update architecture + design              & Architecture V1 finished                \\ \hline
@@ -171,22 +182,22 @@ When a team member wants to merge code, the code is reviewed by at least one oth
 There is a standup-meeting every wednesday at 9:15, which is simultaneously an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
 \\\\
 The team is working with a yellow and red card system.
-A yellow card means a warning. If two yellow cards are received by a teammember,
+A yellow card means a warning. If two yellow cards are received by a team member,
 they will be disqualified from participating in the project.
 The team is unable to issue a yellow card directly, but a recommendation to issue a card
 will be given to Bob van der Putten.
 \\
 A recommendation for a yellow card can only be issued when the following procedures have been followed:
 \begin{enumerate}
-    \item A teammember is underperforming. This is the case when these conditions are met:
+    \item A team member is under performing. This is the case when these conditions are met:
           \begin{itemize}
-              \item A teammember has worked fewer hours than expected on the project.
+              \item A team member has worked fewer hours than expected on the project.
               \item The quality of the submitted work is too low.
-              \item A teammember has not communicated about issues they are facing within the project on time.
+              \item A team member has not communicated about issues they are facing within the project on time.
           \end{itemize}
-    \item The team will make an arrangement with the underperforming teammember about the work that should be submitted.
+    \item The team will make an arrangement with the under performing team member about the work that should be submitted.
           An email about this arrangement will also be sent to Bob van der Putten
-    \item After one week, the arrangement is not met by the underperforming teammember.
+    \item After one week, the arrangement is not met by the under performing team member.
 \end{enumerate}
 In case these procedures have all taken place, a recommendation for a yellow card will be given.
 
@@ -203,19 +214,19 @@ The following points are applied to ensure the documentation’s quality:
     \item All diagrams are in the UML style.
     \item Headers in the research document do not contain questions
     \item No choices are made in the research document
-    \item latex is used as default text editor. This is used so git can be used as version conrol.
+    \item latex is used as default text editor. This is used so git can be used as version control.
 \end{itemize}
 \subsection{Technical}
 the following points are applied to ensure the technical quality of the project:
 \begin{itemize}
     \item Code is written in english.
     \item Code is written in c++23.
-    \item Codestandard is written in ./codestandard.tex.
+    \item Code standard is written in ./codestandard.tex.
     \item Text editor of choice can be used.
     \item Unit test are written for every function except for setters without validation and getters.
     \item Third party libraries must be discussed with the whole team.
     \item One person must check git commits before merging.
-    \item Only code which can be compiled may be commited to git.
+    \item Only code which can be compiled may be committed to git.
 \end{itemize}
 
 \subsection{tools}
@@ -229,11 +240,11 @@ the following tools are used to ensure the quality of the project:
     \item Cppcheck is used for code checking.
     \item Valgrind is used for memory leak checking.
     \item Gtest testing framework is used for testing.
-    \item plantuml is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
+    \item PlantUML is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
 \end{itemize}
 \newpage
 
-\section{project orginisation}
+\section{project organization}
 
 \subsection{Parties}
 The project contains different parties consisting of developers and a customer.
@@ -242,7 +253,6 @@ The following section provides information about the different parties, people i
 \subsubsection{Customer and school supervisor}
 Bob van der Putten is the main customer of the project and provides general demands and requirements for the engine.
 Besides the role of customer, Bob functions as the school supervisor and gives lectures regarding the general project and its factors.
-Finally, Bob  serves as the main talking point when it comes to discussing project progress.
 Finally, Bob is the project owner and oversees the progress of the project.
 
 
@@ -254,6 +264,7 @@ Developers have the responsibility of defining the project, researching solution
 \subsubsection{Project leader}
 Siem Vermeuelen has the role of project leader and oversees the project from within the developer team.
 The project leader is responsible for planning meetings, handing in documents and sending the weekly progress email to Bob van der Putten.
+
 
 \newpage
 
