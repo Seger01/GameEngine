@@ -41,6 +41,7 @@ All information in this document is subject to change. \\
     V0.2                    & 04-09-2024    & Created general planning and version control                           \\ \hline
     V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organization \\ \hline
     V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
+    V0.5                    & 18-09-2024    & Implemented feedback for chapter document inventory and communication  \\ \hline
 \end{tabularx}
 \newpage
 
@@ -174,30 +175,29 @@ Unless a specific day and/or time is specified, all deadlines are on friday, 17:
 
 \section{Communication}
 Communication between team members is done using whatsapp.
-\\
-Communication between the team and the Bob van der Putten
-will be done using email, Teams or in person during the scheduled project meetings.
+Communication between the team and Bob van der Putten
+is be done using e-mail, Microsoft Teams or in person during the scheduled project meetings.
 \\\\
 Collaboration with code and documents is done using GitHub.
-When a team member wants to merge code, the code is reviewed by at least one other team member.
+When a team member wants to merge code, the code is reviewed by at least one other team member beforehand.
 \\\\
-There is a standup-meeting every wednesday at 9:15, which is simultaneously an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
+There is a standup-meeting every wednesday at 9:15, which is also used as an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
 \\\\
-The team is working with a yellow and red card system.
-A yellow card means a warning. If two yellow cards are received by a team member,
-they will be disqualified from participating in the project.
+A yellow and red card system is used to penalize team members when necessary.
+A yellow card means a warning. If two yellow cards are received by a team member, they receive a red card, which means
+they are disqualified from participating in the project.
 The team is unable to issue a yellow card directly, but a recommendation to issue a card
-will be given to Bob van der Putten.
+is given to Bob van der Putten when necessary.
 \\
 A recommendation for a yellow card can only be issued when the following procedures have been followed:
 \begin{enumerate}
-    \item A team member is under performing. This is the case when these conditions are met:
+    \item A team member is underperforming. This is the case when these conditions are met (note that some terms are loosely defined, these are more concretely determined by the team on a case-to-case basis):
           \begin{itemize}
               \item A team member has worked fewer hours than expected on the project.
               \item The quality of the submitted work is too low.
               \item A team member has not communicated about issues they are facing within the project on time.
           \end{itemize}
-    \item The team will make an arrangement with the under performing team member about the work that should be submitted.
+    \item The team will make an arrangement with the underperforming team member about the work that should be submitted.
           An email about this arrangement will also be sent to Bob van der Putten
     \item After one week, the arrangement is not met by the under performing team member.
 \end{enumerate}
@@ -229,6 +229,8 @@ the following points are applied to ensure the technical quality of the project:
     \item Third party libraries must be discussed with the whole team.
     \item One person must check git commits before merging.
     \item Only code which can be compiled may be committed to git.
+    \item Libraries are directly retrieved online whenever possible using cmake.
+    \item Libraries which can not be retrieved online using cmake, must be downloaded, built and installed using a single install script
 \end{itemize}
 
 \subsection{tools}

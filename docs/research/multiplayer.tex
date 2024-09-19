@@ -1,0 +1,255 @@
+\section{Multiplayer}
+Multiplayer is an important aspect of gaming. It is not necessary for a game to work, but it can greatly enhance the experience.
+\subsection{Models}
+There are multiple multiplayer models each with their own advantages and disadvantages. \cite{Kroupp_2024}
+
+\subsubsection{Client-Server Model}
+The \textit{client-server} model is one of the most widely used architectures for multiplayer games. In this model, a server hosts the game world, and clients (players) connect to it. The server is considered authoritative, managing the game state and ensuring consistency across all clients.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Ensures a consistent and authoritative game state.
+    \item Reduces the risk of cheating, as the server controls the game logic.
+    \item Scalable for large games (e.g., MMOs).
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Requires a reliable and performant server, which adds complexity and cost.
+    \item Introduces latency between clients and the server, which can affect gameplay responsiveness.
+\end{itemize}
+
+\subsubsection{Peer-to-Peer (P2P) Model}
+In the \textit{peer-to-peer} model, all players (peers) are directly connected to each other, and the game state is shared among them. Each peer has equal authority over the game, which can make synchronization and consistency more difficult to maintain.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Simple to implement for small-scale games with a limited number of players.
+    \item No need for a dedicated server, reducing costs.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Difficult to ensure game state consistency across peers.
+    \item Susceptible to cheating, as each peer has authority.
+    \item Latency and synchronization issues are harder to manage.
+\end{itemize}
+
+\subsubsection{Authoritative Server with Client-Side Prediction}
+This model combines the \textit{client-server} approach with \textit{client-side prediction}. The server remains authoritative, but clients predict the outcome of their actions while awaiting confirmation from the server. This reduces the apparent latency for the player.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Provides a smoother and more responsive experience for players.
+    \item Retains the security and consistency of a server-authoritative system.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Complex to implement, requiring careful handling of discrepancies between predicted and actual outcomes.
+    \item Still subject to latency, although mitigated by prediction.
+\end{itemize}
+
+\subsubsection{State Synchronization}
+In \textit{state synchronization}, the server periodically sends the full game state to clients, ensuring that all players have a consistent view of the game world.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Simple to implement for games where maintaining a consistent game state is critical, such as strategy or turn-based games.
+    \item Ensures that all clients are synchronized with the server.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Can be bandwidth-intensive, especially for games with a large or complex game state.
+    \item Latency can lead to noticeable delays in the game state being updated on clients.
+\end{itemize}
+
+\subsubsection{Event-Driven Networking}
+\textit{Event-driven networking} focuses on sending specific events (e.g., player actions) rather than the entire game state. Clients process these events and update their local game state accordingly.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item More efficient in terms of bandwidth, as only small packets of information are transmitted.
+    \item Suitable for games with frequent, small state changes, such as mobile or social games.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Requires careful ordering and processing of events to ensure consistency.
+    \item Can be difficult to implement for games with complex interactions.
+\end{itemize}
+
+\subsubsection{Hybrid Models}
+Many games use a \textit{hybrid} approach, combining aspects of different multiplayer models to optimize performance, scalability, and security. For example, a game might use the client-server model for general game logic but implement peer-to-peer connections for specific tasks like voice chat or trading.
+
+\textbf{Advantages}
+\begin{itemize}
+    \item Offers flexibility to tailor the multiplayer system to different aspects of the game.
+    \item Allows for optimization of performance and scalability where needed.
+\end{itemize}
+
+\textbf{Challenges}
+\begin{itemize}
+    \item Increases complexity, requiring careful design to ensure all components work seamlessly together.
+    \item May require more effort to maintain and debug.
+\end{itemize}
+
+\subsection{Tools}
+The development of multiplayer games requires specialized tools and frameworks to ensure smooth,
+real-time communication between players, game servers, and clients. Whether it's managing the networking stack, handling player synchronization, or reducing latency,
+choosing the right multiplayer tool is crucial to the success of any game. This chapter explores the most commonly used multiplayer tools for professional game developers,
+followed by a section specifically aimed at student developers using C++.
+
+\subsubsection{Commonly Used Multiplayer Tools for Professional Developers}
+Professional game developers often need multiplayer tools that are scalable, feature-rich, and easy to integrate with large, complex projects. The tools listed below are widely used in the industry for various types of multiplayer games.
+
+\paragraph{Unity} (with Netcode for GameObjects or Mirror)
+is one of the most popular game engines for both 2D and 3D game development,
+and it provides several options for multiplayer networking.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Extensive documentation and community support.
+    \item Tight integration with Unity's development workflow.
+    \item Multiple networking solutions, including Netcode for GameObjects (official) and Mirror (open-source).
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Limited scalability for very large multiplayer projects.
+    \item Mirror, while simple, may require additional setup for complex use cases.
+\end{itemize}
+
+\paragraph{Unreal Engine} (with Unreal Networking) Unreal Engine,
+a high-end game engine used in AAA titles, includes built-in support for multiplayer via its advanced networking framework.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Built-in support for replication and remote procedure calls (RPCs).
+    \item Highly scalable, suitable for large multiplayer games.
+    \item Excellent graphics and physics, suitable for visually intensive games.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Steep learning curve, especially for new developers.
+    \item Resource-intensive, requiring powerful hardware for development.
+\end{itemize}
+
+\paragraph{Photon Engine} is a cloud-based multiplayer framework designed to scale from small indie games to large multiplayer experiences.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Cloud-hosted and scalable.
+    \item Supports both authoritative server and peer-to-peer networking models.
+    \item Easy integration with Unity and Unreal Engine.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Requires a Photon cloud subscription for larger projects.
+    \item May add latency depending on the geographical location of servers.
+\end{itemize}
+
+\paragraph{Godot} (with ENet or Nakama) Godot is a free,
+open-source game engine that supports both 2D and 3D games.
+It has a lightweight networking stack using libraries such as ENet or Nakama.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Free and open-source, ideal for indie developers.
+    \item Lightweight and fast, especially for 2D games.
+    \item Community-driven development and support.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Lacks the advanced tools found in Unity or Unreal for larger games.
+    \item Smaller community compared to other engines.
+\end{itemize}
+
+\paragraph{PlayFab} is a backend service for multiplayer games that provides tools like player authentication, leaderboards, and matchmaking.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Fully managed backend service, reducing server-side complexity.
+    \item Integrates with multiple game engines.
+    \item Scales for small and large games.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Requires an active subscription for large-scale use.
+    \item May not offer the same level of control as self-hosted solutions.
+\end{itemize}
+
+\subsubsection{Multiplayer Tools for C++ Student Developers}
+For student developers working with C++,
+multiplayer tools must be lightweight, flexible, and simple to integrate.
+Below are some commonly used tools for networking in C++ game projects.
+
+\paragraph{ENet} is a reliable UDP-based networking library designed for real-time multiplayer games.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Lightweight and easy to integrate.
+    \item Provides reliable UDP, packet sequencing, and fragmentation.
+    \item Perfect for real-time, fast-paced multiplayer games.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Does not offer high-level features such as matchmaking or player authentication.
+    \item Requires manual implementation of game-specific features like lag compensation.
+\end{itemize}
+
+\paragraph{RakNet} (or SLikeNet) is a feature-rich networking engine designed for multiplayer games. SLikeNet is its actively maintained fork.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Supports advanced features such as NAT punch-through, RPCs, and object replication.
+    \item Cross-platform, with easy integration into various game engines.
+    \item Highly suitable for both small and large multiplayer games.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item More complex to learn and use compared to simpler libraries like ENet.
+    \item RakNet’s development has slowed, although SLikeNet remains maintained.
+\end{itemize}
+
+\paragraph{asio} (Boost.Asio or standalone) is a general-purpose C++ networking library that supports both TCP and UDP communication and focuses on asynchronous I/O.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item Powerful and flexible, allowing developers to build custom networking solutions.
+    \item Works well for both small-scale and large-scale projects.
+    \item Supports asynchronous programming, which is crucial for multiplayer games.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Low-level, so developers need to implement most game-specific networking logic.
+    \item Steeper learning curve due to its focus on concurrency and asynchronous programming.
+\end{itemize}
+
+\paragraph{KCP} (A Fast and Reliable UDP Protocol) KCP is a reliable and efficient UDP-based protocol for low-latency multiplayer games.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item High-performance, optimized for low-latency environments.
+    \item Easy to integrate with existing networking systems.
+\end{itemize}
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item Lacks higher-level features such as matchmaking, lobbies, or session management.
+    \item Requires developers to implement their own game logic on top of the protocol.
+\end{itemize}
+
+\paragraph{Steamworks SDK} is a set of tools and services provided by Valve for games that are distributed via the Steam platform. It provides networking solutions as well as other features such as achievements, leaderboards, and user authentication.
+\\
+\textbf{Advantages}:
+\begin{itemize}
+    \item \textbf{Integration with Steam}: Provides seamless integration with the Steam platform, including achievements, leaderboards, and Steam Cloud.
+    \item \textbf{Peer-to-peer and server-based networking}: Supports both peer-to-peer connections and server-authoritative networking models.
+    \item \textbf{Matchmaking and lobbies}: Built-in support for lobbies, matchmaking, and friend invites, making it easier to manage multiplayer game sessions.
+\end{itemize}
+
+\textbf{Disadvantages}:
+\begin{itemize}
+    \item \textbf{Limited to Steam}: Only useful for games distributed via Steam, limiting its use for cross-platform or non-Steam games.
+    \item \textbf{Requires Steam API knowledge}: Developers need to be familiar with Steam's API, which adds complexity to the development process.
+\end{itemize}

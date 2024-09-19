@@ -1,0 +1,58 @@
+\section{Audio}
+Sound can be considered to be an unmissable part of any video game. It is therefore important for any video game engine to
+support audio playback, and optionally to play multiple audio sources simultaneously and to give these audio sources a sense of physical direction.
+\subsection{Audio on Linux}
+Firstly, the following question must be answered: how is audio played on Linux through C++? The answer to this question can be divided into two types:
+playing audio by directly interfacing with the operating system, or using third-party software to manage the audio playback.
+Because of the lack of sources on the former, only the latter is considered in this research.
+
+There are many audio libraries available for C++ on Linux, some of the most popular of which (intended for usafe in video games) are \cite{Szanto_2018}:
+\begin{itemize}
+    \item FMOD
+    \item IrrKlang
+    \item OpenAL
+    \item SDL2 \footnote{SDL 2 is "a cross-platform development library designed to provide low level access to audio" \cite{sdl2}. It is therefore not strictly designed for just audio playback, but it is extensively used across the industry \cite{sdl2games}.}
+\end{itemize}
+
+\subsubsection{FMOD} is a proprietary \footnote{Its tools are free for teams with a revenue of < \$200.000 \cite{fmodStudio}.} sound engine used (mainly) in video games.
+It is "widely used within the gaming industry", and "is globally regarded as the leading tools for the creation and playback of interactive audio" \cite{dolbyFmod}.
+
+FMOD provides four different products:
+\begin{enumerate}
+    \item FMOD Studio: the software used to create and adding sound and music to a game. In-game, these sounds are played using the FMOD Engine \cite{fmodStudio}.
+    \item FMOD for Unity: similar to FMOD Studio, but integrated into the Unity engine \cite{fmodUnity}.
+    \item FMOD Core: a more low-level alternative to FMOD Studio. As opposed to FMOD Studio, which has a GUI, Core is only available through an API \cite{fmodCore}.
+    \item FMOD.io: a library of various sound effects / files \cite{fmodIo}.
+\end{enumerate}
+
+A small PoC using fmod core has been created to test and showcase playing a sound.
+
+\subsubsection{IrrKlang}
+IrrKlang is an open-source audio library with support for 2D and 3D audio for Windows, Linux and MacOS \cite{IrrKlang}.
+
+An attempt was made to create a PoC for playing audio through this library. This was however quickly dropped, because of the amount of extra libraries required to get irrklang to perform basic functionalities.
+
+\subsubsection{OpenAL}
+"OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications." It is advertised is being similar in usage to the OpenGL graphics library \cite{OpenAL}.
+Experience has taught that OpenGL is cumbersome to work with, and because of its advertised similarity, OpenAL is not further considered.
+
+\subsubsection{SDL2}
+SDL2 is introduced in \ref{SDL2}. It can additionally be used to play basic audio files, using its audiostream API \cite{SDLaudioStream}.
+Because of the lack of support for multiple channels or surround sound, the SDL mixer library has added this functionality \cite{SDLmixer}.
+
+\subsection{Multiple audio sources}
+How can multiple sounds be played simultaneously?
+\subsection{Directional audio}
+How can stereo headphones be used to create directional audio?
+\subsection{Library comparison}
+\begin{figure}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{|c|X|X|X|} \hline
+        \textbf{Engine} & \textbf{Ease of use}                                                                             & \textbf{Documentation}                   & \textbf{Features}                                          \\ \hline
+        Fmod            & Not optimal; requries a significant amount of code to play audio.                                & Extensive, but not always comprehensible & Very extensive support for 2D and 3D mixing, metadata etc. \\ \hline
+        IrrKlang        & Very poor, required (multiple) libraries to perform basic tasks such as playing .mp3 audio files & \textit{Not researched}                  & \textit{Not researched}                                    \\ \hline
+        OpenAL          & Very poor, advertised as similar to OpenGL graphics library                                      & \textit{Not researched}                  & \textit{Not researched}                                    \\ \hline
+    \end{tabularx}
+    \caption{Comparison between multiple audio libraries}
+    \label{fig:audioLibComparison}
+\end{figure}

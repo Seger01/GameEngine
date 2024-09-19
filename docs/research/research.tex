@@ -1,0 +1,57 @@
+\documentclass{article} % \documentclass{} is the first command in any LaTeX code.  It is used to define what kind of document you are creating such as an article or a book, and begins the document preamble
+
+\usepackage{amsmath} % \usepackage is a command that allows you to add functionality to your LaTeX code
+\usepackage{graphicx} % allows for images to be added to the latex document
+\usepackage{tabularx}
+\usepackage[T1]{fontenc}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage[australian,american]{babel}
+
+\usepackage{hyperref} % allows for hyperlinks to be added to the document
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+    pdftitle={Research},
+    pdfpagemode=FullScreen
+}
+
+\usepackage[
+backend=biber,
+style=numeric-comp,
+sorting=ynt
+]{biblatex} %Imports biblatex package
+\addbibresource{references.bib} %Import the bibliography file
+
+\graphicspath{{../pdf/}{./research_images}}
+
+\title{Research} % Sets article title
+\author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
+\date{\today} % Sets date for date compiled
+\newpage
+\begin{document}
+
+\maketitle % creates title using information in preamble (title, author, date)
+\newpage
+
+\tableofcontents % creates a table of contents
+\newpage
+
+\include{gamespeed}
+\include{rendering}
+\include{sprites}
+\include{multiplayer}
+\include{ai}
+\include{audio}
+\include{savedata}
+\include{particles}
+\include{physics}
+\include{levels}
+\include{gameobjects}
+
+\section{Annex}
+\printbibliography
+
+\end{document}
