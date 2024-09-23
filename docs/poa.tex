@@ -42,6 +42,7 @@ All information in this document is subject to change. \\
     V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organization \\ \hline
     V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
     V0.5                    & 18-09-2024    & Implemented feedback for chapter document inventory and communication  \\ \hline
+V1.0 & 22-09-2024 & Added chapter tasks \\ \hline
 \end{tabularx}
 \newpage
 
@@ -206,6 +207,14 @@ In case these procedures have all taken place, a recommendation for a yellow car
 
 \newpage
 
+\section{Tasks}
+Tasks are created and divided over group members on a per-week basis.
+Because the currently available tasks are not all specifically aimed at developing the engine (research, proof of concepts et cetera), these tasks are managed by each member's own administration.
+This decision is reconsidered when research and proof of concepts are all finished, and the the entire team's effort lies in developing the engine.
+
+Every team member records the amount of worked hours per task every day in their corresponding timesheet. This also immediately provides a convenient way to compare the work balance between members.
+\newpage
+
 \section{Quality}
 To ensure the quality of the project the following points are applied.
 \subsection{Documentation}
@@ -227,7 +236,7 @@ the following points are applied to ensure the technical quality of the project:
     \item Text editor of choice can be used.
     \item Unit test are written for every function except for setters without validation and getters.
     \item Third party libraries must be discussed with the whole team.
-    \item One person must check git commits before merging.
+    \item A pull request must always be reviewed by at least one other team member before merging.
     \item Only code which can be compiled may be committed to git.
     \item Libraries are directly retrieved online whenever possible using cmake.
     \item Libraries which can not be retrieved online using cmake, must be downloaded, built and installed using a single install script
