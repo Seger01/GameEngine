@@ -1,69 +1,61 @@
 #include "SaveGame.hpp"
-#include <fstream>
-#include <nlohmann/json.hpp>
+#include <iostream>
 
-SaveGame::SaveGame(std::string path) : mPath(path) {
-    std::ifstream inputFile {mPath};
-    if (!inputFile.is_open()) {
-        throw std::runtime_error("Unable to open json file");
+SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {}
+
+void SaveGame::store() {}
+
+void SaveGame::addField(std::string name, std::string value) {
+  SaveField newField{name};
+  newField.setValue(value);
+  mFields.push_back(newField);
+}
+void SaveGame::setField(std::string aName, std::string aValue) {
+  try {
+    for (SaveField field : mFields) {
+      if (field.getName() == aName) {
+        field.setValue(aValue);
+        return;
+      }
     }
-
-    inputFile >> jsonData;
-
-    inputFile.close();
-
-    setLevelNr(jsonData["levelNr"]);
-    setLevelStatus(jsonData["levelStatus"]);
-    setPlayerLevel(jsonData["playerLevel"]);
-    std::vector<unsigned> temp;
-    for (const auto& item : jsonData["inventory"]) {
-        temp.push_back(item);
+    throw(aName);
+  } catch (std::string value) {
+    std::cout << "SaveGame::setField(): failed to find field with name \""
+              << aName << "\"" << std::endl;
+  }
+}
+std::string SaveGame::getField(std::string aName) {
+  try {
+    for (SaveField field : mFields) {
+      if (field.getName() == aName) {
+        return field.getValue();
+      }
     }
-    setInventory(temp);
+    throw(aName);
+  } catch (std::string aName) {
+    std::cout << "SaveGame::getField(): failed to find field with name \""
+              << aName << "\"" << std::endl;
+    return "";
+  }
 }
 
-void SaveGame::write() {
-    jsonData["levelNr"] = getLevelNr();
-    jsonData["levelStatus"] = getLevelStatus();
-    jsonData["playerLevel"] = getPlayerLevel();
-    jsonData["inventory"] = getInventory();
-    // Create an output file stream
-    std::ofstream outputFile(mPath);
+void SaveGame::addArray(std::string aName) {
+  // todo: check if item exists yet
+  SaveArray array(aName);
+  mArrays.push_back(array);
+}
 
-    // Check if the file was opened successfully
-    if (!outputFile.is_open()) {
-        throw std::runtime_error("Unable to open the JSON file for writing.");
+const SaveArray &SaveGame::getArray(std::string aName) {
+  try {
+    for (SaveArray array : mArrays) {
+      if (array.getName() == aName) {
+        return array;
+      }
     }
-
-    // Write the JSON object to the file
-    outputFile << jsonData.dump(4); // Pretty print with 4 spaces indentation
-
-    // Close the file
-    outputFile.close();
-}
-
-void SaveGame::setLevelNr(int value) {
-    levelNr = value;
-}
-void SaveGame::setLevelStatus(std::string value) {
-    levelStatus = value;
-}
-void SaveGame::setPlayerLevel(int value) {
-    playerLevel = value;
-}
-void SaveGame::setInventory(std::vector<unsigned>& value) {
-    inventory = value;
-}
-
-int SaveGame::getLevelNr() const {
-    return levelNr;
-}
-std::string SaveGame::getLevelStatus() const {
-    return levelStatus;
-}
-int SaveGame::getPlayerLevel() const {
-    return playerLevel;
-}
-std::vector<unsigned> SaveGame::getInventory() const {
-    return inventory;
+    throw(aName);
+  } catch (std::string aName) {
+    std::cout << "SaveArray::getField(): failed to find field with name \""
+              << aName << "\"" << std::endl;
+    return mArrays[0];
+  }
 }
