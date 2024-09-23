@@ -1,9 +1,72 @@
 #include "SaveGame.hpp"
+#include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp> // Include nlohmann/json
 
-SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {}
+using json = nlohmann::json;
 
-void SaveGame::store() {}
+SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
+  std::ifstream inFile(mFileName);
+  if (inFile) {
+    // File exists, load the data
+    json j;
+    inFile >> j;
+
+    // Load fields from JSON
+    for (const auto &field : j["fields"]) {
+      SaveField saveField(field["name"]);
+      saveField.setValue(field["value"]);
+      mFields.push_back(saveField);
+    }
+
+    // Load arrays from JSON
+    for (const auto &array : j["arrays"]) {
+      SaveArray saveArray(array["name"]);
+      for (const auto &arrayField : array["fields"]) {
+        saveArray.addField(arrayField["name"], arrayField["value"]);
+      }
+      mArrays.push_back(saveArray);
+    }
+  } else {
+    // File doesn't exist, create a new one
+    std::ofstream outFile(mFileName);
+    if (!outFile) {
+      std::cerr << "Failed to create the file: " << mFileName << std::endl;
+    }
+  }
+}
+
+void SaveGame::store() {
+  json j;
+
+  // Serialize fields
+  for (auto &field : mFields) {
+    j["fields"].push_back(
+        {{"name", field.getName()}, {"value", field.getValue()}});
+  }
+
+  // Serialize arrays
+  for (auto &array : mArrays) {
+    json arrayJson;
+    arrayJson["name"] = array.getName();
+
+    for (auto &field :
+         array
+             .getArray()) { // assuming public access to mFields or add a getter
+      arrayJson["fields"].push_back(
+          {{"name", field.getName()}, {"value", field.getValue()}});
+    }
+    j["arrays"].push_back(arrayJson);
+  }
+
+  // Write to file
+  std::ofstream outFile(mFileName);
+  if (outFile) {
+    outFile << j.dump(4); // Pretty print with 4 spaces
+  } else {
+    std::cerr << "Failed to open the file: " << mFileName << std::endl;
+  }
+}
 
 void SaveGame::addField(std::string name, std::string value) {
   SaveField newField{name};

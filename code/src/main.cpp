@@ -1,4 +1,5 @@
 #include "SaveArray.hpp"
+#include "SaveGame.hpp"
 #include "SaveGameTest.hpp"
 #include <iostream>
 
@@ -18,6 +19,7 @@ void writeTest(SaveGameTest saveGame) {
 }
 
 int main() {
-  SaveArray array{"anArray"};
-  array.setField("aField", "aValue");
+  SaveGame sg{"mySave.json"};
+  sg.addField("myField", "myValue");
+  sg.store();
 }

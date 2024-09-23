@@ -10,6 +10,7 @@ public:
 
 public:
   std::string getName();
+  std::vector<SaveField> getArray();
 
 public:
   void addField(std::string name, std::string value);

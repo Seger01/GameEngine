@@ -13,6 +13,8 @@ void SaveArray::addField(std::string name, std::string value) {
 
 std::string SaveArray::getName() { return mName; }
 
+std::vector<SaveField> SaveArray::getArray() { return mFields; }
+
 void SaveArray::setField(std::string aName, std::string aValue) {
   try {
     for (SaveField field : mFields) {
