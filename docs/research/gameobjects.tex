@@ -22,3 +22,23 @@ GameObjects are essentially containers for components, which implement the GameO
 
 \subsection{Adding components to game objects}
 A GameObject is just an empty vessel that needs components to be attached to it.
+To add components to a GameObject, the following steps have to be taken:
+\begin{enumerate}
+      \item \textbf{Defining components:}
+            Components are derived from a base or interface class to ensure each component is managed in a uniform way.
+            Each component will hve a specialized role, like rendering or physics.
+      \item \textbf{Attaching components:}
+            When a component is added to a GameObject, the engine ensures that the component integrates correctly with 
+            the GameObject and other components that are already attached. Some components need another component to function.
+            An example of this is the Collider component, which needs a Transform component.
+      \item \textbf{Limiting component types:}
+            GameObjects can have multiple components, but most components should be limited to one per game object.
+            An example of this is the Physics component, which should be limited to one component to prevent conflicting behaviour.
+\end{enumerate}
+
+\noindent Adding components to GameObjects this way also includes the ability to add or remove components dynamically.
+This opens up the possibility for changes in a GameObject's behaviour during gameplay.
+\\
+Removing components is also important for GameObjects.
+The engine should be able to detach and dispose of components when they are no longer needed.
+This will lead to less resource usage.
