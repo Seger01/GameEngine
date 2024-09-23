@@ -68,9 +68,22 @@ void SaveGame::store() {
   }
 }
 
-void SaveGame::addField(std::string name, std::string value) {
-  SaveField newField{name};
-  newField.setValue(value);
+void SaveGame::addField(std::string aName, std::string aValue) {
+  // Checkif the field already exists
+  try {
+    for (auto &field : mFields) {
+      if (field.getName() == aName) {
+        throw(aName);
+      }
+    }
+  } catch (std::string val) {
+    std::cout << "SaveGame::addField(): cannot add field with name \"" << aName
+              << "\", field already exists." << std::endl;
+    return;
+  }
+
+  SaveField newField{aName};
+  newField.setValue(aValue);
   mFields.push_back(newField);
 }
 void SaveGame::setField(std::string aName, std::string aValue) {
