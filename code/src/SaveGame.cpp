@@ -10,7 +10,14 @@ SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
   if (inFile) {
     // File exists, load the data
     json j;
-    inFile >> j;
+    try {
+      inFile >> j;
+    } catch (...) {
+      std::cout << "SaveGame::SaveGame(std::string): exisitng file \""
+                << aFileName << "\" has invalid syntax, overwriting."
+                << std::endl;
+      createFile();
+    }
 
     // Load fields from JSON
     for (const auto &field : j["fields"]) {
@@ -29,10 +36,14 @@ SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
     }
   } else {
     // File doesn't exist, create a new one
-    std::ofstream outFile(mFileName);
-    if (!outFile) {
-      std::cerr << "Failed to create the file: " << mFileName << std::endl;
-    }
+    createFile();
+  }
+}
+
+void SaveGame::createFile() {
+  std::ofstream outFile(mFileName);
+  if (!outFile) {
+    std::cerr << "Failed to create the file: " << mFileName << std::endl;
   }
 }
 
@@ -100,7 +111,7 @@ void SaveGame::setField(std::string aName, std::string aValue) {
               << aName << "\"" << std::endl;
   }
 }
-std::string SaveGame::getField(std::string aName) {
+std::string SaveGame::getField(std::string aName) const {
   try {
     for (SaveField field : mFields) {
       if (field.getName() == aName) {
@@ -121,7 +132,23 @@ void SaveGame::addArray(std::string aName) {
   mArrays.push_back(array);
 }
 
-const SaveArray &SaveGame::getArray(std::string aName) {
+void SaveGame::setArray(std::string aName, SaveArray aValue) {
+  try {
+    for (SaveArray array : mArrays) {
+      if (array.getName() == aName) {
+        array = aValue;
+        return;
+      }
+    }
+    throw(aName);
+  } catch (std::string aName) {
+    std::cout << "SaveArray::setArray(): failed to find array with name \""
+              << aName << "\"" << std::endl;
+    return;
+  }
+}
+
+SaveArray SaveGame::getArray(std::string aName) const {
   try {
     for (SaveArray array : mArrays) {
       if (array.getName() == aName) {

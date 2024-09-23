@@ -9,13 +9,13 @@ public:
   SaveArray(std::string name);
 
 public:
-  std::string getName();
-  std::vector<SaveField> getArray();
+  std::string getName() const;
+  std::vector<SaveField> getArray() const;
 
 public:
   void addField(std::string name, std::string value);
   void setField(std::string name, std::string value);
-  std::string getField(std::string aName);
+  std::string getField(std::string aName) const;
 
 private:
   std::string mName;

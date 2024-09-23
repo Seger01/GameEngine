@@ -9,16 +9,18 @@ public:
   SaveGame(std::string aFileName);
 
 public:
+  void createFile();
   void store();
 
 public:
   void addField(std::string name, std::string value);
   void setField(std::string name, std::string value);
-  std::string getField(std::string aName);
+  std::string getField(std::string aName) const;
 
 public:
   void addArray(std::string name);
-  const SaveArray &getArray(std::string aName);
+  void setArray(std::string aName, SaveArray aValue);
+  SaveArray getArray(std::string aName) const;
 
 private:
   std::string mFileName;

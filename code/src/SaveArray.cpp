@@ -11,9 +11,9 @@ void SaveArray::addField(std::string name, std::string value) {
   mFields.push_back(newField);
 }
 
-std::string SaveArray::getName() { return mName; }
+std::string SaveArray::getName() const { return mName; }
 
-std::vector<SaveField> SaveArray::getArray() { return mFields; }
+std::vector<SaveField> SaveArray::getArray() const { return mFields; }
 
 void SaveArray::setField(std::string aName, std::string aValue) {
   try {
@@ -29,7 +29,7 @@ void SaveArray::setField(std::string aName, std::string aValue) {
               << aName << "\"" << std::endl;
   }
 }
-std::string SaveArray::getField(std::string aName) {
+std::string SaveArray::getField(std::string aName) const {
   try {
     for (SaveField field : mFields) {
       if (field.getName() == aName) {
@@ -40,5 +40,6 @@ std::string SaveArray::getField(std::string aName) {
   } catch (std::string aName) {
     std::cout << "SaveArray::getField(): failed to find field with name \""
               << aName << "\"" << std::endl;
+    return "";
   }
 }
