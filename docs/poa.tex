@@ -240,8 +240,11 @@ the following points are applied to ensure the technical quality of the project:
     \item Text editor of choice can be used.
     \item Unit test are written for every function except for setters without validation and getters.
     \item Third party libraries must be discussed with the whole team.
+    \item One person must check git commits before merging.
+    \item No commits may be made directly to the main branch.
+    \item No commits may be made directly to the develop branch.
+    \item Only code which can be compiled may be merged in git.
     \item A pull request must always be reviewed by at least one other team member before merging.
-    \item Only code which can be compiled may be committed to git.
     \item Libraries are directly retrieved online whenever possible using cmake.
     \item Libraries which can not be retrieved online using cmake, must be downloaded, built and installed using a single install script
 \end{itemize}
