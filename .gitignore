@@ -50,6 +50,5 @@ build/
 
 code/slikenet/**
 
-code/tinyxml2/**
-code/zlib/**
-code/zstd/**
+code/external/tmxlite-master/**
+output.csv
