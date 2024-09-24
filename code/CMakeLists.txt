@@ -19,17 +19,42 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-g -O0)
 endif()
 
+
+if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
+elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "i686")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a")
+endif()
+
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-# Specify the source files
-set(SOURCES
-    src/main.cpp
-    # Add more source files here
+# Automatically search for source files
+file(GLOB_RECURSE SOURCES
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
+
+# Find SDL2
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
+# Add the external libraries
+add_subdirectory(external/slikenet)
+#add_subdirectory(external/tinyxml2-9.0.0)
+
+# Specify include directories of the external libraries
+include_directories(${Slikenet_INCLUDE_DIRS})
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
+
+# Link SDL2 libraries
+target_link_libraries(engine_BRAVO RakNetLibStatic ${SDL2_LIBRARIES} )
 
 # =====================
 # Google Test Integration
