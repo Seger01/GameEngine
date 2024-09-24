@@ -41,6 +41,10 @@
 *.blg
 .fdb_latexmk
 
-build/
+#ignore build folder
+code/build/
+
+#ignore external libraries
+code/external/
 
 .vscode/
