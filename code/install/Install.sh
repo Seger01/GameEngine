@@ -23,7 +23,8 @@ run_script() {
 
 # Call all install files with error checking
 run_script SDL2_install.sh
-run_script SDL2_Mixer.sh
+run_script SDL2_mixer_install.sh
+run_script SDL2_image_install.sh
 run_script SLikeNet_install.sh
 run_script TmxLite_install.sh
 run_script Box2D_install.sh
