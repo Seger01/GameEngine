@@ -1,23 +1,24 @@
 [submodule "box2d"]
-    path = code/external/box2d
+    path = submodules/box2d
     url = https://github.com/erincatto/box2d.git
 
 [submodule "tmxlite"]
-    path = code/external/tmxlite
+    path = submodules/tmxlite
     url = https://github.com/fallahn/tmxlite.git
 
 [submodule "SLikeNet"]
-    path = code/external/SLikeNet
+    path = submodules/SLikeNet
     url = https://github.com/SLikeSoft/SLikeNet.git
 
 [submodule "SDL"]
-    path = code/external/SDL
+    path = submodules/SDL
     url = https://github.com/libsdl-org/SDL.git
 
 [submodule "SDL_image"]
-    path = code/external/SDL_image
+    path = submodules/SDL_image
     url = https://github.com/libsdl-org/SDL_image.git
+    branch = release-2.8.x
 
 [submodule "SDL_mixer"]
-    path = code/external/SDL_mixer
+    path = submodules/SDL_mixer
     url = https://github.com/libsdl-org/SDL_mixer.git
