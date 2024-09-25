@@ -13,3 +13,6 @@
 [submodule "code/external/box2d"]
 	path = code/external/box2d
 	url = https://github.com/erincatto/box2d.git
+[submodule "code/external/SDL_mixer"]
+	path = code/external/SDL_mixer
+	url = https://github.com/libsdl-org/SDL_mixer.git
