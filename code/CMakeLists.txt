@@ -25,6 +25,10 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 # Specify the source files
 set(SOURCES
     src/main.cpp
+    src/GameObject.cpp
+    src/PhysicsComponent.cpp
+    src/RenderComponent.cpp
+    src/ComponentFactory.cpp
     # Add more source files here
 )
 
