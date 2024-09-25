@@ -60,16 +60,18 @@ add_subdirectory(external/SLikeNet)
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_mixer)
 add_subdirectory(external/tmxlite/tmxlite)
+add_subdirectory(external/box2d)
 
 # Specify include directories of the external libraries
 include_directories(${Slikenet_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/external/tmxlite/tmxlite/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/box2d/include)
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
 
 # Link SDL2 libraries
-target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2 SDL2_mixer tmxlite) 
+target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2 SDL2_mixer tmxlite box2d) 
 
 # =====================
 # Google Test Integration
