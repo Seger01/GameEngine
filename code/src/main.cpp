@@ -5,6 +5,13 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
+
 #include "Animation.h"
 #include "Rectangle.h"
 #include "Renderer.h"
@@ -13,7 +20,7 @@
 
 const int MOVE_SPEED = 10;
 
-int main(int argc, char* args[]) {
+void run() {
     Window myWindow;
     Renderer* myRenderer = new Renderer(myWindow);
 
@@ -107,5 +114,67 @@ int main(int argc, char* args[]) {
 
     // Clean up
     // deInitSDL(window, renderer);
+    return 0;
+}
+
+// Alias for convenience
+using json = nlohmann::json;
+
+// Function to read JSON data into map
+std::map<std::string, std::vector<std::string>> loadKeyMappings(const std::string& filename) {
+    // Create a map to store the data
+    std::map<std::string, std::vector<std::string>> keyMap;
+
+    // Open the JSON file
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file");
+    }
+
+    // Parse the JSON file
+    json jsonData;
+    file >> jsonData;
+
+    // Check if the "KeyMappings" section exists
+    if (jsonData.contains("KeyMappings")) {
+        json keyMappings = jsonData["KeyMappings"];
+
+        // Iterate over each key-value pair in the "KeyMappings" section
+        for (auto& [key, value] : keyMappings.items()) {
+            // Ensure that the value is an array of strings
+            if (value.is_array()) {
+                std::vector<std::string> strings;
+                for (const auto& item : value) {
+                    if (item.is_string()) {
+                        strings.push_back(item);
+                    }
+                }
+                // Insert the array of strings into the map
+                keyMap[key] = strings;
+            }
+        }
+    }
+
+    // Return the populated map
+    return keyMap;
+}
+
+int main() {
+    try {
+        // Load key mappings from the JSON file
+        std::map<std::string, std::vector<std::string>> keyMappings = loadKeyMappings("key_mappings.json");
+
+        // Display the key mappings
+        for (const auto& [id, values] : keyMappings) {
+            std::cout << id << ": ";
+            for (const std::string& val : values) {
+                std::cout << val << " ";
+            }
+            std::cout << std::endl;
+        }
+    } catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << std::endl;
+    }
+
     return 0;
 }
