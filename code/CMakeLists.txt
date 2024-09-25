@@ -19,6 +19,19 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-g -O0)
 endif()
 
+# Execute the Install.sh script
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E chdir ${PROJECT_SOURCE_DIR}/install ./Install.sh
+    RESULT_VARIABLE install_result
+)
+
+if(NOT install_result EQUAL 0)
+    message(FATAL_ERROR "Install.sh script failed with exit code ${install_result}")
+endif()
+
+# Set SDL2MIXER_MIDI option
+option(SDL2MIXER_MIDI "Enable MIDI support in SDL2_mixer" OFF)
+set(SDL2MIXER_MIDI OFF)
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
@@ -39,13 +52,10 @@ file(GLOB_RECURSE SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# Find SDL2
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-
 # Add the external libraries
-add_subdirectory(external/slikenet)
-#add_subdirectory(external/tinyxml2-9.0.0)
+add_subdirectory(external/SLikeNet)
+add_subdirectory(external/SDL)
+add_subdirectory(external/SDL_mixer)
 
 # Specify include directories of the external libraries
 include_directories(${Slikenet_INCLUDE_DIRS})
@@ -54,7 +64,7 @@ include_directories(${Slikenet_INCLUDE_DIRS})
 add_executable(engine_BRAVO ${SOURCES})
 
 # Link SDL2 libraries
-target_link_libraries(engine_BRAVO RakNetLibStatic ${SDL2_LIBRARIES} )
+target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2::SDL2 SDL2::SDL2main SDL2_mixer::SDL2_mixer) 
 
 # =====================
 # Google Test Integration
