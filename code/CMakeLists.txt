@@ -41,23 +41,92 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib_external)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Execute the Install.sh script
-execute_process(
-    COMMAND ${CMAKE_COMMAND} -E chdir ${PROJECT_SOURCE_DIR}/install ./Install.sh
-    RESULT_VARIABLE install_result
-)
-
-if(NOT install_result EQUAL 0)
-    message(FATAL_ERROR "Install.sh script failed with exit code ${install_result}")
-endif()
-
-# Disable building tests for libraries
+# Disable building tests for libraries.
 set(BUILD_TESTING OFF CACHE BOOL "Disable building tests" FORCE)
-set(SDL_TEST OFF CACHE BOOL "Disable building SDL2 test library" FORCE)
+set(BUILD_TESTS OFF CACHE BOOL "Disable building tests" FORCE)
+set(BUILD_SAMPLES OFF CACHE BOOL "Disable building samples" FORCE) # Enable these if you need samples in poc's
+set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples" FORCE) # Enable these if you need examples in poc's
 
-# Set SDL2MIXER_MIDI option
-option(SDL2MIXER_MIDI "Enable MIDI support in SDL2_mixer" OFF)
-set(SDL2MIXER_MIDI OFF)
+# Set options for TmxLite
+set(TMXLITE_STATIC_LIB OFF CACHE BOOL "Should tmxlite be built as a static or shared lib?" FORCE)
+set(PROJECT_STATIC_RUNTIME OFF CACHE BOOL "Use statically linked standard/runtime libraries?" FORCE)
+set(USE_RTTI OFF CACHE BOOL "Use run time type information?" FORCE)
+set(USE_EXTLIBS OFF CACHE BOOL "Use external zlib, zstd and pugixml libraries instead of the included source?" FORCE)
+set(USE_ZSTD OFF CACHE BOOL "Enable zstd compression? (Already set to true if USE_EXTLIBS is true)" FORCE)
+
+# Set options for SlikeNet
+set(RAKNET_ENABLE_SAMPLES OFF CACHE BOOL "Generate RakNet sample projects if true." FORCE)
+set(RAKNET_ENABLE_DLL OFF CACHE BOOL "Generate the DLL project if true." FORCE)
+set(RAKNET_ENABLE_STATIC ON CACHE BOOL "Generate the static library project if true." FORCE)
+set(RAKNET_GENERATE_INCLUDE_ONLY_DIR OFF CACHE BOOL "Setup a include/RakNet/ directory in which all the headers are copied." FORCE)
+
+# set options for SDL_mixer
+set(SDL2MIXER_INSTALL OFF CACHE BOOL "Enable SDL2mixer install target" FORCE)
+set(SDL2MIXER_DEPS_SHARED OFF CACHE BOOL "Default value for loading dependencies dynamically" FORCE)
+set(SDL2MIXER_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE) # Set to ON if you enable almost any other option in this list
+set(SDL2MIXER_SAMPLES OFF CACHE BOOL "Build the SDL2_mixer sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_mixer
+set(SDL2MIXER_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_mixer sample program(s)" FORCE)
+set(SDL2MIXER_CMD OFF CACHE BOOL "Support an external music player" FORCE)
+set(SDL2MIXER_FLAC OFF CACHE BOOL "Enable FLAC music" FORCE)
+set(SDL2MIXER_FLAC_LIBFLAC OFF CACHE BOOL "Enable FLAC music using libFLAC" FORCE)
+set(SDL2MIXER_FLAC_LIBFLAC_SHARED OFF CACHE BOOL "Dynamically load LIBFLAC" FORCE)
+set(SDL2MIXER_FLAC_DRFLAC OFF CACHE BOOL "Enable FLAC music using drflac" FORCE)
+set(SDL2MIXER_GME OFF CACHE BOOL "Support loading GME music via game-music-emu" FORCE)
+set(SDL2MIXER_GME_SHARED OFF CACHE BOOL "Dynamically load libgme" FORCE)
+set(SDL2MIXER_MOD OFF CACHE BOOL "Support loading MOD music" FORCE)
+set(SDL2MIXER_MOD_MODPLUG OFF CACHE BOOL "Support loading MOD music via modplug" FORCE)
+set(SDL2MIXER_MOD_MODPLUG_SHARED OFF CACHE BOOL "Dynamically load modplug" FORCE)
+set(SDL2MIXER_MOD_XMP OFF CACHE BOOL "Support loading MOD music via libxmp" FORCE)
+set(SDL2MIXER_MOD_XMP_LITE OFF CACHE BOOL "Use libxmp-lite instead of libxmp" FORCE)
+set(SDL2MIXER_MOD_XMP_SHARED OFF CACHE BOOL "Dynamically load libxmp(-lite)" FORCE)
+set(SDL2MIXER_MP3 OFF CACHE BOOL "Enable MP3 music" FORCE)
+set(SDL2MIXER_MP3_MINIMP3 OFF CACHE BOOL "Support loading MP3 music via minimp3" FORCE)
+set(SDL2MIXER_MP3_MPG123 OFF CACHE BOOL "Support loading MP3 music via MPG123" FORCE)
+set(SDL2MIXER_MP3_MPG123_SHARED OFF CACHE BOOL "Dynamically load mpg123" FORCE)
+set(SDL2MIXER_MIDI OFF CACHE BOOL "Enable MIDI music" FORCE)
+set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "Support FluidSynth MIDI output" FORCE)
+set(SDL2MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "Dynamically load libfluidsynth" FORCE)
+
+# Set options for SDL_image
+set(SDL2IMAGE_INSTALL OFF CACHE BOOL "Enable SDL2_image install target" FORCE)
+set(SDL2IMAGE_DEPS_SHARED OFF CACHE BOOL "Load dependencies dynamically" FORCE)
+set(SDL2IMAGE_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE)
+set(SDL2IMAGE_SAMPLES OFF CACHE BOOL "Build the SDL2_image sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_image
+set(SDL2IMAGE_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_image sample program(s)" FORCE)
+set(SDL2IMAGE_TESTS OFF CACHE BOOL "Build unit tests?" FORCE)
+set(SDL2IMAGE_TESTS_INSTALL OFF CACHE BOOL "Install unit tests?" FORCE)
+set(SDL2IMAGE_BACKEND_STB OFF CACHE BOOL "Use stb_image for loading JPEG and PNG files" FORCE)
+set(SDL2IMAGE_BACKEND_WIC OFF CACHE BOOL "Add WIC backend (Windows Imaging Component)" FORCE)
+set(SDL2IMAGE_BACKEND_IMAGEIO OFF CACHE BOOL "Use native Mac OS X frameworks for loading images" FORCE)
+set(SDL2IMAGE_AVIF OFF CACHE BOOL "Support loading AVIF images" FORCE)
+set(SDL2IMAGE_BMP OFF CACHE BOOL "Support loading BMP images" FORCE)
+set(SDL2IMAGE_GIF OFF CACHE BOOL "Support loading GIF images" FORCE)
+set(SDL2IMAGE_JPG OFF CACHE BOOL "Support loading JPEG images" FORCE)
+set(SDL2IMAGE_JXL OFF CACHE BOOL "Support loading JXL images" FORCE)
+set(SDL2IMAGE_LBM OFF CACHE BOOL "Support loading LBM images" FORCE)
+set(SDL2IMAGE_PCX OFF CACHE BOOL "Support loading PCX images" FORCE)
+set(SDL2IMAGE_PNG OFF CACHE BOOL "Support loading PNG images" FORCE)
+set(SDL2IMAGE_PNM OFF CACHE BOOL "Support loading PNM images" FORCE)
+set(SDL2IMAGE_QOI OFF CACHE BOOL "Support loading QOI images" FORCE)
+set(SDL2IMAGE_SVG OFF CACHE BOOL "Support loading SVG images" FORCE)
+set(SDL2IMAGE_TGA OFF CACHE BOOL "Support loading TGA images" FORCE)
+set(SDL2IMAGE_TIF OFF CACHE BOOL "Support loading TIFF images" FORCE)
+set(SDL2IMAGE_WEBP OFF CACHE BOOL "Support loading WEBP images" FORCE)
+set(SDL2IMAGE_XCF OFF CACHE BOOL "Support loading XCF images" FORCE)
+set(SDL2IMAGE_XPM OFF CACHE BOOL "Support loading XPM images" FORCE)
+set(SDL2IMAGE_XV OFF CACHE BOOL "Support loading XV images" FORCE)
+set(SDL2IMAGE_JPG_SAVE OFF CACHE BOOL "Add JPEG save support" FORCE)
+set(SDL2IMAGE_PNG_SAVE OFF CACHE BOOL "Add PNG save support" FORCE)
+
+# Set options for Box2D
+set(BOX2D_SANITIZE OFF CACHE BOOL "Enable sanitizers for some builds" FORCE)
+set(BOX2D_AVX2 OFF CACHE BOOL "Enable AVX2 (faster)" FORCE)
+set(BOX2D_SAMPLES OFF CACHE BOOL "Build the Box2D samples" FORCE) # Enable these if you need samples in poc for Box2D
+set(BOX2D_BENCHMARKS OFF CACHE BOOL "Build the Box2D benchmarks" FORCE)
+set(BOX2D_DOCS OFF CACHE BOOL "Build the Box2D documentation" FORCE)
+set(BOX2D_PROFILE OFF CACHE BOOL "Enable profiling with Tracy" FORCE)
+set(BOX2D_VALIDATE OFF CACHE BOOL "Enable heavy validation" FORCE)
+set(BOX2D_UNIT_TESTS OFF CACHE BOOL "Build the Box2D unit tests" FORCE)
 
 # Add the external libraries
 add_subdirectory(external/SLikeNet)
