@@ -13,8 +13,11 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-# Add debug options
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+# Add a CMake option to enable or disable debug mode
+option(ENABLE_DEBUG "Enable debug mode" ON)
+
+# Add debug options if ENABLE_DEBUG is ON
+if(ENABLE_DEBUG)
     message("Debug mode enabled")
     add_compile_options(-g -O0)
 endif()
