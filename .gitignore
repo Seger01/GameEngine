@@ -47,7 +47,4 @@
 #ignore build folder
 code/build/
 
-#ignore external libraries
-# code/external/
-
 .vscode/

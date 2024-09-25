@@ -9,12 +9,17 @@ To download and install the library, follow these steps:
     git clone https://github.com/Engine-BRAVO/Engine-BRAVO.git
     ```
 
-2. Navigate to the build directory:
+2. Update the submodules
+    ```sh
+    git submodule update --init --recursive
+    ```
+
+3. Navigate to the build directory:
     ```sh
     cd Engine-BRAVO/build
     ```
 
-3. Run CMake to configure the project. If you want to include Google Test (gtest), use the following command:
+4. Run CMake to configure the project. If you want to include Google Test (gtest), use the following command:
     ```sh
     cmake -DENABLE_GTEST=ON ..
     ```
@@ -23,7 +28,7 @@ To download and install the library, follow these steps:
     cmake ..
     ```
 
-4. Build the project using `make` or `cmake` with the appropriate number of jobs (replace `N` with the number of jobs):
+5. Build the project using `make` or `cmake` with the appropriate number of jobs:
     ```sh
     make -j$(nproc)
     ```
