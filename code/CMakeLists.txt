@@ -75,35 +75,40 @@ target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2 SDL2_mixer tmxli
 # Google Test Integration
 # =====================
 
-# FetchContent module to download GTest
-include(FetchContent)
+# Option to enable or disable Google Test
+option(ENABLE_GTEST "Enable Google Test" OFF)
 
-# Download and configure GTest
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip  # You can use the latest release
-)
+if(ENABLE_GTEST)
+    # FetchContent module to download GTest
+    include(FetchContent)
 
-# Download GTest during configuration step
-FetchContent_MakeAvailable(googletest)
+    # Download and configure GTest
+    FetchContent_Declare(
+      googletest
+      URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip  # You can use the latest release
+    )
 
-# Enable testing in the project
-enable_testing()
+    # Download GTest during configuration step
+    FetchContent_MakeAvailable(googletest)
 
-# Add the test source files
-set(TEST_SOURCES
-    test/test_main.cpp    # Your test source files
-    # Add more test files here
-)
+    # Enable testing in the project
+    enable_testing()
 
-# Create an executable for tests
-add_executable(tests ${TEST_SOURCES})
+    # Add the test source files
+    set(TEST_SOURCES
+        test/test_main.cpp    # Your test source files
+        # Add more test files here
+    )
 
-# Link GTest and GTest Main to the test executable
-target_link_libraries(tests gtest gtest_main)
+    # Create an executable for tests
+    add_executable(tests ${TEST_SOURCES})
 
-# Add test execution
-add_test(NAME engine_BRAVO_tests COMMAND tests)
+    # Link GTest and GTest Main to the test executable
+    target_link_libraries(tests gtest gtest_main)
 
-# Optionally, set up test include directories
-#target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+    # Add test execution
+    add_test(NAME engine_BRAVO_tests COMMAND tests)
+
+    # Optionally, set up test include directories
+    #target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+endif()
