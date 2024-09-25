@@ -56,15 +56,17 @@ file(GLOB_RECURSE SOURCES
 add_subdirectory(external/SLikeNet)
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_mixer)
+add_subdirectory(external/tmxlite)
 
 # Specify include directories of the external libraries
 include_directories(${Slikenet_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/external/tmxlite/include)
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
 
 # Link SDL2 libraries
-target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2::SDL2 SDL2::SDL2main SDL2_mixer::SDL2_mixer) 
+target_link_libraries(engine_BRAVO PRIVATE RakNetLibStatic SDL2 SDL2_mixer tmxlite) 
 
 # =====================
 # Google Test Integration

@@ -25,6 +25,7 @@ run_script() {
 run_script SDL2_install.sh
 run_script SLikeNet_install.sh
 run_script SDL2_Mixer.sh
+run_script TmxLite_install.sh
 
 echo "All dependencies installed/downloaded successfully"
 exit 0

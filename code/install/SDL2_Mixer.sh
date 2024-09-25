@@ -17,15 +17,6 @@ else
     fi
 fi
 
-# # Install specific version of libsystemd0 if required
-# sudo apt-get install -y libsystemd0=249.11-0ubuntu3.7
-
-# # Check if the installation was successful
-# if [ $? -ne 0 ]; then
-#     echo "Failed to install libsystemd0 library"
-#     exit 1
-# fi
-
 # Install OpusFile library
 sudo apt-get install -y libopusfile-dev
 
@@ -52,14 +43,5 @@ if [ $? -ne 0 ]; then
     echo "Failed to install libwavpack-dev library"
     exit 1
 fi
-
-# # Install FluidSynth library
-# sudo apt-get install -y libfluidsynth-dev
-
-# # Check if the installation was successful
-# if [ $? -ne 0 ]; then
-#     echo "Failed to install FluidSynth library"
-#     exit 1
-# fi
 
 echo "SDL2_mixer download completed successfully."
