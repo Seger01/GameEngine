@@ -45,6 +45,6 @@
 code/build/
 
 #ignore external libraries
-code/external/
+# code/external/
 
 .vscode/
