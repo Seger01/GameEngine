@@ -1,14 +1,14 @@
 #include <string>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_render.h>
+#include <SDL_video.h>
 
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <nlohmann/json.hpp>
+// #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
@@ -35,7 +35,7 @@ void run() {
     const int frameCount = 6;    // Total number of frames in the sprite sheet
 
     // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-    SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
+    SpriteAtlas spriteAtlas(myRenderer, "/home/seger/projects/engine/code/enter_the_gungeon_spritesheet.png");
 
     Rectangle startOfAnimation;
     startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
@@ -114,67 +114,68 @@ void run() {
 
     // Clean up
     // deInitSDL(window, renderer);
-    return 0;
+    return;
 }
 
-// Alias for convenience
-using json = nlohmann::json;
-
-// Function to read JSON data into map
-std::map<std::string, std::vector<std::string>> loadKeyMappings(const std::string& filename) {
-    // Create a map to store the data
-    std::map<std::string, std::vector<std::string>> keyMap;
-
-    // Open the JSON file
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open file");
-    }
-
-    // Parse the JSON file
-    json jsonData;
-    file >> jsonData;
-
-    // Check if the "KeyMappings" section exists
-    if (jsonData.contains("KeyMappings")) {
-        json keyMappings = jsonData["KeyMappings"];
-
-        // Iterate over each key-value pair in the "KeyMappings" section
-        for (auto& [key, value] : keyMappings.items()) {
-            // Ensure that the value is an array of strings
-            if (value.is_array()) {
-                std::vector<std::string> strings;
-                for (const auto& item : value) {
-                    if (item.is_string()) {
-                        strings.push_back(item);
-                    }
-                }
-                // Insert the array of strings into the map
-                keyMap[key] = strings;
-            }
-        }
-    }
-
-    // Return the populated map
-    return keyMap;
-}
+// // Alias for convenience
+// using json = nlohmann::json;
+//
+// // Function to read JSON data into map
+// std::map<std::string, std::vector<std::string>> loadKeyMappings(const std::string& filename) {
+//     // Create a map to store the data
+//     std::map<std::string, std::vector<std::string>> keyMap;
+//
+//     // Open the JSON file
+//     std::ifstream file(filename);
+//     if (!file.is_open()) {
+//         throw std::runtime_error("Could not open file");
+//     }
+//
+//     // Parse the JSON file
+//     json jsonData;
+//     file >> jsonData;
+//
+//     // Check if the "KeyMappings" section exists
+//     if (jsonData.contains("KeyMappings")) {
+//         json keyMappings = jsonData["KeyMappings"];
+//
+//         // Iterate over each key-value pair in the "KeyMappings" section
+//         for (auto& [key, value] : keyMappings.items()) {
+//             // Ensure that the value is an array of strings
+//             if (value.is_array()) {
+//                 std::vector<std::string> strings;
+//                 for (const auto& item : value) {
+//                     if (item.is_string()) {
+//                         strings.push_back(item);
+//                     }
+//                 }
+//                 // Insert the array of strings into the map
+//                 keyMap[key] = strings;
+//             }
+//         }
+//     }
+//
+//     // Return the populated map
+//     return keyMap;
+// }
 
 int main() {
-    try {
-        // Load key mappings from the JSON file
-        std::map<std::string, std::vector<std::string>> keyMappings = loadKeyMappings("key_mappings.json");
-
-        // Display the key mappings
-        for (const auto& [id, values] : keyMappings) {
-            std::cout << id << ": ";
-            for (const std::string& val : values) {
-                std::cout << val << " ";
-            }
-            std::cout << std::endl;
-        }
-    } catch (const std::exception& ex) {
-        std::cerr << "Error: " << ex.what() << std::endl;
-    }
+    run();
+    // try {
+    //     // Load key mappings from the JSON file
+    //     std::map<std::string, std::vector<std::string>> keyMappings = loadKeyMappings("key_mappings.json");
+    //
+    //     // Display the key mappings
+    //     for (const auto& [id, values] : keyMappings) {
+    //         std::cout << id << ": ";
+    //         for (const std::string& val : values) {
+    //             std::cout << val << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    // } catch (const std::exception& ex) {
+    //     std::cerr << "Error: " << ex.what() << std::endl;
+    // }
 
     return 0;
 }

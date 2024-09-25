@@ -105,7 +105,7 @@ set(SDL2IMAGE_JPG OFF CACHE BOOL "Support loading JPEG images" FORCE)
 set(SDL2IMAGE_JXL OFF CACHE BOOL "Support loading JXL images" FORCE)
 set(SDL2IMAGE_LBM OFF CACHE BOOL "Support loading LBM images" FORCE)
 set(SDL2IMAGE_PCX OFF CACHE BOOL "Support loading PCX images" FORCE)
-set(SDL2IMAGE_PNG OFF CACHE BOOL "Support loading PNG images" FORCE)
+set(SDL2IMAGE_PNG ON CACHE BOOL "Support loading PNG images" FORCE)
 set(SDL2IMAGE_PNM OFF CACHE BOOL "Support loading PNM images" FORCE)
 set(SDL2IMAGE_QOI OFF CACHE BOOL "Support loading QOI images" FORCE)
 set(SDL2IMAGE_SVG OFF CACHE BOOL "Support loading SVG images" FORCE)
@@ -164,18 +164,18 @@ add_library(engine_BRAVO_static STATIC ${SOURCES})
 target_link_libraries(engine_BRAVO_shared PRIVATE ${LINK_LIBRARIES})
 target_link_libraries(engine_BRAVO_static PRIVATE ${LINK_LIBRARIES})
 
-# =====================
-# SDL2 and SDL2_image Integration
-# =====================
-
-INCLUDE(FindPkgConfig)
-
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(engine_BRAVO ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
-# =====================
+# # =====================
+# # SDL2 and SDL2_image Integration
+# # =====================
+#
+# INCLUDE(FindPkgConfig)
+#
+# PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+# PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+#
+# INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+# TARGET_LINK_LIBRARIES(engine_BRAVO ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+# # =====================
 # Google Test Integration
 # =====================
 
@@ -195,8 +195,8 @@ if(ENABLE_GTEST)
     # Download GTest during configuration step
     FetchContent_MakeAvailable(googletest)
 
-# Automatically search for test files in the test directory
-file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
+    # Automatically search for test files in the test directory
+    file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
     # Enable testing in the project
     enable_testing()
 
@@ -212,8 +212,8 @@ file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
     # Link GTest and GTest Main to the test executable
     target_link_libraries(tests gtest gtest_main)
 
-# Optionally, set up test include directories
-# target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+    # Optionally, set up test include directories
+    # target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
 
     # Add test execution
     add_test(NAME engine_BRAVO_tests COMMAND tests)
