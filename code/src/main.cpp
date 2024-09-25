@@ -35,7 +35,7 @@ void run() {
     const int frameCount = 6;    // Total number of frames in the sprite sheet
 
     // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-    SpriteAtlas spriteAtlas(myRenderer, "/home/seger/projects/engine/code/enter_the_gungeon_spritesheet.png");
+    SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
 
     Rectangle startOfAnimation;
     startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
