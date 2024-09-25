@@ -52,6 +52,9 @@ file(GLOB_RECURSE SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
+# Disable building tests for SLikeNet
+set(BUILD_TESTING OFF CACHE BOOL "Disable building tests" FORCE)
+
 # Add the external libraries
 add_subdirectory(external/SLikeNet)
 add_subdirectory(external/SDL)
