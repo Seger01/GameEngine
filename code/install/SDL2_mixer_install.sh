@@ -1,22 +1,5 @@
 #!/bin/bash
 
-cd ../external
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change directory to ../external."
-    exit 1
-fi
-
-# Check if the SDL_mixer directory already exists
-if [ -d "SDL_mixer" ]; then
-    echo "SDL_mixer repository already exists. Skipping clone."
-else
-    git clone https://github.com/libsdl-org/SDL_mixer.git --branch release-2.8.0
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to clone SDL_mixer repository."
-        exit 1
-    fi
-fi
-
 # Install OpusFile library
 sudo apt-get install -y libopusfile-dev
 
