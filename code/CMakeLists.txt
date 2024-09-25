@@ -56,11 +56,11 @@ file(GLOB_RECURSE SOURCES
 add_subdirectory(external/SLikeNet)
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_mixer)
-add_subdirectory(external/tmxlite)
+add_subdirectory(external/tmxlite/tmxlite)
 
 # Specify include directories of the external libraries
 include_directories(${Slikenet_INCLUDE_DIRS})
-include_directories(${PROJECT_SOURCE_DIR}/external/tmxlite/include)
+include_directories(${PROJECT_SOURCE_DIR}/external/tmxlite/tmxlite/include)
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES})
