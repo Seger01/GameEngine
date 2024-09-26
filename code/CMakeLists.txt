@@ -168,58 +168,19 @@ target_link_libraries(engine_BRAVO_static PRIVATE ${LINK_LIBRARIES})
 # FMOD Integration
 # =====================
 
-# Path to the FMOD library and include directories
-set(FMOD_DIR "~/fmod/fmodstudioapi20223linux/api/core")  # Replace this with the path where you unpacked FMOD
-set(FMOD_INCLUDE_DIR "${FMOD_DIR}/inc")
-set(FMOD_LIB_DIR "${FMOD_DIR}/lib/x86_64")
+# # Path to the FMOD library and include directories
+# set(FMOD_DIR "~/fmod/fmodstudioapi20223linux/api/core")  # Replace this with the path where you unpacked FMOD
+# set(FMOD_INCLUDE_DIR "${FMOD_DIR}/inc")
+# set(FMOD_LIB_DIR "${FMOD_DIR}/lib/x86_64")
 
-# Include the FMOD headers
-include_directories(${FMOD_INCLUDE_DIR})
+# # Include the FMOD headers
+# include_directories(${FMOD_INCLUDE_DIR})
 
-# Link FMOD library (.so for dynamic linking)
-target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.so)
-
-# Optionally, if you want static linking, use this:
-# target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
-
-# =====================
-# IrrKlang Integration
-# =====================
-
-# Path to the FMOD library and include directories
-set(IRRKLANG_DIR "~/IrrKlang/irrKlang-64bit-1.6.0")  # Replace this with the path where you unpacked FMOD
-set(IRRKLANG_INCLUDE_DIR "${IRRKLANG_DIR}/include")
-set(IRRKLANG_LIB_DIR "${IRRKLANG_DIR}/bin/linux-gcc-64")
-
-# Include the FMOD headers
-include_directories(${IRRKLANG_INCLUDE_DIR})
-
-# Link FMOD library (.so for dynamic linking)
-target_link_libraries(engine_BRAVO ${IRRKLANG_LIB_DIR}/libIrrKlang.so)
-# target_link_libraries(engine_BRAVO ${IRRKLANG_LIB_DIR}/ikpMP3.so) Does not work   
+# # Link FMOD library (.so for dynamic linking)
+# target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.so)
 
 # Optionally, if you want static linking, use this:
 # target_link_libraries(engine_BRAVO ${FMOD_LIB_DIR}/libfmod.a)
-
-# =====================
-# SDL2 Integration
-# =====================
-INCLUDE(FindPkgConfig)
- 
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-PKG_SEARCH_MODULE(SDL2_mixer REQUIRED SDL2_mixer)
-
-find_library(SDL_MIXER_LIBRARY
-  NAMES SDL2_mixer
-  HINTS
-    ENV SDLMIXERDIR
-    ENV SDLDIR
-  PATH_SUFFIXES lib
-)
- 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(engine_BRAVO ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
 
 
 # =====================
