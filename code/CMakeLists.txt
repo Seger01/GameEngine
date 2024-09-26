@@ -90,7 +90,7 @@ set(SDL2MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "Dynamically load libfluidsy
 # Set options for SDL_image
 set(SDL2IMAGE_INSTALL OFF CACHE BOOL "Enable SDL2_image install target" FORCE)
 set(SDL2IMAGE_DEPS_SHARED OFF CACHE BOOL "Load dependencies dynamically" FORCE)
-set(SDL2IMAGE_VENDORED OFF CACHE BOOL "Use vendored third-party libraries" FORCE)
+set(SDL2IMAGE_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE)
 set(SDL2IMAGE_SAMPLES OFF CACHE BOOL "Build the SDL2_image sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_image
 set(SDL2IMAGE_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_image sample program(s)" FORCE)
 set(SDL2IMAGE_TESTS OFF CACHE BOOL "Build unit tests?" FORCE)
