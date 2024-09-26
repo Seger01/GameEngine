@@ -135,6 +135,7 @@ add_subdirectory(external/SDL_mixer)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/tmxlite/tmxlite)
 add_subdirectory(external/box2d)
+add_subdirectory(external/nlohmann_json)
 
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
@@ -148,12 +149,12 @@ file(GLOB_RECURSE SOURCES
 # list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") #TODO add this in later when there are more files than just main.cpp
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image tmxlite box2d)
+set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image tmxlite box2d nlohmann_json::nlohmann_json)
 
 # Add the executable target
 add_executable(engine_BRAVO ${SOURCES} ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
-# Link SDL2 libraries
+# Link libraries
 target_link_libraries(engine_BRAVO PRIVATE ${LINK_LIBRARIES})
 
 # Add shared and static library targets

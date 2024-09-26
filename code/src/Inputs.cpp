@@ -275,3 +275,21 @@ std::string actionToString(DefAction action) {
         return "Unknown Key";
     }
 }
+
+int stringToKeyID(std::string aKeyString) {
+    std::string returnedString = "";
+    int currentKeyAttempt = 0;
+
+    do {
+        returnedString = keyToString(static_cast<Key>(currentKeyAttempt));
+
+        if (returnedString == aKeyString) {
+            return currentKeyAttempt;
+        }
+
+        currentKeyAttempt++;
+
+    } while (returnedString != "Unknown Key");
+
+    return currentKeyAttempt;
+}

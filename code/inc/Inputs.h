@@ -5,7 +5,9 @@
 enum class Key;
 
 // Function to convert enum class values to their corresponding string representation
-std::string KeyToString(Key key);
+std::string keyToString(Key key);
+
+int stringToKeyID(std::string aKeyString);
 
 // Define an enum class for all keyboard, mouse, and controller keys
 enum class Key {
