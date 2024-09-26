@@ -43,6 +43,7 @@ All information in this document is subject to change. \\
     V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
     V0.5                    & 18-09-2024    & Implemented feedback for chapter document inventory and communication  \\ \hline
 V1.0 & 22-09-2024 & Added chapter tasks \\ \hline
+V1.1 & 25-09-2024 & Implemented feedback; Added Kanban, buddy system, project hours
 \end{tabularx}
 \newpage
 
@@ -185,9 +186,35 @@ is be done using e-mail, Microsoft Teams or in person during the scheduled proje
 \\\\
 Collaboration with code and documents is done using GitHub.
 When a team member wants to merge code, the code is reviewed by at least one other team member beforehand.
-\\\\
-There is a standup-meeting every wednesday at 9:15, which is also used as an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
-\\\\
+
+\subsection{Standups}
+The research and POC phase of the project contains a weekly standup at wednsday 9:15 in which current progress is discussed for each team member. The Standup schedule changes once research and pocs are finished and development on the engine starts. The development phase contains 2 daily standups and a designated day for the entire group to work on the project at school.
+
+
+
+\subsection{Buddy system}
+The projects makes use of a buddy system in which pairs are made between developers to share knowledge with eachother on their designated tasks. The sharing of knowledge functions as a safety net when a developer isn't able to work for a period of time in which their buddy can temporarily take over the task with the shared knowledge. The pairings are as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+  \hline
+  \textbf{Developer} & \textbf{Buddy} \\
+  \hline
+  Ronan & Siem \\
+  \hline
+  Siem & Seger \\
+  \hline
+  Seger & Sean \\
+  \hline
+  Sean & Angel \\
+  \hline 
+  Angel & Ronan \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Yellow and red cards}
 A yellow and red card system is used to penalize team members when necessary.
 A yellow card means a warning. If two yellow cards are received by a team member, they receive a red card, which means
 they are disqualified from participating in the project.
@@ -216,7 +243,14 @@ Tasks are created and divided over group members on a per-week basis.
 The tasks avaialable in the first weeks of the project are not all specifically aimed at developing the engine (research, proof of concepts et cetera), these tasks are managed by each member's own administration.
 When research and proof of concepts are all finished, and the the entire team's effort lies in developing the engine, this decision is reconsidered.
 
-Every team member records the amount of worked hours per task every day in their corresponding timesheet. This also immediately provides a convenient way to compare the work balance between members.
+\subsection{Worked hours}
+Each member is expected to spend a minimum of 14 hours per week on the project with the responsibility for each member to record their worked hours and task in the timesheet provided in the github. If a member spends 50 extra hours on the project they may gain a total of 0.5 extra points when dividing individual efforts during the assessment. Besides this, the project leader runs a script each friday to keep track of time spent on the project for each member.
+\subsection{Task management}
+
+To keep track of tasks per member, the project makes use of a kanban board in combination with the tasks mentioned in the time registration. This board is used during standups in which the tasks per member can be updated and discussed. 
+\\\\
+The project uses kanban to keep the assigning and performing of tasks flexible during the project, as time per task is difficult to predict due to a lack of experience with similar projects.
+
 \newpage
 
 \section{Quality}
@@ -359,7 +393,7 @@ The project leader is responsible for planning meetings, handing in documents an
         \hline
         Nr. & Consequence                                                                                                                                   & Mitigation                                                                               \\ [0.5ex]
         \hline\hline
-        2.1 & Parts of the project may be delayed or remain unfinished                                                                                      & No mitigation                                                                            \\
+        2.1 & Parts of the project may be delayed or remain unfinished                                                                                      & The project makes use of a buddy system in which knowledge is shared and tasks can be temporarily taken over by their designated buddy                                                                            \\
         \hline
         2.2 & Poor planning may result in a lack of time for certain aspects of the project and may lead to cuts in the project or an unfinished end result & Hosting weekly stand ups to discuss progress and providing buffers for potential delays  \\
         \hline
