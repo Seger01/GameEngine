@@ -157,6 +157,17 @@ int loadMusic(const char *filename) {
   return music.size() - 1;
 }
 
+int loadSound(const char *filename) {
+  Mix_Chunk *m = NULL;
+  m = Mix_LoadWAV(filename);
+  if (m == NULL) {
+    printf("Failed to load sound. SDL_Mixer error: %s\n", Mix_GetError());
+    return -1;
+  }
+  sounds.push_back(m);
+  return sounds.size() - 1;
+}
+
 int init() {
   // Initialize SDL with audio support
   if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -174,33 +185,57 @@ int init() {
   return 0;
 }
 
+int playMusic(int m) {
+  if (Mix_PlayingMusic() == 0) {
+    Mix_Volume(1, 100);
+    Mix_PlayMusic(
+        music[m],
+        -1); // Play the music (-1 means loop infinitely, 0 means play once)
+  }
+  return 0;
+}
+
+int playSound(int s) {
+  Mix_Volume(-1, 80);
+  // Channel number, sound object and loop infinitely
+  Mix_PlayChannel(0, sounds[s], -1);
+  return 0;
+}
+
+void finalize() {
+  for (int s = 0; s < sounds.size(); s++) {
+    Mix_FreeChunk(sounds[s]);
+    sounds[s] = NULL;
+  }
+  for (int s = 0; s < music.size(); s++) {
+    Mix_FreeMusic(music[s]);
+    music[s] = NULL;
+  }
+  Mix_Quit();
+}
+
 void sdlMixer() {
   init();
   loadMusic("../../resources/music.wav");
+  loadSound("../../resources/music.wav");
 
-  // Load the gun sound file
-  Mix_Music *gun1 = Mix_LoadMUS("../../resources/gun1.wav");
-  if (gun1 == NULL) {
-    printf("Failed to load MP3 file! SDL_mixer Error: %s\n", Mix_GetError());
-    return;
-  }
+  // playMusic(0); // Play music at index 0
+  int angle = 0;
 
-  // Play the music (-1 means loop infinitely, 0 means play once)
-  if (Mix_PlayMusic(music[0], 1) == -1) {
-    printf("Failed to play music! SDL_mixer Error: %s\n", Mix_GetError());
-    Mix_FreeMusic(music[0]);
-    return;
-  }
+  playSound(0); // Play sound at index 0
 
   // Wait until the music has finished playing
-  while (Mix_PlayingMusic()) {
-    SDL_Delay(100); // Sleep for 100 ms
+  while (Mix_Playing(0)) {
+    // while (Mix_PlayingMusic()) {
+    angle %= 360;
+    SDL_Delay(500); // Sleep for 100 ms
+    Mix_SetPosition(0, angle, 100);
+    angle += 10;
+    std::cout << angle << std::endl;
   }
 
   // Clean up
-  Mix_FreeMusic(music[0]);
-  Mix_CloseAudio();
-  SDL_Quit();
+  finalize();
 }
 
 int main() {
