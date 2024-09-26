@@ -19,4 +19,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-25, 09:15, 1   , Weekly team meeting
 2024-09-25, 10:15, 6   , Researched different ways to build an input system; thought through a design for a more advanced implementation of an Input system
 2024-09-25, 10:00, 2   , Implemented the first version of the json parser and DefinedAction classes
-2024-09-25, 12:00, 1   , Team meeting and standup
+2024-09-25, 12:00, 1.5 , Team meeting and standup
