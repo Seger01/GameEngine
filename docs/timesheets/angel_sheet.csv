@@ -30,3 +30,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-27, 10:30, 1.0, created clang for auto format code
 2024-09-27, 11:30, 0.75, fixed lib sub module
 2024-09-27, 12:15, 2.75, created bouncing square poc
+2024-09-27, 15:00, 0.75, cleaned up physics poc code
