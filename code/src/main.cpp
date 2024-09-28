@@ -121,50 +121,12 @@ void run() {
 // Alias for convenience
 using json = nlohmann::json;
 
-// Function to read JSON data into map
-std::map<std::string, std::vector<std::string>> loadKeyMappings(const std::string& filename) {
-    // Create a map to store the data
-    std::map<std::string, std::vector<std::string>> keyMap;
-
-    // Open the JSON file
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open file");
-    }
-
-    // Parse the JSON file
-    json jsonData;
-    file >> jsonData;
-
-    // Check if the "KeyMappings" section exists
-    if (jsonData.contains("KeyMappings")) {
-        json keyMappings = jsonData["KeyMappings"];
-
-        // Iterate over each key-value pair in the "KeyMappings" section
-        for (auto& [key, value] : keyMappings.items()) {
-            // Ensure that the value is an array of strings
-            if (value.is_array()) {
-                std::vector<std::string> strings;
-                for (const auto& item : value) {
-                    if (item.is_string()) {
-                        strings.push_back(item);
-                    }
-                }
-                // Insert the array of strings into the map
-                keyMap[key] = strings;
-            }
-        }
-    }
-
-    // Return the populated map
-    return keyMap;
-}
-
 // Class definition
-class Context {
+class DefinedAction {
 public:
-    Context(std::string aHighlevelTarget) {
-        read(aHighlevelTarget);
+    DefinedAction(DefAction aActionID, std::vector<Key> aActions) {
+        mTriggerKeys = aActions;
+        mActionID = aActionID;
         return;
     }
 
@@ -178,33 +140,190 @@ public:
         }
     }
 
-    void read(std::string aHighlevelTarget) {
+    void print() {
+        std::cout << actionToString(mActionID) << std::endl;
+        for (int i = 0; i < mTriggerKeys.size(); i++) {
+            std::cout << "   " << keyToString(mTriggerKeys[i]) << std::endl;
+        }
+    }
+
+    DefAction getID() { return mActionID; }
+
+private:
+    DefAction mActionID = DefAction::Undefined;
+
+    std::vector<Key> mTriggerKeys = {};
+
+    // Vectoj to store all subscribed functions
+    std::vector<std::function<void(float)>> callbacks;
+};
+
+class Context {
+public:
+    Context(std::string aContextName) {
+        mContextName = aContextName;
+        return;
+    }
+
+    void addDefAction(std::shared_ptr<DefinedAction> aDefinedAction) {
+        std::cout << "mRegisteredActions.push_back(aDefinedAction);" << std::endl;
+        mRegisteredActions.push_back(aDefinedAction);
+
+        return;
+    }
+
+    void processKey(Key pressedKey) {
+        for (int i = 0; i < mRegisteredActions.size(); i++) {
+        }
+
+        return;
+    }
+
+    void print() {
+        std::cout << "Context name: " << mContextName << " amount of registerd actions: " << mRegisteredActions.size()
+                  << std::endl;
+
+        for (auto& defAction : mRegisteredActions) {
+            defAction->print();
+        }
+    }
+
+private:
+    std::vector<std::shared_ptr<DefinedAction>> mRegisteredActions;
+
+    std::string mContextName;
+};
+
+class ContextManager {
+public:
+    ContextManager() {
+        this->loadDefinedActions();
+
+        this->createContexts();
+
+        return;
+    }
+
+    void createContexts() {
+        std::map<std::string, std::vector<std::string>> defActions;
+
+        try {
+            defActions = readJsonFile("contexts.json");
+        } catch (const std::exception& ex) {
+            std::cerr << "Error: " << ex.what() << std::endl;
+        }
+
+        for (const auto& pair : defActions) {
+            const std::string& contextName = pair.first;
+            const std::vector<std::string>& keys = pair.second;
+
+            Context context(contextName);
+
+            std::cout << "mDefActions.size() " << mDefActions.size() << std::endl;
+
+            for (int iDefActions = 0; iDefActions < mDefActions.size(); iDefActions++) {
+                for (int i = 0; i < keys.size(); i++) {
+                    std::cout << "Comparing: " << actionToString(mDefActions[iDefActions]->getID()) << ", " << keys[i]
+                              << std::endl;
+                    if (actionToString(mDefActions[iDefActions]->getID()) == keys[i]) {
+                        context.addDefAction(mDefActions[iDefActions]);
+                    }
+                }
+            }
+            // context.addDefAction(this->mDefActions[0]);
+            mContexts.push_back(context);
+        }
+
+        for (int i = 0; i < mContexts.size(); i++) {
+            mContexts[i].print();
+        }
+    }
+
+    void loadDefinedActions() {
+        std::map<std::string, std::vector<std::string>> defActions;
+
+        try {
+            defActions = readJsonFile("defined_actions.json");
+        } catch (const std::exception& ex) {
+            std::cerr << "Error: " << ex.what() << std::endl;
+        }
+
+        // Iterate over all keys and values
+        for (const auto& pair : defActions) {
+            const std::string& definedActionName = pair.first;
+            const std::vector<std::string>& keys = pair.second;
+
+            std::vector<Key> keyIDs;
+
+            for (int i = 0; i < keys.size(); i++) {
+                keyIDs.push_back(static_cast<Key>(stringToKeyID(keys[i])));
+            }
+
+            mDefActions.push_back(
+                std::make_shared<DefinedAction>(static_cast<DefAction>(stringToActionID(definedActionName)), keyIDs));
+        }
+
+        for (int i = 0; i < mDefActions.size(); i++) {
+            mDefActions[i]->print();
+        }
+    }
+
+    // Function to read JSON data into map
+    std::map<std::string, std::vector<std::string>> readJsonFile(const std::string& filename) {
+        // Create a map to store the data
+        std::map<std::string, std::vector<std::string>> keyMap;
+
+        // Open the JSON file
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Could not open file");
+        }
+
+        // Parse the JSON file
+        json jsonData;
+        file >> jsonData;
+
+        // Check if the "KeyMappings" section exists
+
+        // Iterate over each key-value pair in the "KeyMappings" section
+        for (auto& [key, value] : jsonData.items()) {
+            // Ensure that the value is an array of strings
+            if (value.is_array()) {
+                std::vector<std::string> strings;
+                for (const auto& item : value) {
+                    if (item.is_string()) {
+                        strings.push_back(item);
+                    }
+                }
+                // Insert the array of strings into the map
+                keyMap[key] = strings;
+            }
+        }
+
+        // Return the populated map
+        return keyMap;
+    }
+
+    void readKeys(std::string aActionName) {
         try {
             // Load key mappings from the JSON file
-            std::map<std::string, std::vector<std::string>> keyMappings = loadKeyMappings("HighlevelMappings.json");
 
             // Using operator[] to retrieve the vector of strings associated with the key
-            std::vector<std::string> values = keyMappings[aHighlevelTarget]; // Directly access the vector
-
-            for (int i = 0; i < values.size(); i++) {
-                mTriggerKeys.push_back(static_cast<Key>(stringToKeyID(values[i])));
-            }
+            // std::vector<std::string> values = defActions[aActionName]; // Directly access the vector
+            //
+            // for (int i = 0; i < values.size(); i++) {
+            //     mTriggerKeys.push_back(static_cast<Key>(stringToKeyID(values[i])));
+            // }
 
         } catch (const std::exception& ex) {
             std::cerr << "Error: " << ex.what() << std::endl;
         }
     }
 
-    std::vector<Key> mTriggerKeys = {};
-
 private:
-    // Vector to store all subscribed functions
-    std::vector<std::function<void(float)>> callbacks;
-};
+    std::vector<std::shared_ptr<DefinedAction>> mDefActions;
 
-class ContextManager {
-public:
-    ContextManager();
+    std::vector<Context> mContexts;
 };
 
 // External function 1
@@ -216,21 +335,28 @@ void externalFunction2(float value) { std::cout << "External function 2 received
 int main() {
     // run();
 
-    Context context("MoveUp");
+    // std::vector<Key> keys = {Key::Key_W, Key::Key_A, Key::Key_S};
+    //
+    // DefinedAction action(0, keys);
+    //
+    // action.print();
+
+    ContextManager contextManager;
 
     // // Subscribe external functions
     // context.subscribe(externalFunction1);
     // context.subscribe(externalFunction2);
     //
     // // Subscribe a lambda function for variety
-    // context.subscribe([](float value) { std::cout << "Lambda function received value: " << value << std::endl; });
+    // context.subscribe([](float value) { std::cout << "Lambda function received value: " << value << std::endl;
+    // });
     //
     // // Simulate an update
     // context.update(42.0f);
 
-    for (int i = 0; i < context.mTriggerKeys.size(); i++) {
-        std::cout << static_cast<int>(context.mTriggerKeys[i]) << std::endl;
-    }
+    // for (int i = 0; i < action.mTriggerKeys.size(); i++) {
+    //     std::cout << static_cast<int>(action.mTriggerKeys[i]) << std::endl;
+    // }
 
     return 0;
 }

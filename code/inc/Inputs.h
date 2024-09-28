@@ -3,11 +3,16 @@
 #include <string>
 
 enum class Key;
+enum class DefAction;
 
 // Function to convert enum class values to their corresponding string representation
 std::string keyToString(Key key);
 
 int stringToKeyID(std::string aKeyString);
+
+std::string actionToString(DefAction action);
+
+int stringToActionID(std::string aKeyString);
 
 // Define an enum class for all keyboard, mouse, and controller keys
 enum class Key {
@@ -151,9 +156,10 @@ enum class Key {
 };
 
 enum class DefAction {
-    Player_Up,
-    Player_Left,
-    Player_Down,
-    Player_Right,
+    Move_Up,
+    Move_Left,
+    Move_Down,
+    Move_Right,
 
+    Undefined
 };

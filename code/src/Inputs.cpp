@@ -262,18 +262,36 @@ std::string keyToString(Key key) {
 
 std::string actionToString(DefAction action) {
     switch (action) {
-    case DefAction::Player_Up:
-        return "Player_Up";
-    case DefAction::Player_Left:
-        return "Player_Left";
-    case DefAction::Player_Down:
-        return "Player_Down";
-    case DefAction::Player_Right:
-        return "Player_Right";
+    case DefAction::Move_Up:
+        return "Move_Up";
+    case DefAction::Move_Left:
+        return "Move_Left";
+    case DefAction::Move_Down:
+        return "Move_Down";
+    case DefAction::Move_Right:
+        return "Move_Right";
 
     default:
-        return "Unknown Key";
+        return "Unknown Action";
     }
+}
+
+int stringToActionID(std::string aKeyString) {
+    std::string returnedString = "";
+    int currentKeyAttempt = 0;
+
+    do {
+        returnedString = actionToString(static_cast<DefAction>(currentKeyAttempt));
+
+        if (returnedString == aKeyString) {
+            return currentKeyAttempt;
+        }
+
+        currentKeyAttempt++;
+
+    } while (returnedString != "Unknown Action");
+
+    return currentKeyAttempt;
 }
 
 int stringToKeyID(std::string aKeyString) {
