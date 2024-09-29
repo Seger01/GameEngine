@@ -19,7 +19,12 @@ void writeTest(SaveGameTest saveGame) {
 }
 
 int main() {
-  SaveGame sg{"mySave.json"};
+  SaveGame sg{"code/output/mySave.json"};
   sg.addField("myField", "myValue");
+  sg.setField("myField", "newValue");
+  sg.addArray("myArray");
+  SaveArray array{sg.getArray("myArray")};
+  array.addField("myArrayField", "myArrayValue");
+  sg.setArray("myArray", array);
   sg.store();
 }

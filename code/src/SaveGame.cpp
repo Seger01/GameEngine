@@ -10,33 +10,44 @@ SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
   if (inFile) {
     // File exists, load the data
     json j;
-    try {
-      inFile >> j;
-    } catch (...) {
-      std::cout << "SaveGame::SaveGame(std::string): exisitng file \""
-                << aFileName << "\" has invalid syntax, overwriting."
-                << std::endl;
-      createFile();
-    }
+    inFile >> j;
 
     // Load fields from JSON
-    for (const auto &field : j["fields"]) {
-      SaveField saveField(field["name"]);
-      saveField.setValue(field["value"]);
-      mFields.push_back(saveField);
+    if (j.contains("fields")) {
+      for (const auto &field : j["fields"]) {
+        if (field.contains("name") && field.contains("value")) {
+          SaveField saveField(field["name"]);
+          saveField.setValue(field["value"]);
+          mFields.push_back(saveField);
+        }
+      }
     }
 
     // Load arrays from JSON
-    for (const auto &array : j["arrays"]) {
-      SaveArray saveArray(array["name"]);
-      for (const auto &arrayField : array["fields"]) {
-        saveArray.addField(arrayField["name"], arrayField["value"]);
+    if (j.contains("arrays")) {
+      for (const auto &array : j["arrays"]) {
+        if (array.contains("name") && array.contains("fields")) {
+          SaveArray saveArray(array["name"]);
+
+          // Only add fields if they exist
+          if (!array["fields"].empty()) {
+            for (const auto &arrayField : array["fields"]) {
+              if (arrayField.contains("name") && arrayField.contains("value")) {
+                saveArray.addField(arrayField["name"], arrayField["value"]);
+              }
+            }
+          }
+
+          mArrays.push_back(saveArray);
+        }
       }
-      mArrays.push_back(saveArray);
     }
   } else {
     // File doesn't exist, create a new one
-    createFile();
+    std::ofstream outFile(mFileName);
+    if (!outFile) {
+      std::cerr << "Failed to create the file: " << mFileName << std::endl;
+    }
   }
 }
 
@@ -99,7 +110,7 @@ void SaveGame::addField(std::string aName, std::string aValue) {
 }
 void SaveGame::setField(std::string aName, std::string aValue) {
   try {
-    for (SaveField field : mFields) {
+    for (SaveField &field : mFields) {
       if (field.getName() == aName) {
         field.setValue(aValue);
         return;
