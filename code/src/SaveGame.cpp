@@ -145,7 +145,7 @@ void SaveGame::addArray(std::string aName) {
 
 void SaveGame::setArray(std::string aName, SaveArray aValue) {
   try {
-    for (SaveArray array : mArrays) {
+    for (SaveArray &array : mArrays) {
       if (array.getName() == aName) {
         array = aValue;
         return;
