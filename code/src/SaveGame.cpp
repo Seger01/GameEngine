@@ -138,7 +138,19 @@ std::string SaveGame::getField(std::string aName) const {
 }
 
 void SaveGame::addArray(std::string aName) {
-  // todo: check if item exists yet
+  // Check if the array already exists
+  try {
+    for (auto &array : mArrays) {
+      if (array.getName() == aName) {
+        throw(aName);
+      }
+    }
+  } catch (std::string val) {
+    std::cout << "SaveGame::addArray(): cannot add array with name \"" << aName
+              << "\", field already exists." << std::endl;
+    return;
+  }
+
   SaveArray array(aName);
   mArrays.push_back(array);
 }
