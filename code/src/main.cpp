@@ -133,10 +133,23 @@ public:
     // Subscribe function to add callbacks
     void subscribe(const std::function<void(float)>& callback) { callbacks.push_back(callback); }
 
+    bool isInKeyList(Key aPotentialKey) {
+        for (int i = 0; i < mTriggerKeys.size(); i++) {
+            if (mTriggerKeys[i] == aPotentialKey) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // Function to simulate an update and notify all subscribers
-    void update(float value) {
+    void trigger(Key aReceivedKey) {
+        if (!isInKeyList(aReceivedKey))
+            return;
+
         for (const auto& callback : callbacks) {
-            callback(value);
+            callback(1.0);
         }
     }
 
@@ -165,6 +178,8 @@ public:
         return;
     }
 
+    std::string getName() { return mContextName; }
+
     void addDefAction(std::shared_ptr<DefinedAction> aDefinedAction) {
         std::cout << "mRegisteredActions.push_back(aDefinedAction);" << std::endl;
         mRegisteredActions.push_back(aDefinedAction);
@@ -172,8 +187,9 @@ public:
         return;
     }
 
-    void processKey(Key pressedKey) {
+    void processKey(Key aPressedKey) {
         for (int i = 0; i < mRegisteredActions.size(); i++) {
+            mRegisteredActions[i]->trigger(aPressedKey);
         }
 
         return;
@@ -200,6 +216,35 @@ public:
         this->loadDefinedActions();
 
         this->createContexts();
+
+        return;
+    }
+
+    void subscribeToAction(DefAction aDefAction, const std::function<void(float)>& callback) {
+        for (int i = 0; i < mDefActions.size(); i++) {
+            if (mDefActions[i]->getID() == aDefAction) {
+                mDefActions[i]->subscribe(callback);
+            }
+        }
+    }
+
+    void processKey(Key aInputKey) {
+        mContexts[mActiveContextIndex].processKey(aInputKey);
+
+        return;
+    }
+
+    void setActiveContext(std::string aWantedContex) {
+        for (int i = 0; i < mContexts.size(); i++) {
+            if (mContexts[i].getName() == aWantedContex) {
+                mActiveContextIndex = i;
+                break;
+            }
+
+            if (i == mContexts.size() - 1) {
+                std::cout << "Failed to find context: " << aWantedContex << std::endl;
+            }
+        }
 
         return;
     }
@@ -321,6 +366,8 @@ public:
     }
 
 private:
+    int mActiveContextIndex = 0;
+
     std::vector<std::shared_ptr<DefinedAction>> mDefActions;
 
     std::vector<Context> mContexts;
@@ -342,6 +389,14 @@ int main() {
     // action.print();
 
     ContextManager contextManager;
+
+    contextManager.subscribeToAction(DefAction::Move_Up, externalFunction1);
+
+    contextManager.setActiveContext("Playing");
+
+    contextManager.processKey(Key::Key_0);
+    contextManager.processKey(Key::Key_R);
+    contextManager.processKey(Key::Key_W);
 
     // // Subscribe external functions
     // context.subscribe(externalFunction1);
