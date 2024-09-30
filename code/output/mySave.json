@@ -1,0 +1,19 @@
+{
+    "arrays": [
+        {
+            "fields": [
+                {
+                    "name": "myArrayField",
+                    "value": "myArrayValue"
+                }
+            ],
+            "name": "myArray"
+        }
+    ],
+    "fields": [
+        {
+            "name": "myField",
+            "value": "newValue"
+        }
+    ]
+}

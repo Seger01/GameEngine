@@ -30,3 +30,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-26, 12:00, 1.5, Group meeting
 2024-09-26, 15:00, 3.5, refactoring GameObjects POC to ECS
 2024-09-27, 11:45, 2.5, GameObjects research
+2024-09-29, 11:30, 0.5, small refactor of GameObjects POC
