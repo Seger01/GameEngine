@@ -17,106 +17,10 @@
 #include "SpriteAtlas.h"
 #include "Window.h"
 
+#include "Event.h"
 #include "Inputs.h"
 
 const int MOVE_SPEED = 10;
-
-void run() {
-    Window myWindow;
-    Renderer* myRenderer = new Renderer(myWindow);
-
-    bool quit = false;
-    SDL_Event event;
-
-    // Variables for animation timing and sprite movement
-    Uint32 lastTime = 0;         // Time of the last frame change
-    int frame = 0;               // Current frame (sprite in the sprite sheet)
-    const int spriteWidth = 16;  // Width of each sprite
-    const int spriteHeight = 25; // Height of each sprite
-    const int frameCount = 6;    // Total number of frames in the sprite sheet
-
-    // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-    SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
-
-    Rectangle startOfAnimation;
-    startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
-    startOfAnimation.y = 187;         // Keep the vertical position constant (you can change this for vertical movement)
-    startOfAnimation.w = spriteWidth; // The width of the sprite
-    startOfAnimation.h = spriteHeight; // The height of the sprite
-
-    Animation& animation = spriteAtlas.getAnimation(startOfAnimation, frameCount);
-
-    // Define the destination rect where the image will be drawn
-    Rectangle destRect;
-    destRect.x = 100;    // The x position on the screen
-    destRect.y = 100;    // The y position on the screen
-    destRect.w = 18 * 4; // The width of the drawn image (scaling)
-    destRect.h = 26 * 4; // The height of the drawn image (scaling)
-
-    while (!quit) {
-        // Event handling
-        while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-            // if (event.type == SDL_KEYDOWN) {
-            //     switch (event.key.keysym.sym) {
-            //     case SDLK_w: // Move up
-            //         destRect.y -= MOVE_SPEED;
-            //         break;
-            //     case SDLK_s: // Move down
-            //         destRect.y += MOVE_SPEED;
-            //         break;
-            //     case SDLK_a: // Move left
-            //         destRect.x -= MOVE_SPEED;
-            //         break;
-            //     case SDLK_d: // Move right
-            // destRect.x += MOVE_SPEED;
-            //         break;
-            //     }
-            // }
-        }
-        // Get the state of all keys
-        const Uint8* keyState = SDL_GetKeyboardState(NULL);
-
-        // Check if specific keys are held down (e.g., Left arrow, Space, or Escape)
-        if (keyState[SDL_SCANCODE_W]) {
-            destRect.y -= MOVE_SPEED;
-        }
-        if (keyState[SDL_SCANCODE_A]) {
-            destRect.x -= MOVE_SPEED;
-        }
-        if (keyState[SDL_SCANCODE_S]) {
-            destRect.y += MOVE_SPEED;
-        }
-        if (keyState[SDL_SCANCODE_D]) {
-            destRect.x += MOVE_SPEED;
-        }
-        if (keyState[SDL_SCANCODE_SPACE]) {
-            std::cout << "Space bar is being held down" << std::endl;
-        }
-
-        // Clear screen
-        // SDL_RenderClear(renderer);
-        myRenderer->clear();
-
-        // Texture* spriteTexture = animation.getTexture();
-
-        // Copy part of the sprite sheet to the renderer
-        // SDL_RenderCopy(renderer, spriteTexture->getSDL_Texture(), &srcRect, &destRect);
-        myRenderer->renderAnimation(animation, destRect);
-
-        // Update the screen
-        // SDL_RenderPresent(renderer);
-        myRenderer->present();
-
-        SDL_Delay(16);
-    }
-
-    // Clean up
-    // deInitSDL(window, renderer);
-    return;
-}
 
 // Alias for convenience
 using json = nlohmann::json;
@@ -180,7 +84,7 @@ public:
 
     std::string getName() { return mContextName; }
 
-    void addDefAction(std::shared_ptr<DefinedAction> aDefinedAction) {
+    void addDefAction(DefinedAction& aDefinedAction) {
         std::cout << "mRegisteredActions.push_back(aDefinedAction);" << std::endl;
         mRegisteredActions.push_back(aDefinedAction);
 
@@ -189,7 +93,7 @@ public:
 
     void processKey(Key aPressedKey) {
         for (int i = 0; i < mRegisteredActions.size(); i++) {
-            mRegisteredActions[i]->trigger(aPressedKey);
+            mRegisteredActions[i].get().trigger(aPressedKey);
         }
 
         return;
@@ -200,12 +104,12 @@ public:
                   << std::endl;
 
         for (auto& defAction : mRegisteredActions) {
-            defAction->print();
+            defAction.get().print();
         }
     }
 
 private:
-    std::vector<std::shared_ptr<DefinedAction>> mRegisteredActions;
+    std::vector<std::reference_wrapper<DefinedAction>> mRegisteredActions;
 
     std::string mContextName;
 };
@@ -271,7 +175,7 @@ public:
                     std::cout << "Comparing: " << actionToString(mDefActions[iDefActions]->getID()) << ", " << keys[i]
                               << std::endl;
                     if (actionToString(mDefActions[iDefActions]->getID()) == keys[i]) {
-                        context.addDefAction(mDefActions[iDefActions]);
+                        context.addDefAction(*mDefActions[iDefActions]);
                     }
                 }
             }
@@ -373,30 +277,146 @@ private:
     std::vector<Context> mContexts;
 };
 
+class Input {
+public:
+    Input() {}
+
+    void subscribe(DefAction aDefAction, const std::function<void(float)>& callback) {
+        mContextManager.subscribeToAction(aDefAction, callback);
+    }
+
+    void update() {
+        int numKeys;
+        const Uint8* allKeys = SDL_GetKeyboardState(&numKeys);
+
+        for (int i = 0; i < numKeys; ++i) {
+            if (allKeys[i]) {
+                // std::cout << "Key with scancode " << keyToString((Key)i) << " is pressed" << std::endl;
+                mContextManager.processKey((Key)i);
+            }
+        }
+
+        return;
+    }
+
+    bool getKeyDown(Key aKeyToCheck) { return false; }
+    bool isKeyDown() { return false; }
+
+private:
+    ContextManager mContextManager;
+
+    Uint8* mAllKeys = nullptr;
+};
+
+ContextManager contextManager;
+
+Rectangle destRect;
+
 // External function 1
-void externalFunction1(float value) { std::cout << "External function 1 received value: " << value << std::endl; }
+void MoveUp(float keyState) { destRect.y -= MOVE_SPEED; }
 
-// External function 2
-void externalFunction2(float value) { std::cout << "External function 2 received value: " << value << std::endl; }
+void MoveLeft(float keyState) { destRect.x -= MOVE_SPEED; }
 
+void MoveDown(float keyState) { destRect.y += MOVE_SPEED; }
+
+void MoveRight(float keyState) { destRect.x += MOVE_SPEED; }
+
+void run() {
+    contextManager.subscribeToAction(DefAction::Move_Up, MoveUp);
+    contextManager.subscribeToAction(DefAction::Move_Left, MoveLeft);
+    contextManager.subscribeToAction(DefAction::Move_Down, MoveDown);
+    contextManager.subscribeToAction(DefAction::Move_Right, MoveRight);
+
+    contextManager.setActiveContext("Playing");
+
+    Window myWindow;
+    Renderer* myRenderer = new Renderer(myWindow);
+
+    bool quit = false;
+    SDL_Event event;
+
+    // Variables for animation timing and sprite movement
+    Uint32 lastTime = 0;         // Time of the last frame change
+    int frame = 0;               // Current frame (sprite in the sprite sheet)
+    const int spriteWidth = 16;  // Width of each sprite
+    const int spriteHeight = 25; // Height of each sprite
+    const int frameCount = 6;    // Total number of frames in the sprite sheet
+
+    // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
+    SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
+
+    Rectangle startOfAnimation;
+    startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
+    startOfAnimation.y = 187;         // Keep the vertical position constant (you can change this for vertical movement)
+    startOfAnimation.w = spriteWidth; // The width of the sprite
+    startOfAnimation.h = spriteHeight; // The height of the sprite
+
+    Animation& animation = spriteAtlas.getAnimation(startOfAnimation, frameCount);
+
+    // Define the destination rect where the image will be drawn
+    destRect.x = 100;    // The x position on the screen
+    destRect.y = 100;    // The y position on the screen
+    destRect.w = 18 * 4; // The width of the drawn image (scaling)
+    destRect.h = 26 * 4; // The height of the drawn image (scaling)
+
+    while (!quit) {
+        // Event handling
+        while (SDL_PollEvent(&event) != 0) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+
+            // if (event.type == SDL_CUSTOM) {
+            //     if (even.eventType == "")
+            // }
+
+            // if (event.type == SDL_KEYDOWN) {
+            //     switch (event.key.keysym.sym) {
+            //     case SDLK_w: // Move up
+            //         destRect.y -= MOVE_SPEED;
+            //         break;
+            //     case SDLK_s: // Move down
+            //         destRect.y += MOVE_SPEED;
+            //         break;
+            //     case SDLK_a: // Move left
+            //         destRect.x -= MOVE_SPEED;
+            //         break;
+            //     case SDLK_d: // Move right
+            //         destRect.x += MOVE_SPEED;
+            //         break;
+            //     }
+            // }
+        }
+
+        // Clear screen
+        // SDL_RenderClear(renderer);
+        myRenderer->clear();
+
+        // Texture* spriteTexture = animation.getTexture();
+
+        // Copy part of the sprite sheet to the renderer
+        // SDL_RenderCopy(renderer, spriteTexture->getSDL_Texture(), &srcRect, &destRect);
+        myRenderer->renderAnimation(animation, destRect);
+
+        // Update the screen
+        // SDL_RenderPresent(renderer);
+        myRenderer->present();
+
+        SDL_Delay(16);
+    }
+
+    // Clean up
+    // deInitSDL(window, renderer);
+    return;
+}
 int main() {
-    // run();
+    run();
 
     // std::vector<Key> keys = {Key::Key_W, Key::Key_A, Key::Key_S};
     //
     // DefinedAction action(0, keys);
     //
     // action.print();
-
-    ContextManager contextManager;
-
-    contextManager.subscribeToAction(DefAction::Move_Up, externalFunction1);
-
-    contextManager.setActiveContext("Playing");
-
-    contextManager.processKey(Key::Key_0);
-    contextManager.processKey(Key::Key_R);
-    contextManager.processKey(Key::Key_W);
 
     // // Subscribe external functions
     // context.subscribe(externalFunction1);

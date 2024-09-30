@@ -2,7 +2,6 @@
 
 // Function to convert enum class values to their corresponding string representation
 std::string keyToString(Key key) {
-
     switch (key) {
     // Alphabet keys
     case Key::Key_A:
@@ -127,8 +126,8 @@ std::string keyToString(Key key) {
         return "Key_Num8";
     case Key::Key_Num9:
         return "Key_Num9";
-    case Key::Key_NumLock:
-        return "Key_NumLock";
+    // case Key::Key_NumLock:
+    //     return "Key_NumLock";
     case Key::Key_NumDivide:
         return "Key_NumDivide";
     case Key::Key_NumMultiply:
@@ -139,8 +138,8 @@ std::string keyToString(Key key) {
         return "Key_NumPlus";
     case Key::Key_NumEnter:
         return "Key_NumEnter";
-    case Key::Key_NumDecimal:
-        return "Key_NumDecimal";
+    // case Key::Key_NumDecimal:
+    //     return "Key_NumDecimal";
 
     // Arrow keys
     case Key::Key_Up:
@@ -153,12 +152,12 @@ std::string keyToString(Key key) {
         return "Key_Right";
 
     // Modifier keys
-    case Key::Key_Shift:
-        return "Key_Shift";
-    case Key::Key_Control:
-        return "Key_Control";
-    case Key::Key_Alt:
-        return "Key_Alt";
+    case Key::Key_LShift:
+        return "Key_LShift";
+    case Key::Key_LControl:
+        return "Key_LControl";
+    case Key::Key_LAlt:
+        return "Key_LAlt";
     case Key::Key_CapsLock:
         return "Key_CapsLock";
 
@@ -193,8 +192,8 @@ std::string keyToString(Key key) {
         return "Key_Pause";
 
     // Punctuation keys
-    case Key::Key_Tilde:
-        return "Key_Tilde";
+    // case Key::Key_Tilde:
+    //     return "Key_Tilde";
     case Key::Key_Minus:
         return "Key_Minus";
     case Key::Key_Equals:
@@ -207,8 +206,8 @@ std::string keyToString(Key key) {
         return "Key_Backslash";
     case Key::Key_Semicolon:
         return "Key_Semicolon";
-    case Key::Key_Quote:
-        return "Key_Quote";
+    // case Key::Key_Quote:
+    //     return "Key_Quote";
     case Key::Key_Comma:
         return "Key_Comma";
     case Key::Key_Period:
@@ -296,18 +295,14 @@ int stringToActionID(std::string aKeyString) {
 
 int stringToKeyID(std::string aKeyString) {
     std::string returnedString = "";
-    int currentKeyAttempt = 0;
 
-    do {
-        returnedString = keyToString(static_cast<Key>(currentKeyAttempt));
+    for (int i = 0; i < (int)Key::Key_NumberOfKeys; i++) {
+        returnedString = keyToString(static_cast<Key>(i));
 
         if (returnedString == aKeyString) {
-            return currentKeyAttempt;
+            return i;
         }
+    }
 
-        currentKeyAttempt++;
-
-    } while (returnedString != "Unknown Key");
-
-    return currentKeyAttempt;
+    return 0;
 }
