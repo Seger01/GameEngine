@@ -308,31 +308,45 @@ private:
     Uint8* mAllKeys = nullptr;
 };
 
-ContextManager contextManager;
+void onMouseDownEvent(const Event& aEvent) {
+    if (aEvent.mouse.left) {
+        std::cout << "mouse left pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+    }
+    if (aEvent.mouse.middle) {
+        std::cout << "mouse middle pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+    }
+    if (aEvent.mouse.right) {
+        std::cout << "mouse right pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+    }
+}
 
-Rectangle destRect;
+bool quit = false;
 
-// External function 1
-void MoveUp(float keyState) { destRect.y -= MOVE_SPEED; }
+void enditall(const Event& event) { quit = true; }
 
-void MoveLeft(float keyState) { destRect.x -= MOVE_SPEED; }
+void anyEvent(const Event& aEvent) {
+    std::cout << "this will trigger with every event!!!" << std::endl;
 
-void MoveDown(float keyState) { destRect.y += MOVE_SPEED; }
+    return;
+}
 
-void MoveRight(float keyState) { destRect.x += MOVE_SPEED; }
+void handlePlayerMovement(const Event& aEvent) {
+    std::cout << "Player movement detected" << std::endl;
+
+    return;
+}
 
 void run() {
-    contextManager.subscribeToAction(DefAction::Move_Up, MoveUp);
-    contextManager.subscribeToAction(DefAction::Move_Left, MoveLeft);
-    contextManager.subscribeToAction(DefAction::Move_Down, MoveDown);
-    contextManager.subscribeToAction(DefAction::Move_Right, MoveRight);
-
-    contextManager.setActiveContext("Playing");
+    // contextManager.setActiveContext("Playing");
+    EventManager eventManager;
+    eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
+    eventManager.subscribe(enditall, EventType::Quit);
+    eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
+    eventManager.subscribe(anyEvent);
 
     Window myWindow;
     Renderer* myRenderer = new Renderer(myWindow);
 
-    bool quit = false;
     SDL_Event event;
 
     // Variables for animation timing and sprite movement
@@ -353,6 +367,7 @@ void run() {
 
     Animation& animation = spriteAtlas.getAnimation(startOfAnimation, frameCount);
 
+    Rectangle destRect;
     // Define the destination rect where the image will be drawn
     destRect.x = 100;    // The x position on the screen
     destRect.y = 100;    // The y position on the screen
@@ -360,33 +375,7 @@ void run() {
     destRect.h = 26 * 4; // The height of the drawn image (scaling)
 
     while (!quit) {
-        // Event handling
-        while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-
-            // if (event.type == SDL_CUSTOM) {
-            //     if (even.eventType == "")
-            // }
-
-            // if (event.type == SDL_KEYDOWN) {
-            //     switch (event.key.keysym.sym) {
-            //     case SDLK_w: // Move up
-            //         destRect.y -= MOVE_SPEED;
-            //         break;
-            //     case SDLK_s: // Move down
-            //         destRect.y += MOVE_SPEED;
-            //         break;
-            //     case SDLK_a: // Move left
-            //         destRect.x -= MOVE_SPEED;
-            //         break;
-            //     case SDLK_d: // Move right
-            //         destRect.x += MOVE_SPEED;
-            //         break;
-            //     }
-            // }
-        }
+        eventManager.handleEvents();
 
         // Clear screen
         // SDL_RenderClear(renderer);
@@ -404,7 +393,6 @@ void run() {
 
         SDL_Delay(16);
     }
-
     // Clean up
     // deInitSDL(window, renderer);
     return;

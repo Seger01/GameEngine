@@ -39,7 +39,7 @@ void SpriteAtlas::unloadTexture() { SDL_DestroyTexture(mTexture->getSDL_Texture(
 Animation& SpriteAtlas::getAnimation(Rectangle aStartingFrame, int aAmountOfFrames) {
     std::cout << "getAnimation() " << mCreatedAnimations.size() << std::endl;
 
-    mCreatedAnimations.push_back(Animation(mTexture, aStartingFrame, aAmountOfFrames));
+    mCreatedAnimations.emplace_back(mTexture, aStartingFrame, aAmountOfFrames);
 
     return mCreatedAnimations[mCreatedAnimations.size() - 1];
 }

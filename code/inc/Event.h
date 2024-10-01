@@ -9,6 +9,8 @@
 #include "SDL.h"
 
 #include "Inputs.h"
+#include "SDL_events.h"
+#include "SDL_keycode.h"
 
 enum class EventType;
 
@@ -21,7 +23,7 @@ struct Mouse {
 };
 
 struct Event {
-    EventType eventType;
+    EventType type;
 
     Mouse mouse; // to store mouse data in event
     Key key;     // to store which key pressed data in event
@@ -36,14 +38,18 @@ struct Event {
 enum class EventType {
     KeyUp,
     KeyDown,
-    MouseUp,
-    MouseDown,
+
+    MouseButtonUp,
+    MouseButtonDown,
+    MouseMove,
 
     Quit,
 
     DefinedAction,
     Custom,
 
+    Undefined,
+    Any,
 };
 
 class EventManager {
@@ -54,18 +60,77 @@ public:
     using EventCallback = std::function<void(const Event&)>;
 
     // Subscribe to an event type
-    void subscribe(EventType eventType, EventCallback callback) { subscribers[eventType].push_back(callback); }
+    void subscribe(EventCallback callback, EventType eventType = EventType::Any) {
+        subscribers[eventType].push_back(callback);
+    }
+
+    Key SDLKeyToOwnKey(SDL_Scancode SDLKeyCode) { return (Key)SDLKeyCode; }
+
+    Mouse parseSDLMouse(const SDL_Event& aEvent) {
+        Mouse mouse;
+
+        if (aEvent.button.button == SDL_BUTTON_LEFT) {
+            mouse.left = true;
+        } else if (aEvent.button.button == SDL_BUTTON_RIGHT) {
+            mouse.right = true;
+        } else if (aEvent.button.button == SDL_BUTTON_MIDDLE) {
+            mouse.middle = true;
+        }
+        mouse.x = aEvent.motion.x;
+        mouse.y = aEvent.motion.y;
+
+        return mouse;
+    }
+
+    Event parseSDLEvent(const SDL_Event& aEvent) {
+        Event createdEvent;
+        switch (aEvent.type) {
+        case (SDL_KEYDOWN):
+            createdEvent.type = EventType::KeyDown;
+            createdEvent.key = SDLKeyToOwnKey(aEvent.key.keysym.scancode);
+            break;
+        case (SDL_KEYUP):
+            createdEvent.type = EventType::KeyUp;
+            createdEvent.key = SDLKeyToOwnKey(aEvent.key.keysym.scancode);
+            break;
+
+        case (SDL_MOUSEBUTTONDOWN):
+            createdEvent.type = EventType::MouseButtonDown;
+            createdEvent.mouse = parseSDLMouse(aEvent);
+            break;
+        case (SDL_MOUSEBUTTONUP):
+            createdEvent.type = EventType::MouseButtonUp;
+            createdEvent.mouse = parseSDLMouse(aEvent);
+            break;
+        case (SDL_MOUSEMOTION):
+            createdEvent.type = EventType::MouseMove;
+            createdEvent.mouse = parseSDLMouse(aEvent);
+            break;
+
+        case (SDL_QUIT):
+            createdEvent.type = EventType::Quit;
+            break;
+        }
+
+        return createdEvent;
+    }
 
     // Handle events and call subscribed callbacks
     void handleEvents() {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            Event ownEvent = this->parseSDLEvent(event);
 
-            // if (subscribers.find(event.type) != subscribers.end()) {
-            //     for (const auto& callback : subscribers[event.type]) {
-            //         callback(event);
-            //     }
-            // }
+            if (subscribers.find(ownEvent.type) != subscribers.end()) {
+                for (const auto& callback : subscribers[ownEvent.type]) {
+                    callback(ownEvent);
+                }
+            }
+            if (subscribers.find(EventType::Any) != subscribers.end()) {
+                for (const auto& callback : subscribers[EventType::Any]) {
+                    callback(ownEvent);
+                }
+            }
         }
     }
 
