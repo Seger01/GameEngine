@@ -31,3 +31,4 @@ Date,Time,Duration(in hours),Activity
 2024-09-27, 11:30, 0.75, fixed lib sub module
 2024-09-27, 12:15, 2.75, created bouncing square poc
 2024-09-27, 15:00, 0.75, cleaned up physics poc code
+2024-09-30, 14:30, 1.5, added movement and keyboard inputs to physics poc
