@@ -18,7 +18,7 @@
 #include "Window.h"
 
 #include "Event.h"
-#include "Inputs.h"
+#include "Input.h"
 
 const int MOVE_SPEED = 10;
 
@@ -277,72 +277,73 @@ private:
     std::vector<Context> mContexts;
 };
 
-class Input {
-public:
-    Input() {}
+// class Input {
+// public:
+//     Input() {}
+//
+//     void subscribe(DefAction aDefAction, const std::function<void(float)>& callback) {
+//         mContextManager.subscribeToAction(aDefAction, callback);
+//     }
+//
+//     void update() {
+//         int numKeys;
+//         const Uint8* allKeys = SDL_GetKeyboardState(&numKeys);
+//
+//         for (int i = 0; i < numKeys; ++i) {
+//             if (allKeys[i]) {
+//                 // std::cout << "Key with scancode " << keyToString((Key)i) << " is pressed" << std::endl;
+//                 mContextManager.processKey((Key)i);
+//             }
+//         }
+//
+//         return;
+//     }
+//
+//     bool getKeyDown(Key aKeyToCheck) { return false; }
+//     bool isKeyDown() { return false; }
+//
+// private:
+//     ContextManager mContextManager;
+//
+//     Uint8* mAllKeys = nullptr;
+// };
 
-    void subscribe(DefAction aDefAction, const std::function<void(float)>& callback) {
-        mContextManager.subscribeToAction(aDefAction, callback);
-    }
-
-    void update() {
-        int numKeys;
-        const Uint8* allKeys = SDL_GetKeyboardState(&numKeys);
-
-        for (int i = 0; i < numKeys; ++i) {
-            if (allKeys[i]) {
-                // std::cout << "Key with scancode " << keyToString((Key)i) << " is pressed" << std::endl;
-                mContextManager.processKey((Key)i);
-            }
-        }
-
-        return;
-    }
-
-    bool getKeyDown(Key aKeyToCheck) { return false; }
-    bool isKeyDown() { return false; }
-
-private:
-    ContextManager mContextManager;
-
-    Uint8* mAllKeys = nullptr;
-};
-
-void onMouseDownEvent(const Event& aEvent) {
-    if (aEvent.mouse.left) {
-        std::cout << "mouse left pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
-    }
-    if (aEvent.mouse.middle) {
-        std::cout << "mouse middle pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
-    }
-    if (aEvent.mouse.right) {
-        std::cout << "mouse right pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
-    }
-}
-
+// void onMouseDownEvent(const Event& aEvent) {
+//     if (aEvent.mouse.left) {
+//         std::cout << "mouse left pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+//     }
+//     if (aEvent.mouse.middle) {
+//         std::cout << "mouse middle pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+//     }
+//     if (aEvent.mouse.right) {
+//         std::cout << "mouse right pressed at " << aEvent.mouse.x << ", " << aEvent.mouse.y << std::endl;
+//     }
+// }
+//
 bool quit = false;
 
-void enditall(const Event& event) { quit = true; }
-
-void anyEvent(const Event& aEvent) {
-    std::cout << "this will trigger with every event!!!" << std::endl;
-
-    return;
-}
-
-void handlePlayerMovement(const Event& aEvent) {
-    std::cout << "Player movement detected" << std::endl;
-
-    return;
-}
+// void enditall(const Event& event) { quit = true; }
+//
+// void anyEvent(const Event& aEvent) {
+//     std::cout << "this will trigger with every event!!!" << std::endl;
+//
+//     return;
+// }
+//
+// void handlePlayerMovement(const Event& aEvent) {
+//     std::cout << "Player movement detected" << std::endl;
+//
+//     return;
+// }
 
 void run() {
     // contextManager.setActiveContext("Playing");
-    EventManager eventManager;
-    eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
-    eventManager.subscribe(enditall, EventType::Quit);
-    eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
-    eventManager.subscribe(anyEvent);
+    // EventManager eventManager;
+    // eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
+    // eventManager.subscribe(enditall, EventType::Quit);
+    // eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
+    // eventManager.subscribe(anyEvent);
+    Input& input = Input::getInstance();
 
     Window myWindow;
     Renderer* myRenderer = new Renderer(myWindow);
@@ -375,7 +376,36 @@ void run() {
     destRect.h = 26 * 4; // The height of the drawn image (scaling)
 
     while (!quit) {
-        eventManager.handleEvents();
+        while (SDL_PollEvent(&event) != 0) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+        input.update();
+
+        // input.print();
+
+        if (input.GetKey(Key::Key_W)) {
+            destRect.y -= MOVE_SPEED;
+        }
+        if (input.GetKey(Key::Key_A)) {
+            destRect.x -= MOVE_SPEED;
+        }
+        if (input.GetKey(Key::Key_S)) {
+            destRect.y += MOVE_SPEED;
+        }
+        if (input.GetKey(Key::Key_D)) {
+            destRect.x += MOVE_SPEED;
+        }
+
+        if (input.getAction(DefAction::Move_Up))
+
+            if (input.GetMouseButtonDown(MouseButton::LEFT)) {
+                std::cout << "Mouse button left pressed" << input.MousePosition().x << ", " << input.MousePosition().y
+                          << std::endl;
+            }
+
+        // eventManager.handleEvents();
 
         // Clear screen
         // SDL_RenderClear(renderer);

@@ -1,4 +1,4 @@
-#include "Inputs.h"
+#include "Input.h"
 
 // Function to convert enum class values to their corresponding string representation
 std::string keyToString(Key key) {

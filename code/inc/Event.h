@@ -8,31 +8,9 @@
 
 #include "SDL.h"
 
-#include "Inputs.h"
+#include "Input.h"
 #include "SDL_events.h"
 #include "SDL_keycode.h"
-
-enum class EventType;
-
-struct Mouse {
-    int x = 0;
-    int y = 0;
-    bool left = false;
-    bool middle = false;
-    bool right = false;
-};
-
-struct Event {
-    EventType type;
-
-    Mouse mouse; // to store mouse data in event
-    Key key;     // to store which key pressed data in event
-    float range; // to store button state range in event
-
-    DefAction defAction = DefAction::Undefined;
-
-    std::string customName = "";
-};
 
 // Define an enum class for all keyboard, mouse, and controller keys
 enum class EventType {
@@ -50,6 +28,18 @@ enum class EventType {
 
     Undefined,
     Any,
+};
+
+struct Event {
+    EventType type;
+
+    Mouse mouse; // to store mouse data in event
+    Key key;     // to store which key pressed data in event
+    float range; // to store button state range in event
+
+    DefAction defAction = DefAction::Undefined;
+
+    std::string customName = "";
 };
 
 class EventManager {
@@ -76,8 +66,8 @@ public:
         } else if (aEvent.button.button == SDL_BUTTON_MIDDLE) {
             mouse.middle = true;
         }
-        mouse.x = aEvent.motion.x;
-        mouse.y = aEvent.motion.y;
+        mouse.position.x = aEvent.motion.x;
+        mouse.position.y = aEvent.motion.y;
 
         return mouse;
     }
