@@ -61,7 +61,7 @@ int playMusic(int m) {
 int playSound(int s) {
   Mix_Volume(0, 100);
   // Channel number, sound object and loop infinitely
-  Mix_PlayChannel(1, sounds[s], 10);
+  Mix_PlayChannel(1, sounds[s], 1);
   return 0;
 }
 
@@ -79,8 +79,10 @@ void finalize() {
 
 void sdlMixer() {
   init();
-  loadMusic("../../../resources/music.wav");
-  loadSound("../../../resources/gun1.wav");
+  loadMusic("../../../resources/gun1.wav"); // Sound and music are swapped for
+                                            // the demo; hearing the music
+                                            // rotate is easier to distinguish
+  loadSound("../../../resources/music.wav");
 
   playMusic(0); // Play music at index 0
   int angle = 0;
@@ -91,8 +93,8 @@ void sdlMixer() {
   while (Mix_Playing(1)) {
     // while (Mix_PlayingMusic()) {
     angle %= 360;
-    SDL_Delay(500); // Sleep for 100 ms
-    Mix_SetPosition(0, angle, 100);
+    SDL_Delay(100); // Sleep for 100 ms
+    Mix_SetPosition(1, angle, 100);
     angle += 10;
     std::cout << angle << std::endl;
   }
