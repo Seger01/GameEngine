@@ -1,0 +1,38 @@
+Minutes 02-10-24
+
+What was discussed:
+Question for Bob: Does Bob want an event system / is it required.
+ECS conclusions: large advantage is that it is much quicker. This applies mostly to large / complex games. There is an added risks, because if ECS is poorly implemented, it actually slows down a game.
+Discuss with Bob if it is worth it to use ECS?
+Ask Bob how he expects us to record minimum hardware requirements for the engine, when the engine is not made yet.
+Seger: Worked on event system for inputs
+Next week we'll start making a draft for the architecture
+
+
+For class tomorrow:
+We'll announce that we expect to need 30 minutes for our questions
+- Showing POCs
+    - Multiplayer (Sean)
+    - Spritesheet animation (Seger)
+    - Audio (Siem)
+    - (If there's time) savegame (Siem)
+    - (Maybe): Showing rendered map (Ronan)
+    - (Maybe): Physics simulation (Angel)
+- Discussing problems we expect to run into
+    - Getting multiplayer to work smoothly (and online)
+    - Getting all individual components to cooperate when creating an architecture / global design
+    - Determining the minimum hardware requirements, even though we've no idea how the engine is going to work
+
+What has been done:
+- Siem: Audio SDLMixer PoC
+- Angel: Box2D Physics POC. Cube can now move 'realisticallly' in a 2d environment. Ran into issues with animating / simulating rotation.
+- Ronan: Researching ECS and extensions. GameObject has been modified to use ECS.
+- Sean: State machine: created two PoCs: one example running and one self-written state machine. Have looked at navigation: we will not need recast navigation: it is too large for the scope of this project.
+- Seger: Figuring input and event system
+
+What is going to be done:
+- Siem: Behavioral tree PoC instead of Sean?
+- Angel: Continue physics PoC. Look into adding rotation and simulating multiple object.
+- Ronan: Expanding levels PoC (tile2d), checking if a selfmade level can be rendered.
+- Sean: Continue pathfinding research, A*.
+- Seger: Implement the input system and the class diagram
