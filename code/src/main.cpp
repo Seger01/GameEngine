@@ -49,7 +49,8 @@ int init() {
 
 int playMusic(int m) {
   if (Mix_PlayingMusic() == 0) {
-    Mix_Volume(1, 100);
+    Mix_VolumeMusic(50);
+
     Mix_PlayMusic(
         music[m],
         -1); // Play the music (-1 means loop infinitely, 0 means play once)
@@ -58,9 +59,9 @@ int playMusic(int m) {
 }
 
 int playSound(int s) {
-  Mix_Volume(-1, 80);
+  Mix_Volume(0, 100);
   // Channel number, sound object and loop infinitely
-  Mix_PlayChannel(0, sounds[s], -1);
+  Mix_PlayChannel(1, sounds[s], 10);
   return 0;
 }
 
@@ -87,7 +88,7 @@ void sdlMixer() {
   playSound(0); // Play sound at index 0
 
   // Wait until the music has finished playing
-  while (Mix_Playing(0)) {
+  while (Mix_Playing(1)) {
     // while (Mix_PlayingMusic()) {
     angle %= 360;
     SDL_Delay(500); // Sleep for 100 ms
