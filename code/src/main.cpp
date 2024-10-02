@@ -19,7 +19,7 @@ void writeTest(SaveGameTest saveGame) {
 }
 
 int main() {
-  SaveGame sg{"code/output/mySave.json"};
+  SaveGame sg{"code/output/newSave.json"};
   sg.addField("myField", "myValue");
   sg.setField("myField", "newValue");
   sg.addArray("myArray");
