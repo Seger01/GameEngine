@@ -1,0 +1,18 @@
+[submodule "code/external/SDL"]
+	path = code/external/SDL
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "code/external/SDL_image"]
+	path = code/external/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "code/external/SLikeNet"]
+	path = code/external/SLikeNet
+	url = https://github.com/SLikeSoft/SLikeNet.git
+[submodule "code/external/tmxlite"]
+	path = code/external/tmxlite
+	url = https://github.com/fallahn/tmxlite.git
+[submodule "code/external/box2d"]
+	path = code/external/box2d
+	url = https://github.com/erincatto/box2d.git
+[submodule "code/external/SDL_mixer"]
+	path = code/external/SDL_mixer
+	url = https://github.com/libsdl-org/SDL_mixer.git
