@@ -1,234 +1,231 @@
 #pragma once
 
+#include <fstream>
+#include <functional>
 #include <iostream>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <SDL.h>
+#include <nlohmann/json.hpp>
 
+#include "DefinedAction.h"
+#include "InputStructs.h"
 #include "Point.h"
 
-enum class Key;
-enum class DefAction;
+class Context {
+public:
+    Context(std::string aContextName) {
+        mContextName = aContextName;
+        return;
+    }
 
-// Function to convert enum class values to their corresponding string representation
-std::string keyToString(Key key);
+    bool contains(DefAction aDefAction) {
+        for (int i = 0; i < mRegisteredActions.size(); i++) {
+            if (mRegisteredActions[i].get().getID() == aDefAction) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-int stringToKeyID(std::string aKeyString);
+    std::string getName() { return mContextName; }
 
-std::string actionToString(DefAction action);
+    void addDefAction(DefinedAction& aDefinedAction) {
+        std::cout << "mRegisteredActions.push_back(aDefinedAction);" << std::endl;
+        mRegisteredActions.push_back(aDefinedAction);
 
-int stringToActionID(std::string aKeyString);
+        return;
+    }
 
-enum class MouseButton { LEFT = 1, MIDDLE = 2, RIGHT = 3 };
+    void processKey(Key aPressedKey) {
+        for (int i = 0; i < mRegisteredActions.size(); i++) {
+            // mRegisteredActions[i].get().trigger(aPressedKey);
+        }
 
-struct Mouse {
-    Point position;
+        return;
+    }
 
-    bool left = false;
-    bool middle = false;
-    bool right = false;
+    void print() {
+        std::cout << "Context name: " << mContextName << " amount of registerd actions: " << mRegisteredActions.size()
+                  << std::endl;
+
+        for (auto& defAction : mRegisteredActions) {
+            defAction.get().print();
+        }
+    }
+
+private:
+    std::vector<std::reference_wrapper<DefinedAction>> mRegisteredActions;
+
+    std::string mContextName;
 };
 
-// Define an enum class for all keyboard, mouse, and controller keys
-enum class Key {
-    Key_UNKNOWN = 0,
+class ContextManager {
+public:
+    ContextManager() {
+        this->loadDefinedActions();
 
-    /**
-     *  \name Usage page 0x07
-     *
-     *  These values are from usage page 0x07 (USB keyboard page).
-     */
-    /*  */
+        this->createContexts();
 
-    Key_A = 4,
-    Key_B = 5,
-    Key_C = 6,
-    Key_D = 7,
-    Key_E = 8,
-    Key_F = 9,
-    Key_G = 10,
-    Key_H = 11,
-    Key_I = 12,
-    Key_J = 13,
-    Key_K = 14,
-    Key_L = 15,
-    Key_M = 16,
-    Key_N = 17,
-    Key_O = 18,
-    Key_P = 19,
-    Key_Q = 20,
-    Key_R = 21,
-    Key_S = 22,
-    Key_T = 23,
-    Key_U = 24,
-    Key_V = 25,
-    Key_W = 26,
-    Key_X = 27,
-    Key_Y = 28,
-    Key_Z = 29,
+        return;
+    }
 
-    Key_1 = 30,
-    Key_2 = 31,
-    Key_3 = 32,
-    Key_4 = 33,
-    Key_5 = 34,
-    Key_6 = 35,
-    Key_7 = 36,
-    Key_8 = 37,
-    Key_9 = 38,
-    Key_0 = 39,
+    // void subscribeToAction(DefAction aDefAction, const std::function<void(float)>& callback) {
+    //     for (int i = 0; i < mDefActions.size(); i++) {
+    //         if (mDefActions[i]->getID() == aDefAction) {
+    //             mDefActions[i]->subscribe(callback);
+    //         }
+    //     }
+    // }
 
-    Key_Enter = 40,
-    Key_Escape = 41,
-    Key_Backspace = 42,
-    Key_Tab = 43,
-    Key_Space = 44,
+    // void processKey(Key aInputKey) {
+    //     mContexts[mActiveContextIndex].processKey(aInputKey);
+    //
+    //     return;
+    // }
 
-    Key_Minus = 45,
-    Key_Equals = 46,
-    Key_LeftBracket = 47,
-    Key_RightBracket = 48,
-    Key_Backslash = 49, /**< Located at the lower left of the return
-                         *   key on ISO keyboards and at the right end
-                         *   of the QWERTY row on ANSI keyboards.
-                         *   Produces REVERSE SOLIDUS (backslash) and
-                         *   VERTICAL LINE in a US layout, REVERSE
-                         *   SOLIDUS and VERTICAL LINE in a UK Mac
-                         *   layout, NUMBER SIGN and TILDE in a UK
-                         *   Windows layout, DOLLAR SIGN and POUND SIGN
-                         *   in a Swiss German layout, NUMBER SIGN and
-                         *   APOSTROPHE in a German layout, GRAVE
-                         *   ACCENT and POUND SIGN in a French Mac
-                         *   layout, and ASTERISK and MICRO SIGN in a
-                         *   French Windows layout.
-                         */
-    Key_NONUSHASH = 50, /**< ISO USB keyboards actually use this code
-                         *   instead of 49 for the same key, but all
-                         *   OSes I've seen treat the two codes
-                         *   identically. So, as an implementor, unless
-                         *   your keyboard generates both of those
-                         *   codes and your OS treats them differently,
-                         *   you should generate Key_BACKSLASH
-                         *   instead of this code. As a user, you
-                         *   should not rely on this code because SDL
-                         *   will never generate it with most (all?)
-                         *   keyboards.
-                         */
-    Key_Semicolon = 51,
-    Key_Apostrophe = 52,
-    Key_Grave = 53, /**< Located in the top left corner (on both ANSI
-                     *   and ISO keyboards). Produces GRAVE ACCENT and
-                     *   TILDE in a US Windows layout and in US and UK
-                     *   Mac layouts on ANSI keyboards, GRAVE ACCENT
-                     *   and NOT SIGN in a UK Windows layout, SECTION
-                     *   SIGN and PLUS-MINUS SIGN in US and UK Mac
-                     *   layouts on ISO keyboards, SECTION SIGN and
-                     *   DEGREE SIGN in a Swiss German layout (Mac:
-                     *   only on ISO keyboards), CIRCUMFLEX ACCENT and
-                     *   DEGREE SIGN in a German layout (Mac: only on
-                     *   ISO keyboards), SUPERSCRIPT TWO and TILDE in a
-                     *   French Windows layout, COMMERCIAL AT and
-                     *   NUMBER SIGN in a French Mac layout on ISO
-                     *   keyboards, and LESS-THAN SIGN and GREATER-THAN
-                     *   SIGN in a Swiss German, German, or French Mac
-                     *   layout on ANSI keyboards.
-                     */
-    Key_Comma = 54,
-    Key_Period = 55,
-    Key_Slash = 56,
+    bool getAction() { return false; }
 
-    Key_CapsLock = 57,
+    float getActionRange(DefAction aDefAction) {
+        for (int i = 0; i < mDefActions.size(); i++) {
+            if (mDefActions[i]->getID() == aDefAction) {
+                return mDefActions[i]->isActive();
+            }
+        }
 
-    Key_F1 = 58,
-    Key_F2 = 59,
-    Key_F3 = 60,
-    Key_F4 = 61,
-    Key_F5 = 62,
-    Key_F6 = 63,
-    Key_F7 = 64,
-    Key_F8 = 65,
-    Key_F9 = 66,
-    Key_F10 = 67,
-    Key_F11 = 68,
-    Key_F12 = 69,
+        return 0.0f;
+    }
 
-    Key_PrintScreen = 70,
-    Key_ScrollLock = 71,
-    Key_Pause = 72,
-    Key_Insert = 73, /**< insert on PC, help on some Mac keyboards (but
-                                   does send code 73, not 117) */
-    Key_Home = 74,
-    Key_PageUp = 75,
-    Key_Delete = 76,
-    Key_End = 77,
-    Key_PageDown = 78,
-    Key_Right = 79,
-    Key_Left = 80,
-    Key_Down = 81,
-    Key_Up = 82,
+    bool contains(DefAction aDefAction) {
+        return mContexts[mActiveContextIndex].contains(aDefAction);
 
-    Key_NUMLOCKCLEAR = 83, /**< num lock on PC, clear on Mac keyboards
-                            */
-    Key_NumDivide = 84,
-    Key_NumMultiply = 85,
-    Key_NumMinus = 86,
-    Key_NumPlus = 87,
-    Key_NumEnter = 88,
-    Key_Num1 = 89,
-    Key_Num2 = 90,
-    Key_Num3 = 91,
-    Key_Num4 = 92,
-    Key_Num5 = 93,
-    Key_Num6 = 94,
-    Key_Num7 = 95,
-    Key_Num8 = 96,
-    Key_Num9 = 97,
-    Key_Num0 = 98,
-    Key_KP_PERIOD = 99,
+        return false;
+    }
 
-    Key_LControl = 224,
-    Key_LShift = 225,
-    Key_LAlt = 226, /**< alt, option */
-    Key_LGui = 227, /**< windows, command (apple), meta */
-    Key_RControl = 228,
-    Key_RShift = 229,
-    Key_RAlt = 230, /**< alt gr, option */
-    Key_RGui = 231, /**< windows, command (apple), meta */
+    void setActiveContext(std::string aWantedContex) {
+        for (int i = 0; i < mContexts.size(); i++) {
+            if (mContexts[i].getName() == aWantedContex) {
+                mActiveContextIndex = i;
+                break;
+            }
 
-    // Mouse buttons
-    Mouse_LeftButton,
-    Mouse_RightButton,
-    Mouse_MiddleButton,
+            if (i == mContexts.size() - 1) {
+                std::cout << "Failed to find context: " << aWantedContex << std::endl;
+            }
+        }
 
-    // Controller buttons
-    Controller_A,
-    Controller_B,
-    Controller_X,
-    Controller_Y,
-    Controller_LeftBumper,
-    Controller_RightBumper,
-    Controller_Back,
-    Controller_Start,
-    Controller_LeftStick,
-    Controller_RightStick,
-    Controller_DPad_Up,
-    Controller_DPad_Down,
-    Controller_DPad_Left,
-    Controller_DPad_Right,
+        return;
+    }
 
-    Key_NumberOfKeys = 512 /**< not a key, just marks the number of scancodes
-                                 for array bounds */
+    void createContexts() {
+        std::map<std::string, std::vector<std::string>> defActions;
 
-};
+        try {
+            defActions = readJsonFile("contexts.json");
+        } catch (const std::exception& ex) {
+            std::cerr << "Error: " << ex.what() << std::endl;
+        }
 
-enum class DefAction {
-    Move_Up,
-    Move_Left,
-    Move_Down,
-    Move_Right,
+        for (const auto& pair : defActions) {
+            const std::string& contextName = pair.first;
+            const std::vector<std::string>& keys = pair.second;
 
-    Undefined
+            Context context(contextName);
+
+            std::cout << "mDefActions.size() " << mDefActions.size() << std::endl;
+
+            for (int iDefActions = 0; iDefActions < mDefActions.size(); iDefActions++) {
+                for (int i = 0; i < keys.size(); i++) {
+                    std::cout << "Comparing: " << actionToString(mDefActions[iDefActions]->getID()) << ", " << keys[i]
+                              << std::endl;
+                    if (actionToString(mDefActions[iDefActions]->getID()) == keys[i]) {
+                        context.addDefAction(*mDefActions[iDefActions]);
+                    }
+                }
+            }
+            // context.addDefAction(this->mDefActions[0]);
+            mContexts.push_back(context);
+        }
+
+        for (int i = 0; i < mContexts.size(); i++) {
+            mContexts[i].print();
+        }
+    }
+
+    void loadDefinedActions() {
+        std::map<std::string, std::vector<std::string>> defActions;
+
+        try {
+            defActions = readJsonFile("defined_actions.json");
+        } catch (const std::exception& ex) {
+            std::cerr << "Error: " << ex.what() << std::endl;
+        }
+
+        // Iterate over all keys and values
+        for (const auto& pair : defActions) {
+            const std::string& definedActionName = pair.first;
+            const std::vector<std::string>& keys = pair.second;
+
+            std::vector<Key> keyIDs;
+
+            for (int i = 0; i < keys.size(); i++) {
+                keyIDs.push_back(static_cast<Key>(stringToKeyID(keys[i])));
+            }
+
+            mDefActions.push_back(
+                std::make_shared<DefinedAction>(static_cast<DefAction>(stringToActionID(definedActionName)), keyIDs));
+        }
+
+        for (int i = 0; i < mDefActions.size(); i++) {
+            mDefActions[i]->print();
+        }
+    }
+
+    // Function to read JSON data into map
+    std::map<std::string, std::vector<std::string>> readJsonFile(const std::string& filename) {
+        // Create a map to store the data
+        std::map<std::string, std::vector<std::string>> keyMap;
+
+        // Open the JSON file
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Could not open file");
+        }
+
+        // Parse the JSON file
+        json jsonData;
+        file >> jsonData;
+
+        // Check if the "KeyMappings" section exists
+
+        // Iterate over each key-value pair in the "KeyMappings" section
+        for (auto& [key, value] : jsonData.items()) {
+            // Ensure that the value is an array of strings
+            if (value.is_array()) {
+                std::vector<std::string> strings;
+                for (const auto& item : value) {
+                    if (item.is_string()) {
+                        strings.push_back(item);
+                    }
+                }
+                // Insert the array of strings into the map
+                keyMap[key] = strings;
+            }
+        }
+
+        // Return the populated map
+        return keyMap;
+    }
+
+private:
+    int mActiveContextIndex = 0;
+
+    std::vector<std::shared_ptr<DefinedAction>> mDefActions;
+
+    std::vector<Context> mContexts;
 };
 
 class Input {
@@ -240,7 +237,8 @@ private:
             // if (mCurrentKeys[i] == 1){
             //     mPreviousKeys[]
             // }
-            // // mPreviousKeys = std::vector<Uint8>(mCurrentKeys, mCurrentKeys + mNumKeys); }
+            // // mPreviousKeys = std::vector<Uint8>(mCurrentKeys, mCurrentKeys + mNumKeys);
+            // }
         }
     }
 
@@ -345,6 +343,10 @@ public:
         this->updateMouse();
         this->updatePreviousKeys();
     }
+
+    std::vector<Uint8>& getHeldKeys() { return mHeldKeys; }
+    std::vector<Uint8>& getDownKeys() { return mDownKeys; }
+    std::vector<Uint8>& getUpKeys() { return mUpKeys; }
 
     /**
      * @brief Is any key or mouse button currently held down? (Read Only)
@@ -510,8 +512,6 @@ public:
         }
         return false;
     }
-
-    bool getAction(DefAction aAction) { return false; }
 
 private:
     Mouse mCurrentMouse;

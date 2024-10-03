@@ -16,6 +16,7 @@
 enum class EventType {
     KeyUp,
     KeyDown,
+    KeyHeld,
 
     MouseButtonUp,
     MouseButtonDown,
@@ -108,23 +109,108 @@ public:
     // Handle events and call subscribed callbacks
     void handleEvents() {
         SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            Event ownEvent = this->parseSDLEvent(event);
 
-            if (subscribers.find(ownEvent.type) != subscribers.end()) {
-                for (const auto& callback : subscribers[ownEvent.type]) {
-                    callback(ownEvent);
-                }
+        static Input& input = Input::getInstance();
+
+        std::vector<Uint8> heldKeys = input.getHeldKeys();
+        std::vector<Uint8> downKeys = input.getDownKeys();
+        std::vector<Uint8> upKeys = input.getUpKeys();
+
+        for (int i = 0; i < heldKeys.size(); i++) {
+            Event createdEvent;
+            createdEvent.type = EventType::KeyHeld;
+            createdEvent.key = (Key)heldKeys[i];
+            dispatch(createdEvent);
+        }
+
+        for (int i = 0; i < downKeys.size(); i++) {
+            Event createdEvent;
+            createdEvent.type = EventType::KeyDown;
+            createdEvent.key = (Key)downKeys[i];
+            dispatch(createdEvent);
+        }
+
+        for (int i = 0; i < upKeys.size(); i++) {
+            Event createdEvent;
+            createdEvent.type = EventType::KeyUp;
+            createdEvent.key = (Key)upKeys[i];
+            dispatch(createdEvent);
+        }
+
+        if (input.GetMouseButtonDown(MouseButton::LEFT)) {
+            Event createdEvent;
+
+            createdEvent.type = EventType::MouseButtonDown;
+            createdEvent.mouse.left = true;
+
+            dispatch(createdEvent);
+        }
+
+        if (input.GetMouseButtonDown(MouseButton::MIDDLE)) {
+            Event createdEvent;
+
+            createdEvent.type = EventType::MouseButtonDown;
+            createdEvent.mouse.middle = true;
+
+            dispatch(createdEvent);
+        }
+
+        if (input.GetMouseButtonDown(MouseButton::RIGHT)) {
+            Event createdEvent;
+
+            createdEvent.type = EventType::MouseButtonDown;
+            createdEvent.mouse.right = true;
+
+            dispatch(createdEvent);
+        }
+
+        for (int i = 0; i < heldKeys.size(); i++) {
+            if (mContextManager.containsKey(heldKeys[i])) {
             }
-            if (subscribers.find(EventType::Any) != subscribers.end()) {
-                for (const auto& callback : subscribers[EventType::Any]) {
-                    callback(ownEvent);
-                }
+
+            Event createdEvent;
+            createdEvent.type = EventType::DefinedAction;
+
+            createdEvent.key = (Key)heldKeys[i];
+            dispatch(createdEvent);
+        }
+
+        for (int i = 0; i < downKeys.size(); i++) {
+            Event createdEvent;
+            createdEvent.type = EventType::KeyDown;
+            createdEvent.key = (Key)downKeys[i];
+            dispatch(createdEvent);
+        }
+
+        for (int i = 0; i < upKeys.size(); i++) {
+            Event createdEvent;
+            createdEvent.type = EventType::KeyUp;
+            createdEvent.key = (Key)upKeys[i];
+            dispatch(createdEvent);
+        }
+
+        // while (SDL_PollEvent(&event)) {
+        //     Event ownEvent = this->parseSDLEvent(event);
+        //
+        // }
+    }
+
+    void dispatch(Event aEvent) {
+
+        if (subscribers.find(aEvent.type) != subscribers.end()) {
+            for (const auto& callback : subscribers[aEvent.type]) {
+                callback(aEvent);
+            }
+        }
+        if (subscribers.find(EventType::Any) != subscribers.end()) {
+            for (const auto& callback : subscribers[EventType::Any]) {
+                callback(aEvent);
             }
         }
     }
 
 private:
+    ContextManager mContextManager;
     // Store subscribers for each event type
     std::unordered_map<EventType, std::vector<EventCallback>> subscribers;
 };
