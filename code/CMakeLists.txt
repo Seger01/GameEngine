@@ -138,6 +138,7 @@ add_subdirectory(external/box2d)
 
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
+include_directories(${PROJECT_SOURCE_DIR}/external/SLikeNet/Source)
 
 # Automatically search for source files
 file(GLOB_RECURSE SOURCES
