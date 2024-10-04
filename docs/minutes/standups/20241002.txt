@@ -24,6 +24,7 @@ We'll announce that we expect to need 30 minutes for our questions
     - Getting multiplayer to work smoothly (and online)
     - Getting all individual components to cooperate when creating an architecture / global design
     - Determining the minimum hardware requirements, even though we've no idea how the engine is going to work
+Note after class: GameObject can have a maximum of one rigidbody
 
 What has been done:
 - Siem: Audio SDLMixer PoC
