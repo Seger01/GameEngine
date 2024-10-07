@@ -1,0 +1,27 @@
+ECS: het waard / wenselijk?
+- Als klant boeit het niet, zo lang het maar werkt volgens de API. Bob raadt het af, vanwege de hoeveelheid werk / complexiteit. Alternatieven (zoals ECSlite) kunnen evt. wel bekeken worden.
+- As a customer Bob does not care, 
+
+Event system:
+- Wordt niet geeist, maar is wel een 'toffe' toevoeging.
+- Custom events: klinkt mooi, maar niet verplicht. Klinkt niet alsof Bob er hard aan trekt.
+
+getAxis() in Input:
+- Returns a float indicating how far to the left or right the object is going
+- Is used to retrieve the direction value on an axis.
+- Not a requirement
+
+Savegames:
+- Player preferences (search Unity PlayerPrefs). Works based on id and value combination
+- Not waterproof, but that is not strictly required.
+
+Hardware Requirements:
+- Simply assume an 'average' laptop. It is not required to be very specific in the hardware requirements.
+- It would be an improvement to be more specific. This could be done by testing the app on the least powerful laptop in the group.
+
+Multiplayer:
+- Client-side prediction in-engine? No; it is not desirable to have this outside of the engine, but in the game (validation app), as this is not something generic enough to put in an engine.
+
+To do:
+- Individually make a list to prepare for the individual assessment next monday (14-10)
+- For class next monday: discuss what makes our design / architecture unique

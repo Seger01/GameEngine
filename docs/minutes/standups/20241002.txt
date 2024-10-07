@@ -1,7 +1,6 @@
 Minutes 02-10-24
 
 What was discussed:
-Question for Bob: Does Bob want an event system / is it required.
 ECS conclusions: large advantage is that it is much quicker. This applies mostly to large / complex games. There is an added risks, because if ECS is poorly implemented, it actually slows down a game.
 Discuss with Bob if it is worth it to use ECS?
 Ask Bob how he expects us to record minimum hardware requirements for the engine, when the engine is not made yet.
