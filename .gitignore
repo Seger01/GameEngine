@@ -44,7 +44,8 @@
 *.fls
 *.run.xml
 
-build/
+#ignore build folder
+code/build/
 
 .vscode/
 
