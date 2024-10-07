@@ -8,6 +8,7 @@
 
 #include "SDL.h"
 
+#include "ContextManager.h"
 #include "Input.h"
 #include "SDL_events.h"
 #include "SDL_keycode.h"
@@ -165,7 +166,7 @@ public:
         }
 
         for (int i = 0; i < heldKeys.size(); i++) {
-            if (mContextManager.containsKey(heldKeys[i])) {
+            if (mContextManager.isKeyActive((Key)heldKeys[i])) {
             }
 
             Event createdEvent;
