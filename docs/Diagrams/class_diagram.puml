@@ -1,0 +1,159 @@
+@startuml
+
+' skinparam linetype ortho
+skinparam groupInheritance 2
+
+together{
+
+class Component{
+    - mActive : bool
+
+}
+
+class AudioSource{
+    + void play(??? aLooping)
+    + void stop()
+
+    - mAudioClip : string
+    - mPlayOnAwake : bool
+    - mLoop : bool
+    - mVolume : ???
+}
+
+class Collider{
+
+}
+
+class CircleColider{
+    - mRadius : ???
+}
+
+class BoxCollider{
+    - mWidth : ???
+    - mHeight : ???
+}
+
+class RigidBody{
+    - mMass : ???
+    - mGravityScale : ???
+    - mBodyType : ???
+}
+
+interface BehavourScript{
+    + {abstract} void onStart()
+    + {abstract} void onUpdate()
+}
+
+class Sprite{
+    + void render()
+
+    - mSprite : string
+    - mColor : ???
+    - mflipX : bool
+    - mflipY : bool
+    - mSortingLayer : ???
+    - mOrderinLayer : ???
+}
+
+class Animator{
+    + void play(??? aLooping)
+    + void stop()
+
+    - mFps : ???
+}
+}
+class GameObject{
+    + void addComponent(??? aComponent)
+    + bool isActiveInWorld()
+    + bool isActiveSelf()
+
+    - mName : string
+    - mTag : string
+    - mActive : bool
+    - mLayer : ???
+}
+
+class Scene{}
+
+class Camera{
+    - mBackgroundColor : ???
+    - mAspectWidth : ???
+    - mAspectHeight : ???
+}
+
+together{
+class UIObject{
+    - mWidth : ???
+    - mHeight : ???
+}
+
+class Button{
+    - mInteractable : bool
+    - mOnClick : ???
+}
+
+class Text{
+    - mText : string
+    - mFont : ???
+    - mSize : ???
+    - mAllignment : ???
+    - mColor : ???
+}
+}
+
+class iMouseListener{
+    + ??? onMouseMoved()
+    + ??? onMouseClicked()
+    + ??? onMousePressed()
+    + ??? onMouseReleased()
+}
+
+class iKeyListener{
+    + ??? onKeyPressed()
+    + ??? onKeyReleased()
+}
+
+class Transform{}
+
+together{
+class Input{}
+
+class Time{}
+
+class Debug{}
+}
+
+class Point{}
+
+class Color{}
+
+Component <|-down- AudioSource
+Component <|-down- Collider
+Component <|-down- RigidBody
+Component <|-down- BehavourScript
+Component <|-down- Sprite
+Component <|-down- Animator
+
+Collider <|-- CircleColider
+Collider <|-- BoxCollider
+
+GameObject *-up- "0..*" AudioSource
+GameObject *-up- "0..*" CircleColider
+GameObject *-up- "0..*" BoxCollider
+GameObject *-up- "0..*" RigidBody
+GameObject *-up- "0..*" BehavourScript
+GameObject *-up- "0..1" Sprite
+GameObject *-up- "0..*" Animator
+GameObject -up- Transform
+GameObject "0..1"<-- "0..*" GameObject : +parent >
+
+GameObject <|-- UIObject
+UIObject <|-- Button
+UIObject <|-- Text
+
+Scene "1" --> "0..*" GameObject
+Camera --|> GameObject
+Camera "1..*" -down-> "1" Scene : +renderScene
+
+Animator "0..1" ..> "1..*" Sprite
+@enduml
