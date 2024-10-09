@@ -1,0 +1,17 @@
+Minutes 09-10-24
+
+What was discussed:
+- Creating a block diagram for the subsystems in the engine
+- Create a global activity diagram
+- The decision was made to *not* use ECS.
+
+What has been done:
+- Siem: Worked on savegame, making sure it more matches the unity savegame system.
+- Angel: Not worked on project since last meeting
+- Ronan: Not worked on project since last meeting
+- Sean: Not worked on project since last meeting
+- Seger: Not worked on project since last meeting
+
+What is going to be done:
+- Seger: PoC for physics as described in design
+Everyone is going to work on architecture / design
