@@ -93,13 +93,13 @@ public:
         return false;
     }
 
-    bool containsKey(Key aKey) {
+    DefAction containsKey(Key aKey) {
         for (int i = 0; i < mRegisteredActions.size(); i++) {
             if (mRegisteredActions[i].get().isInKeyList(aKey)) {
-                return true;
+                return mRegisteredActions[i].get().getID();
             }
         }
-        return false;
+        return DefAction::Undefined;
     }
 
     std::string getName() { return mContextName; }
@@ -170,7 +170,7 @@ public:
         return 0.0f;
     }
 
-    bool isKeyActive(Key aKey) { return mContexts[mActiveContextIndex].containsKey(aKey); }
+    DefAction isKeyActive(Key aKey) { return mContexts[mActiveContextIndex].containsKey(aKey); }
 
     bool contains(DefAction aDefAction) {
         return mContexts[mActiveContextIndex].contains(aDefAction);

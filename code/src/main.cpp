@@ -84,15 +84,19 @@ void handlePlayerMovement(const Event& aEvent) {
     return;
 }
 
+void keyDown(const Event& aEvent) { std::cout << "Key Down Event" << std::endl; }
+
 void run() {
     // contextManager.setActiveContext("Playing");
     EventManager eventManager;
     eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
     eventManager.subscribe(enditall, EventType::Quit);
     eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
-    eventManager.subscribe(anyEvent);
+    eventManager.subscribe(keyDown, EventType::KeyDown);
 
-    // Input& input = Input::getInstance();
+    // eventManager.subscribe(anyEvent);
+
+    Input& input = Input::getInstance();
 
     Window myWindow;
     Renderer* myRenderer = new Renderer(myWindow);
@@ -155,6 +159,7 @@ void run() {
         //     std::cout << "Mouse button left pressed" << input.MousePosition().x << ", " << input.MousePosition().y
         //               << std::endl;
         // }
+        input.update();
 
         eventManager.handleEvents();
 

@@ -10,6 +10,7 @@
 
 #include "ContextManager.h"
 #include "Input.h"
+#include "InputStructs.h"
 #include "SDL_events.h"
 #include "SDL_keycode.h"
 
@@ -166,14 +167,14 @@ public:
         }
 
         for (int i = 0; i < heldKeys.size(); i++) {
-            if (mContextManager.isKeyActive((Key)heldKeys[i])) {
+            if (mContextManager.isKeyActive((Key)heldKeys[i]) != DefAction::Undefined) {
+                Event createdEvent;
+                createdEvent.type = EventType::DefinedAction;
+                createdEvent.defAction = mContextManager.isKeyActive((Key)heldKeys[i]);
+
+                createdEvent.key = (Key)heldKeys[i];
+                dispatch(createdEvent);
             }
-
-            Event createdEvent;
-            createdEvent.type = EventType::DefinedAction;
-
-            createdEvent.key = (Key)heldKeys[i];
-            dispatch(createdEvent);
         }
 
         for (int i = 0; i < downKeys.size(); i++) {
@@ -197,7 +198,7 @@ public:
     }
 
     void dispatch(Event aEvent) {
-
+        std::cout << "dispatch(Event) call" << std::endl;
         if (subscribers.find(aEvent.type) != subscribers.end()) {
             for (const auto& callback : subscribers[aEvent.type]) {
                 callback(aEvent);
