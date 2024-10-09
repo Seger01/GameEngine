@@ -4,6 +4,7 @@ What was discussed:
 - Creating a block diagram for the subsystems in the engine
 - Create a global activity diagram
 - The decision was made to *not* use ECS.
+- Question Bob: should we initialize the engine as a large single class, and then mannually add individual objects?
 
 What has been done:
 - Siem: Worked on savegame, making sure it more matches the unity savegame system.
@@ -14,4 +15,5 @@ What has been done:
 
 What is going to be done:
 - Seger: PoC for physics as described in design
+- Sean: (Unity ) multiplayer PoC: figure out how to use multiplayer within the game loop (when is this done?) and how Unity does this.
 Everyone is going to work on architecture / design
