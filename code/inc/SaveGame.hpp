@@ -6,11 +6,12 @@
 
 class SaveGame {
 public:
-  SaveGame(std::string aFileName);
+  SaveGame(const std::string &aFileName);
 
 public:
   void createFile();
   void store();
+  void remove();
 
 public:
   void addField(std::string name, std::string value);

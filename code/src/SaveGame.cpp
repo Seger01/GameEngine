@@ -5,7 +5,7 @@
 
 using json = nlohmann::json;
 
-SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
+SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
   std::ifstream inFile(mFileName);
   if (inFile) {
     // File exists, load the data
@@ -44,10 +44,7 @@ SaveGame::SaveGame(std::string aFileName) : mFileName(aFileName) {
     }
   } else {
     // File doesn't exist, create a new one
-    std::ofstream outFile(mFileName);
-    if (!outFile) {
-      std::cerr << "Failed to create the file: " << mFileName << std::endl;
-    }
+    createFile();
   }
 }
 
@@ -108,6 +105,9 @@ void SaveGame::addField(std::string aName, std::string aValue) {
   newField.setValue(aValue);
   mFields.push_back(newField);
 }
+
+void SaveGame::remove() { std::remove(mFileName.c_str()); }
+
 void SaveGame::setField(std::string aName, std::string aValue) {
   try {
     for (SaveField &field : mFields) {

@@ -25,7 +25,6 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 # Specify the source files
 set(SOURCES
     src/main.cpp
-    src/SaveGameTest.cpp
     src/SaveGameManager.cpp
     src/SaveGame.cpp
     src/SaveField.cpp

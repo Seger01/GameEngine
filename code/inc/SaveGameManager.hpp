@@ -7,7 +7,8 @@
 class SaveGameManager {
 public:
   SaveGame &createSaveGame(const std::string &aId, const std::string &aPath);
-  void deleteSaveGame(const std::string &aId);
+  SaveGame &getSaveGame(const std::string &aId);
+  void deleteSaveGame(const std::string &aId, const bool aDeleteFile = false);
 
 private:
   std::unordered_map<std::string, SaveGame> mSaveGames;
