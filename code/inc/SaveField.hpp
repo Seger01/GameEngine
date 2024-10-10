@@ -1,19 +1,27 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 
-class SaveField {
-public:
-  SaveField(std::string name);
+template <typename T> class SaveField {
+  static_assert(
+      std::is_same<T, std::string>::value || std::is_same<T, int>::value ||
+          std::is_same<T, float>::value,
+      "SaveField can only be instantiated with std::string, int, or float");
 
 public:
-  std::string getName() const;
+  SaveField(std::string name) : mName(name) {}
 
-public:
-  void setValue(std::string aValue);
-  std::string getValue() const;
+  std::string getName() const { return mName; }
+
+  void setValue(T aValue) { mValue = aValue; }
+
+  T getValue() const { return mValue; }
 
 private:
   std::string mName;
-  std::string mValue;
+  T mValue;
 };
+
+// Template idea: declare functions of template in allowed types (string, int
+// and float), then implement as template in source file.

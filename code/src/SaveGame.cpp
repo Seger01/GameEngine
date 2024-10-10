@@ -16,7 +16,7 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
     if (j.contains("fields")) {
       for (const auto &field : j["fields"]) {
         if (field.contains("name") && field.contains("value")) {
-          SaveField saveField(field["name"]);
+          SaveField<std::string> saveField(field["name"]);
           saveField.setValue(field["value"]);
           mFields.push_back(saveField);
         }
@@ -101,7 +101,7 @@ void SaveGame::addField(std::string aName, std::string aValue) {
     return;
   }
 
-  SaveField newField{aName};
+  SaveField<std::string> newField{aName};
   newField.setValue(aValue);
   mFields.push_back(newField);
 }
@@ -110,7 +110,7 @@ void SaveGame::remove() { std::remove(mFileName.c_str()); }
 
 void SaveGame::setField(std::string aName, std::string aValue) {
   try {
-    for (SaveField &field : mFields) {
+    for (SaveField<std::string> &field : mFields) {
       if (field.getName() == aName) {
         field.setValue(aValue);
         return;

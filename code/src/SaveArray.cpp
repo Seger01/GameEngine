@@ -18,14 +18,16 @@ void SaveArray::addField(std::string aName, std::string aValue) {
     }
   }
 
-  SaveField newField{aName};
+  SaveField<std::string> newField{aName};
   newField.setValue(aValue);
   mFields.push_back(newField);
 }
 
 std::string SaveArray::getName() const { return mName; }
 
-std::vector<SaveField> SaveArray::getArray() const { return mFields; }
+std::vector<SaveField<std::string>> SaveArray::getArray() const {
+  return mFields;
+}
 
 void SaveArray::setField(std::string aName, std::string aValue) {
   try {

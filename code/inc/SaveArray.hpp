@@ -10,7 +10,7 @@ public:
 
 public:
   std::string getName() const;
-  std::vector<SaveField> getArray() const;
+  std::vector<SaveField<std::string>> getArray() const;
 
 public:
   void addField(std::string name, std::string value);
@@ -19,5 +19,5 @@ public:
 
 private:
   std::string mName;
-  std::vector<SaveField> mFields;
+  std::vector<SaveField<std::string>> mFields;
 };

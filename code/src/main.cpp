@@ -28,8 +28,8 @@ void test2() {
   sga.addField("myArrayField", "myArrayValue");
   sg1.setArray("myArray", sga);
   // Store the save game
-  // sg1.store();
-  sgm.deleteSaveGame("save1");
+  sg1.store();
+  // sgm.deleteSaveGame("save1");
 }
 
 int main() { test2(); }

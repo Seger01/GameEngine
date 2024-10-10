@@ -25,6 +25,6 @@ public:
 
 private:
   std::string mFileName;
-  std::vector<SaveField> mFields;
+  std::vector<SaveField<std::string>> mFields;
   std::vector<SaveArray> mArrays;
 };
