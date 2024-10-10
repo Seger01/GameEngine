@@ -38,4 +38,5 @@ Date,Time,Duration(in hours),Activity
 2024-10-03, 9:30, 1.5, project meeting
 2024-10-04, 12:00, 1, Learning to create own map in Tiled
 2024-10-04, 13:15, 0.75, Added camera to Tiled2D POC
-2024-19-09, 9:00, 5, Architecture and design
+2024-10-09, 9:00, 5, Architecture and design
+2024-10-10, 12:00, 0.5, SceneManager diagram
