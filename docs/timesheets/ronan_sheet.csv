@@ -1,5 +1,42 @@
 Date,Time,Duration(in hours),Activity
 2024-09-03, 9:15, 2.25, group discussion on first steps / code guidelines
 2024-09-03, 15:00, 1.5, first project lecture
-2024-09-04, 11:00, 3, group discussion, started on PoA
+2024-09-04, 11:00, 3, group discussion and started on PoA
 2024-09-05, 11:00, 0.75, Finished first version of document inventory and communacation sections in PoA
+2024-09-09, 11:00, 0.5, Group meeting
+2024-09-09, 11:30, 3, started research
+2024-09-10, 12:30, 1, prepare meeting bob
+2024-09-10, 13:30, 0.5, group meeting bob
+2024-09-11, 9:30, 2, working on tiled2d POC
+2024-09-12, 14:00, 2.5, working on tiled2D POC
+2024-09-13, 12:30, 0.5, working on tiled2D POC
+2024-09-14, 16:45, 0.5, tiled2D POC fixed libs
+2024-09-15, 13:30, 3, worked on level research
+2024-09-15, 23:00, 1, working on tiled2D POC
+2024-09-16, 9:15, 0.25, group meeting
+2024-09-16, 9:30, 5.75, worked on fixing libraries for Tiled2D POC
+2024-09-17, 15:20, 1, worked on fixing libraries for Tiled2D POC
+2024-09-18, 9:15, 0.5, group meeting
+2024-09-18, 10:20, 0.5, PoA feedback
+2024-09-18, 11:40, 1, GameObjects research
+2024-09-19, 12:30, 1.5, Project meeting with class
+2024-09-22, 14:00, 1, GameObjects research
+2024-09-24, 13:30, 1, group meeting with Bob preperation
+2024-09-24, 14:30, 0.75, group meeting with Bob
+2024-09-24, 16:30, 1, Added TmxLite to Tiled2D POC
+2024-09-25, 9:15, 1.25, Group meeting
+2024-09-25, 10:30, 1, Helped with libraries
+2024-09-25, 12:00, 4.5, worked on GameObjects POC
+2024-09-26, 12:00, 1.5, Group meeting
+2024-09-26, 15:00, 3.5, refactoring GameObjects POC to ECS
+2024-09-27, 11:45, 2.5, GameObjects research
+2024-09-29, 11:30, 0.5, small refactor of GameObjects POC
+2024-10-02, 9:30, 0.25, preparing standup
+2024-10-02, 9:45, 0.75, standup
+2024-10-02, 11:30, 5.5, worked on rendering Tiled map
+2024-10-02, 17:00, 1, trying to get SDL working on laptop
+2024-10-03, 9:30, 1.5, project meeting
+2024-10-04, 12:00, 1, Learning to create own map in Tiled
+2024-10-04, 13:15, 0.75, Added camera to Tiled2D POC
+2024-10-09, 9:00, 5, Architecture and design
+2024-10-10, 12:00, 0.5, SceneManager diagram

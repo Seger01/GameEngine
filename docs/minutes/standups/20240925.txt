@@ -1,0 +1,21 @@
+Minutes 25-09-24
+
+What was discussed:
+- Idea: propose to Bob to send the minutes from the daily standups (in order to better comply with 'Betrokken stakeholders'). Additionally ask if there are other documents / pieces of information he would like to receive. Also ask if he wants to receive the amount of worked hours script output every update.
+- Add to PoA: define that each member is expected to work 14 hours per week. If a member wants to work more than that, it is allowed. During the assessment, when dividing points for individual efforts, a team member can get a maximum of 0.5 extra points for 50 hours or more of extra work done (on top of the 14 hours per week). This way, no team member can gain a significant grading advantage by 'simply' pouring in a lot of hours. During the assessments there is always room to vary points for individual efforts based on the quality of the work, communication and opinions of other team members.
+- Went through the assessment matrix to check for improvements in professional areas.
+
+
+What has been done:
+- Siem: Work on save-game system, design and PoC implementation.
+- Angel: <Has not worked on project since last standup>
+- Ronan: Research gameobjects, troubleshooting libraries with cmake for tmxlite.
+- Sean: Researching AI, researching using libraries with cmake
+- Seger: Work on SDL facade
+
+What is going to be done:
+- Siem: continue work on save-game PoC / system, troubleshoot usage of SDLMixer library. Contact Bob with ideas noted above.
+- Angel: continue work on physics PoC. Considering writing it all by hand versus using box2d. Will write a physics poc in box2d. Update PoA according to subjects discussed in this standup.
+- Ronan: PoC for game objects / game components. Creating an interface for the game objects.
+- Sean: testing if tmxlite works on his own machine as well. Improving library usage in cmake. Work on PoCs for AI: A* and statemachine.
+- Seger: research on input system. Create PoC for using k&m input, using SDL.

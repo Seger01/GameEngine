@@ -1,8 +1,39 @@
 Date,Time,Duration(in hours),Activity
-2024-09-02, 9:00, 1.5, Introduction to project
+2024-09-02, 09:00, 1.5, Introduction to project
 2024-09-02, 10:30, 0.5, Group setup
 2024-09-03, 10:00, 1.5, Team meeting for coding guidelines and setup of project
 2024-09-03, 15:00, 1.5, First project class
-2024-09-04, 11:00, 2.0, Team meeting on start of poa, requirements and planning 
+2024-09-04, 11:00, 2.0, Team meeting on start of poa and requirements and planning 
 2024-09-05, 12:00, 2.0, First version of POA risk analsys and project organisation finished
 2024-09-06, 13:00, 1.5, Finished POA and risk analisys and reviewed POA
+2024-09-09, 11:00, 4.0, Started research on particle engine and configured example sdl project
+2024-09-10, 12:30, 1.5, Pre project meeting in preparation for later bob meeting
+2024-09-10, 15:00, 1.0, Start of physics engine research
+2024-09-11, 09:00, 2.5, Continued physics engine research and morning standup
+2024-09-12, 12:00, 1.0, Start particle engine poc with seger code
+2024-09-13, 12:00, 0.5, Project meeting
+2024-09-13, 15:30, 1.5, Continued particle engine POC; learning sdl; fixed nvim include issue
+2024-09-13, 15:00, 1.5, Continued particle POC
+2024-09-16, 09:15, 5.0, Continued particle POC
+2024-09-18, 09:15, 0.5, daily team standup
+2024-09-18, 10:45, 0.5, reviewed requirements; reviewed quality plan of approach
+2024-09-18, 14:00, 3.5, Particle poc now has color fade
+2024-09-19, 12:30, 1.5, Class project meeting 
+2024-09-24, 09:15, 0.25, Applied sean feedback poa
+2024-09-24, 14:30, 1.0, Project meeting with Bob
+2024-09-25, 09:15, 1.0, Weekly group standup
+2024-09-25, 10:30, 1.5, Added feedback and extra chapters to poa including kanban buddy system etc.
+2024-09-25, 14:45, 2.25, Started physics poc; set up box2d library and created basic example
+2024-09-26, 12:00, 1.5, Standup and project discussion
+2024-09-26, 17:00, 1.0, creating new physics poc from lib branch; fixing submodule
+2024-09-27, 09:00, 1.5, attempt to fix lib sub modules
+2024-09-27, 10:30, 1.0, created clang for auto format code
+2024-09-27, 11:30, 0.75, fixed lib sub module
+2024-09-27, 12:15, 2.75, created bouncing square poc
+2024-09-27, 15:00, 0.75, cleaned up physics poc code
+2024-09-30, 14:30, 1.5, added movement and keyboard inputs to physics poc
+2024-10-01, 11:00, 2.25, attempted code cleanup for physics poc but ended up making a mess and will restart
+2024-10-02, 09:00, 6.00, finished physics poc
+2024-10-03, 09:30, 1.5, sick
+2024-10-04, 09:00, 3.5, sick
+2024-19-09, 9:00, 5, Architecture and design
