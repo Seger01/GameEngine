@@ -21,22 +21,30 @@ class AudioSource{
 }
 
 class Collider{
-
+    ' Relative to position of GameObject
+    - mPosition : Point 
 }
 
 class CircleColider{
-    - mRadius : ???
+    ' Position is middle of circle
+    - mRadius : float 
 }
 
 class BoxCollider{
-    - mWidth : ???
-    - mHeight : ???
+    ' Position is middle of box
+    - mWidth : float
+    - mHeight : float
+    - mRotation : float
 }
 
+enum bodyType{
+    STATIC
+    DYNAMIC
+}
 class RigidBody{
-    - mMass : ???
-    - mGravityScale : ???
-    - mBodyType : ???
+    - mMass : float
+    - mGravityScale : float
+    - mBodyType : Enum bodyType
 }
 
 interface BehavourScript{
@@ -73,18 +81,107 @@ class GameObject{
     - mLayer : ???
 }
 
-class Scene{}
+class SceneManager {
+    + addScene(const Scene& scene) : int
+    + addSceneLevel(Map& map) : int
+    + loadScene(int index) : void
+    + loadScene(const std::string& sceneName) : void
+    + getCurrentScene() : Scene*
+    - SceneManager()
+    - scenes : vector<Scene>
+    - currentSceneIndex : int
+}
+
+class SaveGameManager {
+    - mSaveGames : vector<SaveGame> 
+    - SaveGameManager()
+    + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+    + getSaveGame(const string &aId) : SaveGame&
+    + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+}
+
+class AnimationManager {
+    + updateAnimations(Scene &scene) : void
+}
+
+class SaveGame {
+    - mFileName : string
+    - mFields : vector<SaveField>
+    - mArrays : vector<SaveArray>
+    + SaveGame(const string &aFileName)
+    + store() : void
+    + remove() : void
+    + addField(string name, string value) : void
+    + setField(string name, string value) : void
+    + getField(string name) : SaveField&
+    + getField(string name) : string
+    + addArray(string name) : void
+    + setArray(string name, SaveArray value) : void
+    + getArray(string name) : SaveArray&
+}
+
+class SaveField {
+    - mName : string
+    - mValue : string
+    + SaveField(string name)
+    + getName() : string
+    + setValue(string) : void
+    + getValue() : string
+}
+
+class SaveArray {
+    - mName : string
+    - mFields : vector<SaveField>
+    + SaveArray(string name)
+    + getName() : string
+    + addField(string name, string value) : void
+    + setField(string name, string value) : void
+    + getField(string name) : string
+}
+
+class Scene {
+    + void addGameObject(GameObject object)
+    + void removeGameObject(int id)
+    + GameObject& getGameObject(int id)
+    + int addCamera()
+    + void removeCamera(int id)
+    + Camera& getCamera(int id)
+    + void setActiveCamera(int id)
+    - sceneName : string
+    - gameObjects : vector<GameObject>
+    - activeCameraIndex : int
+    - cameras : vector<Camera>(1)
+}
+
+class EngineBravo {
+    +void initialize()
+    - SceneManager sceneManager
+    + SceneManager& getSceneManager()
+    - SaveGameManager saveGameManager
+    + runBehaviourScripts() : void
+}
+
 
 class Camera{
-    - mBackgroundColor : ???
-    - mAspectWidth : ???
-    - mAspectHeight : ???
+    - mBackgroundColor : Color
+    ' Width and Height are rendered area in Game Units
+    - mWidth : int
+    - mHeight : int
+
+}
+
+class Renderer {
+    - mResolution : Point
+    + render(const Scene& scene) : void
+    + render(const Scene& scene, int layer) : void
+    + clear() : void
+    + setResolution(Point resolution) : void
 }
 
 together{
 class UIObject{
-    - mWidth : ???
-    - mHeight : ???
+    - mWidth : int
+    - mHeight : int
 }
 
 class Button{
@@ -113,7 +210,11 @@ class iKeyListener{
     + ??? onKeyReleased()
 }
 
-class Transform{}
+class Transform{
+    - mPosition : Point
+    - mRotation : float
+    - mScale : Point
+}
 
 together{
 class Input{}
@@ -123,9 +224,17 @@ class Time{}
 class Debug{}
 }
 
-class Point{}
+class Point{
+    - x : float
+    - y : float
+}
 
-class Color{}
+class Color{
+    - r : int
+    - g : int
+    - b : int
+    - a : int
+}
 
 Component <|-down- AudioSource
 Component <|-down- Collider
@@ -151,9 +260,20 @@ GameObject <|-- UIObject
 UIObject <|-- Button
 UIObject <|-- Text
 
-Scene "1" --> "0..*" GameObject
+Scene --> "0..*" GameObject
 Camera --|> GameObject
-Camera "1..*" -down-> "1" Scene : +renderScene
+Camera "1..*" -down->  Scene
 
 Animator "0..1" ..> "1..*" Sprite
+
+SaveGameManager *-- "*" SaveGame
+SaveGame *-- "*" SaveField
+SaveGame *-- "*" SaveArray
+SaveArray *-- "*" SaveField
+Renderer --> Scene
+SceneManager *-- "*" Scene
+
+EngineBravo *-- "1" SceneManager : creates
+EngineBravo *-- "1" SaveGameManager : creates
+EngineBravo *-- "1" AnimationManager : creates
 @enduml

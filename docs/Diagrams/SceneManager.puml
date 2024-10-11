@@ -3,9 +3,8 @@
 
 
 class SceneManager {
-
-    +static SceneManager& getInstance()
-    +void addScene(const Scene& scene)
+    +int addScene(const Scene& scene)
+    +int addSceneLevel(Map& map)
     +void loadScene(int index)
     +void loadScene(const std::string& sceneName)
     +Scene* getCurrentScene()
@@ -16,15 +15,16 @@ class SceneManager {
 
 class Scene {
 
-    +void addGameObject(GameObject* object)
-    +void loadContents()
+    + void addGameObject(GameObject object)
+    + void removeGameObject(int id)
+    + GameObject& getGameObject(int id)
     - sceneName : string
-    - gameObjects : vector<GameObject*>
+    - gameObjects : vector<GameObject>
 }
 
 class EngineBravo {
     +void initialize()
-    - SceneManager& sceneManager
+    - SceneManager sceneManager
 }
 
 SceneManager "1" *-- "many" Scene
