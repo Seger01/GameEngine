@@ -10,11 +10,12 @@ partition "gameloop" {
             if "Physics behind render" then
         --> [true] "Update Physics"
         else
-        --> [false] "Render"
+        --> [false] "Check Delete Queue"
         endif
     else
-    --> [false] "Render"
+    --> [false] "Check Delete Queue"
     endif
+    "Check Delete Queue" --> "Render" 
     "Render" --> "Handle Input"
 
 }
