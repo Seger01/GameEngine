@@ -1,0 +1,101 @@
+@startuml
+
+class NetworkManager {
+    + StartServer()
+    + StartClient()
+    + StartHost()
+    + Shutdown()
+    - mAuthority: string
+    - mNetworkState: string
+}
+
+class NetworkObject {
+    + SyncState()
+    + RequestOwnership()
+    + GetNetworkID(): int
+    - mOwner: string
+    - mNetworkID: int
+}
+
+class NetworkBehaviour {
+    + SyncVariable()
+    + OnNetworkVariableChanged()
+}
+
+class NetworkTransform {
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendInputToServer()
+    + ReceiveGameState()
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ValidateInput()
+    + SendGameState()
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+class NetworkMessage {
+    + Serialize()
+    + Deserialize()
+    + SendMessage()
+    - mMessageType: string
+}
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+}
+
+class NetworkInputManager {
+    + CaptureInput()
+    + SendInput()
+    + ApplyInputPrediction()
+}
+
+class NetworkReplicationManager {
+    + ReplicateObjectState()
+    + SyncWithClients()
+    + ApplyInterpolation()
+}
+
+class AuthorityManager {
+    + AssignAuthority()
+    + RequestControl()
+    - mObjectAuthority: string
+}
+
+NetworkManager --> NetworkClient
+NetworkManager --> NetworkServer
+NetworkManager --> NetworkHost
+NetworkManager --> NetworkSceneManager
+NetworkManager --> AuthorityManager
+
+NetworkObject --> NetworkBehaviour
+NetworkBehaviour <|-- NetworkTransform
+
+NetworkClient --> NetworkInputManager
+NetworkClient --> NetworkMessage
+NetworkClient --> NetworkReplicationManager
+
+NetworkServer --> NetworkMessage
+NetworkServer --> NetworkReplicationManager
+NetworkServer --> NetworkObject
+
+NetworkHost --> NetworkServer
+NetworkHost --> NetworkClient
+
+AuthorityManager --> NetworkObject
+NetworkSceneManager --> NetworkObject
+
+@enduml
