@@ -205,7 +205,8 @@ void testControllerReading() {
     SDL_Quit();
 }
 int main() {
-    run();
+    // run();
+    testControllerReading();
 
     return 0;
 }
