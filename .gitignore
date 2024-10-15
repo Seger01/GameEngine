@@ -46,5 +46,7 @@
 
 #ignore build folder
 code/build/
+code/.cache
+.cache
 
 .vscode/

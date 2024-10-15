@@ -22,37 +22,6 @@
 
 const int MOVE_SPEED = 10;
 
-// class Input {
-// public:
-//     Input() {}
-//
-//     void subscribe(DefAction aDefAction, const std::function<void(float)>& callback) {
-//         mContextManager.subscribeToAction(aDefAction, callback);
-//     }
-//
-//     void update() {
-//         int numKeys;
-//         const Uint8* allKeys = SDL_GetKeyboardState(&numKeys);
-//
-//         for (int i = 0; i < numKeys; ++i) {
-//             if (allKeys[i]) {
-//                 // std::cout << "Key with scancode " << keyToString((Key)i) << " is pressed" << std::endl;
-//                 mContextManager.processKey((Key)i);
-//             }
-//         }
-//
-//         return;
-//     }
-//
-//     bool getKeyDown(Key aKeyToCheck) { return false; }
-//     bool isKeyDown() { return false; }
-//
-// private:
-//     ContextManager mContextManager;
-//
-//     Uint8* mAllKeys = nullptr;
-// };
-
 void onMouseDownEvent(const Event& aEvent) {
     if (aEvent.mouse.left) {
         std::cout << "mouse left pressed at " << aEvent.mouse.position.x << ", " << aEvent.mouse.position.y
@@ -88,15 +57,17 @@ void keyDown(const Event& aEvent) { std::cout << "Key Down Event" << std::endl; 
 
 void run() {
     // contextManager.setActiveContext("Playing");
-    EventManager eventManager;
-    eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
-    eventManager.subscribe(enditall, EventType::Quit);
-    eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
-    eventManager.subscribe(keyDown, EventType::KeyDown);
+    // EventManager eventManager;
+    // eventManager.subscribe(onMouseDownEvent, EventType::MouseButtonDown);
+    // eventManager.subscribe(enditall, EventType::Quit);
+    // eventManager.subscribe(handlePlayerMovement, EventType::DefinedAction);
+    // eventManager.subscribe(keyDown, EventType::KeyDown);
 
     // eventManager.subscribe(anyEvent);
 
     Input& input = Input::getInstance();
+
+    input.setActiveContext("Playing");
 
     Window myWindow;
     Renderer* myRenderer = new Renderer(myWindow);
@@ -138,16 +109,16 @@ void run() {
 
         // input.print();
 
-        // if (input.GetKey(Key::Key_W)) {
+        // if (input.GetAction(DefAction::Move_Up)) {
         //     destRect.y -= MOVE_SPEED;
         // }
-        // if (input.GetKey(Key::Key_A)) {
+        // if (input.GetAction(DefAction::Move_Left)) {
         //     destRect.x -= MOVE_SPEED;
         // }
-        // if (input.GetKey(Key::Key_S)) {
+        // if (input.GetAction(DefAction::Move_Down)) {
         //     destRect.y += MOVE_SPEED;
         // }
-        // if (input.GetKey(Key::Key_D)) {
+        // if (input.GetAction(DefAction::Move_Right)) {
         //     destRect.x += MOVE_SPEED;
         // }
         //
@@ -159,9 +130,24 @@ void run() {
         //     std::cout << "Mouse button left pressed" << input.MousePosition().x << ", " << input.MousePosition().y
         //               << std::endl;
         // }
-        input.update();
+        // input.update();
 
-        eventManager.handleEvents();
+        // Process events
+        while (SDL_PollEvent(&event) != 0) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        // Get the current keyboard state
+        const Uint8* state = SDL_GetKeyboardState(nullptr);
+
+        // Check if the W key is pressed
+        if (state[SDL_SCANCODE_W]) {
+            std::cout << "W key is held down." << std::endl;
+        } else {
+            std::cout << "W key is not pressed." << std::endl;
+        }
 
         // Clear screen
         // SDL_RenderClear(renderer);

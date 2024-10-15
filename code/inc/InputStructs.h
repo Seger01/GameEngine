@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INPUTSTRUCTS_H
+#define INPUTSTRUCTS_H
 
 #include <string>
 
@@ -226,3 +227,5 @@ enum class DefAction {
 
     Undefined
 };
+
+#endif

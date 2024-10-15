@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENT_H
+#define EVENT_H
 
 #include <functional>
 #include <iostream>
@@ -8,7 +9,7 @@
 
 #include "SDL.h"
 
-#include "ContextManager.h"
+// #include "ContextManager.h"
 #include "Input.h"
 #include "InputStructs.h"
 #include "SDL_events.h"
@@ -110,91 +111,91 @@ public:
 
     // Handle events and call subscribed callbacks
     void handleEvents() {
-        SDL_Event event;
-
-        static Input& input = Input::getInstance();
-
-        std::vector<Uint8> heldKeys = input.getHeldKeys();
-        std::vector<Uint8> downKeys = input.getDownKeys();
-        std::vector<Uint8> upKeys = input.getUpKeys();
-
-        for (int i = 0; i < heldKeys.size(); i++) {
-            Event createdEvent;
-            createdEvent.type = EventType::KeyHeld;
-            createdEvent.key = (Key)heldKeys[i];
-            dispatch(createdEvent);
-        }
-
-        for (int i = 0; i < downKeys.size(); i++) {
-            Event createdEvent;
-            createdEvent.type = EventType::KeyDown;
-            createdEvent.key = (Key)downKeys[i];
-            dispatch(createdEvent);
-        }
-
-        for (int i = 0; i < upKeys.size(); i++) {
-            Event createdEvent;
-            createdEvent.type = EventType::KeyUp;
-            createdEvent.key = (Key)upKeys[i];
-            dispatch(createdEvent);
-        }
-
-        if (input.GetMouseButtonDown(MouseButton::LEFT)) {
-            Event createdEvent;
-
-            createdEvent.type = EventType::MouseButtonDown;
-            createdEvent.mouse.left = true;
-
-            dispatch(createdEvent);
-        }
-
-        if (input.GetMouseButtonDown(MouseButton::MIDDLE)) {
-            Event createdEvent;
-
-            createdEvent.type = EventType::MouseButtonDown;
-            createdEvent.mouse.middle = true;
-
-            dispatch(createdEvent);
-        }
-
-        if (input.GetMouseButtonDown(MouseButton::RIGHT)) {
-            Event createdEvent;
-
-            createdEvent.type = EventType::MouseButtonDown;
-            createdEvent.mouse.right = true;
-
-            dispatch(createdEvent);
-        }
-
-        for (int i = 0; i < heldKeys.size(); i++) {
-            if (mContextManager.isKeyActive((Key)heldKeys[i]) != DefAction::Undefined) {
-                Event createdEvent;
-                createdEvent.type = EventType::DefinedAction;
-                createdEvent.defAction = mContextManager.isKeyActive((Key)heldKeys[i]);
-
-                createdEvent.key = (Key)heldKeys[i];
-                dispatch(createdEvent);
-            }
-        }
-
-        for (int i = 0; i < downKeys.size(); i++) {
-            Event createdEvent;
-            createdEvent.type = EventType::KeyDown;
-            createdEvent.key = (Key)downKeys[i];
-            dispatch(createdEvent);
-        }
-
-        for (int i = 0; i < upKeys.size(); i++) {
-            Event createdEvent;
-            createdEvent.type = EventType::KeyUp;
-            createdEvent.key = (Key)upKeys[i];
-            dispatch(createdEvent);
-        }
-
-        // while (SDL_PollEvent(&event)) {
-        //     Event ownEvent = this->parseSDLEvent(event);
+        // SDL_Event event;
         //
+        // static Input& input = Input::getInstance();
+        //
+        // std::vector<Uint8> heldKeys = input.getHeldKeys();
+        // std::vector<Uint8> downKeys = input.getDownKeys();
+        // std::vector<Uint8> upKeys = input.getUpKeys();
+        //
+        // for (int i = 0; i < heldKeys.size(); i++) {
+        //     Event createdEvent;
+        //     createdEvent.type = EventType::KeyHeld;
+        //     createdEvent.key = (Key)heldKeys[i];
+        //     dispatch(createdEvent);
         // }
+        //
+        // for (int i = 0; i < downKeys.size(); i++) {
+        //     Event createdEvent;
+        //     createdEvent.type = EventType::KeyDown;
+        //     createdEvent.key = (Key)downKeys[i];
+        //     dispatch(createdEvent);
+        // }
+        //
+        // for (int i = 0; i < upKeys.size(); i++) {
+        //     Event createdEvent;
+        //     createdEvent.type = EventType::KeyUp;
+        //     createdEvent.key = (Key)upKeys[i];
+        //     dispatch(createdEvent);
+        // }
+        //
+        // if (input.GetMouseButtonDown(MouseButton::LEFT)) {
+        //     Event createdEvent;
+        //
+        //     createdEvent.type = EventType::MouseButtonDown;
+        //     createdEvent.mouse.left = true;
+        //
+        //     dispatch(createdEvent);
+        // }
+        //
+        // if (input.GetMouseButtonDown(MouseButton::MIDDLE)) {
+        //     Event createdEvent;
+        //
+        //     createdEvent.type = EventType::MouseButtonDown;
+        //     createdEvent.mouse.middle = true;
+        //
+        //     dispatch(createdEvent);
+        // }
+        //
+        // if (input.GetMouseButtonDown(MouseButton::RIGHT)) {
+        //     Event createdEvent;
+        //
+        //     createdEvent.type = EventType::MouseButtonDown;
+        //     createdEvent.mouse.right = true;
+        //
+        //     dispatch(createdEvent);
+        // }
+        //
+        // // for (int i = 0; i < heldKeys.size(); i++) {
+        // //     if (mContextManager.isKeyActive((Key)heldKeys[i]) != DefAction::Undefined) {
+        // //         Event createdEvent;
+        // //         createdEvent.type = EventType::DefinedAction;
+        // //         createdEvent.defAction = mContextManager.isKeyActive((Key)heldKeys[i]);
+        // //
+        // //         createdEvent.key = (Key)heldKeys[i];
+        // //         dispatch(createdEvent);
+        // //     }
+        // // }
+        // //
+        // for (int i = 0; i < downKeys.size(); i++) {
+        //     Event createdEvent;
+        //     createdEvent.type = EventType::KeyDown;
+        //     createdEvent.key = (Key)downKeys[i];
+        //     dispatch(createdEvent);
+        // }
+        //
+        // for (int i = 0; i < upKeys.size(); i++) {
+        //     Event createdEvent;
+        //     createdEvent.type = EventType::KeyUp;
+        //     createdEvent.key = (Key)upKeys[i];
+        //     dispatch(createdEvent);
+        // }
+        //
+        // // while (SDL_PollEvent(&event)) {
+        // //     Event ownEvent = this->parseSDLEvent(event);
+        // //
+        // // }
     }
 
     void dispatch(Event aEvent) {
@@ -216,3 +217,5 @@ private:
     // Store subscribers for each event type
     std::unordered_map<EventType, std::vector<EventCallback>> subscribers;
 };
+
+#endif

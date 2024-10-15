@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONTEXTMANAGER_H
+#define CONTEXTMANAGER_H
 
 #include <fstream>
 #include <functional>
@@ -12,7 +13,7 @@
 #include <nlohmann/json.hpp>
 
 #include "InputStructs.h"
-
+//
 // Alias for convenience
 using json = nlohmann::json;
 
@@ -28,21 +29,12 @@ public:
     // // Subscribe function to add callbacks
     // void subscribe(const std::function<void(float)>& callback) { callbacks.push_back(callback); }
 
-    float isActive() {
-        for (int i = 0; i < mTriggerKeys.size(); i++) {
-            // if (Input::getInstance().)
-            // if (Input::getInstance().GetKey(mTriggerKeys[i])) {
-            //     return 1.0;
-            // }
-        }
-
-        return 0;
-    }
-
-    bool isInKeyList(Key aPotentialKey) {
-        for (int i = 0; i < mTriggerKeys.size(); i++) {
-            if (mTriggerKeys[i] == aPotentialKey) {
-                return true;
+    bool isActive(std::vector<Key> aHeldKeys) {
+        for (auto& heldKey : aHeldKeys) {
+            for (auto& triggerKey : mTriggerKeys) {
+                if (heldKey == triggerKey) {
+                    return true;
+                }
             }
         }
 
@@ -84,22 +76,16 @@ public:
         return;
     }
 
-    bool contains(DefAction aDefAction) {
-        for (int i = 0; i < mRegisteredActions.size(); i++) {
-            if (mRegisteredActions[i].get().getID() == aDefAction) {
-                return true;
+    std::vector<DefAction> getCurrentActions(std::vector<Key> aHeldKeys) {
+        std::vector<DefAction> activeActions;
+        std::cout << "mRegisteredActions.size(): " << mRegisteredActions.size() << std::endl;
+        for (auto& action : mRegisteredActions) {
+            if (action.get().isActive(aHeldKeys)) {
+                activeActions.push_back(action.get().getID());
             }
         }
-        return false;
-    }
 
-    DefAction containsKey(Key aKey) {
-        for (int i = 0; i < mRegisteredActions.size(); i++) {
-            if (mRegisteredActions[i].get().isInKeyList(aKey)) {
-                return mRegisteredActions[i].get().getID();
-            }
-        }
-        return DefAction::Undefined;
+        return activeActions;
     }
 
     std::string getName() { return mContextName; }
@@ -107,14 +93,6 @@ public:
     void addDefAction(DefinedAction& aDefinedAction) {
         std::cout << "mRegisteredActions.push_back(aDefinedAction);" << std::endl;
         mRegisteredActions.push_back(aDefinedAction);
-
-        return;
-    }
-
-    void processKey(Key aPressedKey) {
-        for (int i = 0; i < mRegisteredActions.size(); i++) {
-            // mRegisteredActions[i].get().trigger(aPressedKey);
-        }
 
         return;
     }
@@ -144,6 +122,12 @@ public:
         return;
     }
 
+    std::vector<DefAction> getCurrentActions(std::vector<Key> aHeldKeys) {
+        std::cout << "Active context is: " << mContexts[this->mActiveContextIndex].getName() << std::endl;
+        std::cout << "aHeldKeys.size(): " << aHeldKeys.size() << std::endl;
+        return mContexts[this->mActiveContextIndex].getCurrentActions(aHeldKeys);
+    }
+
     // void subscribeToAction(DefAction aDefAction, const std::function<void(float)>& callback) {
     //     for (int i = 0; i < mDefActions.size(); i++) {
     //         if (mDefActions[i]->getID() == aDefAction) {
@@ -157,26 +141,6 @@ public:
     //
     //     return;
     // }
-
-    bool getAction() { return false; }
-
-    float getActionRange(DefAction aDefAction) {
-        for (int i = 0; i < mDefActions.size(); i++) {
-            if (mDefActions[i]->getID() == aDefAction) {
-                return mDefActions[i]->isActive();
-            }
-        }
-
-        return 0.0f;
-    }
-
-    DefAction isKeyActive(Key aKey) { return mContexts[mActiveContextIndex].containsKey(aKey); }
-
-    bool contains(DefAction aDefAction) {
-        return mContexts[mActiveContextIndex].contains(aDefAction);
-
-        return false;
-    }
 
     void setActiveContext(std::string aWantedContex) {
         for (int i = 0; i < mContexts.size(); i++) {
@@ -300,3 +264,5 @@ private:
 
     std::vector<Context> mContexts;
 };
+
+#endif

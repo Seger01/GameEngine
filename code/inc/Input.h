@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INPUT_H
+#define INPUT_H
 
 #include <fstream>
 #include <functional>
@@ -13,12 +14,16 @@
 
 #include "InputStructs.h"
 
+#include "ContextManager.h"
+
+// class ContextManager;
+
 class Input {
 private:
     void updatePreviousKeys() {
-        mPreviousKeys.resize(mNumKeys);
-        for (int i = 0; i < mNumKeys; i++) {
-            mPreviousKeys[i] = mCurrentKeys[i];
+        mPreviousKeys.resize(mCurrentKeys.size());
+        for (int i = 0; i < mCurrentKeys.size(); i++) {
+            mPreviousKeys[i] = (Key)mCurrentKeys[i];
             // if (mCurrentKeys[i] == 1){
             //     mPreviousKeys[]
             // }
@@ -27,14 +32,23 @@ private:
         }
     }
 
-    void updateCurrentKeys() { mCurrentKeys = SDL_GetKeyboardState(&mNumKeys); }
+    void updateCurrentKeys() {
+        int numKeys = 0;
+        const Uint8* currentKeys = SDL_GetKeyboardState(&numKeys);
+
+        mCurrentKeys.resize(numKeys);
+
+        for (int i = 0; i < numKeys; i++) {
+            mCurrentKeys[i] = currentKeys[i];
+        }
+    }
 
     void updateDownKeys() {
         mDownKeys.resize(0);
         // std::cout << "mPreviousKeys.size(): " << mPreviousKeys.size() << std::endl;
         for (int i = 0; i < mPreviousKeys.size(); i++) {
-            if (mCurrentKeys[i] == 1 && mPreviousKeys[i] == 0) {
-                mDownKeys.push_back(i);
+            if (mCurrentKeys[i] == 1 && (int)mPreviousKeys[i] == 0) {
+                mDownKeys.push_back((Key)i);
             }
         }
     }
@@ -43,8 +57,8 @@ private:
         mUpKeys.resize(0);
 
         for (int i = 0; i < mPreviousKeys.size(); i++) {
-            if (mCurrentKeys[i] == 0 && mPreviousKeys[i] == 1) {
-                mUpKeys.push_back(i);
+            if (mCurrentKeys[i] == 0 && (int)mPreviousKeys[i] == 1) {
+                mUpKeys.push_back((Key)i);
             }
         }
     }
@@ -52,11 +66,13 @@ private:
     void updateHeldKeys() {
         mHeldKeys.resize(0);
 
-        for (int i = 0; i < mNumKeys; i++) {
+        for (int i = 0; i < mCurrentKeys.size(); i++) {
             if (mCurrentKeys[i]) {
-                mHeldKeys.push_back(i);
+
+                mHeldKeys.push_back((Key)i);
             }
         }
+        std::cout << "mHeldKeys.size(): " << mHeldKeys.size() << std::endl;
     }
 
     void updateMouse() {
@@ -85,6 +101,12 @@ private:
         }
     }
 
+    void updateHeldActions() {
+
+        std::cout << "mHeldKeysSize from fucking input class: " << mHeldKeys.size() << std::endl;
+        this->mHeldActions = mContextManager.getCurrentActions(mHeldKeys);
+    }
+
     Input() {
         this->updateCurrentKeys();
         this->updatePreviousKeys();
@@ -104,14 +126,14 @@ public:
     void print() {
         static long printID = 0;
 
-        for (int i = 0; i < mNumKeys; i++) {
+        for (int i = 0; i < mCurrentKeys.size(); i++) {
             if (mCurrentKeys[i] == 1) {
                 std::cout << printID << ": mCurrentKeys[" << i << "] == " << keyToString((Key)i) << std::endl;
             }
         }
 
         for (int i = 0; i < mPreviousKeys.size(); i++) {
-            if (mPreviousKeys[i] == 1) {
+            if ((int)mPreviousKeys[i] == 1) {
                 std::cout << printID << ": mPrevousKeys[" << i << "] == " << keyToString((Key)i) << std::endl;
             }
         }
@@ -121,17 +143,19 @@ public:
 
     void update() {
         this->updateCurrentKeys();
-        this->updateUpKeys();
-        this->updateDownKeys();
+        // this->updateUpKeys();
+        // this->updateDownKeys();
         this->updateHeldKeys();
 
-        this->updateMouse();
+        // this->updateHeldActions();
+
+        // this->updateMouse();
         this->updatePreviousKeys();
     }
 
-    std::vector<Uint8>& getHeldKeys() { return mHeldKeys; }
-    std::vector<Uint8>& getDownKeys() { return mDownKeys; }
-    std::vector<Uint8>& getUpKeys() { return mUpKeys; }
+    std::vector<Key>& getHeldKeys() { return mHeldKeys; }
+    std::vector<Key>& getDownKeys() { return mDownKeys; }
+    std::vector<Key>& getUpKeys() { return mUpKeys; }
 
     /**
      * @brief Is any key or mouse button currently held down? (Read Only)
@@ -167,13 +191,24 @@ public:
      */
     double GetAxis();
 
+    bool GetAction(DefAction aDefAction) {
+        // std::cout << "mHeldAction.size(): " << mHeldActions.size() << std::endl;
+        for (auto& action : mHeldActions) {
+            if (aDefAction == action) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @brief Returns true while the user holds down the key identified by keycode.
      * @spicapi
      */
     bool GetKey(Key key) {
         for (const auto& heldKey : mHeldKeys) {
-            if (heldKey == (Uint8)key) {
+            if (heldKey == key) {
                 return true;
             }
         }
@@ -194,7 +229,7 @@ public:
             std::cout << "mDownKeys.size(): " << mDownKeys.size() << std::endl;
 
         for (int i = 0; i < mDownKeys.size(); i++) {
-            if (mDownKeys[i] == (int)key) {
+            if (mDownKeys[i] == key) {
                 return true;
             }
         }
@@ -207,7 +242,7 @@ public:
      */
     bool GetKeyUp(Key key) {
         for (const auto& upKey : mUpKeys) {
-            if (upKey == (Uint8)key) {
+            if (upKey == key) {
                 return true;
             }
         }
@@ -298,15 +333,22 @@ public:
         return false;
     }
 
+    void setActiveContext(std::string aContextName) { mContextManager.setActiveContext(aContextName); }
+
 private:
+    ContextManager mContextManager;
+
     Mouse mCurrentMouse;
     Mouse mPreviousMouse;
 
-    const Uint8* mCurrentKeys = nullptr;
-    int mNumKeys = 0;
+    std::vector<int> mCurrentKeys;
 
-    std::vector<Uint8> mPreviousKeys;
-    std::vector<Uint8> mDownKeys;
-    std::vector<Uint8> mUpKeys;
-    std::vector<Uint8> mHeldKeys;
+    std::vector<Key> mPreviousKeys;
+    std::vector<Key> mDownKeys;
+    std::vector<Key> mUpKeys;
+    std::vector<Key> mHeldKeys;
+
+    std::vector<DefAction> mHeldActions;
 };
+
+#endif
