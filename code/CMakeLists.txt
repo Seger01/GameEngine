@@ -22,14 +22,12 @@ endif()
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-# Specify the source files
-set(SOURCES
-    src/main.cpp
-    # Add more source files here
+file(GLOB_RECURSE SOURCES
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
 # Add the executable target
-add_executable(engine_BRAVO ${SOURCES})
+add_executable(engine_BRAVO ${SOURCES}  ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
 # =====================
 # Google Test Integration
