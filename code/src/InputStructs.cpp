@@ -240,10 +240,10 @@ std::string keyToString(Key key) {
         return "Controller_Back";
     case Key::Controller_Start:
         return "Controller_Start";
-    case Key::Controller_LeftStick_Down:
-        return "Controller_LeftStick_Down";
-    case Key::Controller_RightStick_Down:
-        return "Controller_RightStick_Down";
+    case Key::Controller_LeftStick_Press:
+        return "Controller_LeftStick_Press";
+    case Key::Controller_RightStick_Press:
+        return "Controller_RightStick_Press";
     case Key::Controller_DPad_Up:
         return "Controller_DPad_Up";
     case Key::Controller_DPad_Down:

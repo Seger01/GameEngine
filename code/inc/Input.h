@@ -143,13 +143,13 @@ public:
 
     void update() {
         this->updateCurrentKeys();
-        // this->updateUpKeys();
-        // this->updateDownKeys();
+        this->updateUpKeys();
+        this->updateDownKeys();
         this->updateHeldKeys();
 
-        // this->updateHeldActions();
+        this->updateHeldActions();
 
-        // this->updateMouse();
+        this->updateMouse();
         this->updatePreviousKeys();
     }
 
