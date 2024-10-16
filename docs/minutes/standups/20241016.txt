@@ -1,0 +1,18 @@
+Minutes 16-10-24
+
+What was discussed:
+
+
+What has been done:
+- Siem: Debugging savegame template system, work on audio design.
+- Angel: Box2D top down PoC. Now has functional top down movement. Forces now 'wear out'. Looked at difference between Box2D and SDL rendering, SDL cannot render circles.
+- Ronan: Created filesystem converter.
+- Sean:
+- Seger: Input: reading controller data.
+
+What is going to be done:
+- Siem:
+- Angel: SDL vs. Box2D rendering / origin differences.
+- Ronan: Design for UI / text.
+- Sean:
+- Seger: Help Angel with SDL vs. Box2D origin differences.
