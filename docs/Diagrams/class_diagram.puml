@@ -3,7 +3,7 @@
 ' skinparam linetype ortho
 skinparam groupInheritance 2
 
-together{
+package Components{
 
 class Component{
     - mActive : bool
@@ -37,10 +37,11 @@ class BoxCollider{
     - mRotation : float
 }
 
-enum bodyType{
+enum BodyType{
     STATIC
     DYNAMIC
 }
+
 class RigidBody{
     - mMass : float
     - mGravityScale : float
@@ -61,7 +62,13 @@ class Sprite{
     - mflipY : bool
     - mSortingLayer : ???
     - mOrderinLayer : ???
+
 }
+
+class Texture {
+    - SDLTexture : ???
+}
+
 
 class Animator{
     + void play(??? aLooping)
@@ -69,7 +76,9 @@ class Animator{
 
     - mFps : ???
 }
+
 }
+
 class GameObject{
     + void addComponent(??? aComponent)
     + bool isActiveInWorld()
@@ -81,29 +90,13 @@ class GameObject{
     - mLayer : ???
 }
 
-class SceneManager {
-    + addScene(const Scene& scene) : int
-    + addSceneLevel(Map& map) : int
-    + loadScene(int index) : void
-    + loadScene(const std::string& sceneName) : void
-    + getCurrentScene() : Scene*
-    - SceneManager()
-    - scenes : vector<Scene>
-    - currentSceneIndex : int
+class Transform{
+    - mPosition : Point
+    - mRotation : float
+    - mScale : Point
 }
 
-class SaveGameManager {
-    - mSaveGames : vector<SaveGame> 
-    - SaveGameManager()
-    + createSaveGame(const string &aId, const string &aPath) : SaveGame&
-    + getSaveGame(const string &aId) : SaveGame&
-    + deleteSaveGame(const string &aId, bool aDeleteFile) : void
-}
-
-class AnimationManager {
-    + updateAnimations(Scene &scene) : void
-}
-
+package Save{
 class SaveGame {
     - mFileName : string
     - mFields : vector<SaveField>
@@ -138,6 +131,7 @@ class SaveArray {
     + setField(string name, string value) : void
     + getField(string name) : string
 }
+}
 
 class Scene {
     + void addGameObject(GameObject object)
@@ -153,12 +147,52 @@ class Scene {
     - cameras : vector<Camera>(1)
 }
 
+package Engine{
+
 class EngineBravo {
     +void initialize()
     - SceneManager sceneManager
     + SceneManager& getSceneManager()
     - SaveGameManager saveGameManager
     + runBehaviourScripts() : void
+}
+
+class ResourceManager {
+    + void loadTextures()
+    + void loadAudio()
+}
+
+class SceneManager {
+    + addScene(const Scene& scene) : int
+    + addSceneLevel(Map& map) : int
+    + loadScene(int index) : void
+    + loadScene(const std::string& sceneName) : void
+    + getCurrentScene() : Scene*
+    - SceneManager()
+    - scenes : vector<Scene>
+    - currentSceneIndex : int
+}
+
+class SaveGameManager {
+    - mSaveGames : vector<SaveGame> 
+    - SaveGameManager()
+    + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+    + getSaveGame(const string &aId) : SaveGame&
+    + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+}
+
+class AnimationManager {
+    + updateAnimations(Scene &scene) : void
+}
+
+class UIManager {
+    - mClickableButtons : vector<UIObject&>
+    + bool ClickableButtonPressed()
+    + bool checkIsClickableButton()
+    + void addClickableButton((UIObject& aButton))
+    + void removeClickableButton(std::string ID)
+}
+
 }
 
 
@@ -178,7 +212,7 @@ class Renderer {
     + setResolution(Point resolution) : void
 }
 
-together{
+package UI{
 class UIObject{
     - mWidth : int
     - mHeight : int
@@ -198,6 +232,7 @@ class Text{
 }
 }
 
+package Input{
 class iMouseListener{
     + ??? onMouseMoved()
     + ??? onMouseClicked()
@@ -209,20 +244,14 @@ class iKeyListener{
     + ??? onKeyPressed()
     + ??? onKeyReleased()
 }
-
-class Transform{
-    - mPosition : Point
-    - mRotation : float
-    - mScale : Point
 }
 
-together{
+package global{
 class Input{}
 
 class Time{}
 
 class Debug{}
-}
 
 class Point{
     - x : float
@@ -234,6 +263,15 @@ class Color{
     - g : int
     - b : int
     - a : int
+}
+
+class FSConverter {
+    + FSConverter(string) : FSConverter
+    + getResourcePath(const std::string& resourceName) : string
+    - findResourcesFolder() : string
+    - executablePath() : string
+    - resourceDir : string
+}
 }
 
 Component <|-down- AudioSource
