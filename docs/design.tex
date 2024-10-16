@@ -17,3 +17,10 @@ Dynamic bodies are used for all objects which are affected by gravity and / or o
 - GameObjects should only contain an animator *or* a sprite, not both. The renderer first checks if there is an animator present, and if not, it checks for a sprite.
 
 - Controller input is supported, but not analog values. This is because it does not integrate well with SDL inputs.
+
+- UI:
+  - Three component types: text, button and image
+  - Text rendering: font, text content, color and transparency are adjustable.
+  - Button: has an interactable flag and an onclick callback.
+  - Image: has a sprite and a transparency value.
+  - There is a separate UI manager, which is responsible for checking where the clicks are, checking if the click was on a button, and calling the onclick callback if it was.

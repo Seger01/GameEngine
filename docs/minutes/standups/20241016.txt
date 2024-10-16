@@ -1,7 +1,12 @@
 Minutes 16-10-24
 
-What was discussed:
+Note: Sean was not present at the standup due to public transport issues.
 
+What was discussed:
+Question for Bob: Certain systems ('managers') update only the gameobjects that contain components that are relevant to them (e.g. physics manager and a gameobject with rigidbody). Most of these managers are updated periodically, once every game loop.
+At first the idea was that the scene is the owner of all the game objects. The managers would iterate through the game objects, check if the object contains components relevant to them, and then execute their task.
+The new idea is that the managers all contain references to the game objects with components which are relevant to them. However, this would raise an issue with who is responsible for updating all the references.
+One of the ideas is that the scene is responsible for updating all these lists. However, if a component must be added to a game object after it was created, this would mean that the functionality for having to add a component would all have to go through the scene, which is undesirable.
 
 What has been done:
 - Siem: Debugging savegame template system, work on audio design.
