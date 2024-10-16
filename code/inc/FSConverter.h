@@ -8,7 +8,7 @@
 
 class FSConverter {
 public:
-    FSConverter();
+    FSConverter(std::string ResourceDir = "");
 
     std::string getResourcePath(const std::string& resourceName);
 

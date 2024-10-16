@@ -1,8 +1,11 @@
 #include "FSConverter.h"
 #include <iostream>
 
-FSConverter::FSConverter() {
-    resourceDir = findResourcesFolder();
+FSConverter::FSConverter(std::string ResourceDir) {
+    resourceDir = ResourceDir;
+    if (resourceDir.empty()) {
+        resourceDir = findResourcesFolder();
+    }
 
     if (resourceDir.empty()) {
         std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
