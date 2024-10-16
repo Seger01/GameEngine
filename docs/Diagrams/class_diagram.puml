@@ -196,6 +196,14 @@ class Text{
     - mAllignment : ???
     - mColor : ???
 }
+
+class UIManager {
+    - mClickableButtons : vector<UIObject&>
+    + bool ClickableButtonPressed()
+    + bool checkIsClickableButton()
+    + void addClickableButton((UIObject& aButton))
+    + void removeClickableButton(std::string ID)
+}
 }
 
 class iMouseListener{
