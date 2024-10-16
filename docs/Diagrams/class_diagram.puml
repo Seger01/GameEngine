@@ -61,7 +61,13 @@ class Sprite{
     - mflipY : bool
     - mSortingLayer : ???
     - mOrderinLayer : ???
+
 }
+
+class Texture {
+    - SDLTexture : ???
+}
+
 
 class Animator{
     + void play(??? aLooping)
@@ -79,6 +85,19 @@ class GameObject{
     - mTag : string
     - mActive : bool
     - mLayer : ???
+}
+
+class FSConverter {
+    + FSConverter(string) : FSConverter
+    + getResourcePath(const std::string& resourceName) : string
+    - findResourcesFolder() : string
+    - executablePath() : string
+    - resourceDir : string
+}
+
+class ResourceManager {
+    + void loadTextures()
+    + void loadAudio()
 }
 
 class SceneManager {
