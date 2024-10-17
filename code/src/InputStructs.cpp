@@ -224,26 +224,30 @@ std::string keyToString(Key key) {
         return "Mouse_MiddleButton";
 
     // Controller buttons
-    case Key::Controller_A:
-        return "Controller_A";
-    case Key::Controller_B:
-        return "Controller_B";
-    case Key::Controller_X:
-        return "Controller_X";
-    case Key::Controller_Y:
-        return "Controller_Y";
-    case Key::Controller_LeftBumper:
-        return "Controller_LeftBumper";
-    case Key::Controller_RightBumper:
-        return "Controller_RightBumper";
-    case Key::Controller_Back:
-        return "Controller_Back";
-    case Key::Controller_Start:
-        return "Controller_Start";
-    case Key::Controller_LeftStick_Press:
-        return "Controller_LeftStick_Press";
-    case Key::Controller_RightStick_Press:
-        return "Controller_RightStick_Press";
+    case Key::Controller_Cross:
+        return "Controller_Cross ";
+    case Key::Controller_Circle:
+        return "Controller_Circle";
+    case Key::Controller_Triangle:
+        return "Controller_Triangle";
+    case Key::Controller_Square:
+        return "Controller_Square";
+    case Key::Controller_L1:
+        return "Controller_L1";
+    case Key::Controller_L2:
+        return "Controller_L2";
+    case Key::Controller_R1:
+        return "Controller_R1";
+    case Key::Controller_R2:
+        return "Controller_R2";
+    case Key::Controller_Options:
+        return "Controller_Options";
+    case Key::Controller_Share:
+        return "Controller_Share";
+    case Key::Controller_L3:
+        return "Controller_L3";
+    case Key::Controller_R3:
+        return "Controller_R3";
     case Key::Controller_DPad_Up:
         return "Controller_DPad_Up";
     case Key::Controller_DPad_Down:
@@ -252,8 +256,24 @@ std::string keyToString(Key key) {
         return "Controller_DPad_Left";
     case Key::Controller_DPad_Right:
         return "Controller_DPad_Right";
+    case Key::Controller_LeftStick_Up:
+        return "Controller_LeftStick_Up";
+    case Key::Controller_LeftStick_Left:
+        return "Controller_LeftStick_Left";
+    case Key::Controller_LeftStick_Down:
+        return "Controller_LeftStick_Down";
+    case Key::Controller_LeftStick_Right:
+        return "Controller_LeftStick_Right";
+    case Key::Controller_RightStick_Up:
+        return "Controller_RightStick_Up";
+    case Key::Controller_RightStick_Left:
+        return "Controller_RightStick_Left";
+    case Key::Controller_RightStick_Down:
+        return "Controller_RightStick_Down";
+    case Key::Controller_RightStick_Right:
+        return "Controller_RightStick_Right";
 
-        // Unknown key (default case)
+    // Unknown key (default case)
     default:
         return "Unknown Key";
     }
