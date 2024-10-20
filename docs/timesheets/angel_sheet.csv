@@ -43,3 +43,4 @@ Date,Time,Duration(in hours),Activity
 2024-10-14, 8:30, 2.5, preparing group presentation; holding/listening to group presentations
 2024-10-14, 11:00, 1.0, updated movement system of new physics poc; now trying to fix origin difference between sdl and box2d
 2024-10-16, 8:00, 6.0, worked with team; fixed origin difference sdl and box2d
+2024-10-17, 15:00, 1.5 , Physics engine design and group discussions
