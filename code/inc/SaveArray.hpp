@@ -1,6 +1,8 @@
 #pragma once
 
-#include "SaveField.hpp"
+#include "FloatSaveField.hpp"
+#include "IntSaveField.hpp"
+#include "StringSaveField.hpp"
 #include <string>
 #include <vector>
 
@@ -10,14 +12,21 @@ public:
 
 public:
   std::string getName() const;
-  std::vector<SaveField<std::string>> getArray() const;
 
 public:
-  void addField(std::string name, std::string value);
-  void setField(std::string name, std::string value);
-  std::string getField(std::string aName) const;
+  void addAnyFromString(std::string aName, std::string aValue);
+  void addIntField(std::string name, int value);
+  void addFloatField(std::string name, float value);
+  void addStringField(std::string name, std::string value);
+
+public:
+  IntSaveField &getIntField(std::string aName) const;
+  FloatSaveField &getFloatField(std::string aName) const;
+  StringSaveField &getStringField(std::string aName) const;
 
 private:
   std::string mName;
-  std::vector<SaveField<std::string>> mFields;
+  std::vector<IntSaveField> mIntFields;
+  std::vector<FloatSaveField> mFloatFields;
+  std::vector<StringSaveField> mStringFields;
 };

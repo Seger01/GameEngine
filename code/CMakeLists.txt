@@ -27,7 +27,9 @@ set(SOURCES
     src/main.cpp
     src/SaveGameManager.cpp
     src/SaveGame.cpp
-    src/SaveField.cpp
+    src/IntSaveField.cpp
+    src/FloatSaveField.cpp
+    src/StringSaveField.cpp
     src/SaveArray.cpp
     # Add more source files here
 )

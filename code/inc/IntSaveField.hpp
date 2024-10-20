@@ -4,13 +4,14 @@
 
 class IntSaveField {
 public:
-  IntSaveField(std::string name) : mName(name) {}
+  IntSaveField(std::string name);
+  IntSaveField(std::string name, int value);
 
-  std::string getName() const { return mName; }
+  std::string getName() const;
 
-  void setValue(int aValue) { mValue = aValue; }
+  void setValue(int aValue);
 
-  int getValue() const { return mValue; }
+  int getValue() const;
 
 private:
   std::string mName;

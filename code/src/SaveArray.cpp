@@ -1,15 +1,30 @@
 #include "SaveArray.hpp"
 
-#include "SaveField.hpp"
+#include "FloatSaveField.hpp"
+#include "IntSaveField.hpp"
+#include "SaveGame.hpp"
+#include "StringSaveField.hpp"
 #include <iostream>
 
 SaveArray::SaveArray(std::string name) : mName(name) {}
 
-void SaveArray::addField(std::string aName, std::string aValue) {
+std::string SaveArray::getName() const { return mName; }
+
+void SaveArray::addAnyFromString(std::string aName, std::string aValue) {
+  if (SaveGame::isInteger(aValue)) {
+    addIntField(aName, std::stoi(aValue));
+  } else if (SaveGame::isFloat(aValue)) {
+    addFloatField(aName, std::stof(aValue));
+  } else {
+    addStringField(aName, aValue);
+  }
+}
+
+void SaveArray::addIntField(std::string aName, int aValue) {
   // Check if the field already exists
-  for (auto &field : mFields) {
+  for (auto &field : mIntFields) {
     if (field.getName() == aName) {
-      std::cout << "SaveArray::addField(): cannot add field with name \""
+      std::cout << "SaveArray::addIntField(): cannot add field with name \""
                 << field.getName()
                 << "\", field already exists. Overwriting value instead"
                 << std::endl;
@@ -18,43 +33,64 @@ void SaveArray::addField(std::string aName, std::string aValue) {
     }
   }
 
-  SaveField<std::string> newField{aName};
-  newField.setValue(aValue);
-  mFields.push_back(newField);
+  mIntFields.emplace_back(aName, aValue);
 }
 
-std::string SaveArray::getName() const { return mName; }
-
-std::vector<SaveField<std::string>> SaveArray::getArray() const {
-  return mFields;
-}
-
-void SaveArray::setField(std::string aName, std::string aValue) {
-  try {
-    for (SaveField field : mFields) {
-      if (field.getName() == aName) {
-        field.setValue(aValue);
-        return;
-      }
+void SaveArray::addFloatField(std::string aName, float aValue) {
+  // Check if the field already exists
+  for (auto &field : mFloatFields) {
+    if (field.getName() == aName) {
+      std::cout << "SaveArray::addFloatField(): cannot add field with name \""
+                << field.getName()
+                << "\", field already exists. Overwriting value instead"
+                << std::endl;
+      field.setValue(aValue);
+      return;
     }
-    throw(aName);
-  } catch (std::string value) {
-    std::cout << "SaveArray::setField(): failed to find field with name \""
-              << aName << "\"" << std::endl;
   }
+
+  mFloatFields.emplace_back(aName, aValue);
 }
 
-std::string SaveArray::getField(std::string aName) const {
-  try {
-    for (SaveField field : mFields) {
-      if (field.getName() == aName) {
-        return field.getValue();
-      }
+void SaveArray::addStringField(std::string aName, std::string aValue) {
+  // Check if the field already exists
+  for (auto &field : mStringFields) {
+    if (field.getName() == aName) {
+      std::cout << "SaveArray::addStringField(): cannot add field with name \""
+                << field.getName()
+                << "\", field already exists. Overwriting value instead"
+                << std::endl;
+      field.setValue(aValue);
+      return;
     }
-    throw(aName);
-  } catch (std::string aName) {
-    std::cout << "SaveArray::getField(): failed to find field with name \""
-              << aName << "\"" << std::endl;
-    return "";
   }
+
+  mStringFields.emplace_back(aName, aValue);
+}
+
+IntSaveField &SaveArray::getIntField(std::string aName) const {
+  for (IntSaveField field : mIntFields) {
+    if (field.getName() == aName) {
+      return field;
+    }
+  }
+  throw("Failed to get field " + aName);
+}
+
+FloatSaveField &SaveArray::getFloatField(std::string aName) const {
+  for (FloatSaveField field : mFloatFields) {
+    if (field.getName() == aName) {
+      return field;
+    }
+  }
+  throw("Failed to get field " + aName);
+}
+
+StringSaveField &SaveArray::getStringField(std::string aName) const {
+  for (StringSaveField field : mStringFields) {
+    if (field.getName() == aName) {
+      return field;
+    }
+  }
+  throw("Failed to get field " + aName);
 }

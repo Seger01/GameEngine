@@ -4,13 +4,14 @@
 
 class FloatSaveField {
 public:
-  FloatSaveField(std::string name) : mName(name) {}
+  FloatSaveField(std::string name);
+  FloatSaveField(std::string name, float value);
 
-  std::string getName() const { return mName; }
+  std::string getName() const;
 
-  void setValue(float aValue) { mValue = aValue; }
+  void setValue(float aValue);
 
-  float getValue() const { return mValue; }
+  float getValue() const;
 
 private:
   std::string mName;

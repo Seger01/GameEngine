@@ -16,9 +16,7 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
     if (j.contains("fields")) {
       for (const auto &field : j["fields"]) {
         if (field.contains("name") && field.contains("value")) {
-          SaveField<std::string> saveField(field["name"]);
-          saveField.setValue(field["value"]);
-          mFields.push_back(saveField);
+          addAnyFromString(field["name"], field["value"]);
         }
       }
     }
@@ -33,7 +31,8 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
           if (!array["fields"].empty()) {
             for (const auto &arrayField : array["fields"]) {
               if (arrayField.contains("name") && arrayField.contains("value")) {
-                saveArray.addField(arrayField["name"], arrayField["value"]);
+                saveArray.addAnyFromString(arrayField["name"],
+                                           arrayField["value"]);
               }
             }
           }
@@ -45,13 +44,6 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
   } else {
     // File doesn't exist, create a new one
     createFile();
-  }
-}
-
-void SaveGame::createFile() {
-  std::ofstream outFile(mFileName);
-  if (!outFile) {
-    std::cerr << "Failed to create the file: " << mFileName << std::endl;
   }
 }
 
@@ -87,54 +79,94 @@ void SaveGame::store() {
   }
 }
 
-void SaveGame::addField(std::string aName, std::string aValue) {
-  // Checkif the field already exists
+void SaveGame::addAnyFromString(std::string aName, std::string aValue) {
+  if (isInteger(aValue)) {
+    addIntField(aName, std::stoi(aValue));
+  } else if (isFloat(aValue)) {
+    addFloatField(aName, std::stof(aValue));
+  } else {
+    addStringField(aName, aValue);
+  }
+}
+
+void SaveGame::addIntField(std::string aName, int aValue) {
+  // Check if the field already exists
   try {
-    for (auto &field : mFields) {
+    for (auto &field : mIntFields) {
       if (field.getName() == aName) {
         throw(aName);
       }
     }
   } catch (std::string val) {
-    std::cout << "SaveGame::addField(): cannot add field with name \"" << aName
-              << "\", field already exists." << std::endl;
+    std::cout << "SaveGame::addIntField(): cannot add field with name \""
+              << aName << "\", field already exists." << std::endl;
     return;
   }
 
-  SaveField<std::string> newField{aName};
-  newField.setValue(aValue);
-  mFields.push_back(newField);
+  mIntFields.emplace_back(aName, aValue);
+}
+
+void SaveGame::addFloatField(std::string aName, float aValue) {
+  // Check if the field already exists
+  try {
+    for (auto &field : mFloatFields) {
+      if (field.getName() == aName) {
+        throw(aName);
+      }
+    }
+  } catch (std::string val) {
+    std::cout << "SaveGame::addFloatField(): cannot add field with name \""
+              << aName << "\", field already exists." << std::endl;
+    return;
+  }
+
+  mFloatFields.emplace_back(aName, aValue);
+}
+
+void SaveGame::addStringField(std::string aName, std::string aValue) {
+  // Check if the field already exists
+  try {
+    for (auto &field : mStringFields) {
+      if (field.getName() == aName) {
+        throw(aName);
+      }
+    }
+  } catch (std::string val) {
+    std::cout << "SaveGame::addStringField(): cannot add field with name \""
+              << aName << "\", field already exists." << std::endl;
+    return;
+  }
+
+  mStringFields.emplace_back(aName, aValue);
 }
 
 void SaveGame::remove() { std::remove(mFileName.c_str()); }
 
-void SaveGame::setField(std::string aName, std::string aValue) {
-  try {
-    for (SaveField<std::string> &field : mFields) {
-      if (field.getName() == aName) {
-        field.setValue(aValue);
-        return;
-      }
+IntSaveField &SaveGame::getIntField(std::string aName) const {
+  for (IntSaveField field : mIntFields) {
+    if (field.getName() == aName) {
+      return field;
     }
-    throw(aName);
-  } catch (std::string value) {
-    std::cout << "SaveGame::setField(): failed to find field with name \""
-              << aName << "\"" << std::endl;
   }
+  throw("Failed to get field " + aName);
 }
-std::string SaveGame::getField(std::string aName) const {
-  try {
-    for (SaveField field : mFields) {
-      if (field.getName() == aName) {
-        return field.getValue();
-      }
+
+FloatSaveField &SaveGame::getFloatField(std::string aName) const {
+  for (FloatSaveField field : mFloatFields) {
+    if (field.getName() == aName) {
+      return field;
     }
-    throw(aName);
-  } catch (std::string aName) {
-    std::cout << "SaveGame::getField(): failed to find field with name \""
-              << aName << "\"" << std::endl;
-    return "";
   }
+  throw("Failed to get field " + aName);
+}
+
+StringSaveField &SaveGame::getStringField(std::string aName) const {
+  for (StringSaveField field : mStringFields) {
+    if (field.getName() == aName) {
+      return field;
+    }
+  }
+  throw("Failed to get field " + aName);
 }
 
 void SaveGame::addArray(std::string aName) {
@@ -184,4 +216,29 @@ SaveArray SaveGame::getArray(std::string aName) const {
               << aName << "\"" << std::endl;
     return mArrays[0];
   }
+}
+
+void SaveGame::createFile() {
+  std::ofstream outFile(mFileName);
+  if (!outFile) {
+    std::cerr << "Failed to create the file: " << mFileName << std::endl;
+  }
+}
+
+bool SaveGame::isInteger(const std::string &s) const {
+  std::istringstream iss(s);
+  int val;
+  // Attempt to read an integer from the string
+  iss >> std::noskipws >> val;
+  // Check if the entire string was used (iss should be fully consumed)
+  return iss.eof() && !iss.fail();
+}
+
+bool SaveGame::isFloat(const std::string &s) const {
+  std::istringstream iss(s);
+  float val;
+  // Attempt to read a float from the string
+  iss >> std::noskipws >> val;
+  // Check if the entire string was used (iss should be fully consumed)
+  return iss.eof() && !iss.fail();
 }
