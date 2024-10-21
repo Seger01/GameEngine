@@ -1,12 +1,12 @@
 #include <iostream>
-
+#include "EngineBravo.h"
 #include "test.h"
 
 int main() {
-  for (int i = 0; i < 10; i++) {
-    std::cout << "Hello, World!" << std::endl;
-  }
 
-  test();
-  return 0;
+  EngineBravo engine;
+  engine.initizalize();
+  engine.runBehaviourScripts();
+
+  return 0; 
 }
