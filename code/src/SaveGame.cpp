@@ -74,16 +74,15 @@ void SaveGame::store() {
       arrayJson["fields"].push_back(
           {{"name", field.getName()}, {"value", field.getValue()}});
     }
-    j["arrays"].push_back(arrayJson);
     for (auto &field : array.getFloatArray()) {
       arrayJson["fields"].push_back(
           {{"name", field.getName()}, {"value", field.getValue()}});
     }
-    j["arrays"].push_back(arrayJson);
     for (auto &field : array.getStringArray()) {
       arrayJson["fields"].push_back(
           {{"name", field.getName()}, {"value", field.getValue()}});
     }
+
     j["arrays"].push_back(arrayJson);
   }
 
