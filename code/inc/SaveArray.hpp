@@ -24,6 +24,11 @@ public:
   FloatSaveField &getFloatField(std::string aName) const;
   StringSaveField &getStringField(std::string aName) const;
 
+public:
+  const std::vector<IntSaveField> &getIntArray() const;
+  const std::vector<FloatSaveField> &getFloatArray() const;
+  const std::vector<StringSaveField> &getStringArray() const;
+
 private:
   std::string mName;
   std::vector<IntSaveField> mIntFields;

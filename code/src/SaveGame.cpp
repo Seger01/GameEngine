@@ -1,4 +1,5 @@
 #include "SaveGame.hpp"
+#include "SaveGameUtil.hpp"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp> // Include nlohmann/json
@@ -50,8 +51,16 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
 void SaveGame::store() {
   json j;
 
-  // Serialize fields
-  for (auto &field : mFields) {
+  // Serialize fields (int, then float, then string)
+  for (auto &field : mIntFields) {
+    j["fields"].push_back(
+        {{"name", field.getName()}, {"value", field.getValue()}});
+  }
+  for (auto &field : mFloatFields) {
+    j["fields"].push_back(
+        {{"name", field.getName()}, {"value", field.getValue()}});
+  }
+  for (auto &field : mStringFields) {
     j["fields"].push_back(
         {{"name", field.getName()}, {"value", field.getValue()}});
   }
@@ -61,9 +70,17 @@ void SaveGame::store() {
     json arrayJson;
     arrayJson["name"] = array.getName();
 
-    for (auto &field :
-         array
-             .getArray()) { // assuming public access to mFields or add a getter
+    for (auto &field : array.getIntArray()) {
+      arrayJson["fields"].push_back(
+          {{"name", field.getName()}, {"value", field.getValue()}});
+    }
+    j["arrays"].push_back(arrayJson);
+    for (auto &field : array.getFloatArray()) {
+      arrayJson["fields"].push_back(
+          {{"name", field.getName()}, {"value", field.getValue()}});
+    }
+    j["arrays"].push_back(arrayJson);
+    for (auto &field : array.getStringArray()) {
       arrayJson["fields"].push_back(
           {{"name", field.getName()}, {"value", field.getValue()}});
     }
@@ -80,9 +97,9 @@ void SaveGame::store() {
 }
 
 void SaveGame::addAnyFromString(std::string aName, std::string aValue) {
-  if (isInteger(aValue)) {
+  if (SaveGameUtil::isInteger(aValue)) {
     addIntField(aName, std::stoi(aValue));
-  } else if (isFloat(aValue)) {
+  } else if (SaveGameUtil::isFloat(aValue)) {
     addFloatField(aName, std::stof(aValue));
   } else {
     addStringField(aName, aValue);
@@ -223,22 +240,4 @@ void SaveGame::createFile() {
   if (!outFile) {
     std::cerr << "Failed to create the file: " << mFileName << std::endl;
   }
-}
-
-bool SaveGame::isInteger(const std::string &s) const {
-  std::istringstream iss(s);
-  int val;
-  // Attempt to read an integer from the string
-  iss >> std::noskipws >> val;
-  // Check if the entire string was used (iss should be fully consumed)
-  return iss.eof() && !iss.fail();
-}
-
-bool SaveGame::isFloat(const std::string &s) const {
-  std::istringstream iss(s);
-  float val;
-  // Attempt to read a float from the string
-  iss >> std::noskipws >> val;
-  // Check if the entire string was used (iss should be fully consumed)
-  return iss.eof() && !iss.fail();
 }

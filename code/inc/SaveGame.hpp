@@ -11,8 +11,6 @@ public:
   SaveGame(const std::string &aFileName);
   void store();
   void remove();
-  static bool isInteger(const std::string &s) const;
-  static bool isFloat(const std::string &s) const;
 
 public:
   void addAnyFromString(std::string aName, std::string aValue);

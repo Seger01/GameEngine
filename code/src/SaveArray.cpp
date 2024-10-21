@@ -1,8 +1,8 @@
 #include "SaveArray.hpp"
-
 #include "FloatSaveField.hpp"
 #include "IntSaveField.hpp"
 #include "SaveGame.hpp"
+#include "SaveGameUtil.hpp"
 #include "StringSaveField.hpp"
 #include <iostream>
 
@@ -11,9 +11,9 @@ SaveArray::SaveArray(std::string name) : mName(name) {}
 std::string SaveArray::getName() const { return mName; }
 
 void SaveArray::addAnyFromString(std::string aName, std::string aValue) {
-  if (SaveGame::isInteger(aValue)) {
+  if (SaveGameUtil::isInteger(aValue)) {
     addIntField(aName, std::stoi(aValue));
-  } else if (SaveGame::isFloat(aValue)) {
+  } else if (SaveGameUtil::isFloat(aValue)) {
     addFloatField(aName, std::stof(aValue));
   } else {
     addStringField(aName, aValue);
@@ -93,4 +93,16 @@ StringSaveField &SaveArray::getStringField(std::string aName) const {
     }
   }
   throw("Failed to get field " + aName);
+}
+
+const std::vector<IntSaveField> &SaveArray::getIntArray() const {
+  return mIntFields;
+}
+
+const std::vector<FloatSaveField> &SaveArray::getFloatArray() const {
+  return mFloatFields;
+}
+
+const std::vector<StringSaveField> &SaveArray::getStringArray() const {
+  return mStringFields;
 }

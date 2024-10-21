@@ -31,6 +31,7 @@ set(SOURCES
     src/FloatSaveField.cpp
     src/StringSaveField.cpp
     src/SaveArray.cpp
+    src/SaveGameUtil.cpp
     # Add more source files here
 )
 
