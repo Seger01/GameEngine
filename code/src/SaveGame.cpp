@@ -157,10 +157,43 @@ void SaveGame::addStringField(std::string aName, std::string aValue) {
   mStringFields.emplace_back(aName, aValue);
 }
 
+void SaveGame::setIntField(std::string aName, int aValue) {
+  for (auto &field : mIntFields) {
+    if (field.getName() == aName) {
+      field.setValue(aValue);
+      return;
+    }
+  }
+  std::cout << "SaveGame::setIntField(): failed to find field with name \""
+            << aName << "\"" << std::endl;
+}
+
+void SaveGame::setFloatField(std::string aName, float aValue) {
+  for (auto &field : mFloatFields) {
+    if (field.getName() == aName) {
+      field.setValue(aValue);
+      return;
+    }
+  }
+  std::cout << "SaveGame::setFloatField(): failed to find field with name \""
+            << aName << "\"" << std::endl;
+}
+
+void SaveGame::setStringField(std::string aName, std::string aValue) {
+  for (auto &field : mStringFields) {
+    if (field.getName() == aName) {
+      field.setValue(aValue);
+      return;
+    }
+  }
+  std::cout << "SaveGame::setStringField(): failed to find field with name \""
+            << aName << "\"" << std::endl;
+}
+
 void SaveGame::remove() { std::remove(mFileName.c_str()); }
 
-IntSaveField &SaveGame::getIntField(std::string aName) const {
-  for (IntSaveField field : mIntFields) {
+const IntSaveField &SaveGame::getIntField(std::string aName) const {
+  for (const auto &field : mIntFields) {
     if (field.getName() == aName) {
       return field;
     }
@@ -168,8 +201,8 @@ IntSaveField &SaveGame::getIntField(std::string aName) const {
   throw("Failed to get field " + aName);
 }
 
-FloatSaveField &SaveGame::getFloatField(std::string aName) const {
-  for (FloatSaveField field : mFloatFields) {
+const FloatSaveField &SaveGame::getFloatField(std::string aName) const {
+  for (const auto &field : mFloatFields) {
     if (field.getName() == aName) {
       return field;
     }
@@ -177,8 +210,8 @@ FloatSaveField &SaveGame::getFloatField(std::string aName) const {
   throw("Failed to get field " + aName);
 }
 
-StringSaveField &SaveGame::getStringField(std::string aName) const {
-  for (StringSaveField field : mStringFields) {
+const StringSaveField &SaveGame::getStringField(std::string aName) const {
+  for (const auto &field : mStringFields) {
     if (field.getName() == aName) {
       return field;
     }

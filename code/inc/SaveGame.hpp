@@ -13,15 +13,19 @@ public:
   void remove();
 
 public:
-  void addAnyFromString(std::string aName, std::string aValue);
   void addIntField(std::string name, int value);
   void addFloatField(std::string name, float value);
   void addStringField(std::string name, std::string value);
 
 public:
-  IntSaveField &getIntField(std::string aName) const;
-  FloatSaveField &getFloatField(std::string aName) const;
-  StringSaveField &getStringField(std::string aName) const;
+  void setIntField(std::string aName, int aValue);
+  void setFloatField(std::string aName, float aValue);
+  void setStringField(std::string aName, std::string aValue);
+
+public:
+  const IntSaveField &getIntField(std::string aName) const;
+  const FloatSaveField &getFloatField(std::string aName) const;
+  const StringSaveField &getStringField(std::string aName) const;
 
 public:
   void addArray(std::string name);
@@ -29,6 +33,7 @@ public:
   SaveArray getArray(std::string aName) const;
 
 private:
+  void addAnyFromString(std::string aName, std::string aValue);
   void createFile();
 
 private:

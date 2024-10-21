@@ -14,7 +14,6 @@ public:
   std::string getName() const;
 
 public:
-  void addAnyFromString(std::string aName, std::string aValue);
   void addIntField(std::string name, int value);
   void addFloatField(std::string name, float value);
   void addStringField(std::string name, std::string value);
@@ -29,9 +28,14 @@ public:
   const std::vector<FloatSaveField> &getFloatArray() const;
   const std::vector<StringSaveField> &getStringArray() const;
 
+protected:
+  void addAnyFromString(std::string aName, std::string aValue);
+
 private:
   std::string mName;
   std::vector<IntSaveField> mIntFields;
   std::vector<FloatSaveField> mFloatFields;
   std::vector<StringSaveField> mStringFields;
+
+  friend class SaveGame;
 };
