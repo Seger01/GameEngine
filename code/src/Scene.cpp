@@ -51,6 +51,7 @@ GameObject& Scene::getGameObject(int id) {
 std::string Scene::getName() { return mSceneName; }
 int Scene::getID() { return mSceneID; }
 
+
 // int Scene::addCamera() {
 //     Camera newCamera;
 //     mCameras.push_back(newCamera);

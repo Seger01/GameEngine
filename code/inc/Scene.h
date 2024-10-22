@@ -1,18 +1,13 @@
 #pragma once
 #include <string>
 #include <vector>
-
 #include "Camera.h"
 #include "GameObject.h"
 
 class Scene {
-    friend class SceneManager;
-
-private:
-    Scene(std::string aSceneName, int aSceneID);
-    ~Scene();
-
 public:
+    ~Scene();
+    friend class SceneManager;
     void addGameObject(GameObject* object);
     void removeGameObject(int id);
     void removeGameObject(GameObject* object);
@@ -24,8 +19,9 @@ public:
     // Camera& getActiveCamera();
     int getID();
     std::string getName();
-
     std::vector<GameObject*>& getGameObjects();
+private: 
+    Scene(std::string aSceneName, int aSceneID);
 
 private:
     std::vector<GameObject*> mGameObjects; // Object of pointer?

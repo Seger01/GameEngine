@@ -63,9 +63,9 @@ Scene* SceneManager::createScene(std::string aSceneName, int aSceneID) {
         aSceneID = getNewSceneID();
     }
 
-    mScenes.push_back(std::make_unique<Scene>(aSceneName, aSceneID));
-
-    return mScenes[mScenes.size() - 1].get();
+    mScenes.push_back(std::unique_ptr<Scene>(new Scene(aSceneName, aSceneID)));
+    return mScenes.back().get();
+    //return mScenes[mScenes.size() - 1].get();
 }
 
 void SceneManager::loadScene(const std::string& sceneName) {
