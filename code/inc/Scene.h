@@ -17,6 +17,8 @@ public:
     // Camera& getCamera(int id);
     // void setActiveGamera(int id);
     // Camera& getActiveCamera();
+    void setName(std::string name);
+    std::string getName();
 
     std::vector<GameObject*>& getGameObjects();
 
@@ -24,5 +26,5 @@ private:
     std::vector<GameObject*> mGameObjects; // Object of pointer?
     // std::vector<Camera> mCameras;          // Object of pointer?
     // int mActiveCameraIndex;
-    // std::string sceneName;
+    std::string sceneName;
 };

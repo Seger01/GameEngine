@@ -18,6 +18,6 @@ private:
     SceneManager();
     ~SceneManager();
 
-    // std::vector<Scene&> scenes;
+    std::vector<Scene> scenes;
     int currentSceneIndex;
 };

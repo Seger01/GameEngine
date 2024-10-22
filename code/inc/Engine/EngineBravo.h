@@ -5,6 +5,7 @@
 #include "SaveGameManager.h"
 #include "SceneManager.h"
 #include "UIManager.h"
+#include "Renderer.h"
 
 class EngineBravo {
 public:
@@ -17,6 +18,7 @@ public:
 
 private:
     SceneManager sceneManager;
+    Renderer renderer;
     // SaveGameManager saveGameManager;
     // ResourceManager resourceManager;
     // AnimationManager animationManager;

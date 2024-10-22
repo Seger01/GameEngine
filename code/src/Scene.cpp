@@ -49,6 +49,14 @@ GameObject& Scene::getGameObject(int id) {
     throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
 }
 
+void Scene::setName(std::string name) {
+    sceneName = name;
+}
+
+std::string Scene::getName() {
+    return sceneName;
+}
+
 // int Scene::addCamera() {
 //     Camera newCamera;
 //     mCameras.push_back(newCamera);
