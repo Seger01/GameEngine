@@ -138,6 +138,12 @@ add_subdirectory(external/box2d)
 
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Engine)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Components)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Global)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
+include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
 
 # Automatically search for source files
 file(GLOB_RECURSE SOURCES

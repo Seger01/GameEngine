@@ -1,5 +1,4 @@
-
-#include "Sprite.h"
+#include "Components/Sprite.h"
 #include <iostream>
 
 Sprite::Sprite() : mSprite(""), mFlipX(false), mFlipY(false) {}
