@@ -104,7 +104,8 @@ class INetworkSerializable {
 NetworkManager <-- NetworkClient
 NetworkManager <-- NetworkServer
 NetworkManager <-- NetworkHost
-NetworkManager <-- NetworkSceneManager
+NetworkManager *-- NetworkSceneManager
+NetworkManager *-- "1" NetworkObject
 ' NetworkManager <-- AuthorityManager
 
 NetworkObject *-- "*" NetworkBehaviour
@@ -119,12 +120,12 @@ NetworkTransform --|> Transform
 
 ' NetworkServer --> NetworkMessage
 ' NetworkServer --> NetworkReplicationManager
-NetworkServer <-- NetworkObject
+
 
 NetworkHost <-- NetworkServer
 NetworkHost <-- NetworkClient
 
 ' AuthorityManager <-- NetworkObject
-NetworkSceneManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
 
 @enduml
