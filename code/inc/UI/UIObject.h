@@ -1,8 +1,9 @@
 #pragma once
 #include "Button.h"
 #include "Text.h"
+#include "GameObject.h"
 
-class UIObject
+class UIObject : public GameObject
 {
     public:
         UIObject();
