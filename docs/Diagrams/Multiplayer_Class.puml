@@ -47,7 +47,7 @@ class Transform{}
 
 class NetworkClient {
     + ConnectToServer()
-    + SendInputToServer()
+    + SendGameState()
     + ReceiveGameState()
 
     - mIsConnected: bool
@@ -56,7 +56,7 @@ class NetworkClient {
 
 class NetworkServer {
     + HandleClientConnection()
-    + ValidateInput()
+    + ReceiveGameState()
     + SendGameState()
 }
 
@@ -109,8 +109,11 @@ NetworkManager *-- "1" NetworkObject
 ' NetworkManager <-- AuthorityManager
 
 NetworkObject *-- "*" NetworkBehaviour
-NetworkBehaviour <-- NetworkTransform
+NetworkObject -- NetworkTransform
+
 NetworkBehaviour --|> MonoBehavior
+NetworkBehaviour <-- NetworkVariable
+NetworkBehaviour <-- INetworkSerializable
 
 NetworkTransform --|> Transform
 
