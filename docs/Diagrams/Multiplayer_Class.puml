@@ -1,37 +1,57 @@
 @startuml
 
 class NetworkManager {
-    + StartServer()
-    + StartClient()
-    + StartHost()
-    + Shutdown()
-    - mAuthority: string
-    - mNetworkState: string
+    +bool IsServer
+    +bool IsClient
+    +bool IsHost
+    +List<NetworkClient> ConnectedClients
+    
+    +void StartServer()
+    +void StartClient()
+    +void StartHost()
+    +void Shutdown()
 }
 
 class NetworkObject {
-    + SyncState()
-    + RequestOwnership()
+    + Spawn() : void
+    + Despawn() : void
     + GetNetworkID(): int
-    - mOwner: string
+    - mIsOwner: bool
     - mNetworkID: int
 }
 
 class NetworkBehaviour {
-    + SyncVariable()
-    + OnNetworkVariableChanged()
+    +void ServerRpc()
+    +void ClientRpc()
+    + {abstract} OnNetworkSpawn()
+    
 }
 
+' Template class for network variables
+class NetworkVariable{
+    + NetworkVariable(WritePermission)
+    + T Value
+    
+}
+
+class MonoBehavior{}
+
+' Maybe not needed
 class NetworkTransform {
     + UpdateTransform()
     + SyncPosition()
     + Interpolate()
 }
 
+class Transform{}
+
 class NetworkClient {
     + ConnectToServer()
     + SendInputToServer()
     + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
 }
 
 class NetworkServer {
@@ -45,57 +65,66 @@ class NetworkHost {
     + ActAsServer()
 }
 
-class NetworkMessage {
-    + Serialize()
-    + Deserialize()
-    + SendMessage()
-    - mMessageType: string
-}
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
 
 class NetworkSceneManager {
     + LoadScene()
     + SyncScene()
+    + UnloadScene()
 }
 
-class NetworkInputManager {
-    + CaptureInput()
-    + SendInput()
-    + ApplyInputPrediction()
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
 }
 
-class NetworkReplicationManager {
-    + ReplicateObjectState()
-    + SyncWithClients()
-    + ApplyInterpolation()
-}
+NetworkManager <-- NetworkClient
+NetworkManager <-- NetworkServer
+NetworkManager <-- NetworkHost
+NetworkManager <-- NetworkSceneManager
+' NetworkManager <-- AuthorityManager
 
-class AuthorityManager {
-    + AssignAuthority()
-    + RequestControl()
-    - mObjectAuthority: string
-}
+NetworkObject *-- "*" NetworkBehaviour
+NetworkBehaviour <-- NetworkTransform
+NetworkBehaviour --|> MonoBehavior
 
-NetworkManager --> NetworkClient
-NetworkManager --> NetworkServer
-NetworkManager --> NetworkHost
-NetworkManager --> NetworkSceneManager
-NetworkManager --> AuthorityManager
+NetworkTransform --|> Transform
 
-NetworkObject --> NetworkBehaviour
-NetworkBehaviour <|-- NetworkTransform
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
 
-NetworkClient --> NetworkInputManager
-NetworkClient --> NetworkMessage
-NetworkClient --> NetworkReplicationManager
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+NetworkServer <-- NetworkObject
 
-NetworkServer --> NetworkMessage
-NetworkServer --> NetworkReplicationManager
-NetworkServer --> NetworkObject
+NetworkHost <-- NetworkServer
+NetworkHost <-- NetworkClient
 
-NetworkHost --> NetworkServer
-NetworkHost --> NetworkClient
-
-AuthorityManager --> NetworkObject
-NetworkSceneManager --> NetworkObject
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager <-- NetworkObject
 
 @enduml
