@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,11 +14,17 @@ public:
     void loadScene(const std::string& sceneName); // Willen we dit overloaden?
 
     Scene* getCurrentScene();
+    Scene* createScene(std::string aSceneName, int aSceneID = -1);
+
+private:
+    bool sceneNameExists(std::string aSceneName);
+    bool sceneIDExists(int aSceneID);
+    int getNewSceneID();
 
 private:
     SceneManager();
     ~SceneManager();
 
-    std::vector<Scene> scenes;
-    int currentSceneIndex;
+    std::vector<std::unique_ptr<Scene>> mScenes;
+    int mCurrentSceneIndex;
 };

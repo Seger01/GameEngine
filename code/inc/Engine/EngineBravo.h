@@ -1,11 +1,11 @@
 #pragma once
 
 #include "AnimationManager.h"
+#include "Renderer.h"
 #include "ResourceManager.h"
 #include "SaveGameManager.h"
 #include "SceneManager.h"
 #include "UIManager.h"
-#include "Renderer.h"
 
 class EngineBravo {
 public:
@@ -17,7 +17,7 @@ public:
     void runBehaviourScripts();
 
 private:
-    SceneManager sceneManager;
+    SceneManager mSceneManager;
     Renderer renderer;
     // SaveGameManager saveGameManager;
     // ResourceManager resourceManager;

@@ -2,8 +2,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-// Scene::Scene() : mActiveCameraIndex(-1) {}
-Scene::Scene() {}
+Scene::Scene(std::string aSceneName, int aSceneID) : mSceneName(aSceneName), mSceneID(aSceneID) {}
 
 Scene::~Scene() {
     // Clean up GameObject pointers
@@ -49,13 +48,8 @@ GameObject& Scene::getGameObject(int id) {
     throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
 }
 
-void Scene::setName(std::string name) {
-    sceneName = name;
-}
-
-std::string Scene::getName() {
-    return sceneName;
-}
+std::string Scene::getName() { return mSceneName; }
+int Scene::getID() { return mSceneID; }
 
 // int Scene::addCamera() {
 //     Camera newCamera;
