@@ -1,20 +1,20 @@
 #include "EngineBravo.h"
 
-EngineBravo::EngineBravo() {
+#include "SDL.h"
+
+EngineBravo::EngineBravo() {}
+
+EngineBravo::~EngineBravo() {}
+
+void EngineBravo::initizalize() {}
+
+void EngineBravo::run() {
+    while (true) {
+        runBehaviourScripts();
+        SDL_Delay(200);
+    }
 }
 
-EngineBravo::~EngineBravo() {
-}
+SceneManager& EngineBravo::getSceneManager() { return sceneManager; }
 
-void EngineBravo::initizalize() {
-}
-
-SceneManager& EngineBravo::getSceneManager() {
-    return sceneManager;
-}
-
-void EngineBravo::runBehaviourScripts() {
-}
-
-
-
+void EngineBravo::runBehaviourScripts() {}

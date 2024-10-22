@@ -1,10 +1,10 @@
 #pragma once
 
-class Component
-{
-    public:
-        Component();
-        ~Component();
-    private:
-        bool mActive;
+class Component {
+public:
+    Component() {}
+    virtual ~Component() {}
+
+private:
+    bool mActive;
 };
