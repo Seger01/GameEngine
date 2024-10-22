@@ -1,6 +1,7 @@
 #pragma once
-#include "IBehaviourScript.h"
 #include <iostream>
+
+#include "IBehaviourScript.h"
 
 class SampleBehaviourScript : public IBehaviourScript {
 public:

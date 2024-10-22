@@ -1,9 +1,9 @@
 #include <iostream>
 
+#include "Components/Sprite.h"
 #include "Engine/EngineBravo.h"
 #include "Engine/SceneManager.h"
 #include "Scene.h"
-#include "Components/Sprite.h"
 #include "test.h"
 
 int main() {
@@ -17,7 +17,7 @@ int main() {
     GameObject* gameObject = new GameObject;
 
     gameObject->addComponent<Sprite>();
-    //gameObject->addComponent<SampleBehaviourScript>();
+    gameObject->addComponent<SampleBehaviourScript>();
 
     gameObject->getComponent<Sprite>()->setFlipX(true);
 
@@ -26,7 +26,7 @@ int main() {
     sceneManager.loadScene(0);
 
     std::cout << "flipX: " << gameObject->getComponent<Sprite>()->getFlipX() << std::endl;
-    
+
     engine.run();
 
     return 0;
