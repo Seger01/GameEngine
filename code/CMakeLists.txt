@@ -88,14 +88,14 @@ set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "Support FluidSynth MIDI output" FO
 set(SDL2MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "Dynamically load libfluidsynth" FORCE)
 
 # Set options for SDL_image
-set(SDL2IMAGE_INSTALL OFF CACHE BOOL "Enable SDL2_image install target" FORCE)
+set(SDL2IMAGE_INSTALL ON CACHE BOOL "Enable SDL2_image install target" FORCE)
 set(SDL2IMAGE_DEPS_SHARED OFF CACHE BOOL "Load dependencies dynamically" FORCE)
 set(SDL2IMAGE_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE)
 set(SDL2IMAGE_SAMPLES OFF CACHE BOOL "Build the SDL2_image sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_image
 set(SDL2IMAGE_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_image sample program(s)" FORCE)
 set(SDL2IMAGE_TESTS OFF CACHE BOOL "Build unit tests?" FORCE)
 set(SDL2IMAGE_TESTS_INSTALL OFF CACHE BOOL "Install unit tests?" FORCE)
-set(SDL2IMAGE_BACKEND_STB OFF CACHE BOOL "Use stb_image for loading JPEG and PNG files" FORCE)
+set(SDL2IMAGE_BACKEND_STB ON CACHE BOOL "Use stb_image for loading JPEG and PNG files" FORCE)
 set(SDL2IMAGE_BACKEND_WIC OFF CACHE BOOL "Add WIC backend (Windows Imaging Component)" FORCE)
 set(SDL2IMAGE_BACKEND_IMAGEIO OFF CACHE BOOL "Use native Mac OS X frameworks for loading images" FORCE)
 set(SDL2IMAGE_AVIF OFF CACHE BOOL "Support loading AVIF images" FORCE)
@@ -105,7 +105,7 @@ set(SDL2IMAGE_JPG OFF CACHE BOOL "Support loading JPEG images" FORCE)
 set(SDL2IMAGE_JXL OFF CACHE BOOL "Support loading JXL images" FORCE)
 set(SDL2IMAGE_LBM OFF CACHE BOOL "Support loading LBM images" FORCE)
 set(SDL2IMAGE_PCX OFF CACHE BOOL "Support loading PCX images" FORCE)
-set(SDL2IMAGE_PNG OFF CACHE BOOL "Support loading PNG images" FORCE)
+set(SDL2IMAGE_PNG ON CACHE BOOL "Support loading PNG images" FORCE)
 set(SDL2IMAGE_PNM OFF CACHE BOOL "Support loading PNM images" FORCE)
 set(SDL2IMAGE_QOI OFF CACHE BOOL "Support loading QOI images" FORCE)
 set(SDL2IMAGE_SVG OFF CACHE BOOL "Support loading SVG images" FORCE)
@@ -192,6 +192,8 @@ if(ENABLE_GTEST)
 
     # Enable testing in the project
     enable_testing()
+    # Automatically search for test files in the test directory
+    file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
 
     # Add the test source files
     set(TEST_SOURCES
@@ -211,3 +213,6 @@ if(ENABLE_GTEST)
     # Optionally, set up test include directories
     #target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
 endif()
+# Optionally, set up test include directories
+# target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
+
