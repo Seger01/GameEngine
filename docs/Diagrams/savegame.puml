@@ -1,5 +1,4 @@
 @startuml
-skinparam linetype ortho
 
 class EngineBravo {
 }
@@ -36,6 +35,11 @@ class SaveGame {
   + addArray(string name) : void
   + setArray(string name, SaveArray value) : void
   + getArray(string aName) const : SaveArray
+}
+
+class SaveGameUtil {
+  + isInteger(string aValue) : static bool
+  + isFloat(string aValue) : static bool
 }
 
 class SaveArray {
@@ -100,12 +104,14 @@ EngineBravo *--"1" SaveGameManager
 
 SaveGameManager *--"*" SaveGame
 
+SaveGame <-left- SaveGameUtil
 SaveGame *--"*" SaveArray
 SaveGame -[hidden]> SaveArray
 SaveGame *--"*" IntSaveField
 SaveGame *--"*" FloatSaveField
 SaveGame *--"*" StringSaveField
 
+SaveArray <-up- SaveGameUtil
 SaveArray *--"*" IntSaveField
 SaveArray *--"*" FloatSaveField
 SaveArray *--"*" StringSaveField
