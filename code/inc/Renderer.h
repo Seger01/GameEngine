@@ -1,16 +1,33 @@
-#pragma once
-#include "Scene.h"
-#include "Point.h"
+#ifndef RENDERER_H
+#define RENDERER_H
 
-class Renderer
-{
-    public: 
-        Renderer();
-        ~Renderer();
-        void render(const Scene* scene);
-        void render(const Scene& scene, int layer);
-        void clear();
-        void setResolution(Point resolution);
-    private:
-        Point mResolution;
+#include <SDL.h>
+
+// #include "Texture.h"
+// #include "Animation.h"
+#include "Point.h"
+#include "Rectangle.h"
+#include "Texture.h"
+#include "Window.h"
+
+class Animation;
+
+class Renderer {
+public:
+    Renderer(Window& window);
+    Renderer(SDL_Renderer*& aRenderer);
+    ~Renderer();
+
+    void clear();
+    void show();
+
+    // void renderTexture(Texture& aTexture, Point& location, bool aFlipX, bool aFlipY, float aRotation);
+    // void drawRect(Point& aLocation, float aRotation);
+
+    SDL_Renderer*& getSDLRenderer();
+
+private:
+    SDL_Renderer* mRenderer = nullptr;
 };
+
+#endif

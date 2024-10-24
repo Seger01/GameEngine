@@ -1,10 +1,14 @@
-#pragma once
+#ifndef ANIMATION_H
+#define ANIMATION_H
 
 #include <iostream>
 #include <vector>
 
 #include <SDL.h>
 
+// class Texture;
+#include "Rectangle.h"
+#include "Texture.h"
 // struct spriteCoords {
 //     int spriteStart = 0;
 //     int spriteLength = 0;
@@ -14,16 +18,18 @@
 class Animation {
 public:
     Animation();
-    Animation(SDL_Texture*& texture, SDL_Rect aStartingFrame, int aAmountOfFrames);
+    Animation(Texture*& texture, Rectangle aStartingFrame, int aAmountOfFrames);
     ~Animation();
 
-    SDL_Texture*& getTexture();
-    SDL_Rect& getCurrentFrame();
+    Texture*& getTexture();
+    Rectangle& getCurrentFrame();
 
 private:
-    std::vector<SDL_Rect> sprites = {};
-    SDL_Texture* sourceTexture = nullptr;
+    std::vector<Rectangle> sprites = {};
+    Texture* mSourceTexture = nullptr;
 
-    SDL_Rect currentFrame;
+    Rectangle currentFrame;
     int animationSpeed = 200;
 };
+
+#endif
