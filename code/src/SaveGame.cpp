@@ -42,9 +42,6 @@ SaveGame::SaveGame(const std::string &aFileName) : mFileName(aFileName) {
         }
       }
     }
-  } else {
-    // File doesn't exist, create a new one
-    createFile();
   }
 }
 
@@ -110,7 +107,8 @@ void SaveGame::addIntField(std::string aName, int aValue) {
   try {
     for (auto &field : mIntFields) {
       if (field.getName() == aName) {
-        throw(aName);
+        throw std::invalid_argument("Int field with name \"" + aName +
+                                    "\" already exists.");
       }
     }
   } catch (std::string val) {
@@ -163,8 +161,8 @@ void SaveGame::setIntField(std::string aName, int aValue) {
       return;
     }
   }
-  std::cout << "SaveGame::setIntField(): failed to find field with name \""
-            << aName << "\"" << std::endl;
+  throw std::invalid_argument("Failed to find field with name \"" + aName +
+                              "\"");
 }
 
 void SaveGame::setFloatField(std::string aName, float aValue) {
@@ -174,8 +172,8 @@ void SaveGame::setFloatField(std::string aName, float aValue) {
       return;
     }
   }
-  std::cout << "SaveGame::setFloatField(): failed to find field with name \""
-            << aName << "\"" << std::endl;
+  throw std::invalid_argument("Failed to find field with name \"" + aName +
+                              "\"");
 }
 
 void SaveGame::setStringField(std::string aName, std::string aValue) {
@@ -185,8 +183,8 @@ void SaveGame::setStringField(std::string aName, std::string aValue) {
       return;
     }
   }
-  std::cout << "SaveGame::setStringField(): failed to find field with name \""
-            << aName << "\"" << std::endl;
+  throw std::invalid_argument("Failed to find field with name \"" + aName +
+                              "\"");
 }
 
 void SaveGame::remove() { std::remove(mFileName.c_str()); }
@@ -197,7 +195,8 @@ const IntSaveField &SaveGame::getIntField(std::string aName) const {
       return field;
     }
   }
-  throw("Failed to get field " + aName);
+  throw std::invalid_argument("Failed to get field with name \"" + aName +
+                              "\"");
 }
 
 const FloatSaveField &SaveGame::getFloatField(std::string aName) const {
@@ -206,7 +205,8 @@ const FloatSaveField &SaveGame::getFloatField(std::string aName) const {
       return field;
     }
   }
-  throw("Failed to get field " + aName);
+  throw std::invalid_argument("Failed to get field with name \"" + aName +
+                              "\"");
 }
 
 const StringSaveField &SaveGame::getStringField(std::string aName) const {
@@ -215,7 +215,8 @@ const StringSaveField &SaveGame::getStringField(std::string aName) const {
       return field;
     }
   }
-  throw("Failed to get field " + aName);
+  throw std::invalid_argument("Failed to get field with name \"" + aName +
+                              "\"");
 }
 
 void SaveGame::addArray(std::string aName) {
@@ -237,19 +238,15 @@ void SaveGame::addArray(std::string aName) {
 }
 
 void SaveGame::setArray(std::string aName, SaveArray aValue) {
-  try {
-    for (SaveArray &array : mArrays) {
-      if (array.getName() == aName) {
-        array = aValue;
-        return;
-      }
+
+  for (SaveArray &array : mArrays) {
+    if (array.getName() == aName) {
+      array = aValue;
+      return;
     }
-    throw(aName);
-  } catch (std::string aName) {
-    std::cout << "SaveArray::setArray(): failed to find array with name \""
-              << aName << "\"" << std::endl;
-    return;
   }
+  throw std::invalid_argument("Failed to find array with name \"" + aName +
+                              "\"");
 }
 
 SaveArray SaveGame::getArray(std::string aName) const {

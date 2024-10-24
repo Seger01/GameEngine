@@ -29,7 +29,7 @@ void test2() {
   sg1.setArray("myArray", sga);
   // Store the save game
   sg1.store();
-  sgm.deleteSaveGame("save1");
+  sgm.deleteSaveGame("save1", true);
 }
 
 int main() { test2(); }

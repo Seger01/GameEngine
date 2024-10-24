@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
 project(Engine-BRAVO VERSION 0.1)
+set(projectExecutable Engine_BRAVO)
+set(projectLib Engine-BRAVO_lib)
 
 # Specify the C++ standard (e.g., C++11, C++14, C++17)
 set(CMAKE_CXX_STANDARD 17)
@@ -24,7 +26,6 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 
 # Specify the source files
 set(SOURCES
-    src/main.cpp
     src/SaveGameManager.cpp
     src/SaveGame.cpp
     src/IntSaveField.cpp
@@ -35,8 +36,11 @@ set(SOURCES
     # Add more source files here
 )
 
+add_library(${projectLib} STATIC ${SOURCES})
+target_link_libraries(${projectLib} PRIVATE nlohmann_json::nlohmann_json)
+
 # Add the executable target
-add_executable(engine_BRAVO ${SOURCES})
+add_executable(${projectExecutable} src/main.cpp)
 
 # Fetch nlohmann::json from GitHub
 include(FetchContent)
@@ -47,7 +51,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(json)
 
-target_link_libraries(engine_BRAVO PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${projectExecutable} PRIVATE ${projectLib})
 
 # =====================
 # Google Test Integration
@@ -78,7 +82,7 @@ set(TEST_SOURCES
 add_executable(tests ${TEST_SOURCES})
 
 # Link GTest and GTest Main to the test executable
-target_link_libraries(tests gtest gtest_main)
+target_link_libraries(tests gtest gtest_main ${projectLib})
 
 # Add test execution
 add_test(NAME engine_BRAVO_tests COMMAND tests)
