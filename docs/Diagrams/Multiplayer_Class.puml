@@ -1,35 +1,42 @@
 @startuml
 
 class NetworkManager {
-    +bool IsServer
-    +bool IsClient
-    +bool IsHost
-    +List<NetworkClient> ConnectedClients
     
-    +void StartServer()
-    +void StartClient()
-    +void StartHost()
-    +void Shutdown()
+    
+    + void startServer()
+    + void startClient()
+    + void startHost()
+    + void shutdown()
+
+
+    - mIsServer : bool
+    - mIsClient : bool
+    - mIsHost : bool
+    - mConnectedClients : List<NetworkClient>
+    - mTickRate : int
+    - mDefaultPlayerPrefab : GameObject&
+    - mEnableSceneManagement : bool
 }
 
 class NetworkObject {
-    + Spawn() : void
-    + Despawn() : void
-    + GetNetworkID(): int
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
     - mIsOwner: bool
     - mNetworkID: int
 }
 
 class NetworkBehaviour {
-    +void ServerRpc()
-    +void ClientRpc()
-    + {abstract} OnNetworkSpawn()
+    +void serverRpc()
+    +void clientRpc()
+    + {abstract} void OnNetworkSpawn()
     
 }
 
 ' Template class for network variables
 class NetworkVariable{
-    + NetworkVariable(WritePermission)
+    + networkVariable(WritePermission)
     + T Value
     
 }
