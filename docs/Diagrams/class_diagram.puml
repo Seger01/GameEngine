@@ -235,6 +235,24 @@ class UIManager {
     - UIManager()
 }
 
+class NetworkManager {
+    
+    
+    + void startServer()
+    + void startClient()
+    + void startHost()
+    + void shutdown()
+
+
+    - mIsServer : bool
+    - mIsClient : bool
+    - mIsHost : bool
+    - mConnectedClients : List<NetworkClient>
+    - mTickRate : int
+    - mDefaultPlayerPrefab : GameObject&
+    - mEnableSceneManagement : bool
+}
+
 }
 
 
@@ -317,6 +335,127 @@ class FSConverter {
 }
 }
 
+package Networking{
+class NetworkObject {
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
+    - mIsOwner: bool
+    - mNetworkID: int
+}
+
+interface INetworkBehaviour {
+    + {abstract} void serverRpc()
+    + {abstract} void clientRpc()
+    + {abstract} void OnNetworkSpawn()
+    
+}
+
+' Template class for network variables
+class NetworkVariable{
+    + networkVariable(WritePermission)
+    + T Value
+    
+}
+
+class IBehavourScript_Proxy{}
+
+' Maybe not needed
+class NetworkTransform {
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class Transform_Proxy{}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendGameState()
+    + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ReceiveGameState()
+    + SendGameState()
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+    + UnloadScene()
+}
+
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
+}
+
+class Component_Proxy{
+}
+
+' NetworkManager <-- AuthorityManager
+
+NetworkObject *-- "*" INetworkBehaviour
+NetworkObject -- NetworkTransform
+NetworkObject --|> Component_Proxy
+
+INetworkBehaviour --|> IBehavourScript_Proxy
+INetworkBehaviour <-- NetworkVariable
+INetworkBehaviour <-- INetworkSerializable
+
+NetworkTransform --|> Transform_Proxy
+
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
+
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+
+
+NetworkHost <-- NetworkServer
+NetworkHost <-- NetworkClient
+
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
+}
+
 Component <|-down- AudioSource
 Component <|-down- Collider
 Component <|-down- RigidBody
@@ -332,7 +471,7 @@ GameObject *-up- "0..*" CircleColider
 GameObject *-up- "0..*" BoxCollider
 GameObject *-up- "0..*" RigidBody
 GameObject *-up- "0..*" IBehavourScript
-GameObject *-up- "0..1" Sprite
+GameObject *-up- "0..*" Sprite
 GameObject *-up- "0..*" Animator
 GameObject *-up- "1" Transform
 GameObject "0..1"<-- "0..*" GameObject : +parent >
@@ -341,11 +480,11 @@ GameObject <|-- UIObject
 UIObject <|-- Button
 UIObject <|-- Text
 
-Scene --> "0..*" GameObject
+Scene *-- "0..*" GameObject
 Camera --|> GameObject
-Camera "1..*" -down->  Scene
+Camera "1..*" --*  Scene
 
-Animator "0..1" ..> "1..*" Sprite
+Animator  *-- "2..*" Sprite
 
 SaveGameManager *-- "*" SaveGame
 SaveGame *-- "*" SaveField
@@ -353,12 +492,24 @@ SaveGame *-- "*" SaveArray
 SaveArray *-- "*" SaveField
 Renderer --> Scene
 SceneManager *-- "*" Scene
-UIManager *-- "*" UIObject
-AnimationManager *-- "*" Animator
+UIManager o-- "*" UIObject
+AnimationManager o-- "*" Animator
+
+NetworkManager *-- "0..1"NetworkClient
+NetworkManager *-- "0..1"NetworkServer
+NetworkManager *-- "0..1"NetworkHost
+NetworkManager *-- NetworkSceneManager
+NetworkManager *-- "1" NetworkObject
+
+GameObject *-- "0..*" NetworkObject
 
 EngineBravo *-- "1" SceneManager : creates
 EngineBravo *-- "1" SaveGameManager : creates
 EngineBravo *-- "1" AnimationManager : creates
 EngineBravo *-- "1" UIManager : creates
 EngineBravo *-- "1" ResourceManager : creates
+EngineBravo *-- "0..1" NetworkManager 
 @enduml
+
+
+
