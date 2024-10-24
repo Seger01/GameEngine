@@ -88,7 +88,7 @@ void SaveGame::store() {
   if (outFile) {
     outFile << j.dump(4); // Pretty print with 4 spaces
   } else {
-    std::cerr << "Failed to open the file: " << mFileName << std::endl;
+    throw std::invalid_argument("Failed to open the file: " + mFileName);
   }
 }
 
