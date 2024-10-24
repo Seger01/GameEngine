@@ -1,24 +1,62 @@
 #include "Window.h"
+#include "SDL_video.h"
+#include <stdexcept>
 
-Window::Window() {
-    // Initialize SDL
+// Constructor
+Window::Window(int aWindowWidth, int aWindowHeight) {
+    // Initialize SDL if not already done
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return;
+        throw std::runtime_error("SDL could not initialize! SDL_Error: " + std::string(SDL_GetError()));
     }
 
-    // Create window
-    mWindow = SDL_CreateWindow("SDL2 Sprite Sheet", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
-                               SDL_WINDOW_SHOWN);
-    if (mWindow == NULL) {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-        return;
+    // Create the window
+    mWindow = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, aWindowWidth,
+                               aWindowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+
+    if (mWindow == nullptr) {
+        throw std::runtime_error("Window could not be created! SDL_Error: " + std::string(SDL_GetError()));
     }
 }
 
+// Destructor
 Window::~Window() {
-    SDL_DestroyWindow(this->mWindow);
+    // Destroy window
+    if (mWindow != nullptr) {
+        SDL_DestroyWindow(mWindow);
+    }
+    // Quit SDL subsystems
     SDL_Quit();
 }
 
-SDL_Window*& Window::getSDLWindow() { return mWindow; }
+// Get the window size as a Point object
+Point Window::getSize() {
+    int width, height;
+    SDL_GetWindowSize(mWindow, &width, &height);
+    return Point(width, height);
+}
+
+// Set the window to fullscreen mode
+void Window::setFullScreen() {
+    if (SDL_SetWindowFullscreen(mWindow, SDL_WINDOW_FULLSCREEN) != 0) {
+        throw std::runtime_error("Unable to set fullscreen mode! SDL_Error: " + std::string(SDL_GetError()));
+    }
+}
+
+// Set the window to floating mode (borderless window)
+void Window::setFloating() { SDL_SetWindowBordered(mWindow, SDL_FALSE); }
+
+// Toggle between fullscreen and floating mode
+void Window::toggleFullFloating() {
+    Uint32 windowFlags = SDL_GetWindowFlags(mWindow);
+
+    if (windowFlags & SDL_WINDOW_FULLSCREEN) {
+        // If it's currently fullscreen, set it to floating (borderless)
+        setFloating();
+    } else {
+        // Otherwise, set it to fullscreen
+        setFullScreen();
+    }
+}
+
+// Get the raw SDL_Window pointer
+SDL_Window* Window::getSDLWindow() { return mWindow; }

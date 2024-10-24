@@ -1,17 +1,23 @@
 #pragma once
 
-#include "Component.h"
 #include <string>
+
+#include "Component.h"
+#include "Texture.h"
 
 class Sprite : public Component {
 public:
-    Sprite();
+    Sprite(Texture* aTexture);
     ~Sprite();
-    void render();
+
     void setFlipX(bool state) { mFlipX = state; }
     bool getFlipX() { return mFlipX; }
 
+    Texture* getTexture();
+
 private:
+    Texture* mTexture = nullptr;
+
     std::string mSprite;
     //??? mColor;
     //??? mColor;

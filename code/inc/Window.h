@@ -1,14 +1,22 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
+
+#include "Point.h"
 
 class Window {
 public:
-    Window();
+    Window(int aWindowWidth, int aWindowHeight);
     ~Window();
 
-    SDL_Window*& getSDLWindow();
+    Point getSize();
+
+    void setFullScreen();
+    void setFloating();
+    void toggleFullFloating();
+
+    SDL_Window* getSDLWindow();
 
 private:
     SDL_Window* mWindow = nullptr;

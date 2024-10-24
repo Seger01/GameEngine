@@ -1,6 +1,7 @@
 #include "EngineBravo.h"
 
 #include "IBehaviourScript.h"
+#include "Renderer.h"
 #include "SDL.h"
 
 EngineBravo::EngineBravo() {}
@@ -20,12 +21,16 @@ void EngineBravo::run() {
     // }
     while (true) {
         runBehaviourScripts();
-        renderer.render(mSceneManager.getCurrentScene());
+
+        mRenderSystem.render(mSceneManager.getCurrentScene());
+        // renderer.render(mSceneManager.getCurrentScene());
         SDL_Delay(200);
     }
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
+RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 
 void EngineBravo::runBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();

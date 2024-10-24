@@ -3,25 +3,19 @@
 
 #include <string>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
-#include "Renderer.h"
+#include <SDL.h>
+#include <SDL_image.h>
 
 class Texture {
 public:
     // Texture(SDL_Renderer*& aRenderer);
-    Texture(Renderer*& aRenderer);
+    Texture(SDL_Texture* aTexture);
     ~Texture();
 
-    void load(std::string aFilePath);
-    SDL_Texture*& getSDL_Texture();
+    SDL_Texture* getSDLTexture();
 
 private:
-    SDL_Texture* mLoadedTexture = nullptr;
-
-    // SDL_Renderer* mRenderer = nullptr;
-    Renderer* mRenderer = nullptr;
+    SDL_Texture* mTexture = nullptr;
 
     bool mTextureLoaded = false;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AnimationManager.h"
+#include "RenderSystem.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "SaveGameManager.h"
@@ -16,9 +17,11 @@ public:
     SceneManager& getSceneManager();
     void runBehaviourScripts();
 
+    RenderSystem& getRenderSystem();
+
 private:
     SceneManager mSceneManager;
-    Renderer renderer;
+    RenderSystem mRenderSystem;
     // SaveGameManager saveGameManager;
     // ResourceManager resourceManager;
     // AnimationManager animationManager;

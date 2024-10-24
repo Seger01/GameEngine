@@ -17,19 +17,19 @@
 
 class Animation {
 public:
-    Animation();
-    Animation(Texture*& texture, Rectangle aStartingFrame, int aAmountOfFrames);
-    ~Animation();
-
-    Texture*& getTexture();
-    Rectangle& getCurrentFrame();
-
-private:
-    std::vector<Rectangle> sprites = {};
-    Texture* mSourceTexture = nullptr;
-
-    Rectangle currentFrame;
-    int animationSpeed = 200;
+    //     Animation();
+    //     Animation(Texture*& texture, Rectangle aStartingFrame, int aAmountOfFrames);
+    //     ~Animation();
+    //
+    //     Texture*& getTexture();
+    //     Rectangle& getCurrentFrame();
+    //
+    // private:
+    //     std::vector<Rectangle> sprites = {};
+    //     Texture* mSourceTexture = nullptr;
+    //
+    //     Rectangle currentFrame;
+    //     int animationSpeed = 200;
 };
 
 #endif
