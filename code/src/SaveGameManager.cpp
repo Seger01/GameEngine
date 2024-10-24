@@ -22,10 +22,10 @@ SaveGame &SaveGameManager::getSaveGame(const std::string &aId) {
 void SaveGameManager::deleteSaveGame(const std::string &aId,
                                      const bool aDeleteFile) {
   auto it = mSaveGames.find(aId);
+  if (it == mSaveGames.end()) {
+    throw std::logic_error("Save game with ID " + aId + " does not exist.");
+  }
   if (aDeleteFile) {
-    if (it == mSaveGames.end()) {
-      throw std::logic_error("Save game with ID " + aId + " does not exist.");
-    }
     it->second.remove();
   }
   mSaveGames.erase(it);
