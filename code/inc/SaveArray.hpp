@@ -19,9 +19,9 @@ public:
   void addStringField(std::string name, std::string value);
 
 public:
-  IntSaveField &getIntField(std::string aName) const;
-  FloatSaveField &getFloatField(std::string aName) const;
-  StringSaveField &getStringField(std::string aName) const;
+  IntSaveField &getIntField(std::string aName);
+  FloatSaveField &getFloatField(std::string aName);
+  StringSaveField &getStringField(std::string aName);
 
 public:
   const std::vector<IntSaveField> &getIntArray() const;

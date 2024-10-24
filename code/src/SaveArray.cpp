@@ -68,8 +68,8 @@ void SaveArray::addStringField(std::string aName, std::string aValue) {
   mStringFields.emplace_back(aName, aValue);
 }
 
-IntSaveField &SaveArray::getIntField(std::string aName) const {
-  for (IntSaveField field : mIntFields) {
+IntSaveField &SaveArray::getIntField(std::string aName) {
+  for (IntSaveField &field : mIntFields) {
     if (field.getName() == aName) {
       return field;
     }
@@ -77,8 +77,8 @@ IntSaveField &SaveArray::getIntField(std::string aName) const {
   throw("Failed to get field " + aName);
 }
 
-FloatSaveField &SaveArray::getFloatField(std::string aName) const {
-  for (FloatSaveField field : mFloatFields) {
+FloatSaveField &SaveArray::getFloatField(std::string aName) {
+  for (FloatSaveField &field : mFloatFields) {
     if (field.getName() == aName) {
       return field;
     }
@@ -86,8 +86,8 @@ FloatSaveField &SaveArray::getFloatField(std::string aName) const {
   throw("Failed to get field " + aName);
 }
 
-StringSaveField &SaveArray::getStringField(std::string aName) const {
-  for (StringSaveField field : mStringFields) {
+StringSaveField &SaveArray::getStringField(std::string aName) {
+  for (StringSaveField &field : mStringFields) {
     if (field.getName() == aName) {
       return field;
     }
