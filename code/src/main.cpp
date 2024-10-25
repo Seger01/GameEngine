@@ -1,281 +1,201 @@
-#include <string>
 
-#include "Animation.h"
-#include "Components/Sprite.h"
-#include "Engine/EngineBravo.h"
-#include "Engine/SceneManager.h"
-#include "FSConverter.h"
-#include "Rectangle.h"
-#include "Renderer.h"
-#include "SampleBevahiourScript.h"
-#include "Scene.h"
-#include "SpriteAtlas.h"
-#include "Texture.h"
-#include "Window.h"
-#include "test.h"
+#include <SDL.h>
+#include <iostream>
 
-int main() {
+#include "EngineBravo.h"
+
+// // Initialize SDL and create a window and renderer
+// bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
+//     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+//         std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+//         return false;
+//     }
+//
+//     // Create window
+//     window = SDL_CreateWindow("SDL Rectangle Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600,
+//                               SDL_WINDOW_SHOWN);
+//     if (window == nullptr) {
+//         std::cerr << "Window could not be created! SDL Error: " << SDL_GetError() << std::endl;
+//         return false;
+//     }
+//
+//     // Create renderer for window
+//     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+//     if (renderer == nullptr) {
+//         std::cerr << "Renderer could not be created! SDL Error: " << SDL_GetError() << std::endl;
+//         return false;
+//     }
+//
+//     return true;
+// }
+
+int main(int argc, char* args[]) {
+    // SDL_Window* window = nullptr;
+    // SDL_Renderer* renderer = nullptr;
+
+    // // Initialize SDL and create window/renderer
+    // if (!init(window, renderer)) {
+    //     std::cerr << "Failed to initialize SDL!" << std::endl;
+    //     return -1;
+    // }
     EngineBravo engine;
-    engine.initizalize();
-    SceneManager& sceneManager = engine.getSceneManager();
 
-    Scene* scene = sceneManager.createScene("Level1");
-    if (scene == nullptr)
-        exit(1);
+    SDL_Window* window = engine.getRenderSystem().getWindow().getSDLWindow();
+    SDL_Renderer* renderer = engine.getRenderSystem().getRenderer().getSDLRenderer();
 
-    GameObject* gameObject = new GameObject;
+    bool quit = false;
+    SDL_Event e;
 
-    // gameObject->addComponent<Sprite>();
-    // gameObject->addComponent<SampleBehaviourScript>();
-    // gameObject->getComponent<Sprite>()->setFlipX(true);
+    // Main loop
+    while (!quit) {
+        // Event handling
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
 
-    scene->addGameObject(gameObject);
+        // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Red
+        // // Clear the screen
+        // SDL_RenderClear(renderer);
+        engine.getRenderSystem().getRenderer().clear(Color(0, 0, 0));
 
-    sceneManager.loadScene(0);
+        // Set the draw color for the renderer (red, green, blue, alpha)
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red
 
-    std::string spritePath = "player.png";
+        // Create a rectangle at position (200, 150) with width 400 and height 300
+        SDL_Rect rect = {200, 150, 400, 300};
 
-    // Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load(FSConverter().getResourcePath(spritePath).c_str());
-    if (loadedSurface == nullptr) {
-        throw std::runtime_error(
-            "Unable to load image " + spritePath + "! SDL_image Error: " + std::string(IMG_GetError()));
+        // Draw an empty rectangle (outline)
+        SDL_RenderDrawRect(renderer, &rect);
+
+        // Set a new color (green) and fill the rectangle
+        // SDL_RenderFillRect(renderer, &rect);
+
+        // // Update the screen with the drawn rectangle
+        // SDL_RenderPresent(renderer);
+        engine.getRenderSystem().getRenderer().show();
     }
 
-    // Create texture from surface pixels
-    SDL_Texture* mTexture =
-        SDL_CreateTextureFromSurface(engine.getRenderSystem().getRenderer().getSDLRenderer(), loadedSurface);
-    if (mTexture == nullptr) {
-        SDL_FreeSurface(loadedSurface);
-        throw std::runtime_error(
-            "Unable to create texture from " + spritePath + "! SDL Error: " + std::string(SDL_GetError()));
-    }
-
-    Texture texture(mTexture);
-
-    Sprite* sprite = new Sprite(&texture);
-
-    gameObject->addComponent(sprite);
-
-    // Free the loaded surface as we no longer need it
-    SDL_FreeSurface(loadedSurface);
-
-    // std::cout << "flipX: " << gameObject->getComponent<Sprite>()->getFlipX() << std::endl;
-
-    engine.run();
+    // Cleanup
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
 
-// #include <SDL2/SDL.h>
-// #include <SDL2/SDL_image.h>
-// #include <SDL2/SDL_render.h>
-// #include <SDL2/SDL_video.h>
+// #include <string>
 //
 // #include "Animation.h"
+// #include "Components/Sprite.h"
+// #include "Engine/EngineBravo.h"
+// #include "Engine/SceneManager.h"
+// #include "FSConverter.h"
+// #include "Rectangle.h"
+// #include "Renderer.h"
+// #include "SampleBevahiourScript.h"
+// #include "Scene.h"
 // #include "SpriteAtlas.h"
+// #include "Texture.h"
+// #include "Window.h"
+// #include "test.h"
 //
-// const int MOVE_SPEED = 10;
+// int main() {
+//     EngineBravo engine;
+//     engine.initizalize();
+//     SceneManager& sceneManager = engine.getSceneManager();
 //
-// int initSDL(SDL_Window*& window, SDL_Renderer*& renderer) {
-//     // Initialize SDL
-//     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-//         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-//         return -1;
+//     Scene* scene = sceneManager.createScene("Level1");
+//     if (scene == nullptr)
+//         exit(1);
+//
+//     GameObject* gameObject = new GameObject;
+//
+//     // gameObject->addComponent<Sprite>();
+//     // gameObject->addComponent<SampleBehaviourScript>();
+//     // gameObject->getComponent<Sprite>()->setFlipX(true);
+//
+//     scene->addGameObject(gameObject);
+//
+//     sceneManager.loadScene(0);
+//
+//     std::string spritePath = "player.png";
+//
+//     // Initialize PNG loading
+//     int imgFlags = IMG_INIT_PNG;
+//     if (!(IMG_Init(imgFlags) & imgFlags)) {
+//         std::cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
+//         return 0;
 //     }
 //
-//     // Create window
-//     window = SDL_CreateWindow("SDL2 Sprite Sheet", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
-//                               SDL_WINDOW_SHOWN);
-//     if (window == NULL) {
-//         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-//         return -1;
-//     }
+//     // // Load image at specified path
+//     // SDL_Surface* loadedSurface = IMG_Load(FSConverter().getResourcePath(spritePath).c_str());
+//     // if (loadedSurface == nullptr) {
+//     //     throw std::runtime_error(
+//     //         "Unable to load image " + spritePath + "! SDL_image Error: " + std::string(IMG_GetError()));
+//     // }
 //
-//     // Create renderer
-//     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-//     if (renderer == NULL) {
-//         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
-//         return -1;
-//     }
+//     // // Load the image from the specified path
+//     // SDL_Texture* mTexture = IMG_LoadTexture(engine.getRenderSystem().getRenderer().getSDLRenderer(),
+//     //                                         FSConverter().getResourcePath(spritePath).c_str());
+//     // if (mTexture == nullptr) {
+//     //     std::cerr << "Unable to load texture! SDL_image Error: " << IMG_GetError() << std::endl;
+//     // }
 //
-//     return 0;
-// }
+//     // // Create texture from surface pixels
+//     // SDL_Texture* mTexture =
+//     //     SDL_CreateTextureFromSurface(engine.getRenderSystem().getRenderer().getSDLRenderer(), loadedSurface);
+//     // if (mTexture == nullptr) {
+//     //     SDL_FreeSurface(loadedSurface);
+//     //     throw std::runtime_error(
+//     //         "Unable to create texture from " + spritePath + "! SDL Error: " + std::string(SDL_GetError()));
+//     // }
 //
-// void deInitSDL(SDL_Window*& window, SDL_Renderer*& renderer) {
-//     SDL_DestroyRenderer(renderer);
-//     SDL_DestroyWindow(window);
-//     SDL_Quit();
-// }
+//     // Free the loaded surface as we no longer need it
+//     // SDL_FreeSurface(loadedSurface);
+//     //
+//     SDL_Texture* emptyTexture = nullptr;
 //
-// int main(int argc, char* args[]) {
-//     SDL_Window* window = nullptr;
-//     SDL_Renderer* renderer = nullptr;
+//     Texture texture(emptyTexture);
 //
-//     initSDL(window, renderer);
+//     Sprite* sprite = new Sprite(&texture);
 //
-//     bool quit = false;
-//     SDL_Event event;
+//     // sprite->getTransformPtr()->position.x = 500;
+//     // sprite->getTransformPtr()->position.y = 500;
+//     //
+//     // sprite->setWidth(40);
+//     // sprite->setHeight(40);
 //
-//     // Variables for animation timing and sprite movement
-//     Uint32 lastTime = 0;         // Time of the last frame change
-//     int frame = 0;               // Current frame (sprite in the sprite sheet)
-//     const int spriteWidth = 16;  // Width of each sprite
-//     const int spriteHeight = 25; // Height of each sprite
-//     const int frameCount = 6;    // Total number of frames in the sprite sheet
+//     gameObject->addComponent(sprite);
 //
-//     // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-//     SpriteAtlas spriteAtlas(renderer, "enter_the_gungeon_spritesheet.png");
+//     // std::cout << "flipX: " << gameObject->getComponent<Sprite>()->getFlipX() << std::endl;
 //
-//     SDL_Rect startOfAnimation;
-//     startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
-//     startOfAnimation.y = 187;         // Keep the vertical position constant (you can change this for vertical
-//     movement) startOfAnimation.w = spriteWidth; // The width of the sprite startOfAnimation.h = spriteHeight; // The
-//     height of the sprite
+//     while (true) {
+//         // Clear the screen
+//         SDL_SetRenderDrawColor(engine.getRenderSystem().getRenderer().getSDLRenderer(), 0, 0, 0, 255); // Green
+//         SDL_RenderClear(engine.getRenderSystem().getRenderer().getSDLRenderer());
 //
-//     Animation& animation = spriteAtlas.getAnimation(startOfAnimation, frameCount);
+//         // Set the draw color for the renderer (red, green, blue, alpha)
+//         SDL_SetRenderDrawColor(engine.getRenderSystem().getRenderer().getSDLRenderer(), 255, 0, 0, 255); // Red
 //
-//     // Define the destination rect where the image will be drawn
-//     SDL_Rect destRect;
-//     destRect.x = 100;    // The x position on the screen
-//     destRect.y = 100;    // The y position on the screen
-//     destRect.w = 18 * 4; // The width of the drawn image (scaling)
-//     destRect.h = 26 * 4; // The height of the drawn image (scaling)
+//         // Create a rectangle at position (200, 150) with width 400 and height 300
+//         SDL_Rect rect = {200, 150, 400, 300};
 //
-//     while (!quit) {
-//         // Event handling
-//         while (SDL_PollEvent(&event) != 0) {
-//             if (event.type == SDL_QUIT) {
-//                 quit = true;
-//             }
-//             if (event.type == SDL_KEYDOWN) {
-//                 switch (event.key.keysym.sym) {
-//                 case SDLK_w: // Move up
-//                     destRect.y -= MOVE_SPEED;
-//                     break;
-//                 case SDLK_s: // Move down
-//                     destRect.y += MOVE_SPEED;
-//                     break;
-//                 case SDLK_a: // Move left
-//                     destRect.x -= MOVE_SPEED;
-//                     break;
-//                 case SDLK_d: // Move right
-//                     destRect.x += MOVE_SPEED;
-//                     break;
-//                 }
-//             }
-//         }
-//         // Clear screen
-//         SDL_RenderClear(renderer);
+//         // Draw an empty rectangle (outline)
+//         SDL_RenderDrawRect(engine.getRenderSystem().getRenderer().getSDLRenderer(), &rect);
 //
-//         SDL_Rect srcRect = animation.getCurrentFrame();
-//         SDL_Texture* spriteTexture = animation.getTexture();
+//         // Set a new color (green) and fill the rectangle
+//         SDL_SetRenderDrawColor(engine.getRenderSystem().getRenderer().getSDLRenderer(), 0, 255, 0, 255); // Green
+//         SDL_RenderFillRect(engine.getRenderSystem().getRenderer().getSDLRenderer(), &rect);
 //
-//         // Copy part of the sprite sheet to the renderer
-//         SDL_RenderCopy(renderer, spriteTexture, &srcRect, &destRect);
-//
-//         // Update the screen
-//         SDL_RenderPresent(renderer);
-//     }
-//
-//     // Clean up
-//     deInitSDL(window, renderer);
-//     return 0;
-// >>>>>>> origin/poc_animation
-// }
-// int main(int argc, char* args[]) {
-//     Window myWindow;
-//     Renderer* myRenderer = new Renderer(myWindow);
-//
-//     bool quit = false;
-//     SDL_Event event;
-//
-//     // Variables for animation timing and sprite movement
-//     Uint32 lastTime = 0;         // Time of the last frame change
-//     int frame = 0;               // Current frame (sprite in the sprite sheet)
-//     const int spriteWidth = 16;  // Width of each sprite
-//     const int spriteHeight = 25; // Height of each sprite
-//     const int frameCount = 6;    // Total number of frames in the sprite sheet
-//
-//     // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-//     SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
-//
-//     Rectangle startOfAnimation;
-//     startOfAnimation.x = 22;          // Move horizontally in the sprite sheet
-//     startOfAnimation.y = 187;         // Keep the vertical position constant (you can change this for vertical
-//     movement) startOfAnimation.w = spriteWidth; // The width of the sprite startOfAnimation.h = spriteHeight; // The
-//     height of the sprite
-//
-//     Animation& animation = spriteAtlas.getAnimation(startOfAnimation, frameCount);
-//
-//     // Define the destination rect where the image will be drawn
-//     Rectangle destRect;
-//     destRect.x = 100;    // The x position on the screen
-//     destRect.y = 100;    // The y position on the screen
-//     destRect.w = 18 * 4; // The width of the drawn image (scaling)
-//     destRect.h = 26 * 4; // The height of the drawn image (scaling)
-//
-//     while (!quit) {
-//         // Event handling
-//         while (SDL_PollEvent(&event) != 0) {
-//             if (event.type == SDL_QUIT) {
-//                 quit = true;
-//             }
-//             // if (event.type == SDL_KEYDOWN) {
-//             //     switch (event.key.keysym.sym) {
-//             //     case SDLK_w: // Move up
-//             //         destRect.y -= MOVE_SPEED;
-//             //         break;
-//             //     case SDLK_s: // Move down
-//             //         destRect.y += MOVE_SPEED;
-//             //         break;
-//             //     case SDLK_a: // Move left
-//             //         destRect.x -= MOVE_SPEED;
-//             //         break;
-//             //     case SDLK_d: // Move right
-//             // destRect.x += MOVE_SPEED;
-//             //         break;
-//             //     }
-//             // }
-//         }
-//         // Get the state of all keys
-//         const Uint8* keyState = SDL_GetKeyboardState(NULL);
-//
-//         // Check if specific keys are held down (e.g., Left arrow, Space, or Escape)
-//         if (keyState[SDL_SCANCODE_W]) {
-//             destRect.y -= MOVE_SPEED;
-//         }
-//         if (keyState[SDL_SCANCODE_A]) {
-//             destRect.x -= MOVE_SPEED;
-//         }
-//         if (keyState[SDL_SCANCODE_S]) {
-//             destRect.y += MOVE_SPEED;
-//         }
-//         if (keyState[SDL_SCANCODE_D]) {
-//             destRect.x += MOVE_SPEED;
-//         }
-//         if (keyState[SDL_SCANCODE_SPACE]) {
-//             std::cout << "Space bar is being held down" << std::endl;
-//         }
-//
-//         // Clear screen
-//         // SDL_RenderClear(renderer);
-//         myRenderer->clear();
-//
-//         // Texture* spriteTexture = animation.getTexture();
-//
-//         // Copy part of the sprite sheet to the renderer
-//         // SDL_RenderCopy(renderer, spriteTexture->getSDL_Texture(), &srcRect, &destRect);
-//         myRenderer->renderAnimation(animation, destRect);
-//
-//         // Update the screen
-//         // SDL_RenderPresent(renderer);
-//         myRenderer->present();
+//         // Update the screen with the drawn rectangle
+//         SDL_RenderPresent(engine.getRenderSystem().getRenderer().getSDLRenderer());
 //
 //         SDL_Delay(16);
 //     }
 //
-//     // Clean up
-//     // deInitSDL(window, renderer);
+//     engine.run();
+//
 //     return 0;
 // }

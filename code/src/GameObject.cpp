@@ -9,12 +9,13 @@ GameObject::~GameObject() {
     for (auto component : mComponents) {
         delete component;
     }
-    mComponents.clear();
+    mComponents.resize(0);
 }
 
 void GameObject::addComponent(Component* aComponent) {
     if (aComponent) {
         mComponents.push_back(aComponent);
+        aComponent->setGameObjectParent(this);
     }
 }
 
@@ -40,3 +41,5 @@ std::string GameObject::getTag() { return mTag; }
 void GameObject::setIsActive(bool isActive) { mIsActive = isActive; }
 
 bool GameObject::getIsActive() { return mIsActive; }
+
+Transform& GameObject::getTransform() { return mTransform; }

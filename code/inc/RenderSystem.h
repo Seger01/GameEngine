@@ -22,6 +22,8 @@ private:
 
     int WindowWidth;
     int WindowHeight;
+
+    Color mBackgroundColor;
 };
 
 #endif

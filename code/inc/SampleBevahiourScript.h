@@ -12,6 +12,6 @@ public:
 
     void onUpdate() override {
         // Update code here
-        std::cout << "SampleBehaviourScript updating!" << std::endl;
+        // std::cout << "SampleBehaviourScript updating!" << std::endl;
     }
 };

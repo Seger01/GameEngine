@@ -3,11 +3,9 @@
 
 #include <SDL.h>
 
-// #include "Texture.h"
-// #include "Animation.h"
-#include "Point.h"
-#include "Rectangle.h"
+#include "Color.h"
 #include "Texture.h"
+#include "Transform.h"
 #include "Window.h"
 
 class Animation;
@@ -17,12 +15,13 @@ public:
     Renderer(Window& window);
     ~Renderer();
 
-    void clear();
+    void clear(Color aColor);
     void show();
 
-    void renderTexture(Texture& aTexture, int aWidth, int aHeight, Point& aLocation, bool aFlipX, bool aFlipY,
+    void renderTexture(Texture& aTexture, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX, bool aFlipY,
                        float aRotation);
-    // void drawRect(Point& aLocation, float aRotation);
+
+    void renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill);
 
     SDL_Renderer*& getSDLRenderer();
 

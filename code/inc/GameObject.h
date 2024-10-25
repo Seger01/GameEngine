@@ -1,10 +1,13 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 
-#include "Component.h"
 #include <string>
 #include <type_traits>
 #include <typeinfo>
 #include <vector>
+
+#include "Component.h"
+#include "Transform.h"
 
 class GameObject {
 public:
@@ -27,6 +30,8 @@ public:
 
     void setIsActive(bool isActive);
     bool getIsActive();
+
+    Transform& getTransform();
 
     // Templated functions
     template <typename T> bool hasComponent() const {
@@ -57,6 +62,8 @@ public:
         // Create a new component of type T
         T* newComponent = new T(std::forward<Args>(args)...);
 
+        newComponent->setGameObjectParent(this);
+
         // Add the new component to the list
         mComponents.push_back(newComponent);
 
@@ -65,8 +72,12 @@ public:
 
 private:
     std::vector<Component*> mComponents;
+    Transform mTransform;
+
     int mID;
     std::string mName;
     std::string mTag;
     bool mIsActive;
 };
+
+#endif
