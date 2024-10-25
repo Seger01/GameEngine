@@ -17,16 +17,17 @@ RenderSystem::RenderSystem() {
 
 void RenderSystem::render(Scene* aScene) {
     mRenderer->clear(Color(0, 0, 0));
-    // mRenderer->clear(mBackgroundColor);
+    mRenderer->clear(mBackgroundColor);
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Sprite>()) {
             std::cout << "Game object in scene with sprite" << std::endl;
             Sprite* sprite = gameObject->getComponent<Sprite>();
 
-            // mRenderer->renderTexture(*sprite->getTexture(), sprite->getTransform().position, sprite->getWidth(),
-            //                          sprite->getHeight(), sprite->getFlipX(), sprite->getFlipY(),
-            //                          sprite->getTransform().rotation);
-            mRenderer->renderSquare(Vector2(200, 200), 50, 50, Color(255, 255, 255, 0), true);
+            mRenderer->renderTexture(*sprite->getTexture(), sprite->getTransform().position, sprite->getWidth(),
+                                     sprite->getHeight(), sprite->getFlipX(), sprite->getFlipY(),
+                                     sprite->getTransform().rotation);
+            // mRenderer->renderSquare(Vector2(200, 200), 50, 50, Color(255, 255, 255, 0), false);
+            // mRenderer->renderSquare(sprite->getTransform().position, 50, 50, Color(255, 255, 255, 0), true);
         }
     }
     mRenderer->show();

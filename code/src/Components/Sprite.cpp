@@ -11,14 +11,16 @@ Sprite::~Sprite() {
 Texture* Sprite::getTexture() { return mTexture; }
 
 Transform Sprite::getTransform() {
-    Transform& parentTransform = this->mGameObject->getTransform();
+    Transform parentTransform = this->mGameObject->getTransform();
 
     Transform returnTransform = parentTransform;
 
-    // returnTransform = returnTransform + mTransform;
-    returnTransform += mTransform;
+    returnTransform = returnTransform + mTransform;
+    // returnTransform += mTransform;
 
     return returnTransform;
 }
 
 Transform* Sprite::getTransformPtr() { return &mTransform; }
+
+void Sprite::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }

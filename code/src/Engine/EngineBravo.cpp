@@ -8,29 +8,35 @@ EngineBravo::EngineBravo() {}
 
 EngineBravo::~EngineBravo() {}
 
-void EngineBravo::initizalize() {}
+void EngineBravo::initizalize() {
+    this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
+
+    return;
+}
 
 void EngineBravo::run() {
-    // Scene* currentScene = sceneManager.getCurrentScene();
-    // if (currentScene) {
-    //     for (auto& gameObject : currentScene->getGameObjects()) {
-    //         for (auto& script : gameObject->getComponent<SampleBehaviourScript>()) {
-    //             script->onStart();
-    //         }
-    //     }
-    // }
-    while (true) {
+    bool quit = false;
+    SDL_Event e;
+
+    while (!quit) {
+        // Event handling
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
         runBehaviourScripts();
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
-        // renderer.render(mSceneManager.getCurrentScene());
+
         SDL_Delay(200);
     }
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
-
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 
 void EngineBravo::runBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();

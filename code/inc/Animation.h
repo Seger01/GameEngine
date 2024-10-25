@@ -16,7 +16,7 @@
 // };
 
 class Animation {
-public:
+    // public:
     //     Animation();
     //     Animation(Texture*& texture, Rectangle aStartingFrame, int aAmountOfFrames);
     //     ~Animation();

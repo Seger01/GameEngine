@@ -31,7 +31,8 @@ public:
     void setIsActive(bool isActive);
     bool getIsActive();
 
-    Transform& getTransform();
+    Transform getTransform();
+    void setTransform(Transform aNewTransform);
 
     // Templated functions
     template <typename T> bool hasComponent() const {

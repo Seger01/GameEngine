@@ -14,6 +14,7 @@ public:
     Texture* getTexture();
     Transform getTransform();
     Transform* getTransformPtr();
+    void setTransform(Transform aNewTransform);
 
     void setFlipX(bool state) { mFlipX = state; }
     bool getFlipX() { return mFlipX; }

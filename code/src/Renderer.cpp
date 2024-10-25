@@ -60,6 +60,7 @@ void Renderer::renderTexture(Texture& aTexture, Vector2 aLocation, int aWidth, i
 }
 
 void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) {
+    std::cout << "RenderSquare called()" << std::endl;
     // Set the draw color for the renderer (red, green, blue, alpha)
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 

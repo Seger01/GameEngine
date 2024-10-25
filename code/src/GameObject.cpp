@@ -42,4 +42,5 @@ void GameObject::setIsActive(bool isActive) { mIsActive = isActive; }
 
 bool GameObject::getIsActive() { return mIsActive; }
 
-Transform& GameObject::getTransform() { return mTransform; }
+Transform GameObject::getTransform() { return mTransform; }
+void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }

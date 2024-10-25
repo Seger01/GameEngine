@@ -14,16 +14,17 @@ public:
     ~EngineBravo();
     void initizalize();
     void run();
-    SceneManager& getSceneManager();
     void runBehaviourScripts();
 
+    SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
+    ResourceManager& getResourceManager();
 
 private:
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;
+    ResourceManager mResourceManager;
     // SaveGameManager saveGameManager;
-    // ResourceManager resourceManager;
     // AnimationManager animationManager;
     // UIManager uiManager;
 };
