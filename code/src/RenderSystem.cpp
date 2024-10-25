@@ -20,7 +20,6 @@ void RenderSystem::render(Scene* aScene) {
     mRenderer->clear(mBackgroundColor);
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Sprite>()) {
-            std::cout << "Game object in scene with sprite" << std::endl;
             Sprite* sprite = gameObject->getComponent<Sprite>();
 
             mRenderer->renderTexture(*sprite->getTexture(), sprite->getTransform().position, sprite->getWidth(),

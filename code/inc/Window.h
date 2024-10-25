@@ -3,12 +3,14 @@
 
 #include <SDL.h>
 
+#include "Vector2.h"
+
 class Window {
 public:
     Window(int aWindowWidth, int aWindowHeight);
     ~Window();
 
-    Point getSize();
+    Vector2 getSize();
 
     void setFullScreen();
     void setFloating();

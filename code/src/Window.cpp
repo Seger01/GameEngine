@@ -28,11 +28,11 @@ Window::~Window() {
     SDL_Quit();
 }
 
-// Get the window size as a Point object
-Point Window::getSize() {
+// Get the window size as a Vector2 object
+Vector2 Window::getSize() {
     int width, height;
     SDL_GetWindowSize(mWindow, &width, &height);
-    return Point(width, height);
+    return Vector2(width, height);
 }
 
 // Set the window to fullscreen mode
