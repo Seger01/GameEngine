@@ -3,8 +3,6 @@
 
 #include <SDL.h>
 
-#include "Point.h"
-
 class Window {
 public:
     Window(int aWindowWidth, int aWindowHeight);
