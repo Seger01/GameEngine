@@ -57,3 +57,4 @@ Date,Time,Duration(in hours),Activity
 2024-10-21, 20:00, 1, Fix savegame issues
 2024-10-22, 14:00, 2, Discuss physics design
 2024-10-25, 9:15, 3.45, standup and worked on design
+2024-10-27, 9:30, 3, Audio design and implementation
