@@ -3,18 +3,22 @@
 #include <string>
 
 #include "Component.h"
+#include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"
 
 class Sprite : public Component {
 public:
-    Sprite(Texture* aTexture);
+    Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect());
     ~Sprite();
 
     Texture* getTexture();
-    Transform getTransform();
-    Transform* getTransformPtr();
-    void setTransform(Transform aNewTransform);
+
+    Transform getRelativePosition();
+    void setRelativePosition(Transform aNewTransform);
+
+    Rect getSource();
+    void setSource(Rect aSourceRect);
 
     void setFlipX(bool state) { mFlipX = state; }
     bool getFlipX() { return mFlipX; }
@@ -31,6 +35,8 @@ public:
 private:
     Texture* mTexture = nullptr;
     Transform mTransform;
+
+    Rect mSourceRect;
 
     std::string mSprite;
     int mWidth = 0;

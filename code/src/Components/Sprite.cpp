@@ -1,26 +1,20 @@
 #include "Components/Sprite.h"
-#include <iostream>
 
-#include "GameObject.h"
-
-Sprite::Sprite(Texture* aTexture) : mTexture(aTexture), mFlipX(false), mFlipY(false) {}
+Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect) {
+    mTexture = aTexture;
+    mWidth = aWidth;
+    mHeight = aHeight;
+    mSourceRect = aSourceRect;
+}
 
 Sprite::~Sprite() {
     // Cleanup resources if necessary
 }
 Texture* Sprite::getTexture() { return mTexture; }
 
-Transform Sprite::getTransform() {
-    Transform parentTransform = this->mGameObject->getTransform();
+Transform Sprite::getRelativePosition() { return mTransform; }
+void Sprite::setRelativePosition(Transform aNewTransform) { mTransform = aNewTransform; }
 
-    Transform returnTransform = parentTransform;
+Rect Sprite::getSource() { return mSourceRect; }
 
-    returnTransform = returnTransform + mTransform;
-    // returnTransform += mTransform;
-
-    return returnTransform;
-}
-
-Transform* Sprite::getTransformPtr() { return &mTransform; }
-
-void Sprite::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
+void Sprite::setSource(Rect aSourceRect) { mSourceRect = aSourceRect; }

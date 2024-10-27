@@ -5,6 +5,7 @@
 
 #include "Renderer.h"
 #include "Scene.h"
+#include "Sprite.h"
 #include "Window.h"
 
 class RenderSystem {
@@ -17,6 +18,9 @@ public:
     Window& getWindow();
 
 private:
+    void renderSprite(GameObject* aGameObject, Sprite* aSprite);
+    void renderAnimation(GameObject* aGameObject, Animation* aAnimation);
+
     std::unique_ptr<Renderer> mRenderer;
     std::unique_ptr<Window> mWindow;
 

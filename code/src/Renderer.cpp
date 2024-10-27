@@ -1,8 +1,8 @@
-#include "Renderer.h"
-#include "Point.h"
 #include <iostream>
 
 #include "Animation.h"
+#include "Rect.h"
+#include "Renderer.h"
 #include "SDL_render.h"
 #include "Window.h"
 
@@ -15,48 +15,43 @@ Renderer::Renderer(Window& window) {
     }
 }
 
-void Renderer::renderTexture(Texture& aTexture, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX, bool aFlipY,
-                             float aRotation) {
-    std::cout << "renderTexture called" << std::endl;
-    // // Get the SDL_Texture from the Texture class
-    // SDL_Texture* sdlTexture = aTexture.getSDLTexture();
-    //
-    // // Define the destination rectangle where the texture will be drawn
-    // SDL_Rect dstRect;
-    // dstRect.x = aLocation.x;
-    // dstRect.y = aLocation.y;
-    // dstRect.w = aWidth;
-    // dstRect.h = aHeight;
-    //
-    // // Set the flipping mode based on input flags
-    // SDL_RendererFlip flip = SDL_FLIP_NONE;
-    // if (aFlipX && aFlipY) {
-    //     flip = (SDL_RendererFlip)(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
-    // } else if (aFlipX) {
-    //     flip = SDL_FLIP_HORIZONTAL;
-    // } else if (aFlipY) {
-    //     flip = SDL_FLIP_VERTICAL;
-    // }
-    //
-    // // Render the texture with flipping and rotation
-    // SDL_RenderCopyEx(mRenderer,  // The renderer associated with the texture
-    //                  sdlTexture, // The texture to render
-    //                  nullptr,    // The source rectangle (nullptr means the entire texture)
-    //                  &dstRect,   // The destination rectangle
-    //                  aRotation,  // The angle of rotation (in degrees)
-    //                  nullptr,    // The point around which to rotate (nullptr means center)
-    //                  flip        // The flipping mode
-    // );
-    // Query the texture to get its width and height
-    int width, height;
-    width = aWidth;
-    height = aHeight;
+void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
+                             bool aFlipX, bool aFlipY, float aRotation) {
+    // Get the SDL_Texture from the Texture class
+    SDL_Texture* sdlTexture = aTexture.getSDLTexture();
 
-    // Set the destination rectangle for rendering the player texture
-    SDL_Rect dstRect = {(int)aLocation.x, (int)aLocation.y, width, height};
+    // Define the destination rectangle where the texture will be drawn
+    SDL_Rect dstRect;
+    dstRect.x = aLocation.x;
+    dstRect.y = aLocation.y;
+    dstRect.w = aWidth;
+    dstRect.h = aHeight;
 
-    // Render the texture to the screen
-    SDL_RenderCopy(mRenderer, aTexture.getSDLTexture(), nullptr, &dstRect);
+    // SDL_Rect sourceRect(aSourceRect);
+    SDL_Rect* sourceRect = nullptr;
+    if (aSourceRect.w != 0) {
+        sourceRect = new SDL_Rect(aSourceRect);
+    }
+
+    // Set the flipping mode based on input flags
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (aFlipX && aFlipY) {
+        flip = (SDL_RendererFlip)(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+    } else if (aFlipX) {
+        flip = SDL_FLIP_HORIZONTAL;
+    } else if (aFlipY) {
+        flip = SDL_FLIP_VERTICAL;
+    }
+
+    // Render the texture with flipping and rotation
+    SDL_RenderCopyEx(mRenderer,  // The renderer associated with the texture
+                     sdlTexture, // The texture to render
+                     sourceRect, // The source rectangle (nullptr means the entire texture)
+                     &dstRect,   // The destination rectangle
+                     aRotation,  // The angle of rotation (in degrees)
+                     nullptr,    // The point around which to rotate (nullptr means center)
+                     flip        // The flipping mode
+    );
 }
 
 void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) {

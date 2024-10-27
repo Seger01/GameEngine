@@ -4,6 +4,8 @@
 #include "Renderer.h"
 #include "SDL.h"
 
+#include "Input.h"
+
 EngineBravo::EngineBravo() {}
 
 EngineBravo::~EngineBravo() {}
@@ -15,6 +17,8 @@ void EngineBravo::initizalize() {
 }
 
 void EngineBravo::run() {
+    Input& input = Input::getInstance();
+
     bool quit = false;
     SDL_Event e;
 
@@ -26,11 +30,13 @@ void EngineBravo::run() {
             }
         }
 
+        input.update();
+
         runBehaviourScripts();
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
-        SDL_Delay(200);
+        SDL_Delay(16);
     }
 }
 
@@ -51,7 +57,6 @@ void EngineBravo::runBehaviourScripts() {
             // for (auto& script : gameObject->getComponent<IBehaviourScript>()) {
             //     script->onUpdate();
             // }
-            std::cout << "looping through behaviour scritps" << std::endl;
             if (gameObject->getComponent<IBehaviourScript>() != nullptr) {
                 gameObject->getComponent<IBehaviourScript>()->onUpdate();
             }

@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "Color.h"
+#include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "Window.h"
@@ -18,8 +19,8 @@ public:
     void clear(Color aColor);
     void show();
 
-    void renderTexture(Texture& aTexture, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX, bool aFlipY,
-                       float aRotation);
+    void renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation);
 
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill);
 

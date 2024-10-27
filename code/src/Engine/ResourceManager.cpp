@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Animation.h"
 #include "FSConverter.h"
 
 ResourceManager::ResourceManager() : mRenderer(nullptr) {}
@@ -32,6 +33,8 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath) {
         return nullptr;
     }
 
+    std::cout << "Loaded texture from " << FSConverter().getResourcePath(aPngPath).c_str() << std::endl;
+
     // Create a new Texture object
     auto texture = std::make_unique<Texture>(sdlTexture);
 
@@ -39,6 +42,24 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath) {
     Texture* texturePtr = texture.get();
     mTextureMap[aPngPath] = std::move(texture);
     return texturePtr;
+}
+
+Sprite* ResourceManager::createSprite(SpriteDef aSpriteDef) {
+    Sprite* createdSprite = nullptr;
+
+    createdSprite =
+        new Sprite(loadTexture(aSpriteDef.texturePath), aSpriteDef.width, aSpriteDef.height, aSpriteDef.sourceRect);
+
+    return createdSprite;
+}
+
+Animation* ResourceManager::loadAnimation(std::vector<SpriteDef> aSpriteDefs, int aTimeBetweenFrames, bool aIsLooping) {
+    std::vector<Sprite*> animationFrames;
+    for (SpriteDef spriteDef : aSpriteDefs) {
+        animationFrames.push_back(createSprite(spriteDef));
+    }
+
+    return new Animation(animationFrames, aTimeBetweenFrames, aIsLooping);
 }
 
 void ResourceManager::loadAudio() {}
