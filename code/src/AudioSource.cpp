@@ -23,11 +23,11 @@ void AudioSource::stop() {
 
 void AudioSource::setPlayOnWake(bool aValue) { mPlayOnAwake = aValue; }
 
-bool AudioSource::getPlayOnWake() { return mPlayOnAwake; }
+bool AudioSource::getPlayOnWake() const { return mPlayOnAwake; }
 
 void AudioSource::setLooping(bool aLooping) { mLoop = aLooping; }
 
-bool AudioSource::getLooping() { return mLoop; }
+bool AudioSource::getLooping() const { return mLoop; }
 
 void AudioSource::setVolume(unsigned aVolume) {
   if (aVolume > mMaxVolume) {
@@ -39,7 +39,7 @@ void AudioSource::setVolume(unsigned aVolume) {
   }
 }
 
-unsigned AudioSource::getVolume() { return mVolume; }
+unsigned AudioSource::getVolume() const { return mVolume; }
 
 void AudioSource::setXDirection(int aXCoord) {
   if (aXCoord < minXDirection || aXCoord > maxXDirection) {
@@ -51,7 +51,7 @@ void AudioSource::setXDirection(int aXCoord) {
   }
 }
 
-int AudioSource::getXDirection() { return mXCoord; }
+int AudioSource::getXDirection() const { return mXCoord; }
 
 void AudioSource::setXVelocity(int aXVelocity) {
   if (aXVelocity > std::abs(mMaxVelocity)) {
@@ -63,4 +63,4 @@ void AudioSource::setXVelocity(int aXVelocity) {
   }
 }
 
-int AudioSource::getXVelocity() { return mXVelocity; }
+int AudioSource::getXVelocity() const { return mXVelocity; }

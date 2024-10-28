@@ -11,16 +11,17 @@ public:
   void play(bool aLooping);
   void stop();
 
+  bool isMusic() const;
   void setPlayOnWake(bool aValue);
-  bool getPlayOnWake();
+  bool getPlayOnWake() const;
   void setLooping(bool aLooping);
-  bool getLooping();
+  bool getLooping() const;
   void setVolume(unsigned aVolume);
-  unsigned getVolume();
+  unsigned getVolume() const;
   void setXDirection(int aXDirection);
-  int getXDirection();
+  int getXDirection() const;
   void setXVelocity(int aXVelocity);
-  int getXVelocity();
+  int getXVelocity() const;
 
 private:
   std::string mFileName;

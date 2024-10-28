@@ -5,10 +5,12 @@
 #include "GameObject.h"
 #include "IAudioFacade.h"
 #include <functional>
+#include <memory>
 #include <vector>
 
 class AudioManager {
 public:
+  AudioManager();
   void play(const AudioSource &);
   void stop(const AudioSource &);
   void wake();
@@ -21,4 +23,5 @@ public:
 private:
   std::vector<std::reference_wrapper<GameObject>> mGameObjects;
   AudioResourceManager mResources;
+  std::unique_ptr<IAudioFacade> mFacade;
 };
