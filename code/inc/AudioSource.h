@@ -24,6 +24,7 @@ private:
   std::string mFileName;
   bool mPlayOnAwake;
   bool mLoop;
+  bool mIsMusic;
 
 private:
   const static int minXCoord{-100};
