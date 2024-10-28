@@ -1,6 +1,7 @@
 Minutes 28-10-24
 
 What was discussed:
+If managers should contain references to all game objects or just the game objects which are relevant to them. Conclusions are noted in the design document.
 
 What has been done:
 - Siem: Savegame implementation, audio design

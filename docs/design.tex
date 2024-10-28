@@ -46,6 +46,10 @@
 \subsection{Architecture}
 The game engine is a singleton. This will be the only singleton in the engine.
 
+Managers contain only references to the game objects which are relevant to them. For example, the physics manager only contains references to game objects with collider or rigidbody components.
+Whenever a component is added to or removed from a game object, the game object calls a function in the game engine class. This adds the game object to an update queue. This update queue is used every cycle, where the engine checks all components of the object in the queue, and adds or removes them to the relevant managers.
+\textbf{\textit{Motivate why we made this choice!}}
+
 \subsection{Physics Update}
 Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
 
