@@ -3,6 +3,8 @@
 #include "Component.h"
 #include <string>
 
+#define DEFAULT_VOLUME 50
+
 class AudioSource : public Component {
 public:
   AudioSource(std::string aPath, bool aIsMusic = false);
@@ -15,8 +17,8 @@ public:
   bool getLooping();
   void setVolume(unsigned aVolume);
   unsigned getVolume();
-  void setXCoord(int aXCoord);
-  int getXCoord();
+  void setXDirection(int aXDirection);
+  int getXDirection();
   void setXVelocity(int aXVelocity);
   int getXVelocity();
 
@@ -27,8 +29,9 @@ private:
   bool mIsMusic;
 
 private:
-  const static int minXCoord{-100};
-  const static int maxXCoord{100};
+  const static int mMaxVolume{100};
+  const static int minXDirection{-100};
+  const static int maxXDirection{100};
   const static int mMaxVelocity{10};
   int mVolume;
   int mXCoord;
