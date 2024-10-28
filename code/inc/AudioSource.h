@@ -24,10 +24,12 @@ private:
   std::string mFileName;
   bool mPlayOnAwake;
   bool mLoop;
+
+private:
+  const static int minXCoord{-100};
+  const static int maxXCoord{100};
+  const static int mMaxVelocity{10};
   int mVolume;
   int mXCoord;
-  static int minXCoord;
-  static int maxXCoord;
-  const int mMaxVelocity;
   int mXVelocity;
 };
