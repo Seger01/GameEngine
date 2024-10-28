@@ -26,25 +26,29 @@ void RenderSystem::renderSprite(GameObject* aGameObject, Sprite* aSprite) {
 
 void RenderSystem::renderAnimation(GameObject* aGameObject, Animation* aAnimation) {
     Sprite* currentFrame = aAnimation->getFrameAtTime(SDL_GetTicks());
+    // Sprite* currentFrame = aAnimation->getFrame(0);
 
     renderSprite(aGameObject, currentFrame);
 }
 
 void RenderSystem::render(Scene* aScene) {
-    // mRenderer->clear(Color(0, 0, 0));
     mRenderer->clear(mBackgroundColor);
+
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Animation>()) {
-            Animation* animation = gameObject->getComponent<Animation>();
-
-            std::cout << "GameObject pos: " << gameObject->getTransform().position.x << ", "
-                      << gameObject->getTransform().position.y << std::endl;
-
-            renderAnimation(gameObject, animation);
+            std::cout << "Amount of Animtions: " << gameObject->getComponents<Animation>().size() << std::endl;
+            for (auto animation : gameObject->getComponents<Animation>()) {
+                if (animation->isActive()) {
+                    std::cout << "Active animation" << std::endl;
+                    renderAnimation(gameObject, animation);
+                }
+            }
         } else if (gameObject->hasComponent<Sprite>()) {
-            Sprite* sprite = gameObject->getComponent<Sprite>();
-
-            renderSprite(gameObject, sprite);
+            for (auto sprite : gameObject->getComponents<Sprite>()) {
+                if (sprite->isActive()) {
+                    renderSprite(gameObject, sprite);
+                }
+            }
         }
     }
     mRenderer->show();

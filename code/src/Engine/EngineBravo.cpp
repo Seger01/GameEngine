@@ -10,9 +10,15 @@ EngineBravo::EngineBravo() {}
 
 EngineBravo::~EngineBravo() {}
 
+EngineBravo& EngineBravo::getInstance() {
+    static EngineBravo instance;
+    return instance;
+}
+
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
+    startBehaviourScripts();
     return;
 }
 
@@ -44,6 +50,21 @@ SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 
+void EngineBravo::startBehaviourScripts() {
+    Scene* currentScene = mSceneManager.getCurrentScene();
+    if (currentScene == nullptr) {
+        std::cout << "retrieved scene is nullptr" << std::endl;
+    }
+
+    if (currentScene) {
+        for (auto& gameObject : currentScene->getGameObjects()) {
+            for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                behaviourScript->onStart();
+            }
+        }
+    }
+}
+
 void EngineBravo::runBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
     if (currentScene == nullptr) {
@@ -54,11 +75,8 @@ void EngineBravo::runBehaviourScripts() {
 
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
-            // for (auto& script : gameObject->getComponent<IBehaviourScript>()) {
-            //     script->onUpdate();
-            // }
-            if (gameObject->getComponent<IBehaviourScript>() != nullptr) {
-                gameObject->getComponent<IBehaviourScript>()->onUpdate();
+            for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                behaviourScript->onUpdate();
             }
         }
     }

@@ -72,7 +72,6 @@ private:
                 mHeldKeys.push_back((Key)i);
             }
         }
-        std::cout << "mHeldKeys.size(): " << mHeldKeys.size() << std::endl;
     }
 
     void updateMouse() {
@@ -101,11 +100,7 @@ private:
         }
     }
 
-    void updateHeldActions() {
-
-        std::cout << "mHeldKeysSize from fucking input class: " << mHeldKeys.size() << std::endl;
-        this->mHeldActions = mContextManager.getCurrentActions(mHeldKeys);
-    }
+    void updateHeldActions() { this->mHeldActions = mContextManager.getCurrentActions(mHeldKeys); }
 
     Input() {
         this->updateCurrentKeys();
@@ -226,13 +221,12 @@ public:
         //     }
         // }
         if (mDownKeys.size() != 0)
-            std::cout << "mDownKeys.size(): " << mDownKeys.size() << std::endl;
 
-        for (int i = 0; i < mDownKeys.size(); i++) {
-            if (mDownKeys[i] == key) {
-                return true;
+            for (int i = 0; i < mDownKeys.size(); i++) {
+                if (mDownKeys[i] == key) {
+                    return true;
+                }
             }
-        }
         return false;
     }
 

@@ -10,10 +10,13 @@ public:
 
     void setGameObjectParent(GameObject* aParentObject) { mGameObject = aParentObject; }
 
+    bool isActive() { return mActive; }
+    void setActive(bool aState) { mActive = aState; }
+
 protected:
     GameObject* mGameObject = nullptr;
 
-    bool mActive;
+    bool mActive = true;
 };
 
 #endif

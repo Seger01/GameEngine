@@ -1,6 +1,7 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include <algorithm>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
@@ -15,6 +16,7 @@ public:
     ~GameObject();
 
     void addComponent(Component* aComponent);
+    void removeComponent(Component* component);
 
     bool isActiveInWorld();
     bool isActiveSelf();
@@ -22,10 +24,10 @@ public:
     void setID(int id);
     int getID();
 
-    void setName(std::string name);
+    void setName(const std::string& name);
     std::string getName();
 
-    void setTag(std::string tag);
+    void setTag(const std::string& tag);
     std::string getTag();
 
     void setIsActive(bool isActive);
@@ -44,28 +46,21 @@ public:
         return false;
     }
 
-    template <typename T> T* getComponent() const {
+    template <typename T> std::vector<T*> getComponents() const {
+        std::vector<T*> componentsOfType;
         for (const auto& component : mComponents) {
             if (T* casted = dynamic_cast<T*>(component)) {
-                return casted;
+                componentsOfType.push_back(casted);
             }
         }
-        return nullptr;
+        return componentsOfType;
     }
 
     // Templated addComponent function
     template <typename T, typename... Args> T* addComponent(Args&&... args) {
-        // Check if the component already exists
-        if (hasComponent<T>()) {
-            return getComponent<T>();
-        }
-
-        // Create a new component of type T
         T* newComponent = new T(std::forward<Args>(args)...);
-
         newComponent->setGameObjectParent(this);
 
-        // Add the new component to the list
         mComponents.push_back(newComponent);
 
         return newComponent;

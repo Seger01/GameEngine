@@ -10,15 +10,27 @@
 
 class EngineBravo {
 public:
-    EngineBravo();
-    ~EngineBravo();
+    // Get the single instance of EngineBravo
+    static EngineBravo& getInstance();
+
     void initizalize();
     void run();
-    void runBehaviourScripts();
 
     SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
+
+private:
+    // Private constructor and destructor
+    EngineBravo();
+    ~EngineBravo();
+
+    // Deleted copy constructor and assignment operator to prevent copying
+    EngineBravo(const EngineBravo&) = delete;
+    EngineBravo& operator=(const EngineBravo&) = delete;
+
+    void runBehaviourScripts();
+    void startBehaviourScripts();
 
 private:
     SceneManager mSceneManager;

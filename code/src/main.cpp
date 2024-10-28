@@ -21,40 +21,8 @@
 #include "Window.h"
 #include "test.h"
 
-SpriteDef playerSprite = {"player.png", Rect(), 100, 200};
-
-const int spriteWidth = 16;  // Width of each sprite
-const int spriteHeight = 25; // Height of each sprite
-const int frameCount = 6;    // Total number of frames in the sprite sheet
-
-// SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-// SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
-
-// Rectangle startOfAnimation;
-// startOfAnimation.x = 22;           // Move horizontally in the sprite sheet
-// startOfAnimation.y = 187;          // Keep the vertical position constant (you can change this for vertical movement)
-// startOfAnimation.w = spriteWidth;  // The width of the sprite
-// startOfAnimation.h = spriteHeight; // The height of the sprite
-
-SpriteDef playerAnimationSprite1 = {"enter_the_gungeon_spritesheet.png", Rect{22, 187, spriteWidth, spriteHeight},
-                                    16 * 5, 25 * 5};
-SpriteDef playerAnimationSprite2 = {"enter_the_gungeon_spritesheet.png",
-                                    Rect{22 + (spriteWidth * 1), 187, spriteWidth, spriteHeight}, 16 * 5, 25 * 5};
-SpriteDef playerAnimationSprite3 = {"enter_the_gungeon_spritesheet.png",
-                                    Rect{22 + (spriteWidth * 2), 187, spriteWidth, spriteHeight}, 16 * 5, 25 * 5};
-SpriteDef playerAnimationSprite4 = {"enter_the_gungeon_spritesheet.png",
-                                    Rect{22 + (spriteWidth * 3), 187, spriteWidth, spriteHeight}, 16 * 5, 25 * 5};
-SpriteDef playerAnimationSprite5 = {"enter_the_gungeon_spritesheet.png",
-                                    Rect{22 + (spriteWidth * 4), 187, spriteWidth, spriteHeight}, 16 * 5, 25 * 5};
-SpriteDef playerAnimationSprite6 = {"enter_the_gungeon_spritesheet.png",
-                                    Rect{22 + (spriteWidth * 5), 187, spriteWidth, spriteHeight}, 16 * 5, 25 * 5};
-
-std::vector<SpriteDef> playerAnimationJump = {playerAnimationSprite1, playerAnimationSprite2, playerAnimationSprite3,
-                                              playerAnimationSprite4, playerAnimationSprite5, playerAnimationSprite6};
-
 void engineTest() {
-    EngineBravo engine;
-    engine.initizalize();
+    EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
 
     Scene* scene = sceneManager.createScene("Level1");
@@ -76,29 +44,7 @@ void engineTest() {
 
     sceneManager.loadScene(0);
 
-    Animation* playerAnimation = engine.getResourceManager().loadAnimation(playerAnimationJump, 200, true);
-
-    gameObject->addComponent(playerAnimation);
-
-    // std::string spritePath = "player.png";
-    // Texture* texture = engine.getResourceManager().loadTexture(spritePath);
-    //
-    // Sprite* sprite = engine.getResourceManager().createSprite(playerSprite);
-    //
-    // // sprite->setSource(Rect{0, 0, 200, 100});
-    //
-    // Transform newTransform;
-    //
-    // newTransform.position.x = 0;
-    // newTransform.position.y = 0;
-    //
-    // sprite->setWidth(200);
-    // sprite->setHeight(300);
-    //
-    // sprite->setTransform(newTransform);
-    //
-    // gameObject->addComponent(sprite);
-
+    engine.initizalize();
     engine.run();
 
     return;

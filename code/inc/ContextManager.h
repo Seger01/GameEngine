@@ -78,7 +78,7 @@ public:
 
     std::vector<DefAction> getCurrentActions(std::vector<Key> aHeldKeys) {
         std::vector<DefAction> activeActions;
-        std::cout << "mRegisteredActions.size(): " << mRegisteredActions.size() << std::endl;
+
         for (auto& action : mRegisteredActions) {
             if (action.get().isActive(aHeldKeys)) {
                 activeActions.push_back(action.get().getID());
@@ -123,8 +123,6 @@ public:
     }
 
     std::vector<DefAction> getCurrentActions(std::vector<Key> aHeldKeys) {
-        std::cout << "Active context is: " << mContexts[this->mActiveContextIndex].getName() << std::endl;
-        std::cout << "aHeldKeys.size(): " << aHeldKeys.size() << std::endl;
         return mContexts[this->mActiveContextIndex].getCurrentActions(aHeldKeys);
     }
 
@@ -172,12 +170,8 @@ public:
 
             Context context(contextName);
 
-            std::cout << "mDefActions.size() " << mDefActions.size() << std::endl;
-
             for (int iDefActions = 0; iDefActions < mDefActions.size(); iDefActions++) {
                 for (int i = 0; i < keys.size(); i++) {
-                    std::cout << "Comparing: " << actionToString(mDefActions[iDefActions]->getID()) << ", " << keys[i]
-                              << std::endl;
                     if (actionToString(mDefActions[iDefActions]->getID()) == keys[i]) {
                         context.addDefAction(*mDefActions[iDefActions]);
                     }
