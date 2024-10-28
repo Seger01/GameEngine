@@ -1,0 +1,17 @@
+Minutes 28-10-24
+
+What was discussed:
+
+What has been done:
+- Siem: Savegame implementation, audio design
+- Angel: Has not worked on project since last standup.
+- Ronan: Not present this standup
+- Sean: Has not worked on project since last standup.
+- Seger: Worked on render system implementation.
+
+What is going to be done:
+- Siem: Update audio design, audio implementation
+- Angel: Implement physics
+- Ronan: Not present this standup
+- Sean: Multiplayer implementation
+- Seger: Modify structure so gameobjects can have multiple instances of a component. Work on particle emitter.
