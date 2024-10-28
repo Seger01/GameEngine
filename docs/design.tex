@@ -43,6 +43,9 @@
 
 \section*{Design Document}
 
+\subsection{Architecture}
+The game engine is a singleton. This will be the only singleton in the engine.
+
 \subsection{Physics Update}
 Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
 
