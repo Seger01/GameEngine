@@ -3,7 +3,7 @@ Date,Time,Duration(in hours),Activity
 2024-09-02, 10:30, 0.5, group discussion on first steps
 2024-09-03, 9:15, 2.25, group discussion on first steps / code guidelines
 2024-09-03, 15:00, 1.5, first project lecture
-2024-09-04, 11:00, 3, group discussion on plan of attack, general requirements and planning
+2024-09-04, 11:00, 3, group discussion on plan of attack and general requirements and planning
 2024-09-05, 10:45, 1, Writing PoA: planning and version control
 2024-09-05, 18:00, 0.5, Small bits of feedback to PoA chapter quality
 2024-09-05, 21:00, 0.5, Small bits of PoA feedback, added requirements to requirements docu up to userstory 3
@@ -11,3 +11,52 @@ Date,Time,Duration(in hours),Activity
 2024-09-06, 11:30, 0.5, Added requirements up to user story 6
 2024-09-06, 17:00, 0.5, Implement small bits of feedback on PoA
 2024-09-06, 18:30, 1, Added gtest to project, gtest can now be used to run automatic tests
+2024-09-08, 11:00, 5, Worked on Jenkins integration for automated code reports (test success, test coverage)
+2024-09-09, 11:00, 0.5, Standup
+2024-09-09, 11:30, 2.5, Audio research
+2024-09-09, 20:30, 1, Audio PoC
+2024-09-10, 11:30, 1, Preparing meeting
+2024-09-10, 12:30, 0.5, Meeting with Bob
+2024-09-11, 8:45, 0.5, Updated audio PoC
+2024-09-11, 9:15, 0.5, Meeting with team
+2024-09-11, 14:00, 1.5, Work on audio research & PoC
+2024-09-11, 16:00, 1, Help Sean with multiplayer PoC
+2024-09-12, 18:00, 1.5, Research and PoC sdl (mixer)
+2024-09-14, 14:00, 3, Research and PoC savegame
+2024-09-16, 9:15, 6, Debug applying libraries using cmake
+2024-09-16, 19:30, 1, Wrote requirements up to U10
+2024-09-17, 18:30, 1, Finished reqs 
+2024-09-18, 9:15, 0.5, Project meeting
+2024-09-18, 9:45, 1, Updated requirements, retrieved a RasbPi 5 charger
+2024-09-18, 18:00, 1.5, Updated requirements from feedback
+2024-09-19, 12:30, 1.5, Class project meeting
+2024-09-22, 18:00, 1.5, Updated and handed PoA V1
+2024-09-23, 19:00, 2.5, Worked on savegame (PoC)
+2024-09-24, 14:30, 0.75, Assessment for plan of attack
+2024-09-25, 9:15, 2, Daily standup + meeting troubleshooting libraries
+2024-09-26, 12:00, 1.5, Team meeting and standup
+2024-09-26, 19:00, 2, Work on SDLMixer PoC
+2024-09-29, 13:30, 2, Work on savegame PoC
+2024-10-02, 9:45, 0,75, Team standup
+2024-10-02, 10:30, 4.5, Clean up pocs for demoing, start work on behavioral tree poc
+2024-10-03, 9:30, 1.5, Project class
+2024-10-06, 14:00, 2.5, Behaviortree PoC
+2024-10-07, 12:00, 0.5, Meeting with Bob
+2024-10-08, 19:00, 1, Researching unity savegames
+2024-10-09, 9:00, 5, Architecture and design
+2024-10-09, 19:00, 0.5, Preparing group presentation
+2024-10-09, 19:30, 1, Update savegame diagram and implementation
+2024-10-09, 13:00, 1, Added templating to savefield
+2024-10-11, 9:15, 6, Discussed design with group.
+2024-10-12, 20:00, 0.5, Preparing group presentation
+2024-10-13, 19:00, 0.5, Researching savegame template implementation
+2024-10-14, 9:00, 2.15, Attending presentations of other groups, conversation with Bob
+2024-10-16, 9:15, 4.5, Project meeting
+2024-10-17, 14:30, 2, Work on savegame design
+2024-10-20, 14:40, 2, Work on savegame implementation
+2024-10-21, 20:00, 1, Fix savegame issues
+2024-10-22, 14:00, 2, Discuss physics design
+2024-10-25, 9:15, 3.45, standup and worked on design
+2024-10-27, 9:30, 3, Audio design and implementation
+2024-10-28, 9:15, 3.75, Standup, audio design feedback and implementation
+2024-10-28, 15:30, 1, Audio implementation

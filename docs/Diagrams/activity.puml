@@ -1,0 +1,40 @@
+@startuml
+(*) --> "Init"
+"Init" --> "Gameloop"
+
+partition "gameloop" {
+    "Handle Input" --> "Run Behaviour scripts"
+    "Run Behaviour scripts" --> "Update particles"
+    if "Physics requires update"
+    --> [true] "Update Physics"
+            if "Physics behind render" then
+        --> [true] "Update Physics"
+        else
+        --> [false] "Check Delete Queue"
+        endif
+    else
+    --> [false] "Check Delete Queue"
+    endif
+    "Check Delete Queue" --> "Render" 
+    "Render" --> "Handle Input"
+
+}
+@enduml
+
+' handle Input --> Read input from keyboard/mouse/controller. (read w)
+' Transfrom input to an action. (w == walk forward)
+' Call function (in behavioral script) from that action (walk forward function)
+
+' Behaviour scripts --> Loop trough all game objects.
+' If Behaviour script available, call update function of behaviour script.
+
+' Update particles --> Loop trough all game objects.
+' If particle emitter component available, call update function of particle system.
+
+' Update Physics --> Loop trough all game objects.
+' If physics component available, call update function of physics system.
+
+' Render --> Render all game objects.
+
+
+

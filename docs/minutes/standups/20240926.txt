@@ -1,0 +1,22 @@
+Minutes 26-09-24
+
+What was discussed:
+Ask during next project meeting: what does Bob recommend in regard to (not) using ECS.
+Sean had decided to put more than the expected amount of hours in, specifically for the multiplayer and AI sections
+State machine alternatives as researched by Sean: choice between a more complex state machine, which has support for nested states, or a simpler state machine which does not support nested states.
+Pathfinding: considering using navmesh, a very commonly used library, intended for use in 3d games. Could otherwise look into libraries designed for 2d pathfinding, which might be more optimized.
+Made the agreement, that during the second quarter of the year (when a greater share of the members' time can be spent on the project) at least three out of five working days, all members are present at school to work on the project
+
+What has been done:
+- Siem: Fixing usage of SDLMixer 
+- Angel: Updated PoA, worked on box2d PoC: getting the library to work and running example
+- Ronan: Work on PoC for gameobjects: can now create gameobjects and attach components
+- Sean: Cmake: using git submodules (instead of install scripts)
+- Seger: Fixing issues with cmake (git submodules), research input system (for using both controller and k&m)
+
+What is going to be done:
+- Siem: Check PoA updates by Angel, create SDLMixer PoC, continue work on savegame system
+- Angel: Fixing issues with git, continue work on box2d poc
+- Ronan: Research ECS
+- Sean: Starting PoC for AI: states, behavioural tree and A*
+- Seger: Implement PoC input system

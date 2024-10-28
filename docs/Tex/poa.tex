@@ -8,6 +8,17 @@
 \usepackage{tabularx} % For tables that auto-adjust to the page width
 \usepackage{longtable} % For tables across multiple pages
 
+\usepackage{hyperref} % allows for hyperlinks to be added to the document
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+    pdftitle={Research},
+    pdfpagemode=FullScreen
+}
+
 \title{Plan of Attack} % Sets article title
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
 \date{\today} % Sets date for date compiled
@@ -28,8 +39,11 @@ All information in this document is subject to change. \\
     \textbf{Version number} & \textbf{Date} & \textbf{Change}                                                        \\ \hline
     V0.1                    & 02-09-2024    & Initial draft                                                          \\ \hline
     V0.2                    & 04-09-2024    & Created general planning and version control                           \\ \hline
-    V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organisation \\ \hline
+    V0.3                    & 06-09-2024    & Finished the initial version of risk analysis and project organization \\ \hline
     V0.4                    & 06-09-2024    & Implemented various small pieces of feedback, removed work division    \\ \hline
+    V0.5                    & 18-09-2024    & Implemented feedback for chapter document inventory and communication  \\ \hline
+V1.0 & 22-09-2024 & Added chapter tasks \\ \hline
+V1.1 & 25-09-2024 & Implemented feedback; Added Kanban, buddy system, project hours
 \end{tabularx}
 \newpage
 
@@ -49,9 +63,12 @@ Besides the game engine the client needs a simple validation game, so the client
 \subsection{Goal}
 The objective of this project is to create a game engine that the client can use for creating games at their company.
 The engine is designed to satisfy all requirements as stated in the requirements document enabling the client to make games with a custom engine without learning an entirely new game engine structure.
+The engine will be accompanied with a validation game. 
+The validation game will be a simplified Enter The Gungeon clone.
+
 
 \subsection{Scope}
-The game engine is made to function on computers running a Linux operating system, because every developer uses and is experienced with a Linux operating system.
+The game engine is made to function on computers running a Linux operating system.
 \newline\newline
 The following is a list of items which lay outside of the scope of this project:
 \begin{itemize}
@@ -61,13 +78,16 @@ The following is a list of items which lay outside of the scope of this project:
     \item Cross-platform compatibility
     \item High-End Graphics features
     \item In-Depth animation systems
+    \item 3D Graphics
 \end{itemize}
 
 \subsection{Result}
 The result of this project is a user-friendly game engine that follows the API structure of the Unity game engine.
 The engine is easily understood, maintained and extendable by an engine engineer working one day a week.
+The engine will have extensive documentation on all of its features and APIs.
 \newline\newline
 Besides the game engine a simple validation game is created to show all the functions of the engine.
+The validation game will be a simple Enter The Gungeon clone to showcase all of our features.
 \newpage
 
 \section{General planning} % creates a section
@@ -99,7 +119,7 @@ Unless a specific day and/or time is specified, all deadlines are on friday, 17:
     4                    & Research potential features               & Research V1                             \\ \hline
                          & Start drafting architecture + design      &                                         \\ \hline
                          & Work on POCs                              & Finish second POCs                      \\ \hline
-    5                    & Write and implement research feedback     & Research feedack implemented            \\ \hline
+    5                    & Write and implement research feedback     & Research feedback implemented           \\ \hline
                          & Work on POCs                              &                                         \\ \hline
                          & Update architecture + design              &                                         \\ \hline
     6                    & Update architecture + design              & Architecture V1 finished                \\ \hline
@@ -161,35 +181,77 @@ Unless a specific day and/or time is specified, all deadlines are on friday, 17:
 
 \section{Communication}
 Communication between team members is done using whatsapp.
-\\
-Communication between the team and the Bob van der Putten
-will be done using email, Teams or in person during the scheduled project meetings.
+Communication between the team and Bob van der Putten
+is be done using e-mail, Microsoft Teams or in person during the scheduled project meetings.
 \\\\
 Collaboration with code and documents is done using GitHub.
-When a team member wants to merge code, the code is reviewed by at least one other team member.
-\\\\
-There is a standup-meeting every wednesday at 9:15, which is simultaneously an opportunity to work on the project. If there are classes scheduled at this moment, another time in the same week is chosen.
-\\\\
-The team is working with a yellow and red card system.
-A yellow card means a warning. If two yellow cards are received by a teammember,
-they will be disqualified from participating in the project.
+When a team member wants to merge code, the code is reviewed by at least one other team member beforehand.
+
+\subsection{Standups}
+The research and POC phase of the project contains a weekly standup at wednsday 9:15 in which current progress is discussed for each team member. The Standup schedule changes once research and pocs are finished and development on the engine starts. The development phase contains 2 daily standups and a designated day for the entire group to work on the project at school.
+
+\subsection{Physical presence}
+During the second quarter of the year (when more time is focused on the project), all team members are physically present at school, to stimulate teamwork.
+
+
+\subsection{Buddy system}
+The projects makes use of a buddy system in which pairs are made between developers to share knowledge with eachother on their designated tasks. The sharing of knowledge functions as a safety net when a developer isn't able to work for a period of time in which their buddy can temporarily take over the task with the shared knowledge. The pairings are as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+  \hline
+  \textbf{Developer} & \textbf{Buddy} \\
+  \hline
+  Ronan & Siem \\
+  \hline
+  Siem & Seger \\
+  \hline
+  Seger & Sean \\
+  \hline
+  Sean & Angel \\
+  \hline 
+  Angel & Ronan \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Yellow and red cards}
+A yellow and red card system is used to penalize team members when necessary.
+A yellow card means a warning. If two yellow cards are received by a team member, they receive a red card, which means
+they are disqualified from participating in the project.
 The team is unable to issue a yellow card directly, but a recommendation to issue a card
-will be given to Bob van der Putten.
+is given to Bob van der Putten when necessary.
 \\
 A recommendation for a yellow card can only be issued when the following procedures have been followed:
 \begin{enumerate}
-    \item A teammember is underperforming. This is the case when these conditions are met:
+    \item A team member is underperforming. This is the case when these conditions are met (note that some terms are loosely defined, these are more concretely determined by the team on a case-to-case basis):
           \begin{itemize}
-              \item A teammember has worked fewer hours than expected on the project.
+              \item A team member has worked fewer hours than expected on the project.
               \item The quality of the submitted work is too low.
-              \item A teammember has not communicated about issues they are facing within the project on time.
+              \item A team member has not communicated about issues they are facing within the project on time.
           \end{itemize}
-    \item The team will make an arrangement with the underperforming teammember about the work that should be submitted.
+    \item The team will make an arrangement with the underperforming team member about the work that should be submitted.
           An email about this arrangement will also be sent to Bob van der Putten
-    \item After one week, the arrangement is not met by the underperforming teammember.
+    \item After one week, the arrangement is not met by the under performing team member.
 \end{enumerate}
 In case these procedures have all taken place, a recommendation for a yellow card will be given.
 
+
+\newpage
+
+\section{Tasks}
+Tasks are created and divided over group members on a per-week basis.
+The tasks avaialable in the first weeks of the project are not all specifically aimed at developing the engine (research, proof of concepts et cetera), these tasks are managed by each member's own administration.
+When research and proof of concepts are all finished, and the the entire team's effort lies in developing the engine, this decision is reconsidered.
+
+\subsection{Worked hours}
+Each member is expected to spend a minimum of 14 hours per week on the project with the responsibility for each member to record their worked hours and task in the timesheet provided in the github. If a member spends 50 extra hours on the project they may gain a total of 0.5 extra points when dividing individual efforts during the assessment. Besides this, the project leader runs a script each friday to keep track of time spent on the project for each member.
+\subsection{Task management}
+
+To keep track of tasks per member, the project makes use of a kanban board in combination with the tasks mentioned in the time registration. This board is used during standups in which the tasks per member can be updated and discussed. 
+\\\\
+The project uses kanban to keep the assigning and performing of tasks flexible during the project, as time per task is difficult to predict due to a lack of experience with similar projects.
 
 \newpage
 
@@ -203,19 +265,24 @@ The following points are applied to ensure the documentation’s quality:
     \item All diagrams are in the UML style.
     \item Headers in the research document do not contain questions
     \item No choices are made in the research document
-    \item latex is used as default text editor. This is used so git can be used as version conrol.
+    \item latex is used as default text editor. This is used so git can be used as version control.
 \end{itemize}
 \subsection{Technical}
 the following points are applied to ensure the technical quality of the project:
 \begin{itemize}
     \item Code is written in english.
     \item Code is written in c++23.
-    \item Codestandard is written in ./codestandard.tex.
+    \item Code standard is written in ./codestandard.tex.
     \item Text editor of choice can be used.
     \item Unit test are written for every function except for setters without validation and getters.
     \item Third party libraries must be discussed with the whole team.
     \item One person must check git commits before merging.
-    \item Only code which can be compiled may be commited to git.
+    \item No commits may be made directly to the main branch.
+    \item No commits may be made directly to the develop branch.
+    \item Only code which can be compiled may be merged in git.
+    \item A pull request must always be reviewed by at least one other team member before merging.
+    \item Libraries are directly retrieved online whenever possible using cmake.
+    \item Libraries which can not be retrieved online using cmake, must be downloaded, built and installed using a single install script
 \end{itemize}
 
 \subsection{tools}
@@ -227,28 +294,33 @@ the following tools are used to ensure the quality of the project:
     \item Cmake is used to build the code.
     \item Clangformat is used for code formatting.
     \item Cppcheck is used for code checking.
-    \item valgrind is used for memory leak checking.
+    \item Valgrind is used for memory leak checking.
     \item Gtest testing framework is used for testing.
-    \item plantuml is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
+    \item PlantUML is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
 \end{itemize}
 \newpage
 
-\section{project orginisation}
+\section{project organization}
 
 \subsection{Parties}
-The project contains different parties consisting of developers and a customer. The following section provides information about the different parties, people involved within the parties and what their task is within the project.
-\subsubsection{Customer and school supervisor}
+The project contains different parties consisting of developers and a customer.
+The following section provides information about the different parties, people involved within the parties and what their tasks are within the project.
 
-Bob van der Putten is the main customer of the project and provides general demands and requirements for the engine. Besides the role of customer, Bob functions as the school supervisor and gives lectures regarding the general project and its factors. Finally, Bob  serves as the main talking point when it comes to discussing project progress.
+\subsubsection{Customer and school supervisor}
+Bob van der Putten is the main customer of the project and provides general demands and requirements for the engine.
+Besides the role of customer, Bob functions as the school supervisor and gives lectures regarding the general project and its factors.
+Finally, Bob is the project owner and oversees the progress of the project.
+
 
 \subsubsection{Developers}
-
-The software developers of the project are Sean Groenenboom, Siem Vermeulen, Angel Villanueva, and Ronan vlak. Developers have the responsibility of defining the project, researching solutions and developing and delivering the final product to the customer.
+The software developers of the project are Seger Sars, Sean Groenenboom, Siem Vermeulen, Angel Villanueva, and Ronan vlak.
+Developers have the responsibility of defining the project, researching solutions and developing and delivering the final product to the customer.
 
 
 \subsubsection{Project leader}
+Siem Vermeuelen has the role of project leader and oversees the project from within the developer team.
+The project leader is responsible for planning meetings, handing in documents and sending the weekly progress email to Bob van der Putten.
 
-Siem Vermeuelen has the role of project leader and oversees the project from within the developer team. The project leader is responsible for planning meetings, handing in documents and sending the weekly progress email to Bob van der Putten.
 
 \newpage
 
@@ -323,7 +395,7 @@ Siem Vermeuelen has the role of project leader and oversees the project from wit
         \hline
         Nr. & Consequence                                                                                                                                   & Mitigation                                                                               \\ [0.5ex]
         \hline\hline
-        2.1 & Parts of the project may be delayed or remain unfinished                                                                                      & No mitigation                                                                            \\
+        2.1 & Parts of the project may be delayed or remain unfinished                                                                                      & The project makes use of a buddy system in which knowledge is shared and tasks can be temporarily taken over by their designated buddy. When a team member is sick, the sick hours are cancelled (and not counted as 'missed' hours). The team will discuss how the unfinished tasks are divided over the group.                                                                     \\
         \hline
         2.2 & Poor planning may result in a lack of time for certain aspects of the project and may lead to cuts in the project or an unfinished end result & Hosting weekly stand ups to discuss progress and providing buffers for potential delays  \\
         \hline

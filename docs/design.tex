@@ -1,0 +1,117 @@
+% - Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
+% Alternatives considered:
+% - Updating physics using a deltatime. This is undesirable, because when the update frequency of the game drops, the physics will also slow down and become unreliable and prone to error.
+% - Multithreading. Not done because rendering can then copy old data and new data in a single frame. Alternative would be copying the data to physics and copying it back when physics is finished, but that would mean copying too much data back and forth per cycle.
+
+% - The 'levelManager' (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behavior script.
+
+% - Physics object types (in Box2D):
+% - Staticbody: objects which can be manually moved, but are not affected by gravity, mass et cetera
+% - Kinematic body: has zero mass, and can be moved by applying forces to it. It is not affected by gravity.
+% - Dynamic body: has mass, and is affected by gravity and other forces. It can be moved by applying forces to it.
+
+% Staticbody is used for walls, and objects which may move but only when explicitly told to do so.
+% Kinematic bodies are not used, because the gravity of a dynamic body can instead be manually set to zero.
+% Dynamic bodies are used for all objects which are affected by gravity and / or other forces.
+
+% - GameObjects should only contain an animator *or* a sprite, not both. The renderer first checks if there is an animator present, and if not, it checks for a sprite.
+
+% - Controller input is supported, but not analog values. This is because it does not integrate well with SDL inputs.
+
+% - UI:
+% - Three component types: text, button and image
+% - Text rendering: font, text content, color and transparency are adjustable.
+% - Button: has an interactable flag and an onclick callback.
+% - Image: has a sprite and a transparency value.
+% - There is a separate UI manager, which is responsible for checking where the clicks are, checking if the click was on a button, and calling the onclick callback if it was.
+
+% - Transform
+% - Does not need update flag when position is changed, as a movable object is usually moving
+
+
+% - Collider
+% - Has bodyID, which is needed for the physics
+
+% - RigidBody
+% - Has a bodyID, which is needed for the physics
+
+
+\documentclass{article}
+\usepackage{enumitem}
+
+\begin{document}
+
+\section*{Design Document}
+
+\subsection{Architecture}
+The game engine is a singleton. This will be the only singleton in the engine.
+
+Managers contain only references to the game objects which are relevant to them. For example, the physics manager only contains references to game objects with collider or rigidbody components.
+Whenever a component is added to or removed from a game object, the game object calls a function in the game engine class. This adds the game object to an update queue. This update queue is used every cycle, where the engine checks all components of the object in the queue, and adds or removes them to the relevant managers.
+\textbf{\textit{Motivate why we made this choice!}}
+
+\subsection{Physics Update}
+Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
+
+\subsubsection{Alternatives Considered}
+\begin{itemize}
+  \item Updating physics using a deltatime. This is undesirable, because when the update frequency of the game drops, the physics will also slow down and become unreliable and prone to error.
+  \item Multithreading. Not done because rendering can then copy old data and new data in a single frame. Alternative would be copying the data to physics and copying it back when physics is finished, but that would mean copying too much data back and forth per cycle.
+\end{itemize}
+
+\subsection{Level Manager}
+The \texttt{levelManager} (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behavior script.
+
+\subsection{Physics Object Types (in Box2D)}
+\begin{itemize}
+  \item \textbf{Staticbody}: objects which can be manually moved, but are not affected by gravity, mass, etc.
+  \item \textbf{Kinematic body}: has zero mass, and can be moved by applying forces to it. It is not affected by gravity.
+  \item \textbf{Dynamic body}: has mass, and is affected by gravity and other forces. It can be moved by applying forces to it.
+\end{itemize}
+
+\noindent
+\textbf{Usage:}
+\begin{itemize}
+  \item \textbf{Staticbody} is used for walls, and objects which may move but only when explicitly told to do so.
+  \item \textbf{Kinematic bodies} are not used, because the gravity of a dynamic body can instead be manually set to zero.
+  \item \textbf{Dynamic bodies} are used for all objects which are affected by gravity and/or other forces.
+\end{itemize}
+
+\subsection{GameObjects}
+GameObjects should only contain an animator \textit{or} a sprite, not both. The renderer first checks if there is an animator present, and if not, it checks for a sprite.
+
+\subsection{Controller Input}
+Controller input is supported, but not analog values. This is because it does not integrate well with SDL inputs.
+
+\subsection{UI}
+\begin{itemize}
+  \item \textbf{Three component types:} text, button, and image.
+  \item \textbf{Text rendering:} font, text content, color, and transparency are adjustable.
+  \item \textbf{Button:} has an interactable flag and an onclick callback.
+  \item \textbf{Image:} has a sprite and a transparency value.
+\end{itemize}
+
+\noindent
+There is a separate UI manager, which is responsible for checking where the clicks are, checking if the click was on a button, and calling the onclick callback if it was.
+
+\subsection{Transform}
+Does not need an update flag when the position is changed, as a movable object is usually moving.
+
+\subsection{Collider}
+Has \texttt{bodyID}, which is needed for the physics.
+
+\subsection{RigidBody}
+Has \texttt{bodyID}, which is needed for the physics.
+
+\subsection{PhysicsEngine}{
+  \begin{itemize}
+    \item Steps are at 50 hertz
+    \item substeps are configurable by the game programmer
+    \item update method gets int of the amount of steps it need to set so less data gets copied to the world class
+  \end{itemize}
+}
+
+\subsection{Multithreading}
+Multithreading is not added to the engine as it lies out of the scope of the project.
+
+\end{document}

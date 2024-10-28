@@ -116,7 +116,7 @@ What was really intended here, was that depending on yellow, either banana or ki
 -Use override and final wherever applicable.
 -If a function is virtual, the virtual keyword should always be added to it, so not only in the parent class, but also in each version of the function in the child classes.
 -Don't use rvalue references (&&) unless you really really really need them.
--Use unique_ptr wherever possible. If an object is not owned, then it's stored as a normal pointer. Avoid creating complex types in the initialiser list. Here's an example of how that works:
+-Use unique_ptr wherever possible for ownership. If an object is not owned, then it may be passed along as a raw pointer (but only when it cannot be passed an a reference). Avoid creating complex types in the initialiser list. Here's an example of how that works:
 	class FruitManager
 	{
 	public:

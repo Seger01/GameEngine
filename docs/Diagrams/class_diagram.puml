@@ -1,0 +1,624 @@
+@startuml
+
+' skinparam linetype ortho
+skinparam groupInheritance 2
+
+package Components{
+
+class Component{
+    - mActive : bool
+
+}
+
+class AudioSource{
+    + void play(??? aLooping)
+    + void stop()
+
+    - mAudioClip : string
+    - mPlayOnAwake : bool
+    - mLoop : bool
+    - mVolume : ???
+}
+
+class Collider{
+    ' Relative to position of GameObject
+    - mPosition : Point 
+}
+
+class BoxCollider {
+    ' Position is middle of box
+    - mWidth : float
+    - mHeight : float
+
+    - mBodyId : b2BodyId
+    - mBodyDef : b2BodyDef
+}
+
+class CircleCollider {
+    'Position is middle of circle
+    - mRadius : float
+
+    - mBodyId : b2BodyId
+    - mBodyDef : b2BodyDef
+}
+
+enum BodyType{
+    STATIC
+    DYNAMIC
+}
+
+'class RigidBody{
+ '   + setMass(float aMass) : void
+ '   + getMass() : float
+ '   + setBodyType(BodyType aBodyType) : void
+ '   + getBodyType() : BodyType
+ '   + setGravityScale(float aGravityScale) : void
+ '   + getGravity() : float
+ '   - mMass : float
+ '   - mGravityScale : float
+ '   - mBodyType : Enum bodyType
+' }
+class RigidBody_BodyTypeDYNAMIC {
+
+    + RigidBody(flags, properties)
+    + applyForce(point) : void
+
+    ' SETTERS AND GETTERS FOR MEMBERS
+    - mIsUpdated : bool
+    - mHasGravity : bool true/false
+    - mIsMoveableByForce : bool false
+    - mCanRotate : bool true/false
+
+    - mDensity : float 0
+    - mFriction : float 0
+    - mRestitution : float 0
+
+    - mMass : float 0
+    - mGravityScale : float 0
+
+    - mBodyId : int
+
+    - mForcesBuffer : vector<point>
+}
+class RigidBody_BodyTypeSTATIC {
+
+    + RigidBody(flags, properties)
+    + applyForce(point) : void
+
+    ' SETTERS AND GETTERS FOR MEMBERS
+    - mIsUpdated : bool
+    - mHasGravity : bool false
+    - mIsMoveable : bool true/false
+    - mIsMoveableByForce : bool false
+    - mCanRotate : bool true/false
+
+    - mDensity : float 0
+    - mFriction : float 0
+    - mRestitution : float 0
+
+    - mMass : float 0
+    - mGravityScale : float 0
+
+    - mBodyId : int
+
+    - mForcesBuffer : vector<point>
+}
+
+interface IBehaviourScript{
+    + {abstract} void onStart()
+    + {abstract} void onUpdate()
+}
+
+class Sprite{
+    + render() : void
+    + setFlipX(bool) : void
+    + getFlipX() : bool
+    + setFlipY(bool) : void
+    + getFlipY() : bool
+
+    - mSprite : string
+    - mColor : Color
+    - mflipX : bool
+    - mflipY : bool
+    - mSortingLayer : ???
+    - mOrderinLayer : ???
+
+}
+
+class Texture {
+    - SDLTexture : ???
+}
+
+
+class Animator{
+    + play(??? aLooping) : void
+    + stop() : void
+
+    - mFps : ???
+}
+
+}
+
+class GameObject{
+    + addComponent(Component* aComponent) : void
+    + isActiveInWorld() : bool
+    + isActiveSelf() : bool
+    + setID(int aId) : void
+    + getID() : int
+    + setName(string aName) : void
+    + getName() : string
+    + setTag(string aTag) : void
+    + getTag() : string
+    + setIsActive(bool aIsActive) : void
+    + getIsActive() : bool
+    + hasComponenent() const : template<typename T> bool
+    + getComponent() const : template<typename T> T*
+    + addComponent(Args&&... args) : template<typename T, typename... Args> T*
+
+    - mComponents : vector<Component*>
+    - mName : string
+    - mTag : string
+    - mIsActive : bool
+    - mLayer : ???
+    - mID : int
+}
+
+struct Transform{
+    - mPosition : Point
+    - mRotation : float
+    - mScale : Point
+}
+
+package Save{
+class SaveGame {
+    - mFileName : string
+    - mFields : vector<SaveField>
+    - mArrays : vector<SaveArray>
+    + SaveGame(const string &aFileName)
+    + store() : void
+    + remove() : void
+    + addField(string aName, string aValue) : void
+    + setField(string aName, string aValue) : void
+    + getField(string aName) : SaveField&
+    + getField(string aName) : string
+    + addArray(string aName) : void
+    + setArray(string aName, SaveArray value) : void
+    + getArray(string aName) : SaveArray&
+}
+
+class SaveField {
+    - mName : string
+    - mValue : string
+    + SaveField(string aName)
+    + getName() : string
+    + setValue(string aValue) : void
+    + getValue() : string
+}
+
+class SaveArray {
+    - mName : string
+    - mFields : vector<SaveField>
+    + SaveArray(string aName)
+    + getName() : string
+    + addField(string aName, string aValue) : void
+    + setField(string aName, string aValue) : void
+    + getField(string aName) : string
+}
+}
+
+class Scene {
+    + addGameObject(GameObject* aObject) : void
+    + removeGameObject(int aId) : void
+    + getGameObject(int aId) : GameObject&
+    + addCamera() : int
+    + removeCamera(int id) : void
+    + getCamera(int id) : Camera&
+    + setActiveCamera(int id) : void
+    + getID() : int
+    + getName() : string
+    + getGameObjects() : vector<GameObject*>& 
+
+    - Scene(string aSceneName, int aSceneID)
+    - mSceneName : string
+    - mGameObjects : vector<GameObject*>
+    - mSceneID = -1 : int
+    - activeCameraIndex : int
+    - cameras : vector<Camera>(1)
+}
+
+package Engine{
+
+class EngineBravo {
+    + initialize() : void
+    + run() : void
+    + getSceneManager() : SceneManager&
+    + runBehaviourScripts() : void
+
+    - mSaveGameManager : SaveGameManager 
+    - mSceneManager : SceneManager
+    - mResourceManager : ResourceManager
+    - mAnimationManager : AnimationManager
+    - mUIManager : UIManager
+    - mRenderer : Renderer
+}
+
+class ResourceManager {
+    - ResourceManager()
+    + loadTextures() : void
+    + loadAudio() : void
+}
+
+class SceneManager {
+    + addScene(const Scene& scene) : int
+    + addSceneLevel(Map& map) : int
+    + loadScene(int index) : void
+    + loadScene(const std::string& sceneName) : void
+    + getCurrentScene() : Scene*
+    + createScene(std::string aSceneName, int aSceneID = -1) : Scene*
+    - SceneManager()
+    - sceneNameExists(string aSceneName) : bool
+    - sceneIDExists(int aSceneID) : bool
+    - getNewSceneID() : int
+    - mScenes : vector<unique_ptr<Scene>>
+    - mCurrentSceneIndex : int
+}
+
+class SaveGameManager {
+    - SaveGameManager()
+    + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+    + getSaveGame(const string &aId) : SaveGame&
+    + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+    - mSaveGames : vector<SaveGame> 
+}
+
+class AnimationManager {
+    + updateAnimations(Scene &scene) : void
+    - AnimationManager()
+}
+
+class UIManager {
+    - mClickableButtons : vector<UIObject&>
+    + ClickableButtonPressed() : bool
+    + checkIsClickableButton() : bool
+    + addClickableButton((UIObject& aButton)) : void
+    + removeClickableButton(std::string ID) : void
+    - UIManager()
+}
+
+class NetworkManager {
+    
+    
+    + void startServer()
+    + void startClient()
+    + void startHost()
+    + void shutdown()
+
+
+    - mIsServer : bool
+    - mIsClient : bool
+    - mIsHost : bool
+    - mConnectedClients : List<NetworkClient>
+    - mTickRate : int
+    - mDefaultPlayerPrefab : GameObject&
+    - mEnableSceneManagement : bool
+}
+
+class PhysicsManager {
+
+    + updateReferences(vector<GameObject*>&) : void
+    + update() : void
+    + setSubStep : void
+    + getSubStep() : int
+
+    - GameObjects : vector<GameObject*>
+    - step : float
+    - subStep : int
+
+}
+}
+
+
+class Camera{
+    - mBackgroundColor : Color
+    ' Width and Height are rendered area in Game Units
+    - mWidth : int
+    - mHeight : int
+
+}
+
+class Renderer {
+    + render(const Scene* aScene) : void
+    + render(const Scene* aScene, int aLayer) : void
+    + clear() : void
+    + setResolution(Point aResolution) : void
+
+    - mResolution : Point
+}
+
+package UI{
+class UIObject{
+    - mWidth : int
+    - mHeight : int
+}
+
+class Button{
+    - mInteractable : bool
+    - mOnClick : ???
+}
+
+class Text{
+    - mText : string
+    - mFont : ???
+    - mSize : ???
+    - mAllignment : ???
+    - mColor : ???
+}
+}
+
+package Input{
+class iMouseListener{
+    + ??? onMouseMoved()
+    + ??? onMouseClicked()
+    + ??? onMousePressed()
+    + ??? onMouseReleased()
+}
+
+class iKeyListener{
+    + ??? onKeyPressed()
+    + ??? onKeyReleased()
+}
+}
+
+package global{
+class Input{}
+
+class Time{}
+
+class Debug{}
+
+struct Point{
+    - x : float
+    - y : float
+}
+
+class Color{
+    - r : int
+    - g : int
+    - b : int
+    - a : int
+}
+
+class FSConverter {
+    + FSConverter(string) : FSConverter
+    + getResourcePath(const std::string& resourceName) : string
+    - findResourcesFolder() : string
+    - executablePath() : string
+    - resourceDir : string
+}
+}
+
+package Networking{
+class NetworkObject {
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
+    - mIsOwner: bool
+    - mNetworkID: int
+}
+
+interface INetworkBehaviour {
+    + {abstract} void serverRpc()
+    + {abstract} void clientRpc()
+    + {abstract} void OnNetworkSpawn()
+    
+}
+
+' Template class for network variables
+class NetworkVariable{
+    + networkVariable(WritePermission)
+    + T Value
+    
+}
+
+class IBehaviourScript_Proxy{}
+
+' Maybe not needed
+class NetworkTransform {
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class Transform_Proxy{}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendGameState()
+    + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ReceiveGameState()
+    + SendGameState()
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+    + UnloadScene()
+}
+
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
+}
+
+class Component_Proxy{
+}
+
+' NetworkManager <-- AuthorityManager
+
+NetworkObject *-- "*" INetworkBehaviour
+NetworkObject -- NetworkTransform
+NetworkObject --|> Component_Proxy
+
+INetworkBehaviour --|> IBehaviourScript_Proxy
+INetworkBehaviour <-- NetworkVariable
+INetworkBehaviour <-- INetworkSerializable
+
+NetworkTransform --|> Transform_Proxy
+
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
+
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+
+
+NetworkHost <-- NetworkServer
+NetworkHost <-- NetworkClient
+
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
+}
+
+package Physics {
+
+class BodyProxy {
+
+    BodyProxy(GameObject&)
+}
+
+class World {
+
+    + World(b2Vec2 Gravity)
+
+    + executeWorldStep(float step, int subStep) : void
+    + reset() : void
+
+    + createBody(BodyProxy& bodyProxy) : b2BoxId
+    + updateBody(b2BodyId bodyID, BodyProxy&) : void
+    + applyForce(b2BodyId bodyIS, point force): void
+
+    + setPosition(b2BodyId bodyID, point pos) : void
+    + setGravity(point gravity) : void
+
+    + getPosition(b2BodyId bodyID) : point
+    + getGravity() : point
+
+    - mWorldID : b2worldId
+}
+
+
+class ContactListener {
+    
+    + setContactEvents(b2BodyId bodyA, b2BodyId, bodyB) : void
+}
+
+class b2ContactListener {
+
+}
+
+}
+Component <|-down- AudioSource
+Component <|-down- Collider
+'Component <|-down- RigidBody
+Component <|-down- RigidBody_BodyTypeSTATIC
+Component <|-down- RigidBody_BodyTypeDYNAMIC
+Component <|-down- IBehaviourScript
+Component <|-down- Sprite
+Component <|-down- Animator
+
+Collider <|-- CircleCollider
+Collider <|-- BoxCollider
+
+GameObject *-up- "0..*" AudioSource
+GameObject *-up- "0..*" CircleCollider
+GameObject *-up- "0..*" BoxCollider
+GameObject *-up- "0..*" RigidBody_BodyTypeSTATIC
+GameObject *-up- "0..*" RigidBody_BodyTypeDYNAMIC
+GameObject *-up- "0..*" IBehaviourScript
+GameObject *-up- "0..*" Sprite
+GameObject *-up- "0..*" Animator
+GameObject *-up- "1" Transform
+GameObject "0..1"<-- "0..*" GameObject : +parent >
+
+GameObject <|-- UIObject
+UIObject <|-- Button
+UIObject <|-- Text
+
+Scene *-- "0..*" GameObject
+Camera --|> GameObject
+Camera "1..*" --*  Scene
+
+Animator  *-- "2..*" Sprite
+
+SaveGameManager *-- "*" SaveGame
+SaveGame *-- "*" SaveField
+SaveGame *-- "*" SaveArray
+SaveArray *-- "*" SaveField
+Renderer --> Scene
+SceneManager *-- "*" Scene
+UIManager o-- "*" UIObject
+AnimationManager o-- "*" Animator
+
+NetworkManager *-- "0..1"NetworkClient
+NetworkManager *-- "0..1"NetworkServer
+NetworkManager *-- "0..1"NetworkHost
+NetworkManager *-- NetworkSceneManager
+NetworkManager *-- "1" NetworkObject
+GameObject *-- "0..*" NetworkObject
+
+
+PhysicsManager *-- "1" World
+BodyProxy --> PhysicsManager
+ContactListener --> PhysicsManager
+b2ContactListener -right-> ContactListener
+
+EngineBravo *-- "1" SceneManager : creates
+EngineBravo *-- "1" SaveGameManager : creates
+EngineBravo *-- "1" AnimationManager : creates
+EngineBravo *-- "1" UIManager : creates
+EngineBravo *-- "1" ResourceManager : creates
+EngineBravo *-- "0..1" NetworkManager : creates
+EngineBravo *-- "1" PhysicsManager : creates
+@enduml
+
+
+
