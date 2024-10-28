@@ -12,7 +12,6 @@ class NetworkManager {
     - mIsServer : bool
     - mIsClient : bool
     - mIsHost : bool
-    - mConnectedClients : List<NetworkClient>
     - mTickRate : int
     - mDefaultPlayerPrefab : GameObject&
     - mEnableSceneManagement : bool
@@ -65,6 +64,8 @@ class NetworkServer {
     + HandleClientConnection()
     + ReceiveGameState()
     + SendGameState()
+
+    - mConnectedClients : List<NetworkClient>
 }
 
 class NetworkHost {
@@ -108,11 +109,11 @@ class INetworkSerializable {
     ' + Deserialize()
 }
 
-NetworkManager <-- NetworkClient
-NetworkManager <-- NetworkServer
-NetworkManager <-- NetworkHost
-NetworkManager *-- NetworkSceneManager
-NetworkManager *-- "1" NetworkObject
+NetworkManager *-- "0..1"NetworkClient
+NetworkManager *-- "0..1"NetworkServer
+NetworkManager *-- "0..1"NetworkHost
+NetworkManager *-- "0..1"NetworkSceneManager
+NetworkManager *-- "0..*" NetworkObject
 ' NetworkManager <-- AuthorityManager
 
 NetworkObject *-- "*" NetworkBehaviour
@@ -132,8 +133,8 @@ NetworkTransform --|> Transform
 ' NetworkServer --> NetworkReplicationManager
 
 
-NetworkHost <-- NetworkServer
-NetworkHost <-- NetworkClient
+NetworkHost *-- "0..1"NetworkServer
+NetworkHost *-- "0..1"NetworkClient
 
 ' AuthorityManager <-- NetworkObject
 NetworkSceneManager *-- "*" NetworkObject

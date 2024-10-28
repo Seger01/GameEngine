@@ -65,7 +65,7 @@ file(GLOB_RECURSE SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-Exclude main.cpp from library sources
+#Exclude main.cpp from library sources
 list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") #TODO add this in later when there are more files than just main.cpp
 
 # Define the libraries to link against

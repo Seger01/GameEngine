@@ -1,18 +1,25 @@
 #ifndef NETWORKSERVER_H
 #define NETWORKSERVER_H
 
-#include <vector>
-#include "NetworkObject.h"
-#include "NetworkManager.h"
+#include <list>
+#include <memory>
 #include <slikenet/peerinterface.h>
+#include "NetworkClient.h"
 
 class NetworkServer
 {
 public:
-    std::vector<NetworkObject> gameObjects;
+    NetworkServer();
+    void handleClientConnection();
+    void receiveGameState();
+    void sendGameState();
+    void update();
 
-    void HandleClientConnections(NetworkManager &manager);
-    void SyncObjects(SLNet::RakPeerInterface *peer);
+private:
+    std::list<NetworkClient> mConnectedClients;
+    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface *)> mPeer;
+    static constexpr const char *SERVER_ADDRESS = "192.168.1.100";
+    static constexpr unsigned short SERVER_PORT = 60001;
 };
 
 #endif // NETWORKSERVER_H

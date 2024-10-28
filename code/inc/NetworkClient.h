@@ -1,17 +1,26 @@
 #ifndef NETWORKCLIENT_H
 #define NETWORKCLIENT_H
 
-#include "NetworkManager.h"
-
-#include <slikenet/BitStream.h>
-#include <slikenet/MessageIdentifiers.h>
+#include <memory>
 #include <slikenet/peerinterface.h>
 
 class NetworkClient
 {
 public:
-    void Connect(NetworkManager &manager, const char *serverIP = "127.0.0.1", unsigned short port = 60000);
-    void SendInput(SLNet::RakPeerInterface *peer, float inputX, float inputY);
+    NetworkClient();
+    void connectToServer();
+    void sendGameState();
+    void receiveGameState();
+    void update();
+
+private:
+    bool mIsConnected;
+    bool mIsConnecting;
+    int mClientID;
+    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface *)> mPeer;
+    static constexpr const char *SERVER_ADDRESS = "192.168.1.100";
+    static constexpr unsigned short SERVER_PORT = 60001;
+    static constexpr unsigned short CLIENT_PORT = 60002;
 };
 
 #endif // NETWORKCLIENT_H

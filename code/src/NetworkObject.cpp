@@ -1,13 +1,17 @@
 #include "NetworkObject.h"
+#include <stdexcept>
 
-NetworkObject::NetworkObject()
+void NetworkObject::spawn()
 {
+    throw std::runtime_error("NetworkObject::spawn() not implemented");
 }
 
-void NetworkObject::SyncState(SLNet::RakPeerInterface *peer, SLNet::SystemAddress targetAddress)
+void NetworkObject::despawn()
 {
+    throw std::runtime_error("NetworkObject::despawn() not implemented");
 }
 
-void NetworkObject::UpdateState(SLNet::BitStream &bs)
+int NetworkObject::getNetworkID()
 {
+    throw std::runtime_error("NetworkObject::getNetworkID() not implemented");
 }

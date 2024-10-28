@@ -1,31 +1,17 @@
 #include "NetworkTransform.h"
+#include <stdexcept>
 
-void NetworkTransform::UpdateTransform()
+void NetworkTransform::updateTransform()
 {
-    // Implementation of transform update logic
+    throw std::runtime_error("NetworkTransform::updateTransform() not implemented");
 }
 
-void NetworkTransform::SyncPosition()
+void NetworkTransform::syncPosition()
 {
-    // Implementation of position sync logic
+    throw std::runtime_error("NetworkTransform::syncPosition() not implemented");
 }
 
-void NetworkTransform::Interpolate()
+void NetworkTransform::interpolate()
 {
-    // Implementation of interpolation logic
-}
-
-void NetworkTransform::SyncState(SLNet::RakPeerInterface *peer, SLNet::SystemAddress targetAddress)
-{
-    SLNet::BitStream bs;
-    bs.Write((SLNet::MessageID)ID_USER_PACKET_ENUM);
-    bs.Write(mX);
-    bs.Write(mY);
-    peer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, targetAddress, false);
-}
-
-void NetworkTransform::UpdateState(SLNet::BitStream &bs)
-{
-    bs.Read(mX);
-    bs.Read(mY);
+    throw std::runtime_error("NetworkTransform::interpolate() not implemented");
 }
