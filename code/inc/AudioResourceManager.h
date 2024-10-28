@@ -1,6 +1,8 @@
 #pragma once
 
+#include "ComponentPathPair.h"
 #include <string>
+#include <vector>
 
 class AudioSource;
 
@@ -9,4 +11,5 @@ public:
   std::string getPath(const AudioSource &aSource);
 
 private:
+  std::vector<ComponentPathPair> mPaths;
 };
