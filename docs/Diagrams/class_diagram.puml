@@ -133,11 +133,11 @@ class GameObject{
     - mID : int
 }
 
-' struct Transform{
-'     - mPosition : Point
-'     - mRotation : float
-'     - mScale : Point
-' }
+struct Transform{
+    - mPosition : Point
+    - mRotation : float
+    - mScale : Point
+ }
 
 package Physics{
 class PhysicsEngine {
@@ -260,11 +260,12 @@ class ResourceManager {
     - ResourceManager()
     + loadTextures() : void
     + loadAudio() : void
+    + loadTileset(const string &aPath) : Texture*
 }
 
 class SceneManager {
     + addScene(const Scene& scene) : int
-    + addSceneLevel(Map& map) : int
+    + addSceneLevel(TileMap& map) : int
     + loadScene(int index) : void
     + loadScene(const std::string& sceneName) : void
     + getCurrentScene() : Scene*
@@ -339,6 +340,22 @@ class Renderer {
     + setResolution(Point aResolution) : void
 
     - mResolution : Point
+}
+
+class TileMap {
+    + loadMap(const string& aPath): bool
+    + getWidth(): int
+    + getHeight(): int
+    + getTileWidth(): int
+    + getTileHeight(): int
+    + getTileLayers(): std::vector<tmx::TileLayer>
+    + getObjects(): std::vector<tmx::Object>
+    + getTilesets(): std::vector<tmx::Tileset>
+
+    - mMap : tmx::Map
+    - mTilesets : std::vector<tmx::Tileset>
+    - mTileLayers : std::vector<tmx::TileLayer>
+    - mObjects : std::vector<tmx::Object>
 }
 
 package UI{
@@ -569,8 +586,9 @@ NetworkManager *-- "0..1"NetworkServer
 NetworkManager *-- "0..1"NetworkHost
 NetworkManager *-- NetworkSceneManager
 NetworkManager *-- "1" NetworkObject
-
 GameObject *-- "0..*" NetworkObject
+
+SceneManager --> TileMap
 
 EngineBravo *-- "1" SceneManager : creates
 EngineBravo *-- "1" SaveGameManager : creates
