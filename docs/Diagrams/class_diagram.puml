@@ -21,19 +21,34 @@ class AudioSource{
 }
 
 class Collider{
+    + Collider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+    + getPosition() : point
+
     ' Relative to position of GameObject
     - mPosition : Point 
+    - mBodyId : b2Body
+
+    
 }
 
 class CircleColider{
+    + CircleCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+
     ' Position is middle of circle
     - mRadius : float 
 }
 
 class BoxCollider{
+    + BoxCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+
     ' Position is middle of box
-    - mWidth : float
-    - mHeight : float
+    - mSize : point
     - mRotation : float
 }
 
@@ -157,6 +172,30 @@ class PhysicsEngine {
 
 class BodyProxy {
     + BodyProxy(GameObject&)
+    + defineBodyType() : void
+    + getBodyFlags() : struct
+    + getBodyProperties() : struct
+    + getBodyType() : enum
+    + getPosition() : point
+    + getSize() : point
+
+
+    - mPosition : point
+    - mSize : point
+
+    - mHasGravity : bool
+    - mIsMoveableByForce : bool
+    - mCanRotate : bool
+
+    - mBodyType : Enum 
+
+    - mDensity : float
+    - mFriction : float
+    - mRestitution : float
+
+    - mMass : float
+    - mGravityScale : float
+
 }
 
 class World {
@@ -168,7 +207,7 @@ class World {
 
     + createBody(BodyProxy& bodyProxy) : b2BoxId
     + updateBody(b2BodyId bodyID, BodyProxy&) : void
-    + applyForce(b2BodyId bodyIS, point force): void
+    + applyForce(b2BodyId bodyID, point force): void
 
     + setPosition(b2BodyId bodyID, point pos) : void
     + setGravity(point gravity) : void
@@ -319,7 +358,9 @@ class NetworkManager {
 }
 
 class PhysicsManager {
-    
+    + PhysicsManager()
+
+    + startPhysicsEngine() : void
 }
 
 }
