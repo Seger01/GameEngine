@@ -30,6 +30,14 @@ class AudioSource {
     + getXVelocity() : int
 }
 
+note right of AudioSource
+    The direction and velocity members are their own units, they are not related to the game's units
+end note
+
+note left of AudioSource
+    mPlayOnWake indicates whether the audio source should be played when a new scene is loaded
+end note
+
 class EngineBravo {
     + getAudioManager() : AudioManager&
 }
@@ -45,7 +53,58 @@ class AudioManager {
     + removeSound(const GameObject&) : void
 }
 
+note right of AudioManager
+    The mGameObjects with references to GameObjects that have AudioSource components stays update by the EngineBravo. it calls the addSound and removeSound functions every cycle.
+end note
+
+interface IAudioFacade {
+    + addSound(string path) : void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
+    + addMusic(string path) : void
+    + playMusic() : void
+    + stopMusic() : void
+}
+
+class AudioResourceManager {
+    - mPaths : vector<ComponentPathPair>
+    + getPath(const AudioSource&) : string
+}
+
+class ComponentPathPair {
+    - mComponent : const AudioSource&
+    - mPath : const string
+}
+
+class MixerFacade implements IAudioFacade {
+    - mChannelCount : const unsigned
+    - mLastUsedChannel : unsigned
+    - findAvailableChannel() : int
+}
+
+note left of MixerFacade
+    mLastUsedChannel is used to keep track of the last channel used
+end note
+
+class MixerContainer {
+    // string is the path
+    - mSfx : unordered_map<string, Mix_Chunk>
+    - mMusic : Mix_Music
+    + addSound(string aPath, Mix_Chunk aSound) : void
+    + getSound(string aIndex) : Mix_Chunk*
+    + addMusic(Mix_Music aMusic) : void
+    + getMusic() : Mix_Music*
+    + clear() : void
+}
+
+note left of MixerContainer
+    The string key in mSfx is the path to the sound effect
+end note
+
 Component <|-- AudioSource
 EngineBravo *-- AudioManager
+AudioManager *-- IAudioFacade
+AudioManager *-- AudioResourceManager
+AudioResourceManager <-- ComponentPathPair
+MixerFacade *-- MixerContainer
 
 @enduml
