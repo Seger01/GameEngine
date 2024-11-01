@@ -49,10 +49,11 @@ code/build/
 
 .vscode/
 
-code/slikenet/**
-
-code/external/tmxlite-master/**
 output.csv
 
 # ignore clagd cache
 code/.cache
+
+# ignore puml images
+*.png
+*.svg
