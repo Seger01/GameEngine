@@ -1,4 +1,4 @@
-@startuml
+@startuml classDiagram
 
 ' skinparam linetype ortho
 skinparam groupInheritance 2

@@ -141,3 +141,146 @@ Lambda's that are too big for a single line are indented like this:
 -Use enum class and not the standard enum
 -Use the C++ libraries and not the C libraries. So cmath instead of math.h
 -Use smart pointers instead of "normal" pointers
+
+\documentclass{article}
+\usepackage{enumitem}
+
+\title{Code Style Guidelines}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Code Style Guidelines}
+
+\begin{enumerate}[left=0pt, align=left]
+
+    \item All code and comments should be in British English, e.g., use \texttt{colour}, \texttt{centre}, \texttt{initialiser} instead of \texttt{color}, \texttt{center}, \texttt{initializer}.
+
+    \item Use proper spacing:
+    \begin{itemize}
+        \item Place a space after every comma, e.g., \texttt{myFunction(5, 7, 8)}.
+        \item Surround operators with spaces, e.g., \texttt{5 + 7} instead of \texttt{5+7}.
+    \end{itemize}
+
+    \item Tabs should be the size of four spaces, and stored as tabs, not spaces.
+
+    \item Ensure functions and static variables appear in the same order in \texttt{.h} and \texttt{.cpp} files.
+
+    \item Use \texttt{\#pragma once} instead of include guards.
+
+    \item Keep functions short (preferably no more than 50 lines) and avoid creating large classes. Limit class size to 750 lines; split classes only if the resulting code is clean.
+
+    \item Use forward declarations to minimize header file includes. Place \texttt{\#include} directives in \texttt{.cpp} files wherever possible.
+
+    \item Organize includes and forward declarations in the following order:
+    \begin{itemize}
+        \item Forward declarations from our code (alphabetically).
+        \item Includes from our code (alphabetically).
+        \item Empty line.
+        \item Library-specific forward declarations and includes (alphabetically).
+    \end{itemize}
+    The header file associated with a \texttt{.cpp} file should always be included at the top.
+
+    \item Define static variables as class members instead of within functions.
+
+    \item Follow \textbf{const correctness}; only methods that cannot be \texttt{const} should omit it.
+
+    \item Use descriptive names for variables and functions; avoid abbreviations unless widely known. Capitalize class, struct, and enum type names; start variable and function names with a lowercase letter. Example:
+    \begin{verbatim}
+        class MyClass
+        {
+            void someFunction();
+            int someVariable;
+        };
+    \end{verbatim}
+
+    \item Prefix member variables with \texttt{m} (e.g., \texttt{mMember}), and function arguments with \texttt{a} (e.g., \texttt{aArgument}).
+
+    \item Do not implement functions in \texttt{.h} files. For template functions that must remain in the header, use a separate \texttt{MyClassImplementation.h}.
+
+    \item Start template typenames with \texttt{T} (e.g., \texttt{TString}).
+
+    \item Define only one class per header file, except for nested classes.
+
+    \item Use two empty lines between functions and empty lines within functions for readability.
+
+    \item Add extensive comments to the code. Use \texttt{///} for comments above classes and functions for compatibility with Linux tools.
+
+    \item Use consistent brace styles:
+    \begin{verbatim}
+        if (condition)
+        {
+            // code
+        }
+        else
+        {
+            // code
+        }
+    \end{verbatim}
+
+    \item Format \texttt{do-while} and \texttt{switch} statements as shown in the example below:
+    \begin{verbatim}
+        do
+        {
+            // code
+        } while (condition);
+
+        switch (variable)
+        {
+            case 1: action; break;
+            case 2:
+                // multiple lines
+                action;
+                break;
+            case 3: { scoped action; break; }
+        }
+    \end{verbatim}
+
+    \item Use consistent naming for parameters in header and implementation files.
+
+    \item Limit precompiler instructions and avoid macros.
+
+    \item Declare variables where they are first needed within functions.
+
+    \item Use initializer lists in constructors, aligning them with the order in class definitions.
+
+    \item Avoid using \texttt{dynamic\_cast}, \texttt{reinterpret\_cast}, and \texttt{const\_cast} unless necessary.
+
+    \item Only commit code that compiles without warnings or errors.
+
+    \item Avoid global variables and do not use \texttt{using namespace std}.
+
+    \item Avoid using \texttt{goto} statements or unions.
+
+    \item Limit the use of the ternary operator to simple cases.
+
+    \item For user-facing counters, start from zero.
+
+    \item Use \texttt{nullptr} for pointers, and make pointer existence checks explicit with \texttt{if (pointer != nullptr)}.
+
+    \item Use RAII (Resource Acquisition Is Initialization) to initialize classes fully in constructors.
+
+    \item Structure class definitions with functions followed by variables, ordered as \texttt{public}, \texttt{protected}, then \texttt{private}.
+
+    \item Prefer \texttt{enum class} over \texttt{bool} for two-option values.
+
+    \item Ensure code is framerate-independent and explicit in structure.
+
+    \item Use \texttt{nullptr} instead of \texttt{NULL}, range-based \texttt{for} loops where possible, and only use \texttt{auto} for complex types.
+
+    \item Apply \texttt{override} and \texttt{final} as needed and mark all virtual functions in subclasses.
+
+    \item Use \texttt{unique\_ptr} for ownership; pass raw pointers only when ownership is not implied.
+
+    \item Avoid \texttt{MyConstructor = delete} and use exceptions for error handling.
+
+    \item Use C++ libraries (e.g., \texttt{cmath}) over C libraries (e.g., \texttt{math.h}).
+
+    \item Favor smart pointers over traditional pointers.
+
+\end{enumerate}
+
+\end{document}
