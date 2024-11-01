@@ -423,7 +423,7 @@ class RenderSystem{
     - mBackgroundColor : Color 
 }
 
-class Window {
+interface IWindow{
     + Window(int aWindowWidth, int aWindowHeight)
     + ~Window()
 
@@ -438,7 +438,40 @@ class Window {
     - mWindow = nullptr : SDL_Window* 
 }
 
-class Renderer {
+class SDLWindow {
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+interface IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class SDLRenderer {
     + Renderer(Window& window)
     + ~Renderer() 
 
@@ -735,8 +768,12 @@ PhysicsManager *-- "1" PhysicsEngine
 PhysicsEngine *-- "1" World
 BodyProxy -left-> PhysicsEngine
 
-RenderSystem *-- "1" Renderer
-RenderSystem *-- "1" Window
+RenderSystem *-- "1" IRenderer
+RenderSystem *-- "1" IWindow
+
+IRenderer <|-- SDLRenderer
+IWindow <|-- SDLWindow
+
 
 Animation  *-- "2..*" Sprite
 Sprite *-- "1" Texture
