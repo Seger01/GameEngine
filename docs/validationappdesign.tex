@@ -7,12 +7,17 @@
 \begin{document}
 
 \maketitle % Generates the title
+\newpage
+
+\tableofcontents
+\newpage
 
 \section{Introduction}
 \begin{itemize}
     \item Validation app is a game.
     \item The game is a 2D bullet hell, inspired by Enter the Gungeon.
     \item The game is a rogue-lite. This means that when the player dies, some progress carries over into next runs.
+    \item The game supports keyboard + mouse input and controller input.
 \end{itemize}
 
 \section{Core gameplay loop}
@@ -21,6 +26,7 @@ Each level contains five regular rooms, one shop room and a boss room.
 
 \subsection{Player}
 The player always starts a run with a standard amount of health and a starting weapon.
+The player has an inventory which can contain multiple weapons.
 
 \subsection{Regular rooms}
 Regular rooms contain only regular enemies.
@@ -40,8 +46,19 @@ Boss rooms contain pitfalls.
 
 \section{Gameplay mechanics}
 - All bullets have infinite range (within the room).
+
+\subsection{Player}
+\begin{itemize}
+    \item The player can move in eight directions.
+    \item The player can dodge, which allows it to jump over pitfalls.
+    \item The player can shoot bullets.
+    \item The player can interact with certain game objects.
+\end{itemize}
+
 \subsection{Enemies}
-- Getting hit by an enemy cecreases the player health by 0.5 hearts.
+Getting hit by an enemy decreases the player health by 0.5 hearts.
+Enemies can randomly drop either health or BS when killed.
+When the player bumps into an enemy, the player loses 0.5 hearts, and the player and enemy are briefly pushed apart.
 
 \subsection{Currency}
 Player upgrades can be unlocked using the EC currency (eternal credits). If you have enough EC you can unlock a new upgrade.
@@ -58,6 +75,7 @@ Items are bought during runs. The following types of items are available:
     \item Bullet speed: increase bullet speed by 0.5 points. 15 EC to unlock.
     \item Buy weapon (shotgun): buy the shotgun weapon. 60 EC to unlock.
     \item Buy weapon (machine gun): buy the machine gun weapon. 60 EC to unlock.
+    \item Bob's BPH (banana power hour): unlocks godmode for this run. Cannot be permanently unlocked.
 \end{itemize}
 
 Player upgrades mean unlocking new items, which can then be bought during a run.
@@ -71,8 +89,13 @@ Player upgrades mean unlocking new items, which can then be bought during a run.
 \section{Audiovisual design}
 \begin{itemize}
     \item Sprites are stolen from Enter the Gungeon.
+    \item The game has background music in the regular rooms and shop rooms. There is a separate song for boss rooms.
 \end{itemize}
 
 \section{Multiplayer}
+The game can be played with two players. It contains the same mechanics as single player, except a second player is added.
+Unlocks are shared between players, but each has their own inventory.
+If a player moves to the next level or room, the other player is forced to follow.
+If one player dies, it becomes a ghost: it can move around but not interact in any way.
 
 \end{document}

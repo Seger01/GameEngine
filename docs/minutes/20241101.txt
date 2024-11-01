@@ -25,3 +25,6 @@ What will be handed in:
     - SDL
     - Tile2D
 - Validation app design
+
+To do after today: everyone fills in their respective parts of the design document.
+Finished before sunday 2pm. Documents will be handed in on sunday by Siem.
