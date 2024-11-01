@@ -1,0 +1,63 @@
+\documentclass{article}
+
+\title{Validation app design}
+\author{Your Name}
+\date{\today} % Use \today for today's date or write a specific date, e.g., "October 31, 2023"
+
+\begin{document}
+
+\maketitle % Generates the title
+
+\section{Introduction}
+\begin{itemize}
+    \item Validation app is a game.
+    \item The game is a 2D bullet hell, inspired by Enter the Gungeon.
+    \item The game is a rogue-lite. This means that when the player dies, progress carries over into next runs.
+\end{itemize}
+
+\section{Core gameplay loop}
+The game consists of multiple levels \textit{How many?}.
+Each level contains five regular rooms, one shop room and a boss room.
+
+\subsection{Player}
+The player always starts a run with a standard amount of health and a starting weapon.
+
+\subsection{Regular rooms}
+Regular rooms contain only regular enemies, and no other objects.
+The enemies are spawned semi-random: a random amount between set values, and at a random location in the room.
+The type of enemies spawned is predefined for each room.
+
+\subsection{Shop rooms}
+Shop rooms contain a shopkeeper, which sells three randomly selected items to the player.
+Each item has a standard fixed price.
+
+\subsection{Boss rooms}
+
+\section{Gameplay mechanics}
+- All bullets have infinite range (within the room).
+\subsection{Enemies}
+- Getting hit by an enemy cecreases the player health by 0.5 hearts.
+\subsection{Player items}
+Items are bought during runs. The following types of items are available:
+\begin{itemize}
+    \item Health: increase health by 2 hearts.
+    \item Damage: increase damage by 5 points.
+    \item Speed: increase speed by 0.5 points.
+    \item Fire rate: increase fire rate by 0.1 points.
+    \item Bullet speed: increase bullet speed by 0.5 points.
+    \item Buy weapon (shotgun): buy the shotgun weapon.
+    \item Buy weapon (machine gun): buy the machine gun weapon.
+\end{itemize}
+\subsection{Player upgrades}
+Player upgrades mean unlocking new items, which can then be bought during a run.
+Player upgrades can be purchased using the EC currency. If you have enough EC you can unlock a new upgrade.
+Upgrades count a fixed amount, but differ between upgrades.
+
+\section{Audiovisual design}
+\begin{itemize}
+    \item Sprites are stolen from Enter the Gungeon.
+\end{itemize}
+
+\section{Multiplayer}
+
+\end{document}
