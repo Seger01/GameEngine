@@ -5,8 +5,6 @@ cd build
 cmake ..
 cd ..
 
-make -C build/ -j 32
+make -C build/ -j 32 & ./build/bin/engine_BRAVO
 
-# ./engine_BRAVO
-./build/bin/engine_BRAVO
 

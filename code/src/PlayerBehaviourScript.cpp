@@ -47,10 +47,19 @@ Animation* playerIdleBackAnimation = nullptr;
 std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
 
 void PlayerBehaviourScript::deactivateAllAnimations() {
-    for (auto animation : playerAnimations) {
-        if (animation != nullptr) {
-            animation->setActive(false);
-        }
+    // for (auto animation : playerAnimations) {
+    //     if (animation != nullptr) {
+    //         animation->setActive(false);
+    //     }
+    // }
+    if (playerIdleFrontAnimation != nullptr) {
+        playerIdleFrontAnimation->setActive(false);
+    }
+    if (playerIdleSideAnimation != nullptr) {
+        playerIdleSideAnimation->setActive(false);
+    }
+    if (playerIdleBackAnimation != nullptr) {
+        playerIdleBackAnimation->setActive(false);
     }
 }
 
@@ -104,8 +113,8 @@ void PlayerBehaviourScript::onStart() {
         const int spriteWidth = 16;  // Width of each sprite
         const int spriteHeight = 25; // Height of each sprite
 
-        const int AnimationStartInSpriteSheetX = 37;
-        const int AnimationStartInSpriteSheetY = 102;
+        const int AnimationStartInSpriteSheetX = 21;
+        const int AnimationStartInSpriteSheetY = 95;
 
         SpriteDef playerFrameIdle1 = {
             "enter_the_gungeon_spritesheet.png",
@@ -133,8 +142,8 @@ void PlayerBehaviourScript::onStart() {
         const int spriteWidth = 16;  // Width of each sprite
         const int spriteHeight = 25; // Height of each sprite
 
-        const int AnimationStartInSpriteSheetX = 37;
-        const int AnimationStartInSpriteSheetY = 73;
+        const int AnimationStartInSpriteSheetX = 21;
+        const int AnimationStartInSpriteSheetY = 66;
 
         SpriteDef playerFrameIdle1 = {
             "enter_the_gungeon_spritesheet.png",
@@ -198,8 +207,8 @@ void PlayerBehaviourScript::onStart() {
 void PlayerBehaviourScript::handleAnimations() {
     static Transform previousTransform = this->mGameObject->getTransform();
 
-    deactivateAllAnimations();
-    setAnimationActive(playerIdleFrontAnimation, true);
+    // deactivateAllAnimations();
+    // setAnimationActive(playerIdleFrontAnimation, true);
     // if (previousTransform.position.x < this->mGameObject->getTransform().position.x) {
     //     deactivateAllAnimations();
     //     setAnimationActive(playerIdleSideAnimation, true);
@@ -228,8 +237,9 @@ void PlayerBehaviourScript::handleMovement() {
 
     Transform parentTransform = this->mGameObject->getTransform();
 
-    if (input.GetKeyDown(Key::Key_E)) {
-        toggleAnimaionEnabled();
+    if (input.GetKey(Key::Key_E)) {
+        std::cout << "Key E pressed" << std::endl;
+        deactivateAllAnimations();
     }
 
     if (input.GetKey(Key::Key_R)) {
@@ -240,15 +250,27 @@ void PlayerBehaviourScript::handleMovement() {
     }
 
     if (input.GetKey(Key::Key_W)) {
+        deactivateAllAnimations();
+        setAnimationActive(playerIdleBackAnimation, true);
+        setFlipX(false);
         parentTransform.position.y -= movementSpeed;
     }
     if (input.GetKey(Key::Key_A)) {
+        deactivateAllAnimations();
+        setAnimationActive(playerIdleSideAnimation, true);
+        setFlipX(true);
         parentTransform.position.x -= movementSpeed;
     }
     if (input.GetKey(Key::Key_S)) {
+        deactivateAllAnimations();
+        setAnimationActive(playerIdleFrontAnimation, true);
+        setFlipX(false);
         parentTransform.position.y += movementSpeed;
     }
     if (input.GetKey(Key::Key_D)) {
+        deactivateAllAnimations();
+        setAnimationActive(playerIdleSideAnimation, true);
+        setFlipX(false);
         parentTransform.position.x += movementSpeed;
     }
     this->mGameObject->setTransform(parentTransform);
