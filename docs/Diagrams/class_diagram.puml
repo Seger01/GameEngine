@@ -11,7 +11,11 @@ class Component{
 
 }
 
-class Sprite{
+class AudioSourceProxy implements Component{}
+
+class NetworkObjectProxy implements Component{}
+
+class Sprite implements Component{
     + Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect())
     + ~Sprite()
 
@@ -49,7 +53,7 @@ class Sprite{
     - int mLayer;
 }
 
-class Animation{
+class Animation implements Component{
     + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
     + ~Animation()
 
@@ -83,17 +87,7 @@ class Animation{
     - mIsLooping : bool 
 }
 
-class AudioSource{
-    + void play(??? aLooping)
-    + void stop()
-
-    - mAudioClip : string
-    - mPlayOnAwake : bool
-    - mLoop : bool
-    - mVolume : ???
-}
-
-class Collider{
+class Collider implements Component{
     + Collider(point pos, point size)
     + setBodyId() : b2BodyId
     + getBodyId() : b2BodyId
@@ -106,7 +100,7 @@ class Collider{
     
 }
 
-class CircleColider{
+class CircleColider implements Collider{
     + CircleCollider(point pos, point size)
     + setBodyId() : b2BodyId
     + getBodyId() : b2BodyId
@@ -115,7 +109,7 @@ class CircleColider{
     - mRadius : float 
 }
 
-class BoxCollider{
+class BoxCollider implements Collider{
     + BoxCollider(point pos, point size)
     + setBodyId() : b2BodyId
     + getBodyId() : b2BodyId
@@ -125,12 +119,7 @@ class BoxCollider{
     - mRotation : float
 }
 
-enum BodyType{
-    STATIC
-    DYNAMIC
-}
-
-class RigidBody{
+class RigidBody implements Component{
     + RigidBody(flag, properties)
     + setMass(float aMass) : void
     + getMass() : float
@@ -162,7 +151,7 @@ class RigidBody{
     - mForcesBuffer : vector<point>
 }
 
-interface IBehavourScript{
+interface IBehavourScript implements Component{
     + {abstract} void onStart()
     + {abstract} void onUpdate()
 }
@@ -194,9 +183,9 @@ class GameObject{
 }
 
 struct Transform{
-    - mPosition : Point
-    - mRotation : float
-    - mScale : Point
+    + mPosition : Point
+    + mRotation : float
+    + mScale : Point
  }
 
 package Physics{
@@ -302,6 +291,10 @@ class SaveArray {
     + setField(string aName, string aValue) : void
     + getField(string aName) : string
 }
+
+SaveGame *-- "*" SaveField
+SaveGame *-- "*" SaveArray
+SaveArray *-- "*" SaveField
 }
 
 class Scene {
@@ -331,19 +324,25 @@ class EngineBravo {
     + run() : void
     + getSceneManager() : SceneManager&
     + runBehaviourScripts() : void
+    + getAudioManager() : AudioManager&
 
     - mSaveGameManager : SaveGameManager 
     - mSceneManager : SceneManager
-    - mResourceManager : ResourceManager
+    - mTextureManager : TextureManager
     - mUIManager : UIManager
     - mRenderer : Renderer
 }
 
-class ResourceManager {
-    - ResourceManager()
+class TextureManager {
+    - TextureManager()
     + loadTextures() : void
     + loadAudio() : void
     + loadTileset(const string &aPath) : Texture*
+}
+
+class AudioResourceManager {
+    - mPaths : vector<ComponentPathPair>
+    + getPath(const AudioSource&) : string
 }
 
 class SceneManager {
@@ -423,75 +422,34 @@ class RenderSystem{
     - mBackgroundColor : Color 
 }
 
-interface IWindow{
-    + Window(int aWindowWidth, int aWindowHeight)
-    + ~Window()
-
-    + getSize() : Vector2 
-
-    + setFullScreen() : void 
-    + setFloating() : void 
-    + toggleFullFloating() : void 
-
-    + getSDLWindow() : SDL_Window* 
-
-    - mWindow = nullptr : SDL_Window* 
+class AudioManager {
+    - mGameObjects : vector<reference_wrapper<GameObject>>
+    + AudioManager()
+    + play(const AudioSource&) : void
+    + stop(const AudioSource&) : void
+    + wake() : void
+    + getFacade() : IAudioFacade&
+    + addSound(const GameObject&) : void
+    + removeSound(const GameObject&) : void
 }
 
-class SDLWindow {
-    + Window(int aWindowWidth, int aWindowHeight)
-    + ~Window()
-
-    + getSize() : Vector2 
-
-    + setFullScreen() : void 
-    + setFloating() : void 
-    + toggleFullFloating() : void 
-
-    + getSDLWindow() : SDL_Window* 
-
-    - mWindow = nullptr : SDL_Window* 
-}
-
-interface IRenderer {
-    + Renderer(Window& window)
-    + ~Renderer() 
-
-    + clear(Color aColor) : void 
-    + show() : void 
-
-    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
-                       bool aFlipY, float aRotation) : void
-
-    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
-
-    + getSDLRenderer() : SDL_Renderer*& 
-
-    - mRenderer = nullptr : SDL_Renderer* 
+' note right of AudioManager
+'     The mGameObjects with references to GameObjects that have AudioSource components stays update by the EngineBravo. it calls the addSound and removeSound functions every cycle.
+' end note
+EngineBravo *-- "1" SceneManager
+EngineBravo *-- "1" SaveGameManager
+EngineBravo *-- "1" UIManager
+EngineBravo *-- "1" TextureManager
+EngineBravo *-- "0..1" NetworkManager 
+EngineBravo *-- "1" PhysicsManager
+EngineBravo *-- "1" RenderSystem
+EngineBravo *-- "1" AudioManager
+EngineBravo *-- "1" AudioResourceManager
 
 }
 
-class SDLRenderer {
-    + Renderer(Window& window)
-    + ~Renderer() 
 
-    + clear(Color aColor) : void 
-    + show() : void 
-
-    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
-                       bool aFlipY, float aRotation) : void
-
-    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
-
-    + getSDLRenderer() : SDL_Renderer*& 
-
-    - mRenderer = nullptr : SDL_Renderer* 
-
-}
-}
-
-
-class Camera{
+class Camera implements GameObject{
     - mBackgroundColor : Color
     ' Width and Height are rendered area in Game Units
     - mWidth : int
@@ -528,37 +486,104 @@ class TileMap {
 }
 
 package UI{
-class UIObject{
+class UIObject implements GameObject_Proxy{
     - mWidth : int
     - mHeight : int
 }
 
-class Button{
+class Button implements UIObject{
     - mInteractable : bool
     - mOnClick : ???
 }
 
-class Text{
+class Text implements UIObject{
     - mText : string
     - mFont : ???
     - mSize : ???
     - mAllignment : ???
     - mColor : ???
 }
+
+class GameObject_Proxy{}
 }
 
-package Input{
-class iMouseListener{
-    + ??? onMouseMoved()
-    + ??? onMouseClicked()
-    + ??? onMousePressed()
-    + ??? onMouseReleased()
+package Audio{
+    class Component_Proxy {}
+
+class AudioSource implements Component_Proxy{
+    - mFileName : string
+    - mPlayOnAwake : bool
+    - mLoop : bool
+    - mVolume : int
+    - mXDirection : int
+    - minXDirection : const static int
+    - maxXDirection : const static int
+    - mMaxVelocity : const static int
+    - mXVelocity : int
+    + AudioSource(string aPath, bool aIsMusic=false)
+    + play(bool aLooping) : void
+    + stop() : void 
+
+    + setPlayOnWake(bool aValue) : void
+    + getPlayOnWake() : bool
+    + setLooping(bool aLooping) : void
+    + getLooping() : bool
+    + setVolume(unsigned aVolume) : void
+    + getVolume() : unsigned
+    + setXDirection(int aXDirection) : void
+    + getXDirection() : int
+    + setXVelocity(int aXVelocity) : void
+    + getXVelocity() : int
 }
 
-class iKeyListener{
-    + ??? onKeyPressed()
-    + ??? onKeyReleased()
+' note right of AudioSource
+'     The direction and velocity members are their own units, they are not related to the game's units
+' end note
+
+' note left of AudioSource
+'     mPlayOnWake indicates whether the audio source should be played when a new scene is loaded
+' end note
+
+interface IAudioFacade {
+    + addSound(string path) : void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
+    + addMusic(string path) : void
+    + playMusic() : void
+    + stopMusic() : void
 }
+
+class ComponentPathPair {
+    - mComponent : const AudioSource&
+    - mPath : const string
+}
+
+class MixerFacade implements IAudioFacade {
+    - mChannelCount : const unsigned
+    - mLastUsedChannel : unsigned
+    - findAvailableChannel() : int
+}
+
+' note left of MixerFacade
+'     mLastUsedChannel is used to keep track of the last channel used
+' end note
+
+class MixerContainer {
+    // string is the path
+    - mSfx : unordered_map<string, Mix_Chunk>
+    - mMusic : Mix_Music
+    + addSound(string aPath, Mix_Chunk aSound) : void
+    + getSound(string aIndex) : Mix_Chunk*
+    + addMusic(Mix_Music aMusic) : void
+    + getMusic() : Mix_Music*
+    + clear() : void
+}
+
+' note left of MixerContainer
+'     The string key in mSfx is the path to the sound effect
+' end note
+
+MixerFacade *-- MixerContainer
+
 }
 
 package global{
@@ -589,8 +614,78 @@ class FSConverter {
 }
 }
 
+package Rendering{
+
+    interface IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+class SDLWindow implements IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+interface IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class SDLRenderer implements IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+}
+
 package Networking{
-class NetworkObject {
+class NetworkObject implements Component_Proxy{
     + spawn() : void
     + despawn() : void
     + getNetworkID(): int
@@ -599,7 +694,7 @@ class NetworkObject {
     - mNetworkID: int
 }
 
-interface INetworkBehaviour {
+interface INetworkBehaviour implements IBehavourScript_Proxy{
     + {abstract} void serverRpc()
     + {abstract} void clientRpc()
     + {abstract} void OnNetworkSpawn()
@@ -616,7 +711,7 @@ class NetworkVariable{
 class IBehavourScript_Proxy{}
 
 ' Maybe not needed
-class NetworkTransform {
+class NetworkTransform implements Transform_Proxy{
     + UpdateTransform()
     + SyncPosition()
     + Interpolate()
@@ -687,13 +782,9 @@ class Component_Proxy{
 
 NetworkObject *-- "*" INetworkBehaviour
 NetworkObject -- NetworkTransform
-NetworkObject --|> Component_Proxy
 
-INetworkBehaviour --|> IBehavourScript_Proxy
 INetworkBehaviour <-- NetworkVariable
 INetworkBehaviour <-- INetworkSerializable
-
-NetworkTransform --|> Transform_Proxy
 
 ' NetworkClient --> NetworkInputManager
 ' NetworkClient --> NetworkMessage
@@ -708,72 +799,66 @@ NetworkHost <-- NetworkClient
 
 ' AuthorityManager <-- NetworkObject
 NetworkSceneManager *-- "*" NetworkObject
+
 }
 
-Component <|-down- AudioSource
-Component <|-down- Collider
-Component <|-down- RigidBody
-Component <|-down- IBehavourScript
-Component <|-down- Sprite
-Component <|-down- Animation
+NetworkManager *-- Networking
 
-Collider <|-- CircleColider
-Collider <|-- BoxCollider
+Networking *-- NetworkObject
+Networking *-- "0..1"NetworkClient
+Networking *-- "0..1"NetworkServer
+Networking *-- "0..1"NetworkHost
+Networking *-- NetworkSceneManager
+Networking *-- "1" NetworkObject
 
-GameObject *-up- "0..*" AudioSource
+GameObject *-up- "0..*" AudioSourceProxy
 GameObject *-up- "0..*" CircleColider
 GameObject *-up- "0..*" BoxCollider
 GameObject *-up- "0..*" RigidBody
 GameObject *-up- "0..*" IBehavourScript
 GameObject *-up- "0..*" Sprite
 GameObject *-up- "1" Transform
-GameObject "0..1"<-- "0..*" GameObject : +parent >
+GameObject "0..1" o-- "0..*" GameObject : parent >
+GameObject *-- "0..*" NetworkObjectProxy
+UIObjectProxy --|> GameObject
 
-GameObject <|-- UIObject
-UIObject <|-- Button
-UIObject <|-- Text
 
 Scene *-- "0..*" GameObject
-Camera --|> GameObject
 Camera "1..*" --*  Scene
 
+' Save
+SaveGameManager *-- Save
+Save *-- "*" SaveGame
 
 
-SaveGameManager *-- "*" SaveGame
-SaveGame *-- "*" SaveField
-SaveGame *-- "*" SaveArray
-SaveArray *-- "*" SaveField
 SceneManager *-- "*" Scene
-UIManager o-- "*" UIObject
 
-NetworkManager *-- "0..1"NetworkClient
-NetworkManager *-- "0..1"NetworkServer
-NetworkManager *-- "0..1"NetworkHost
-NetworkManager *-- NetworkSceneManager
-NetworkManager *-- "1" NetworkObject
-GameObject *-- "0..*" NetworkObject
+
+' UI
+UIManager o-- UI
+UI o-- "*" UIObject
+
 
 SceneManager --> TileMap
 
-EngineBravo *-- "1" SceneManager : creates
-EngineBravo *-- "1" SaveGameManager : creates
-EngineBravo *-- "1" UIManager : creates
-EngineBravo *-- "1" ResourceManager : creates
-EngineBravo *-- "0..1" NetworkManager 
-EngineBravo *-- "1" PhysicsManager : creates
-EngineBravo *-- "1" RenderSystem : creates
+AudioManager *-- Audio
 
-PhysicsManager *-- "1" PhysicsEngine
+Audio *--IAudioFacade
+Audio <-- ComponentPathPair
+
+TextureManager *-- "0..*" Texture
+
+PhysicsManager *-- Physics
+Physics *-- "1" PhysicsEngine
 
 PhysicsEngine *-- "1" World
 BodyProxy -left-> PhysicsEngine
 
-RenderSystem *-- "1" IRenderer
-RenderSystem *-- "1" IWindow
 
-IRenderer <|-- SDLRenderer
-IWindow <|-- SDLWindow
-
+' Rendering
+RenderSystem *-- Rendering
+Rendering *-- "1" IRenderer
+Rendering *-- "1" IWindow
 
 Animation  *-- "2..*" Sprite
 Sprite *-- "1" Texture
