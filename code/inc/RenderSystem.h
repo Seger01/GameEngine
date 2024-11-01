@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "Particle.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Sprite.h"
@@ -20,6 +21,7 @@ public:
 private:
     void renderSprite(GameObject* aGameObject, Sprite* aSprite);
     void renderAnimation(GameObject* aGameObject, Animation* aAnimation);
+    void renderParticle(Particle& aParticle);
 
     std::unique_ptr<Renderer> mRenderer;
     std::unique_ptr<Window> mWindow;

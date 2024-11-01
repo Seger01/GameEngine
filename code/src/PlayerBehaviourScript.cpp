@@ -6,6 +6,7 @@
 #include "EngineBravo.h"
 #include "GameObject.h"
 #include "Input.h"
+#include "ParticleEmitter.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
 
@@ -43,6 +44,10 @@ void PlayerBehaviourScript::toggleAnimaionEnabled() {
 Animation* playerIdleFrontAnimation = nullptr;
 Animation* playerIdleSideAnimation = nullptr;
 Animation* playerIdleBackAnimation = nullptr;
+
+ParticleEmitter* emitter = new ParticleEmitter(
+    EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(5, 5), Vector2(0, 0), 45.0f, 0.0f, 0.0f,
+    {Color(255, 255, 255, 255), Color(255, 0, 0, 255), Color(0, 255, 0, 255), Color(0, 0, 255, 255)});
 
 std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
 
@@ -202,6 +207,10 @@ void PlayerBehaviourScript::onStart() {
     mGameObject->addComponent(playerIdleFrontAnimation);
     mGameObject->addComponent(playerIdleSideAnimation);
     mGameObject->addComponent(playerIdleBackAnimation);
+
+    emitter->setParticlesPerSecond(200);
+    emitter->setAngle(0, 45);
+    mGameObject->addComponent(emitter);
 }
 
 void PlayerBehaviourScript::handleAnimations() {
@@ -231,7 +240,7 @@ void PlayerBehaviourScript::handleAnimations() {
 }
 
 void PlayerBehaviourScript::handleMovement() {
-    static const float movementSpeed = 15.0f;
+    static const float movementSpeed = 0.5f;
 
     Input& input = Input::getInstance();
 
@@ -253,25 +262,25 @@ void PlayerBehaviourScript::handleMovement() {
         deactivateAllAnimations();
         setAnimationActive(playerIdleBackAnimation, true);
         setFlipX(false);
-        parentTransform.position.y -= movementSpeed;
+        parentTransform.position.y -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_A)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(true);
-        parentTransform.position.x -= movementSpeed;
+        parentTransform.position.x -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_S)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleFrontAnimation, true);
         setFlipX(false);
-        parentTransform.position.y += movementSpeed;
+        parentTransform.position.y += (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_D)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(false);
-        parentTransform.position.x += movementSpeed;
+        parentTransform.position.x += (movementSpeed * Time::deltaTime);
     }
     this->mGameObject->setTransform(parentTransform);
 }
@@ -279,4 +288,6 @@ void PlayerBehaviourScript::handleMovement() {
 void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
+
+    // emitter->getRelativeTransform().rotation += 0.01f;
 }

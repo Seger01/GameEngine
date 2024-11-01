@@ -1,10 +1,11 @@
 #include "EngineBravo.h"
 
-#include "IBehaviourScript.h"
-#include "Renderer.h"
-#include "SDL.h"
+#include <SDL.h>
 
+#include "IBehaviourScript.h"
 #include "Input.h"
+#include "ParticleEmitter.h"
+#include "Renderer.h"
 
 EngineBravo::EngineBravo() {}
 
@@ -19,6 +20,8 @@ void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
     startBehaviourScripts();
+
+    Time::initialize();
     return;
 }
 
@@ -36,9 +39,24 @@ void EngineBravo::run() {
             }
         }
 
+        Time::update();
+
+        std::cout << "Time since start: " << Time::ticks << std::endl;
+        std::cout << "Delta time: " << Time::deltaTime << std::endl;
+
         input.update();
 
         runBehaviourScripts();
+
+        for (auto& gameObject : mSceneManager.getCurrentScene()->getGameObjects()) {
+            if (gameObject->isActive()) {
+                if (gameObject->hasComponent<ParticleEmitter>()) {
+                    for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
+                        particleEmitter->update();
+                    }
+                }
+            }
+        }
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 

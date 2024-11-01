@@ -42,9 +42,9 @@ void GameObject::setTag(const std::string& tag) { mTag = tag; }
 
 std::string GameObject::getTag() { return mTag; }
 
-void GameObject::setIsActive(bool isActive) { mIsActive = isActive; }
+void GameObject::setActive(bool isActive) { mIsActive = isActive; }
 
-bool GameObject::getIsActive() { return mIsActive; }
+bool GameObject::isActive() { return mIsActive; }
 
 Transform GameObject::getTransform() { return mTransform; }
 

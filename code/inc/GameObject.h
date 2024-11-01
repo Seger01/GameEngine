@@ -30,8 +30,8 @@ public:
     void setTag(const std::string& tag);
     std::string getTag();
 
-    void setIsActive(bool isActive);
-    bool getIsActive();
+    void setActive(bool isActive);
+    bool isActive();
 
     Transform getTransform();
     void setTransform(Transform aNewTransform);

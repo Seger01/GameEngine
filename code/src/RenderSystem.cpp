@@ -5,6 +5,7 @@
 
 #include "Animation.h"
 #include "Color.h"
+#include "ParticleEmitter.h"
 #include "SDL_timer.h"
 #include "Sprite.h"
 
@@ -31,6 +32,16 @@ void RenderSystem::renderAnimation(GameObject* aGameObject, Animation* aAnimatio
     renderSprite(aGameObject, currentFrame);
 }
 
+void RenderSystem::renderParticle(Particle& aParticle) {
+    if (aParticle.getRotation() == 0) {
+        mRenderer->renderSquare(aParticle.getPosition(), aParticle.getSize().x, aParticle.getSize().y,
+                                aParticle.getColor(), true);
+    } else {
+        mRenderer->renderSquare(aParticle.getPosition(), aParticle.getSize().x, aParticle.getSize().y,
+                                aParticle.getRotation(), aParticle.getColor(), true);
+    }
+}
+
 void RenderSystem::render(Scene* aScene) {
     mRenderer->clear(mBackgroundColor);
 
@@ -47,6 +58,13 @@ void RenderSystem::render(Scene* aScene) {
             for (auto sprite : gameObject->getComponents<Sprite>()) {
                 if (sprite->isActive()) {
                     renderSprite(gameObject, sprite);
+                }
+            }
+        }
+        if (gameObject->hasComponent<ParticleEmitter>()) {
+            for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
+                for (auto& particle : particleEmitter->getParticles()) {
+                    renderParticle(particle);
                 }
             }
         }

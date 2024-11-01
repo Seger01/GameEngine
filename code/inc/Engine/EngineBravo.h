@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ENGINEBRAVO_H
+#define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
 #include "RenderSystem.h"
@@ -6,6 +7,7 @@
 #include "ResourceManager.h"
 #include "SaveGameManager.h"
 #include "SceneManager.h"
+#include "Time.h"
 #include "UIManager.h"
 
 class EngineBravo {
@@ -40,3 +42,5 @@ private:
     // AnimationManager animationManager;
     // UIManager uiManager;
 };
+
+#endif // ENGINEBRAVO_H

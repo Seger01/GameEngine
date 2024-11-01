@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLOR_H
+#define COLOR_H
 
 class Color {
 public:
@@ -12,3 +13,5 @@ public:
     int b;
     int a;
 };
+
+#endif // COLOR_H

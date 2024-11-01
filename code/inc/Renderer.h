@@ -22,6 +22,7 @@ public:
     void renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
                        bool aFlipY, float aRotation);
 
+    void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill);
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill);
 
     SDL_Renderer*& getSDLRenderer();
