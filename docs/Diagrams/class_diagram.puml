@@ -404,38 +404,23 @@ class PhysicsManager {
 }
 
 class RenderSystem{
-    + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
-    + ~Animation()
+    + RenderSystem()
 
-    + getTransform() : Transform 
-    + setTransform(Transform aNewTransform) : void 
+    + render(Scene* aScene) : void 
 
-    + getFrame(int aFrameIndex) : Sprite* 
-    + getFrameAtTime(long aTime) : Sprite* 
+    + getRenderer() : Renderer& 
+    + getWindow() : Window& 
 
-    + getTimeBetweenFrames() : int 
-    + setTimeBetweenFrames(int aTimeBetweenFrames) : void 
+    - renderSprite(GameObject* aGameObject, Sprite* aSprite) : void 
+    - renderAnimation(GameObject* aGameObject, Animation* aAnimation) : void 
 
-    + setFlipX(bool state) : void 
-    + getFlipX() : bool 
+    - mRenderer : std::unique_ptr<Renderer> 
+    - mWindow : std::unique_ptr<Window> 
 
-    + setFlipY(bool state) : void 
-    + getFlipY() : bool 
+    - WindowWidth : int 
+    - WindowHeight : int 
 
-    + isLooping() : bool 
-    + setIsLooping(bool aIsLooping) : void 
-
-    + getFrameCount() : int 
-
-    - mTransform : Transform 
-
-    - mFlipX : bool 
-    - mFlipY : bool 
-
-    - mAnimationFrames : std::vector<Sprite*> 
-    - mTimeBetweenFrames : int 
-    - mIsLooping : bool 
-
+    - mBackgroundColor : Color 
 }
 
 class Window {
