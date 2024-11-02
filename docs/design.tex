@@ -13,6 +13,19 @@
 \tableofcontents
 \newpage
 
+\section{Abbreviations}
+
+\begin{table}
+% Please make sure to keep this in alphabetical order!
+\begin{tabular}{c|c}
+  \textbf{Abbreviation} & \textbf{Full from} \\ \hline
+  SDL & Simple DirectMedia Layer \\ \hline
+  Hz & hertz \\ \hline
+  Sfx & Sound effect(s) \\ \hline
+  UI & User interface \\
+\end{tabular}
+\end{table}
+
 \section{Architecture}
 The game engine is a singleton. This will be the only singleton in the engine.
 
@@ -64,6 +77,9 @@ Controller input is supported, but not analog values. This is because it does no
 \noindent
 There is a separate UI manager, which is responsible for checking where the clicks are, checking if the click was on a button, and calling the onclick callback if it was.
 
+\section{Audio}
+The audio system is is responsible for playing sfx.
+
 \section{Transform}
 Does not need an update flag when the position is changed, as a movable object is usually moving.
 
@@ -75,7 +91,7 @@ Has \texttt{bodyID}, which is needed for the physics.
 
 \section{PhysicsEngine}{
   \begin{itemize}
-    \item Steps are at 50 hertz
+    \item Steps are at 50 Hz
     \item substeps are configurable by the game programmer
     \item update method gets int of the amount of steps it need to set so less data gets copied to the world class
   \end{itemize}
