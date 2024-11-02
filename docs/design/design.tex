@@ -23,6 +23,7 @@
   SDL & Simple DirectMedia Layer \\ \hline
   Hz & hertz \\ \hline
   Sfx & Sound effect(s) \\ \hline
+  ECS & Entity Component System \\ \hline
   UI & User interface \\
 \end{tabular}
 
@@ -32,6 +33,17 @@ The game engine is a singleton. This will be the only singleton in the engine.
 Managers contain only references to the game objects which are relevant to them. For example, the physics manager only contains references to game objects with collider or rigidbody components.
 Whenever a component is added to or removed from a game object, the game object calls a function in the game engine class. This adds the game object to an update queue. This update queue is used every cycle, where the engine checks all components of the object in the queue, and adds or removes them to the relevant managers.
 \textbf{\textit{Motivate why we made this choice!}}
+
+\subsection{GameObjects Architecture}
+\begin{itemize}
+  \item \textbf{GameObjects} are the main objects in the engine. They can contain multiple components, and are the objects which are updated every cycle.
+  \item \textbf{Components} are the parts of the GameObjects. They can be added and removed from GameObjects, and are updated every cycle
+\end{itemize}
+ECS is not used because the decision was made that there is too little time to create a ECS system that is efficient enough to warrant the extra work it would cost to implement it.
+Instead of ECS, a more standard Object Oriented approach is used.
+
+Components can be added and removed from GameObjects at runtime. This is done by calling the addComponent and removeComponent functions of the GameObject class. 
+
 
 \section{Physics Update}
 Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
@@ -66,6 +78,18 @@ Engine bravo makes use of the Box2D library to process any physics logic within 
 \section{GameObjects}
 GameObjects can contain multiple animtors and multiple sprites, if any of them are active they will be rendered.
 
+\section{Tilemaps}
+Tilemaps can be used to create levels more easily.
+Tilemaps will be parsed in the engine.
+\\
+The map creator that is used to create the tilemaps is Tiled.
+The reason Tiled is chosen is primarily because it was recommended for this project.
+Another advantage Tiled has is its extensive documentation and its ease of use.
+\\
+Maps created in Tiled are exported in a .tmx format, which is a type of XML file.
+The engine will parse the map file using a library called Tmxlite, which was recommended in the Tiled documentation.
+Required textures can be loaded using the TextureManager.
+From the parsed map, the engine will create GameObjects with a sprite component.
 
 \section{Input}
 \subsection{Supported Input types}
