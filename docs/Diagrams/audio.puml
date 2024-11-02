@@ -30,14 +30,6 @@ class AudioSource {
     + getXVelocity() : int
 }
 
-note right of AudioSource
-    The direction and velocity members are their own units, they are not related to the game's units
-end note
-
-note left of AudioSource
-    mPlayOnWake indicates whether the audio source should be played when a new scene is loaded
-end note
-
 class EngineBravo {
     + getAudioManager() : AudioManager&
 }
@@ -52,10 +44,6 @@ class AudioManager {
     + addSound(const GameObject&) : void
     + removeSound(const GameObject&) : void
 }
-
-note right of AudioManager
-    The mGameObjects with references to GameObjects that have AudioSource components stays update by the EngineBravo. it calls the addSound and removeSound functions every cycle.
-end note
 
 interface IAudioFacade {
     + addSound(string path) : void
@@ -81,10 +69,6 @@ class MixerFacade implements IAudioFacade {
     - findAvailableChannel() : int
 }
 
-note left of MixerFacade
-    mLastUsedChannel is used to keep track of the last channel used
-end note
-
 class MixerContainer {
     // string is the path
     - mSfx : unordered_map<string, Mix_Chunk>
@@ -95,10 +79,6 @@ class MixerContainer {
     + getMusic() : Mix_Music*
     + clear() : void
 }
-
-note left of MixerContainer
-    The string key in mSfx is the path to the sound effect
-end note
 
 Component <|-- AudioSource
 EngineBravo *-- AudioManager

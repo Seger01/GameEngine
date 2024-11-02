@@ -1,5 +1,7 @@
 \documentclass{article}
 \usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
 
 \title{Engine Bravo Design}
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -14,8 +16,6 @@
 \newpage
 
 \section{Abbreviations}
-
-\begin{table}
 % Please make sure to keep this in alphabetical order!
 \begin{tabular}{c|c}
   \textbf{Abbreviation} & \textbf{Full from} \\ \hline
@@ -24,7 +24,6 @@
   Sfx & Sound effect(s) \\ \hline
   UI & User interface \\
 \end{tabular}
-\end{table}
 
 \section{Architecture}
 The game engine is a singleton. This will be the only singleton in the engine.
@@ -78,7 +77,48 @@ Controller input is supported, but not analog values. This is because it does no
 There is a separate UI manager, which is responsible for checking where the clicks are, checking if the click was on a button, and calling the onclick callback if it was.
 
 \section{Audio}
-The audio system is is responsible for playing sfx.
+The audio system is is responsible for playing sfx and music.
+\begin{itemize}
+  \item Sfx work in a 'fire and forget' way: a single function call to the AudioSource is required to start playing the sound, and it never needs to be stopped or cleaned up in any way. The engine stops playing the sfx when it is finished \footnote{Unless specified that the sound should loop}.
+  \item Music can be played, stopped and adjusted while it is playing, however, just like sfc, music does not need to be manually stopped.
+\end{itemize}
+
+\subsection{Audio library}
+As discussed in the research, it is best to use an audio library (rather than manually doing system calls)
+, and there are many audio libraries to choose from. By trying out various audio libraries, it was concluded that
+SDL Mixer is the best library to use for this engine. While it is not as extensive as other libraries,
+it has the features to meet the engine requirements, and its ease of use makes it a sensible choice.
+
+\subsection{Class diagram}
+\includegraphics[width=\textwidth]{audio_class.png}
+In the following subsections, the classes in this diagram are further detailed.
+\subsubsection{AudioSource}
+note right of AudioSource
+    The direction and velocity members are their own units, they are not related to the game's units
+end note
+
+note left of AudioSource
+    mPlayOnWake indicates whether the audio source should be played when a new scene is loaded
+end note
+
+\subsubsection{AudioManager}
+note right of AudioManager
+    The mGameObjects with references to GameObjects that have AudioSource components stays update by the EngineBravo. it calls the addSound and removeSound functions every cycle.
+end note
+
+\subsubsection{AudioResourceManager}
+
+\subsubsection{IAudioFacade}
+
+\subsubsection{MixerFacade}
+note left of MixerFacade
+    mLastUsedChannel is used to keep track of the last channel used
+end note
+
+\subsubsection{MixerContainer}
+note left of MixerContainer
+    The string key in mSfx is the path to the sound effect
+end note
 
 \section{Transform}
 Does not need an update flag when the position is changed, as a movable object is usually moving.
