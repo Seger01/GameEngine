@@ -114,18 +114,24 @@ It contains only a few basic methods, and delegates most functionality to the au
 \end{itemize}
 
 \subsubsection{AudioResourceManager}
+The AudioResourceManager is intended to reduce the amount of memory the engine requires.
+If the audio resource manager is not used, each game object with a sound source would load the required sound file.
+When there are many game objects which all use the same sfx file, this file would be loaded into memory multpile times, which is inefficient.
+To solve this, the audio resource manager is created. This class makes sure that for each path, only one sound file is loaded.
+It makes use of the ComponentPathPair, to keep track of the relation between the AudioSource components and their paths.
 
 \subsubsection{IAudioFacade}
+A facade interface to make the coupling between the AudioManager and the used audio library less tight.
 
 \subsubsection{MixerFacade}
-note left of MixerFacade
-    mLastUsedChannel is used to keep track of the last channel used
-end note
+The implementation of the audio facade interface for SDL mixer.
+Because channel \footnote{what is called a channel in SDL mixer is more commonly known as a track.} management is done
+manually in SDL mixer, the mChannelCount and mLastUsedChannel variables are used to determine the next available channel for playing sfx.
 
 \subsubsection{MixerContainer}
-note left of MixerContainer
-    The string key in mSfx is the path to the sound effect
-end note
+The mixer container holds all the 
+SDL mixer sound files.
+The string in the mSfx map is the path to the file, because that can be considered as a sort of unique id for the sound file.
 
 \section{Transform}
 Does not need an update flag when the position is changed, as a movable object is usually moving.
