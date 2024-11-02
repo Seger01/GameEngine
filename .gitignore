@@ -51,7 +51,10 @@ code/.cache
 
 .vscode/
 
-code/slikenet/**
+output.csv
 
 code/external/tmxlite-master/**
 output.csv
+# ignore clagd cache
+code/.cache
+

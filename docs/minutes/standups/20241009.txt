@@ -14,6 +14,9 @@ What has been done:
 - Seger: Not worked on project since last meeting
 
 What is going to be done:
-- Seger: PoC for physics as described in design
+- Seger: Input system: finish design and work on implementation
 - Sean: (Unity ) multiplayer PoC: figure out how to use multiplayer within the game loop (when is this done?) and how Unity does this.
+- Angel: Physics PoC: objects with multiple shapes finished before next thursday.
+- Siem: Update savegame design. Work on audio design.
+- Ronan: FsConverter: design and implementation. 
 Everyone is going to work on architecture / design

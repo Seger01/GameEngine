@@ -1,0 +1,90 @@
+@startuml name audio
+
+class Component {
+    + mActive : bool
+}
+
+class AudioSource {
+    - mFileName : string
+    - mPlayOnAwake : bool
+    - mLoop : bool
+    - mVolume : int
+    - mXDirection : int
+    - minXDirection : const static int
+    - maxXDirection : const static int
+    - mMaxVelocity : const static int
+    - mXVelocity : int
+    + AudioSource(string aPath, bool aIsMusic=false)
+    + play(bool aLooping) : void
+    + stop() : void 
+
+    + setPlayOnWake(bool aValue) : void
+    + getPlayOnWake() : bool
+    + setLooping(bool aLooping) : void
+    + getLooping() : bool
+    + setVolume(unsigned aVolume) : void
+    + getVolume() : unsigned
+    + setXDirection(int aXDirection) : void
+    + getXDirection() : int
+    + setXVelocity(int aXVelocity) : void
+    + getXVelocity() : int
+}
+
+class EngineBravo {
+    + getAudioManager() : AudioManager&
+}
+
+class AudioManager {
+    - mGameObjects : vector<reference_wrapper<GameObject>>
+    + AudioManager()
+    + play(const AudioSource&) : void
+    + stop(const AudioSource&) : void
+    + wake() : void
+    + getFacade() : IAudioFacade&
+    + addSound(const GameObject&) : void
+    + removeSound(const GameObject&) : void
+}
+
+interface IAudioFacade {
+    + addSound(string path) : void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
+    + addMusic(string path) : void
+    + playMusic() : void
+    + stopMusic() : void
+}
+
+class AudioResourceManager {
+    - mPaths : vector<ComponentPathPair>
+    + getPath(const AudioSource&) : string
+}
+
+class ComponentPathPair {
+    - mComponent : const AudioSource&
+    - mPath : const string
+}
+
+class MixerFacade implements IAudioFacade {
+    - mChannelCount : const unsigned
+    - mLastUsedChannel : unsigned
+    - findAvailableChannel() : int
+}
+
+class MixerContainer {
+    // string is the path
+    - mSfx : unordered_map<string, Mix_Chunk>
+    - mMusic : Mix_Music
+    + addSound(string aPath, Mix_Chunk aSound) : void
+    + getSound(string aIndex) : Mix_Chunk*
+    + addMusic(Mix_Music aMusic) : void
+    + getMusic() : Mix_Music*
+    + clear() : void
+}
+
+Component <|-- AudioSource
+EngineBravo *-- AudioManager
+AudioManager *-- IAudioFacade
+AudioManager *-- AudioResourceManager
+AudioResourceManager <-- ComponentPathPair
+MixerFacade *-- MixerContainer
+
+@enduml

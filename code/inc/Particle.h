@@ -17,15 +17,6 @@ public:
 
     void update();
 
-    // void setVelocity(Vector2 aVelocity);
-    // void setAcceleration(Vector2 aAcceleration);
-    // void setLifeTime(float aLifeTime);
-    // void setScale(Vector2 aScale);
-    // void setRotation(float rotation);
-    // void setAngularVelocity(float angularVelocity);
-    // void setAngularAcceleration(float angularAcceleration);
-    // void setColor(Color aColor);
-
     Vector2 getPosition();
     float getLifeTime();
     Vector2 getSize();

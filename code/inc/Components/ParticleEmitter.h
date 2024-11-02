@@ -32,30 +32,30 @@ public:
 private:
     void spawnParticle();
 
-    Vector2 generateRandomVelocity(float minSpeed, float maxSpeed, int minAngle, int maxAngle);
+    Vector2 generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle);
 
 private:
-    Transform relativeTransform;
+    Transform mRelativeTransform;
 
-    int particlesPerSecond;
-    std::vector<Particle> particles;
+    int mParticlesPerSecond;
+    std::vector<Particle> mParticles;
 
-    EmitterMode emitterMode;
+    EmitterMode mEmitterMode;
 
-    int minAngle;
-    int maxAngle;
+    int mMinAngle;
+    int mMaxAngle;
 
-    int minLifeTimeMs;
-    int maxLifeTimeMs;
+    int mMinLifeTimeMs;
+    int mMaxLifeTimeMs;
 
-    float velocity;
-    float acceleration;
-    Vector2 size;
-    Vector2 sizeShift;
-    float rotation;
-    float angularVelocity;
-    float angularAcceleration;
-    std::vector<Color> colorGradient;
+    float mVelocity;
+    float mAcceleration;
+    Vector2 mSize;
+    Vector2 mSizeShift;
+    float mRotation;
+    float mAngularVelocity;
+    float mAngularAcceleration;
+    std::vector<Color> mColorGradient;
 };
 
 #endif // PARTICLEEMITTER_H

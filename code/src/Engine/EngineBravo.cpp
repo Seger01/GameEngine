@@ -32,14 +32,15 @@ void EngineBravo::run() {
     SDL_Event e;
 
     while (!quit) {
+        Time::update();
+        static long startOfFrame = 0;
+        startOfFrame = Time::ticks;
         // Event handling
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = true;
             }
         }
-
-        Time::update();
 
         std::cout << "Time since start: " << Time::ticks << std::endl;
         std::cout << "Delta time: " << Time::deltaTime << std::endl;
@@ -48,19 +49,13 @@ void EngineBravo::run() {
 
         runBehaviourScripts();
 
-        for (auto& gameObject : mSceneManager.getCurrentScene()->getGameObjects()) {
-            if (gameObject->isActive()) {
-                if (gameObject->hasComponent<ParticleEmitter>()) {
-                    for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
-                        particleEmitter->update();
-                    }
-                }
-            }
-        }
+        mParticleSystem.update(mSceneManager.getCurrentScene());
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
-        SDL_Delay(16);
+        if (Time::ticks - startOfFrame < mMinFrameTimeMs) {
+            SDL_Delay(mMinFrameTimeMs - (Time::ticks - startOfFrame));
+        }
     }
 }
 

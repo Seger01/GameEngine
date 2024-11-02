@@ -45,9 +45,11 @@ Animation* playerIdleFrontAnimation = nullptr;
 Animation* playerIdleSideAnimation = nullptr;
 Animation* playerIdleBackAnimation = nullptr;
 
-ParticleEmitter* emitter =
-    new ParticleEmitter(EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(5, 5), Vector2(0, 0), 0.0f, 0.0f, 0.0f,
-                        {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)});
+const float shrinkRate = -0.003f;
+
+ParticleEmitter* emitter = new ParticleEmitter(EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(10, 10),
+                                               Vector2(shrinkRate, shrinkRate), 0.0f, 0.0f, 0.0f,
+                                               {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)});
 
 std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
 
@@ -300,7 +302,7 @@ void PlayerBehaviourScript::onUpdate() {
 
     if (emitterMode) {
         emitter->setAngle(0, 45);
-        emitter->getRelativeTransform().rotation += 0.01f;
+        emitter->getRelativeTransform().rotation += 0.001f * Time::deltaTime;
     } else {
         emitter->setAngle(0, 360);
         emitter->getRelativeTransform().rotation = 0.0f;

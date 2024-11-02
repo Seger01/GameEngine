@@ -2,6 +2,7 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
+#include "ParticleSystem.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -35,9 +36,12 @@ private:
     void startBehaviourScripts();
 
 private:
+    int mMinFrameTimeMs = 4;
+
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;
     ResourceManager mResourceManager;
+    ParticleSystem mParticleSystem;
     // SaveGameManager saveGameManager;
     // AnimationManager animationManager;
     // UIManager uiManager;

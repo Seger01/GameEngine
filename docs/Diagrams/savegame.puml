@@ -1,0 +1,118 @@
+@startuml
+
+class EngineBravo {
+}
+
+class SaveGameManager {
+  - mSaveGames : vector<SaveGame>
+  - SaveGameManager()
+  + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+  + getSaveGame(const string &aId) : SaveGame& 
+  + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+}
+
+class SaveGame {
+  - mFileName : string
+  - mFields : vector<SaveField>
+  - mArrays : vector<SaveArray>
+
+  + SaveGame(const string &aFileName)
+  + store() : void
+  + remove() : void
+
+  + addIntField(string name, string value) : void
+  + addFloatField(string name, string value) : void
+  + addStringField(string name, string value) : void
+
+  + setIntField(string name, string value) : void
+  + setFloatField(string name, string value) : void
+  + setStringField(string name, string value) : void
+
+  + getIntField(string name) : string
+  + getFloatField(string name) : string
+  + geStringField(string name) : string
+
+  + addArray(string name) : void
+  + setArray(string name, SaveArray value) : void
+  + getArray(string aName) const : SaveArray
+}
+
+class SaveGameUtil {
+  + isInteger(string aValue) : static bool
+  + isFloat(string aValue) : static bool
+}
+
+class SaveArray {
+  - mName : string
+  - mIntFields : vector<SaveField>
+  - mFloatFields : vector<SaveField>
+  - mStringFields : vector<SaveField>
+
+  + SaveArray(string name)
+
+  + getName() : string
+
+  + addIntField(string name, int value) : void
+  + addFloatField(string name, float value) : void
+  + addStringField(string name, string value) : void
+
+  + getIntField(string name) : IntSaveField&
+  + getFloatField(string name) : FloatSaveField&
+  + getStringField(string name) : StringSaveField&
+}
+
+together {
+class IntSaveField {
+  - mName : string
+  - mValue : int
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(int) : void
+  + getValue() : int
+}
+
+class FloatSaveField {
+  - mName : string
+  - mValue : float
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(float) : void
+  + getValue() : float
+}
+
+class StringSaveField {
+  - mName : string
+  - mValue : string
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(string) : void
+  + getValue() : string
+}
+}
+
+
+EngineBravo *--"1" SaveGameManager
+
+SaveGameManager *--"*" SaveGame
+
+SaveGame <-left- SaveGameUtil
+SaveGame *--"*" SaveArray
+SaveGame -[hidden]> SaveArray
+SaveGame *--"*" IntSaveField
+SaveGame *--"*" FloatSaveField
+SaveGame *--"*" StringSaveField
+
+SaveArray <-up- SaveGameUtil
+SaveArray *--"*" IntSaveField
+SaveArray *--"*" FloatSaveField
+SaveArray *--"*" StringSaveField
+@enduml

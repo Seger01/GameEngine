@@ -1,0 +1,30 @@
+Discussed: to do list for today:
+- divide points across team members for assessment
+- Finish class diagram whole engine
+- Design document: insert missing sections
+- Game design document: textual description of game functionality.
+
+What will be handed in:
+- Paperwork documents with score division filled in
+- Engine design document
+- Engine class diagram
+- POCs source code:
+    - Multiplayer
+    - Engine structure + renderer
+    - Audio
+    - Savegame
+    - Particle
+    - Physics topdown
+    - Behaviortree
+    - AI
+    - Animation
+    - SDL facade
+    - FS converter
+    - Gameobject
+    - Input system
+    - SDL
+    - Tile2D
+- Validation app design
+
+To do after today: everyone fills in their respective parts of the design document.
+Finished before sunday 2pm. Documents will be handed in on sunday by Siem.

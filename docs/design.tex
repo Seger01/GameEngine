@@ -1,6 +1,0 @@
-- Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
-  Alternatives considered:
-    - Updating physics using a deltatime. This is undesirable, because when the update frequency of the game drops, the physics will also slow down and become unreliable and prone to error.
-    - Multithreading. Not done because rendering can then copy old data and new data in a single frame. Alternative would be copying the data to physics and copying it back when physics is finished, but that would mean copying too much data back and forth per cycle.
-
-- The 'levelManager' (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behavior script.

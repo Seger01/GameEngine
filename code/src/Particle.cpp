@@ -29,6 +29,17 @@ void Particle::update() {
     lifeTimeRemaining -= Time::deltaTime;
     size.x += sizeShift.x * Time::deltaTime;
     size.y += sizeShift.y * Time::deltaTime;
+
+    if (size.x < 0) {
+        size.x = 0;
+        lifeTimeRemaining = 0;
+    }
+
+    if (size.y < 0) {
+        size.y = 0;
+        lifeTimeRemaining = 0;
+    }
+
     rotation += angularVelocity * Time::deltaTime;
     angularVelocity += angularAcceleration * Time::deltaTime;
 }

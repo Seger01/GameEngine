@@ -1,159 +1,1004 @@
-@startuml
+@startuml class_diagram
 
 ' skinparam linetype ortho
 skinparam groupInheritance 2
+skinparam backgroundColor #AAAAAA
 
-together{
+package Components{
 
 class Component{
     - mActive : bool
 
 }
 
-class AudioSource{
-    + void play(??? aLooping)
-    + void stop()
+class AudioSourceProxy implements Component{}
 
-    - mAudioClip : string
-    - mPlayOnAwake : bool
-    - mLoop : bool
-    - mVolume : ???
+class ParticleEmitterProxy implements Component{}
+
+class AnimationProxy implements Component{}
+
+class SpriteProxy implements Component{}
+
+class NetworkObjectProxy implements Component{}
+
+
+class Collider implements Component{
+    + Collider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+    + getPosition() : point
+
+    ' Relative to position of GameObject
+    - mPosition : Point 
+    - mBodyId : b2Body
+
+    
 }
 
-class Collider{
+class CircleColider implements Collider{
+    + CircleCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
 
+    ' Position is middle of circle
+    - mRadius : float 
 }
 
-class CircleColider{
-    - mRadius : ???
+class BoxCollider implements Collider{
+    + BoxCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+
+    ' Position is middle of box
+    - mSize : point
+    - mRotation : float
 }
 
-class BoxCollider{
-    - mWidth : ???
-    - mHeight : ???
+class RigidBody implements Component{
+    + RigidBody(flag, properties)
+    + setMass(float aMass) : void
+    + getMass() : float
+    + setBodyType(BodyType aBodyType) : void
+    + getBodyType() : BodyType
+    + setGravityScale(float aGravityScale) : void
+    + getGravity() : float
+    + getBodyId() : int
+
+    + applyForce(point) : void
+
+    ' SETTERS AND GETTERS FOR MEMBERS
+    - mIsUpdated : bool
+    - mHasGravity : bool
+    - mIsMoveableByForce : bool
+    - mCanRotate : bool
+
+    - mBodyType : Enum 
+
+    - mDensity : float
+    - mFriction : float
+    - mRestitution : float
+
+    - mMass : float
+    - mGravityScale : float
+
+    - mBodyId : int
+
+    - mForcesBuffer : vector<point>
 }
 
-class RigidBody{
-    - mMass : ???
-    - mGravityScale : ???
-    - mBodyType : ???
-}
 
-interface BehavourScript{
+interface IBehavourScript implements Component{
     + {abstract} void onStart()
     + {abstract} void onUpdate()
 }
 
-class Sprite{
-    + void render()
-
-    - mSprite : string
-    - mColor : ???
-    - mflipX : bool
-    - mflipY : bool
-    - mSortingLayer : ???
-    - mOrderinLayer : ???
 }
 
-class Animator{
-    + void play(??? aLooping)
-    + void stop()
 
-    - mFps : ???
-}
-}
+
 class GameObject{
-    + void addComponent(??? aComponent)
-    + bool isActiveInWorld()
-    + bool isActiveSelf()
+    + addComponent(Component* aComponent) : void
+    + isActiveInWorld() : bool
+    + isActiveSelf() : bool
+    + setID(int aId) : void
+    + getID() : int
+    + setName(string aName) : void
+    + getName() : string
+    + setTag(string aTag) : void
+    + getTag() : string
+    + setIsActive(bool aIsActive) : void
+    + getIsActive() : bool
+    + hasComponenent() const : template<typename T> bool
+    + getComponent() const : template<typename T> T*
+    + addComponent(Args&&... args) : template<typename T, typename... Args> T*
 
+    - mComponents : vector<Component*>
     - mName : string
     - mTag : string
-    - mActive : bool
+    - mIsActive : bool
     - mLayer : ???
+    - mID : int
 }
 
-class Scene{}
+struct Transform{
+    + mPosition : Point
+    + mRotation : float
+    + mScale : Point
+ }
 
-class Camera{
-    - mBackgroundColor : ???
-    - mAspectWidth : ???
-    - mAspectHeight : ???
+package Physics{
+class PhysicsEngine {
+
+    + updateReferences(vector<GameObject*>&) : void
+    + update() : void
+    + setSubStep() : void
+    + getSubStep() : int
+    + executeCollisionScripts(vector<int>) : void
+    + getBody(int bodyID) : GameObject
+
+    - GameObjects : vector<GameObject*>
+    - step : float
+    - subStep : int
+
 }
 
-together{
-class UIObject{
-    - mWidth : ???
-    - mHeight : ???
+class BodyProxy {
+    + BodyProxy(GameObject&)
+    + defineBodyType() : void
+    + getBodyFlags() : struct
+    + getBodyProperties() : struct
+    + getBodyType() : enum
+    + getPosition() : point
+    + getSize() : point
+
+
+    - mPosition : point
+    - mSize : point
+
+    - mHasGravity : bool
+    - mIsMoveableByForce : bool
+    - mCanRotate : bool
+
+    - mBodyType : Enum 
+
+    - mDensity : float
+    - mFriction : float
+    - mRestitution : float
+
+    - mMass : float
+    - mGravityScale : float
+
 }
 
-class Button{
+class World {
+
+    + World(b2Vec2 Gravity)
+
+    + executeWorldStep(float step, int subStep) : void
+    + reset() : void
+
+    + createBody(BodyProxy& bodyProxy) : b2BoxId
+    + updateBody(b2BodyId bodyID, BodyProxy&) : void
+    + applyForce(b2BodyId bodyID, point force): void
+
+    + setPosition(b2BodyId bodyID, point pos) : void
+    + setGravity(point gravity) : void
+
+    + getPosition(b2BodyId bodyID) : point
+    + getGravity() : point
+
+    + checkContactEvent() : vector<int>
+
+    - mWorldID : b2worldId
+}
+
+}
+
+package ParticlePackage{
+class Particle {
+    + Particle()
+    + Particle(Vector2 aPosition, Vector2 aVelocity, float aAcceleration, int aLifeTime, int aMaxLifeTime, Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
+    + ~Particle() 
+
+    + update() : void 
+
+    + getPosition() : Vector2 
+    + getLifeTime() : float 
+    + getSize() : Vector2 
+    + getRotation() : float 
+    + getColor() : Color 
+
+    - calculateColor() : Color 
+    - calculateInterpolatedColor() : Color 
+    - getNearestColor() : Color 
+
+    - position : Vector2 
+    - velocity : Vector2 
+    - acceleration : float 
+
+    - maxLifeTime : int 
+    - lifeTimeRemaining : int 
+    - initialLifeTime : int 
+
+    - size : Vector2 
+    - sizeShift : Vector2 
+    - rotation : float 
+    - angularVelocity : float 
+    - angularAcceleration : float 
+    - colorGradient : std::vector<Color> 
+
+    - interpolateColor = true : bool 
+}
+
+enum EmitterMode {
+    Continuous
+    Burst
+}
+
+class ParticleEmitter implements Component{
+    + ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs, Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
+
+    + ~ParticleEmitter()
+
+    + update() : void
+
+    + burst(int aAmount) : void
+
+    + setRelativeTransform(Transform aTransform) : void
+    + getRelativeTransform() : Transform& 
+
+    + setParticlesPerSecond(int aParticlesPerSecond) : void 
+    + setAngle(int aMinAngle, int aMaxAngle) : void 
+
+    + getParticles() : std::vector<Particle>& 
+
+    - spawnParticle() : void 
+
+    - generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle) : Vector2 
+
+    - mRelativeTransform : Transform 
+
+    - mParticlesPerSecond : int 
+    - mParticles : std::vector<Particle> 
+
+    - mEmitterMode : EmitterMode 
+
+    - mMinAngle : int 
+    - mMaxAngle : int 
+
+    - mMinLifeTimeMs : int 
+    - mMaxLifeTimeMs : int 
+
+    - mVelocity : float 
+    - mAcceleration : float 
+    - mSize : Vector2 
+    - mSizeShift : Vector2 
+    - mRotation : float 
+    - mAngularVelocity : float 
+    - mAngularAcceleration : float 
+    - mColorGradient : std::vector<Color> 
+}
+
+ParticleEmitter *-- "0..*" Particle
+ParticleEmitter --> EmitterMode
+
+}
+
+package Save{
+class SaveGame {
+    - mFileName : string
+    - mFields : vector<SaveField>
+    - mArrays : vector<SaveArray>
+    + SaveGame(const string &aFileName)
+    + store() : void
+    + remove() : void
+    + addField(string aName, string aValue) : void
+    + setField(string aName, string aValue) : void
+    + getField(string aName) : SaveField&
+    + getField(string aName) : string
+    + addArray(string aName) : void
+    + setArray(string aName, SaveArray value) : void
+    + getArray(string aName) : SaveArray&
+}
+
+class SaveField {
+    - mName : string
+    - mValue : string
+    + SaveField(string aName)
+    + getName() : string
+    + setValue(string aValue) : void
+    + getValue() : string
+}
+
+class SaveArray {
+    - mName : string
+    - mFields : vector<SaveField>
+    + SaveArray(string aName)
+    + getName() : string
+    + addField(string aName, string aValue) : void
+    + setField(string aName, string aValue) : void
+    + getField(string aName) : string
+}
+
+SaveGame *-- "*" SaveField
+SaveGame *-- "*" SaveArray
+SaveArray *-- "*" SaveField
+}
+
+class Scene {
+    + addGameObject(GameObject* aObject) : void
+    + removeGameObject(int aId) : void
+    + getGameObject(int aId) : GameObject&
+    + addCamera() : int
+    + removeCamera(int id) : void
+    + getCamera(int id) : Camera&
+    + setActiveCamera(int id) : void
+    + getID() : int
+    + getName() : string
+    + getGameObjects() : vector<GameObject*>& 
+
+    - Scene(string aSceneName, int aSceneID)
+    - mSceneName : string
+    - mGameObjects : vector<GameObject*>
+    - mSceneID = -1 : int
+    - activeCameraIndex : int
+    - cameras : vector<Camera>(1)
+}
+
+package Engine{
+
+class EngineBravo {
+    + initialize() : void
+    + run() : void
+    + getSceneManager() : SceneManager&
+    + runBehaviourScripts() : void
+    + getAudioManager() : AudioManager&
+
+    - mSaveGameManager : SaveGameManager 
+    - mSceneManager : SceneManager
+    - mTextureManager : TextureManager
+    - mUIManager : UIManager
+    - mRenderer : Renderer
+}
+
+class TextureManager {
+    - TextureManager()
+    + loadTextures() : void
+    + loadAudio() : void
+    + loadTileset(const string &aPath) : Texture*
+}
+
+class AudioResourceManager {
+    - mPaths : vector<ComponentPathPair>
+    + getPath(const AudioSource&) : string
+}
+
+class SceneManager {
+    + addScene(const Scene& scene) : int
+    + addSceneLevel(TileMap& map) : int
+    + loadScene(int index) : void
+    + loadScene(const std::string& sceneName) : void
+    + getCurrentScene() : Scene*
+    + createScene(std::string aSceneName, int aSceneID = -1) : Scene*
+    - SceneManager()
+    - sceneNameExists(string aSceneName) : bool
+    - sceneIDExists(int aSceneID) : bool
+    - getNewSceneID() : int
+    - mScenes : vector<unique_ptr<Scene>>
+    - mCurrentSceneIndex : int
+}
+
+class SaveGameManager {
+    - SaveGameManager()
+    + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+    + getSaveGame(const string &aId) : SaveGame&
+    + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+    - mSaveGames : vector<SaveGame> 
+}
+
+
+class UIManager {
+    - mClickableButtons : vector<UIObject&>
+    + ClickableButtonPressed() : bool
+    + checkIsClickableButton() : bool
+    + addClickableButton((UIObject& aButton)) : void
+    + removeClickableButton(std::string ID) : void
+    - UIManager()
+}
+
+class NetworkManager {
+    
+    
+    + void startServer()
+    + void startClient()
+    + void startHost()
+    + void shutdown()
+
+
+    - mIsServer : bool
+    - mIsClient : bool
+    - mIsHost : bool
+    - mConnectedClients : List<NetworkClient>
+    - mTickRate : int
+    - mDefaultPlayerPrefab : GameObject&
+    - mEnableSceneManagement : bool
+}
+
+class PhysicsManager {
+    + PhysicsManager()
+
+    + startPhysicsEngine() : void
+}
+
+class RenderSystem{
+    + RenderSystem()
+
+    + render(Scene* aScene) : void 
+
+    + getRenderer() : Renderer& 
+    + getWindow() : Window& 
+
+    - renderSprite(GameObject* aGameObject, Sprite* aSprite) : void 
+    - renderAnimation(GameObject* aGameObject, Animation* aAnimation) : void 
+
+    - mRenderer : std::unique_ptr<Renderer> 
+    - mWindow : std::unique_ptr<Window> 
+
+    - WindowWidth : int 
+    - WindowHeight : int 
+
+    - mBackgroundColor : Color 
+}
+
+class AudioManager {
+    - mGameObjects : vector<reference_wrapper<GameObject>>
+    + AudioManager()
+    + play(const AudioSource&) : void
+    + stop(const AudioSource&) : void
+    + wake() : void
+    + getFacade() : IAudioFacade&
+    + addSound(const GameObject&) : void
+    + removeSound(const GameObject&) : void
+}
+
+
+class ParticleSystem {
+    + ParticleSystem()
+
+    + update(Scene* aScene) : void
+
+}
+
+EngineBravo *-- "1" SceneManager
+EngineBravo *-- "1" SaveGameManager
+EngineBravo *-- "1" UIManager
+EngineBravo *-- "1" TextureManager
+EngineBravo *-- "0..1" NetworkManager 
+EngineBravo *-- "1" PhysicsManager
+EngineBravo *-- "1" RenderSystem
+EngineBravo *-- "1" AudioManager
+EngineBravo *-- "1" AudioResourceManager
+EngineBravo *-- "1" ParticleSystem
+
+}
+
+
+
+class Camera implements GameObject{
+    - mBackgroundColor : Color
+    ' Width and Height are rendered area in Game Units
+    - mWidth : int
+    - mHeight : int
+
+}
+
+
+class TileMap {
+    + loadMap(const string& aPath): bool
+    + getWidth(): int
+    + getHeight(): int
+    + getTileWidth(): int
+    + getTileHeight(): int
+    + getTileLayers(): std::vector<tmx::TileLayer>
+    + getObjects(): std::vector<tmx::Object>
+    + getTilesets(): std::vector<tmx::Tileset>
+
+    - mMap : tmx::Map
+    - mTilesets : std::vector<tmx::Tileset>
+    - mTileLayers : std::vector<tmx::TileLayer>
+    - mObjects : std::vector<tmx::Object>
+}
+
+package UI{
+class UIObject implements GameObject_Proxy{
+    - mWidth : int
+    - mHeight : int
+}
+
+class Button implements UIObject{
     - mInteractable : bool
     - mOnClick : ???
 }
 
-class Text{
+class Text implements UIObject{
     - mText : string
     - mFont : ???
     - mSize : ???
     - mAllignment : ???
     - mColor : ???
 }
+
+class GameObject_Proxy{}
 }
 
-class iMouseListener{
-    + ??? onMouseMoved()
-    + ??? onMouseClicked()
-    + ??? onMousePressed()
-    + ??? onMouseReleased()
+package Audio{
+    class Component_Proxy {}
+
+class AudioSource implements Component_Proxy{
+    - mFileName : string
+    - mPlayOnAwake : bool
+    - mLoop : bool
+    - mVolume : int
+    - mXDirection : int
+    - minXDirection : const static int
+    - maxXDirection : const static int
+    - mMaxVelocity : const static int
+    - mXVelocity : int
+    + AudioSource(string aPath, bool aIsMusic=false)
+    + play(bool aLooping) : void
+    + stop() : void 
+
+    + setPlayOnWake(bool aValue) : void
+    + getPlayOnWake() : bool
+    + setLooping(bool aLooping) : void
+    + getLooping() : bool
+    + setVolume(unsigned aVolume) : void
+    + getVolume() : unsigned
+    + setXDirection(int aXDirection) : void
+    + getXDirection() : int
+    + setXVelocity(int aXVelocity) : void
+    + getXVelocity() : int
 }
 
-class iKeyListener{
-    + ??? onKeyPressed()
-    + ??? onKeyReleased()
+interface IAudioFacade {
+    + addSound(string path) : void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
+    + addMusic(string path) : void
+    + playMusic() : void
+    + stopMusic() : void
 }
 
-class Transform{}
+'This class is probably useless, because the path can be retrieved directly from the audiosource. The actual functionality it was intended for can be found in the MixerContainer::mSfx
+class ComponentPathPair {
+    - mComponent : const AudioSource&
+    - mPath : const string
+}
 
-together{
-class Input{}
+class MixerFacade implements IAudioFacade {
+    - mChannelCount : const unsigned
+    - mLastUsedChannel : unsigned
+    - findAvailableChannel() : int
+}
 
-class Time{}
+class MixerContainer {
+    // string is the path
+    - mSfx : unordered_map<string, Mix_Chunk>
+    - mMusic : Mix_Music
+    + addSound(string aPath, Mix_Chunk aSound) : void
+    + getSound(string aIndex) : Mix_Chunk*
+    + addMusic(Mix_Music aMusic) : void
+    + getMusic() : Mix_Music*
+    + clear() : void
+}
+
+MixerFacade *-- MixerContainer
+
+}
+
+package global{
+class Input{
+    + getInstance() : static Input&
+
+    + Input(const Input&) = delete
+    + Input& operator=(const Input&) = delete
+
+    + update() : void 
+
+    + getHeldKeys() : std::vector<Key>& 
+    + getDownKeys() : std::vector<Key>& 
+    + getUpKeys() : std::vector<Key>& 
+
+    + AnyKey() : bool
+    + AnyKeyDown()  : bool 
+
+    + MousePosition() : Point 
+
+    + GetAxis() : double 
+
+    + GetAction(DefAction aDefAction)  : bool 
+
+    + GetKey(Key key)  : bool 
+
+    + GetKeyDown(Key key)  : bool 
+    + GetKeyUp(Key key)  : bool 
+
+    + GetMouseButton(MouseButton which)  : bool 
+    + GetMouseButtonDown(MouseButton which)  : bool 
+    + GetMouseButtonUp(MouseButton which)  : bool 
+
+    + setActiveContext(std::string aContextName) : void 
+}
+
+
+class Time{
+    + initialize() : static void 
+
+    + update() : static void
+
+    + deltaTime : static long
+    + ticks : static long 
+
+    - startTime : static std::chrono::high_resolution_clock::time_point 
+    - lastFrameTime :  static std::chrono::milliseconds
+}
 
 class Debug{}
+
+class Color{
+    - r : int
+    - g : int
+    - b : int
+    - a : int
 }
 
-class Point{}
+class FSConverter {
+    + FSConverter(string) : FSConverter
+    + getResourcePath(const std::string& resourceName) : string
+    - findResourcesFolder() : string
+    - executablePath() : string
+    - resourceDir : string
+}
+}
 
-class Color{}
+package Rendering {
 
-Component <|-down- AudioSource
-Component <|-down- Collider
-Component <|-down- RigidBody
-Component <|-down- BehavourScript
-Component <|-down- Sprite
-Component <|-down- Animator
+interface IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
 
-Collider <|-- CircleColider
-Collider <|-- BoxCollider
+    + getSize() : Vector2 
 
-GameObject *-up- "0..*" AudioSource
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+class SDLWindow implements IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+interface IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class SDLRenderer implements IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class Sprite implements Component{
+    + Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect())
+    + ~Sprite()
+
+    + Texture* getTexture()
+
+    + getRelativePosition() : Transform 
+    + setRelativePosition(Transform aNewTransform) : void 
+
+    + getSource() : Rect 
+    + setSource(Rect aSourceRect) : void
+
+    +  setFlipX(bool state) { mFlipX = state; } : void
+    +  getFlipX() { return mFlipX; } : bool
+
+    +  setFlipY(bool state) { mFlipY = state; } : void
+    +  getFlipY() { return mFlipY; } : bool
+
+    +  setWidth(int aWidth) { mWidth = aWidth; } : void
+    +  getWidth() { return mWidth; } : int
+
+    +  setHeight(int aHeight) { mHeight = aHeight; } : void
+    +  getHeight() { return mHeight; } : int
+
+    - Texture* mTexture = nullptr;
+    - Transform mTransform;
+
+    - Rect mSourceRect;
+
+    - std::string mSprite;
+    - int mWidth = 0;
+    - int mHeight = 0;
+    - bool mFlipX;
+    - bool mFlipY;
+
+    - int mLayer;
+}
+
+class Animation implements Component{
+    + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
+    + ~Animation()
+
+    + getTransform() : Transform 
+    + setTransform(Transform aNewTransform) : void 
+
+    + getFrame(int aFrameIndex) : Sprite* 
+    + getFrameAtTime(long aTime) : Sprite* 
+
+    + getTimeBetweenFrames() : int 
+    + setTimeBetweenFrames(int aTimeBetweenFrames) : void 
+
+    + setFlipX(bool state) : void 
+    + getFlipX() : bool 
+
+    + setFlipY(bool state) : void 
+    + getFlipY() : bool 
+
+    + isLooping() : bool 
+    + setIsLooping(bool aIsLooping) : void 
+
+    + getFrameCount() : int 
+
+    - mTransform : Transform 
+
+    - mFlipX : bool 
+    - mFlipY : bool 
+
+    - mAnimationFrames : std::vector<Sprite*> 
+    - mTimeBetweenFrames : int 
+    - mIsLooping : bool 
+}
+
+class Texture {
+    + Texture(SDL_Texture* aTexture)
+    + ~Texture()
+
+    + SDL_Texture* getSDLTexture();
+
+    - SDL_Texture* mTexture = nullptr;
+
+    - bool mTextureLoaded = false;
+}
+
+
+}
+
+package Networking{
+class NetworkObject implements Component_Proxy{
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
+    - mIsOwner: bool
+    - mNetworkID: int
+}
+
+interface INetworkBehaviour implements IBehavourScript_Proxy{
+    + {abstract} void serverRpc()
+    + {abstract} void clientRpc()
+    + {abstract} void OnNetworkSpawn()
+    
+}
+
+' Template class for network variables
+class NetworkVariable{
+    + networkVariable(WritePermission)
+    + T Value
+    
+}
+
+class IBehavourScript_Proxy{}
+
+' Maybe not needed
+class NetworkTransform implements Transform_Proxy{
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class Transform_Proxy{}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendGameState()
+    + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ReceiveGameState()
+    + SendGameState()
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+    + UnloadScene()
+}
+
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
+}
+
+class Component_Proxy{
+}
+
+' NetworkManager <-- AuthorityManager
+
+NetworkObject *-- "*" INetworkBehaviour
+NetworkObject -- NetworkTransform
+
+INetworkBehaviour <-- NetworkVariable
+INetworkBehaviour <-- INetworkSerializable
+
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
+
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+
+
+NetworkHost <-- NetworkServer
+NetworkHost <-- NetworkClient
+
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
+
+}
+
+NetworkManager *-- Networking
+
+Networking *-- NetworkObject
+Networking *-- "0..1"NetworkClient
+Networking *-- "0..1"NetworkServer
+Networking *-- "0..1"NetworkHost
+Networking *-- NetworkSceneManager
+Networking *-- "1" NetworkObject
+
+GameObject *-up- "0..*" AudioSourceProxy
+GameObject *-up- "0..*" ParticleEmitterProxy
 GameObject *-up- "0..*" CircleColider
 GameObject *-up- "0..*" BoxCollider
 GameObject *-up- "0..*" RigidBody
-GameObject *-up- "0..*" BehavourScript
-GameObject *-up- "0..1" Sprite
-GameObject *-up- "0..*" Animator
-GameObject -up- Transform
-GameObject "0..1"<-- "0..*" GameObject : +parent >
+GameObject *-up- "0..*" IBehavourScript
+GameObject *-up- "0..*" AnimationProxy
+GameObject *-up- "0..*" SpriteProxy
+GameObject *-up- "1" Transform
+GameObject "0..1" o-- "0..*" GameObject : parent >
+GameObject *-- "0..*" NetworkObjectProxy
+UIObjectProxy --|> GameObject
 
-GameObject <|-- UIObject
-UIObject <|-- Button
-UIObject <|-- Text
 
-Scene "1" --> "0..*" GameObject
-Camera --|> GameObject
-Camera "1..*" -down-> "1" Scene : +renderScene
+Scene *-- "0..*" GameObject
+Camera "1..*" --*  Scene
 
-Animator "0..1" ..> "1..*" Sprite
+' Save
+SaveGameManager *-- Save
+Save *-- "*" SaveGame
+
+
+SceneManager *-- "*" Scene
+
+
+' UI
+UIManager o-- UI
+UI o-- "*" UIObject
+
+
+SceneManager --> TileMap
+
+AudioManager *-- Audio
+
+Audio *--IAudioFacade
+Audio <-- ComponentPathPair
+
+TextureManager *-- "0..*" Texture
+
+PhysicsManager *-- Physics
+Physics *-- "1" PhysicsEngine
+
+PhysicsEngine *-- "1" World
+BodyProxy -left-> PhysicsEngine
+
+
+' Rendering
+RenderSystem *-- Rendering
+Rendering *-- "1" IRenderer
+Rendering *-- "1" IWindow
+
+Animation  *-- "2..*" Sprite
+Sprite *-up- "1" Texture
+
+
+' Particle
+ParticlePackage *-down- "*" ParticleEmitter
+ParticleSystem *-down- ParticlePackage
+
+
 @enduml
