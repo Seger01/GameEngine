@@ -13,7 +13,7 @@ RenderSystem::RenderSystem() {
     mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
     mRenderer = std::make_unique<Renderer>(*mWindow);
 
-    mBackgroundColor = Color(0, 0, 0);
+    mBackgroundColor = Color(255, 255, 255);
 
     return;
 }

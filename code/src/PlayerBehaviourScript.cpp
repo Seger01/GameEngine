@@ -45,9 +45,9 @@ Animation* playerIdleFrontAnimation = nullptr;
 Animation* playerIdleSideAnimation = nullptr;
 Animation* playerIdleBackAnimation = nullptr;
 
-ParticleEmitter* emitter = new ParticleEmitter(
-    EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(5, 5), Vector2(0, 0), 45.0f, 0.0f, 0.0f,
-    {Color(255, 255, 255, 255), Color(255, 0, 0, 255), Color(0, 255, 0, 255), Color(0, 0, 255, 255)});
+ParticleEmitter* emitter =
+    new ParticleEmitter(EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(5, 5), Vector2(0, 0), 0.0f, 0.0f, 0.0f,
+                        {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)});
 
 std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
 
@@ -211,6 +211,9 @@ void PlayerBehaviourScript::onStart() {
     emitter->setParticlesPerSecond(200);
     emitter->setAngle(0, 45);
     mGameObject->addComponent(emitter);
+
+    emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
+    emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
 }
 
 void PlayerBehaviourScript::handleAnimations() {
@@ -289,5 +292,17 @@ void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
 
-    // emitter->getRelativeTransform().rotation += 0.01f;
+    static bool emitterMode = false;
+
+    if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
+        emitterMode = !emitterMode;
+    }
+
+    if (emitterMode) {
+        emitter->setAngle(0, 45);
+        emitter->getRelativeTransform().rotation += 0.01f;
+    } else {
+        emitter->setAngle(0, 360);
+        emitter->getRelativeTransform().rotation = 0.0f;
+    }
 }
