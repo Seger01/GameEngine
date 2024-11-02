@@ -1,6 +1,6 @@
 \documentclass[draft]{article}
 \usepackage{enumitem}
-\usepackage{graphicx}
+\usepackage[options]{package}\usepackage{graphicx}
 \graphicspath{ {./images/} }
 
 \title{Engine Bravo Design}
@@ -44,6 +44,9 @@ Physics are updated sequentially in the normal game loop. It is checked how much
 
 \section{Level Manager}
 The \texttt{levelManager} (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behavior script.
+
+\section{Physics Library}
+Engine bravo makes use of the Box2D library to process any physics logic within the application. Box2D is chosen due to recommendations from teachers and since it is one of the only regularly updated ans accessible 2d physics libraries. 
 
 \section{Physics Object Types (in Box2D)}
 \begin{itemize}
