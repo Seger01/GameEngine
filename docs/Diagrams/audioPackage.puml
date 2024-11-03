@@ -60,11 +60,17 @@ class MixerContainer {
     + clear() : void
 }
 
+class AudioResourceManager {
+    - mPaths : vector<ComponentPathPair>
+    + getPath(const AudioSource&) : string
+}
+
 MixerFacade *-- MixerContainer
 
 }
 
 Audio *--IAudioFacade
 Audio <-- ComponentPathPair
+Audio *-- AudioResourceManager
 
 @enduml

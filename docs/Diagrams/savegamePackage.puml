@@ -119,4 +119,6 @@ SaveArray *--"*" IntSaveField
 SaveArray *--"*" FloatSaveField
 SaveArray *--"*" StringSaveField
 }
+
+Save *-- "*" SaveGame
 @enduml
