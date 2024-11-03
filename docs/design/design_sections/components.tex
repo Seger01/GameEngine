@@ -30,6 +30,36 @@ Has \texttt{bodyID}, which is needed for the physics.
 \subsection{NetworkObjectProxy}
 see \autoref{sec:networking} for more information.
 
+\subsection{Sprite}
+Used to add a still image to a GameObject.
+The Sprite Component has the following properties:
+\begin{itemize}
+    \item \texttt{texture} - The texture of the sprite.
+    \item \texttt{width} - The width of the sprite.
+    \item \texttt{height} - The height of the sprite.
+    \item \texttt{flipx} - Whether the sprite is flipped horizontally.
+    \item \texttt{flipy} - Whether the sprite is flipped vertically.
+    \item \texttt{sprite source} - The source rectangle that defines which part of the texture is rendered(can be set to 0 to render all).
+    \item \texttt{transform.x} - The x position of the texture relative to the GameObject it is attached to.
+    \item \texttt{transform.y} - The y position of the texture relative to the GameObject it is attached to.
+    \item \texttt{transform.rotation} - The rotation of the texture relative to the GameObject it is attached to.
+\end{itemize}
+
+\subsection{Animation}
+Used to add an animated image to a GameObject.
+The Animation Component has the following properties:
+\begin{itemize}
+    \item \texttt{sprites} - The sprites that make up the animation.
+    \item \texttt{transform.x} - The x position of the animation relative to the GameObject it is attached to.
+    \item \texttt{transform.y} - The y position of the animation relative to the GameObject it is attached to.
+    \item \texttt{transform.rotation} - The rotation of the animtion relative to the GameObject it is attached to.
+    \item \texttt{flipX} - Whether the animation is flipped horizontally.
+    \item \texttt{flipY} - Whether the animation is flipped vertically.
+    \item \texttt{frameCount} - The amount of frames in the animation.
+    \item \texttt{frameTime} - The time between each frame.
+    \item \texttt{currentFrame} - The current frame of the animation.
+    \item \texttt{loop} - Whether the animation should loop.
+\end{itemize}
 \subsection{Collider}
 
 \subsection{CircleCollider}
@@ -43,7 +73,24 @@ Has \texttt{bodyID}, which is needed for the physics.
 IBehaviour script is an interface that can be used to create behaviour scripts for GameObjects.
 
 \subsection{ParticleEmitter}
-Used to create particle effects.
+Particle emitter is a component that can be used to create particle effects.
+The particle emitter has the following properties:
+\begin{itemize}
+    \item \texttt{particles} - The particles that make up the particle effect.
+    \item \texttt{transform.x} - The x position of the particle effect relative to the GameObject it is attached to.
+    \item \texttt{transform.y} - The y position of the particle effect relative to the GameObject it is attached to.
+    \item \texttt{transform.rotation} - The rotation of the particle effect relative to the GameObject it is attached to.
+    \item \texttt{angle} - in which direction the particles are emitted.
+    \item \texttt{emissionRate} - The amount of particles emitted per second.
+    \item \texttt{particleLifetime} - The lifetime of the particles.
+    \item \texttt{particleSpeed} - The speed of the particles.
+    \item \texttt{particleSize} - The size of the particles.
+    \item \texttt{particleSizeShift} - The shift in size of the particles.
+    \item \texttt{particleColor} - The color of the particles.
+    \item \texttt{rotationSpeed} - The speed at which the particles rotate.
+    \item \texttt{acceleration} - The acceleration of the particles.
+    \item \texttt{angularAcceleration} - The angular acceleration of the particles.
+\end{itemize}
 
 \subsection{AudioSource}
 Used to add audio to a GameObject. See chapter \autoref{sec:audio} for details

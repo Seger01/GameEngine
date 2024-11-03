@@ -1,9 +1,19 @@
 \section{Scene Manager}
 \label{sec:sceneManager}
-The \texttt{sceneManager} (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behaviour script.
+The SceneManager is responsible for creating, loading and unloading scenes.
+It posses a list of scenes and keeps track of which scene is currently active.
+To change the current scene the SceneManager can be addressed to load a new scene, which will happen after the current scene is rendered.
+The SceneManager can also use the TileMap class to create a scene from a tilemap, which is described in more detail in the TileMaps chapter.
 
-\noindent The scene manager is responsible for creating, loading and unloading scenes.
-Scenes are kept in the level as a vector of unique pointers to the scene.
-This is done to keep the memory management of the scenes in one place and ensure memory leaks are avoided through the use of unique pointers.
-The SceneManager can also use the TileMap class to create a scene from a tilemap, which is described in more detail in \autoref{sec:tilemaps}.
-The scene manager also keep track of which scene is currently active.
+\subsection{Scene}
+The Scene class is a container for GameObjects.
+It has a list of GameObjects and a list of UIObjects.
+The Scene class has functions to add and remove GameObjects and UIObjects.
+The Scene class also has one or multiple cameras, which are used to render the scene.
+The Camera is derived from the GameObject class, so it can be manipulated like any other GameObject.
+The current Camera can be set, changed and retrieved from the Scene class.
+
+\subsection{Camera}
+The Camera class is derived from a GameObject that has a position and a size.
+The size defined in the Camera class is the size of the view that is rendered.
+The Camera class has a function to set the position of the camera, which will be used to render the scene.
