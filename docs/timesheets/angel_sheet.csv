@@ -48,3 +48,6 @@ Date,Time,Duration(in hours),Activity
 2024-10-24, 09:00, 4.0, discussed physics design; tested out contact listeners box2d
 2024-10-28, 9:00, 4.0, Standup; physics design
 2024-10-30, 22:00, 1.0, added physics design to class diagram
+2024-11-01, 11:45, 5.25, worked on engine design and validation app
+2024-11-02, 19:15, 0.5, added library choice to design doc
+2024-11-03, 18:45, 0.5, added intro for physics section; small addition to library choice
