@@ -1,7 +1,11 @@
 \section{GameObjects}
-GameObjects are the main objects in the engine. They are part of a Scene and contain zero or more components.
-The transform struct is always a part of the the GameObjects, so the GameObjects always have a position, rotation and scale.
-The components are can be added to GameObjects are described in the Components chapter.
-Components can be added to the GameObjects at runtime.
-GameObjects can contain multiple animtors and multiple sprites, if any of them are active they will be rendered.
-UIObjects can also be created, which inherit from GameObjects. UIObjects are described in more detail in the UI chapter.
+GameObjects are the basic building blocks of the game.
+A GameObject is just a container for components, which have a shared position.
+The GameObject class has functions like hasComponent, addComponent, getComponents, and removeComponent, for registered components manipulation.
+Everything that is visible in the game is a component which is attached to a GameObject.
+All GameObjects are stored in scenes, which are the different levels of the game.
+A GameObject always possesses a Transform, because it is necessary to have a position in the game world.
+Components can be added to the GameObjects at runtime, from the Behaviourscripts.
+% GameObjects can contain multiple animtors and multiple sprites, if any of them are active they will be rendered.
+UIObjects are a special type of GameObjects that are used for the User Interface.
+More information about the UIObjects can be found in the UI section.
