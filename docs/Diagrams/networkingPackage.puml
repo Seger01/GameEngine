@@ -1,23 +1,6 @@
-@startuml networkingClassDiagram
+@startuml NetworkingPackageClassDiagram
 
-class NetworkManager {
-    
-    
-    + void startServer()
-    + void startClient()
-    + void startHost()
-    + void shutdown()
-
-
-    - mIsServer : bool
-    - mIsClient : bool
-    - mIsHost : bool
-    - mConnectedClients : List<NetworkClient>
-    - mTickRate : int
-    - mDefaultPlayerPrefab : GameObject&
-    - mEnableSceneManagement : bool
-}
-
+package Networking{
 class NetworkObject implements Component_Proxy{
     + spawn() : void
     + despawn() : void
@@ -133,11 +116,13 @@ NetworkHost <-- NetworkClient
 ' AuthorityManager <-- NetworkObject
 NetworkSceneManager *-- "*" NetworkObject
 
-NetworkManager *-- NetworkObject
-NetworkManager *-- "0..1"NetworkClient
-NetworkManager *-- "0..1"NetworkServer
-NetworkManager *-- "0..1"NetworkHost
-NetworkManager *-- NetworkSceneManager
-NetworkManager *-- "1" NetworkObject
+}
+
+Networking *-- NetworkObject
+Networking *-- "0..1"NetworkClient
+Networking *-- "0..1"NetworkServer
+Networking *-- "0..1"NetworkHost
+Networking *-- NetworkSceneManager
+Networking *-- "1" NetworkObject
 
 @enduml

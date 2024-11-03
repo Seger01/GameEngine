@@ -1,10 +1,9 @@
-@startuml audioClassDiagram
+@startuml audioPackageClassDiagram
 
-class Component {
-    + mActive : bool
-}
+package Audio{
+    class Component_Proxy {}
 
-class AudioSource {
+class AudioSource implements Component_Proxy{
     - mFileName : string
     - mPlayOnAwake : bool
     - mLoop : bool
@@ -30,21 +29,6 @@ class AudioSource {
     + getXVelocity() : int
 }
 
-class EngineBravo {
-    + getAudioManager() : AudioManager&
-}
-
-class AudioManager {
-    - mGameObjects : vector<reference_wrapper<GameObject>>
-    + AudioManager()
-    + play(const AudioSource&) : void
-    + stop(const AudioSource&) : void
-    + wake() : void
-    + getFacade() : IAudioFacade&
-    + addSound(const GameObject&) : void
-    + removeSound(const GameObject&) : void
-}
-
 interface IAudioFacade {
     + addSound(string path) : void
     + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
@@ -53,11 +37,7 @@ interface IAudioFacade {
     + stopMusic() : void
 }
 
-class AudioResourceManager {
-    - mPaths : vector<ComponentPathPair>
-    + getPath(const AudioSource&) : string
-}
-
+'This class is probably useless, because the path can be retrieved directly from the audiosource. The actual functionality it was intended for can be found in the MixerContainer::mSfx
 class ComponentPathPair {
     - mComponent : const AudioSource&
     - mPath : const string
@@ -80,11 +60,11 @@ class MixerContainer {
     + clear() : void
 }
 
-Component <|-- AudioSource
-EngineBravo *-- AudioManager
-AudioManager *-- IAudioFacade
-AudioManager *-- AudioResourceManager
-AudioResourceManager <-- ComponentPathPair
 MixerFacade *-- MixerContainer
+
+}
+
+Audio *--IAudioFacade
+Audio <-- ComponentPathPair
 
 @enduml

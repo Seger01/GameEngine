@@ -1,0 +1,76 @@
+@startuml miscClassDiagram
+class GameObject{
+    + addComponent(Component* aComponent) : void
+    + isActiveInWorld() : bool
+    + isActiveSelf() : bool
+    + setID(int aId) : void
+    + getID() : int
+    + setName(string aName) : void
+    + getName() : string
+    + setTag(string aTag) : void
+    + getTag() : string
+    + setIsActive(bool aIsActive) : void
+    + getIsActive() : bool
+    + hasComponenent() const : template<typename T> bool
+    + getComponent() const : template<typename T> T*
+    + addComponent(Args&&... args) : template<typename T, typename... Args> T*
+
+    - mComponents : vector<Component*>
+    - mName : string
+    - mTag : string
+    - mIsActive : bool
+    - mLayer : ???
+    - mID : int
+}
+
+struct Transform{
+    + mPosition : Point
+    + mRotation : float
+    + mScale : Point
+}
+
+class Scene {
+    + addGameObject(GameObject* aObject) : void
+    + removeGameObject(int aId) : void
+    + getGameObject(int aId) : GameObject&
+    + addCamera() : int
+    + removeCamera(int id) : void
+    + getCamera(int id) : Camera&
+    + setActiveCamera(int id) : void
+    + getID() : int
+    + getName() : string
+    + getGameObjects() : vector<GameObject*>& 
+
+    - Scene(string aSceneName, int aSceneID)
+    - mSceneName : string
+    - mGameObjects : vector<GameObject*>
+    - mSceneID = -1 : int
+    - activeCameraIndex : int
+    - cameras : vector<Camera>(1)
+}
+
+class Camera implements GameObject{
+    - mBackgroundColor : Color
+    ' Width and Height are rendered area in Game Units
+    - mWidth : int
+    - mHeight : int
+
+}
+
+class TileMap {
+    + loadMap(const string& aPath): bool
+    + getWidth(): int
+    + getHeight(): int
+    + getTileWidth(): int
+    + getTileHeight(): int
+    + getTileLayers(): std::vector<tmx::TileLayer>
+    + getObjects(): std::vector<tmx::Object>
+    + getTilesets(): std::vector<tmx::Tileset>
+
+    - mMap : tmx::Map
+    - mTilesets : std::vector<tmx::Tileset>
+    - mTileLayers : std::vector<tmx::TileLayer>
+    - mObjects : std::vector<tmx::Object>
+}
+
+@enduml

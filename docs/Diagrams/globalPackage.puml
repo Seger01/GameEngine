@@ -1,0 +1,66 @@
+@startuml globalPackageClassDiagram
+package global{
+class Input{
+    + getInstance() : static Input&
+
+    + Input(const Input&) = delete
+    + Input& operator=(const Input&) = delete
+
+    + update() : void 
+
+    + getHeldKeys() : std::vector<Key>& 
+    + getDownKeys() : std::vector<Key>& 
+    + getUpKeys() : std::vector<Key>& 
+
+    + AnyKey() : bool
+    + AnyKeyDown()  : bool 
+
+    + MousePosition() : Point 
+
+    + GetAxis() : double 
+
+    + GetAction(DefAction aDefAction)  : bool 
+
+    + GetKey(Key key)  : bool 
+
+    + GetKeyDown(Key key)  : bool 
+    + GetKeyUp(Key key)  : bool 
+
+    + GetMouseButton(MouseButton which)  : bool 
+    + GetMouseButtonDown(MouseButton which)  : bool 
+    + GetMouseButtonUp(MouseButton which)  : bool 
+
+    + setActiveContext(std::string aContextName) : void 
+}
+
+
+class Time{
+    + initialize() : static void 
+
+    + update() : static void
+
+    + deltaTime : static long
+    + ticks : static long 
+
+    - startTime : static std::chrono::high_resolution_clock::time_point 
+    - lastFrameTime :  static std::chrono::milliseconds
+}
+
+class Debug{}
+
+class Color{
+    - r : int
+    - g : int
+    - b : int
+    - a : int
+}
+
+class FSConverter {
+    + FSConverter(string) : FSConverter
+    + getResourcePath(const std::string& resourceName) : string
+    - findResourcesFolder() : string
+    - executablePath() : string
+    - resourceDir : string
+}
+}
+@enduml
