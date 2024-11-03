@@ -3,6 +3,7 @@ The game engine is a singleton. This will be the only singleton in the engine.
 
 Managers contain only references to the game objects which are relevant to them. For example, the physics manager only contains references to game objects with collider or rigidbody components.
 Whenever a component is added to or removed from a game object, the game object calls a function in the game engine class. This adds the game object to an update queue. This update queue is used every cycle, where the engine checks all components of the object in the queue, and adds or removes them to the relevant managers.
+Managers have a private constructur and can only be created from the main engine class. This is done to ensure that there is only one instance of each manager.
 \textbf{\textit{Motivate why we made this choice!}}
 
 \subsection{GameObjects Architecture}
@@ -13,4 +14,20 @@ Whenever a component is added to or removed from a game object, the game object 
 ECS is not used because the decision was made that there is too little time to create a ECS system that is efficient enough to warrant the extra work it would cost to implement it.
 Instead of ECS, a more standard Object Oriented approach is used.
 
-Components can be added and removed from GameObjects at runtime. This is done by calling the addComponent and removeComponent functions of the GameObject class.
+\subsection{Scenes Architecture}
+Scenes are the "levels" that can be created in the engine. Each scene contains a vector of zero or more GameObjects pointers. 
+A scene also contains one or ore Camera objects. 
+The SceneManager is responsible for creating, loading and unloading scenes and is described in more detial in the Scene Manager chapter.
+
+
+
+
+
+
+
+
+
+
+
+
+
