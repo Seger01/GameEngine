@@ -55,5 +55,8 @@ output.csv
 code/.cache
 
 # ignore puml images
-*.png
-*.svg
+Diagrams/*.png
+Diagrams/*.svg
+
+#ignore output folder
+out/

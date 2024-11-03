@@ -1,7 +1,7 @@
 \documentclass[draft]{article}
 \usepackage{enumitem}
-\usepackage[options]{package}\usepackage{graphicx}
-\graphicspath{ {./images/} }
+\usepackage{graphicx}
+\graphicspath{ {./design_images/} }
 
 \title{Engine Bravo Design}
 \author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
@@ -18,13 +18,13 @@
 \section{Abbreviations}
 % Please make sure to keep this in alphabetical order!
 \begin{tabular}{c|c}
-  \textbf{Abbreviation} & \textbf{Full from} \\ \hline
-  API & Application programming interface \\ \hline
-  SDL & Simple DirectMedia Layer \\ \hline
-  Hz & hertz \\ \hline
-  Sfx & Sound effect(s) \\ \hline
-  ECS & Entity Component System \\ \hline
-  UI & User interface \\
+  \textbf{Abbreviation} & \textbf{Full from}                \\ \hline
+  API                   & Application programming interface \\ \hline
+  SDL                   & Simple DirectMedia Layer          \\ \hline
+  Hz                    & hertz                             \\ \hline
+  Sfx                   & Sound effect(s)                   \\ \hline
+  ECS                   & Entity Component System           \\ \hline
+  UI                    & User interface                    \\
 \end{tabular}
 
 \section{Architecture}
@@ -42,11 +42,12 @@ Whenever a component is added to or removed from a game object, the game object 
 ECS is not used because the decision was made that there is too little time to create a ECS system that is efficient enough to warrant the extra work it would cost to implement it.
 Instead of ECS, a more standard Object Oriented approach is used.
 
-Components can be added and removed from GameObjects at runtime. This is done by calling the addComponent and removeComponent functions of the GameObject class. 
+Components can be added and removed from GameObjects at runtime. This is done by calling the addComponent and removeComponent functions of the GameObject class.
 
 
 \section{Physics Update}
-Physics are updated sequentially in the normal game loop. It is checked how much time has accumulated since the last cycle, and the physics are ticked the required amount of times to keep up with the accumulated time.
+Physics are updated sequentially in the normal game loop.
+The physics are updated at a fixed rate of 50 Hz. This is done by checking how much time has passed since the last physics update, and then updating the physics the required amount of times to keep up with the accumulated time.
 
 \subsection{Alternatives Considered}
 \begin{itemize}
@@ -58,7 +59,7 @@ Physics are updated sequentially in the normal game loop. It is checked how much
 The \texttt{levelManager} (state machine responsible for transitioning between scenes) is never automatically updated, it is only updated when called by a behavior script.
 
 \section{Physics Library}
-Engine bravo makes use of the Box2D library to process any physics logic within the application. Box2D is chosen due to recommendations from teachers and since it is one of the only regularly updated ans accessible 2d physics libraries. 
+Engine bravo makes use of the Box2D library to process any physics logic within the application. Box2D is chosen due to recommendations from teachers and since it is one of the only regularly updated ans accessible 2d physics libraries.
 
 \section{Physics Object Types (in Box2D)}
 \begin{itemize}
@@ -98,7 +99,7 @@ From the parsed map, the engine will create GameObjects with a sprite component.
   \item \textbf{Mouse input:} the engine supports left, right, and middle mouse buttons.
   \item \textbf{Controller input:} the engine supports controller input, with analog values for the joysticks.
 \end{itemize}
-    
+
 \subsection{Input class}
 The input class is a singleton, and at the start of each cycle, it updates the input states.
 This is done by checking the state of the input devices, and updating the input states accordingly.
@@ -177,7 +178,7 @@ Because channel \footnote{what is called a channel in SDL mixer is more commonly
 manually in SDL mixer, the mChannelCount and mLastUsedChannel variables are used to determine the next available channel for playing sfx.
 
 \subsubsection{MixerContainer}
-The mixer container holds all the 
+The mixer container holds all the
 SDL mixer sound files.
 The string in the mSfx map is the path to the file, because that can be considered as a sort of unique id for the sound file.
 
@@ -196,9 +197,21 @@ Has \texttt{bodyID}, which is needed for the physics.
     \item substeps are configurable by the game programmer
     \item update method gets int of the amount of steps it need to set so less data gets copied to the world class
   \end{itemize}
-}
+ }
 
 \section{Multithreading}
 Multithreading is not added to the engine as it lies out of the scope of the project.
+
+\section{Multiplayer}
+The engine will support multiplayer.
+As the customer wants the engine to follow the Unity engine API, the multiplayer system wil follow the multiplayer package of unity \textbf{Netcode}.
+
+\subsection{Multiplayer library}
+Multiple libraries have been considered, for example ENet, RakNet or Boost.
+The uses library is SLikeNet. This library is a continuation of RakNet, which is a well known and well documented library.
+The library is also easy to use and has a lot of features that are useful for the engine.
+
+\subsection{Class diagram}
+\includegraphics[width=\textwidth]{networkingClassDiagram.png}
 
 \end{document}
