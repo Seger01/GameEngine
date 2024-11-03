@@ -1,0 +1,12 @@
+\section{Tilemaps}
+Tilemaps can be used to create levels more easily.
+Tilemaps will be parsed in the engine.
+\\
+The map creator that is used to create the tilemaps is Tiled.
+The reason Tiled is chosen is primarily because it was recommended for this project.
+Another advantage Tiled has is its extensive documentation and its ease of use.
+\\
+Maps created in Tiled are exported in a .tmx format, which is a type of XML file.
+The engine will parse the map file using a library called Tmxlite, which was recommended in the Tiled documentation.
+Required textures can be loaded using the TextureManager.
+From the parsed map, the engine will create GameObjects with a sprite component.
