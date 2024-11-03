@@ -8,6 +8,9 @@ Engine bravo makes use of the Box2D library to process any physics logic within 
 Box2D is chosen due to recommendations from teachers and since it is one of the only regularly updated ans accessible 2d physics libraries.
 Developing a custom physics engine was also considered for a short time but was deemed unnecessary as the project does not require any functionalities which aren't provided by Box2D.
 
+\subsection{Collision Detection}
+Collision detection within the engine is provided by the Box2D library. The library handles the physics related collision interactions between objects but also provides the user with data of which objects have collided with each other. This data is used within the engine to handle collision scripts for individual objects and other cases.
+
 \subsection{Physics Update}
 Physics are updated sequentially in the normal game loop.
 The physics are updated at a fixed rate of 50 Hz. This is done by checking how much time has passed since the last physics update, and then updating the physics the required amount of times to keep up with the accumulated time.
