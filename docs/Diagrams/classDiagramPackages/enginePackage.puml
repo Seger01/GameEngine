@@ -20,11 +20,6 @@ package Engine {
         + loadTileset(const string &aPath) : Texture*
     }
 
-    class AudioResourceManager {
-        - mPaths : vector<ComponentPathPair>
-        + getPath(const AudioSource&) : string
-    }
-
     class SceneManager {
         + addScene(const Scene& scene) : int
         + addSceneLevel(TileMap& map) : int
@@ -114,7 +109,6 @@ package Engine {
     EngineBravo *-- "1" PhysicsManager
     EngineBravo *-- "1" RenderSystem
     EngineBravo *-- "1" AudioManager
-    EngineBravo *-- "1" AudioResourceManager
     EngineBravo *-- "1" ParticleSystem
 }
 @enduml

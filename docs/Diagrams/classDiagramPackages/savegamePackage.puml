@@ -107,11 +107,6 @@ SaveGame *-- "*" SaveField
 SaveGame *-- "*" SaveArray
 SaveArray *-- "*" SaveField
 
-
-EngineBravo *--"1" SaveGameManager
-
-SaveGameManager *--"*" SaveGame
-
 SaveGame <-left- SaveGameUtil
 SaveGame *--"*" SaveArray
 SaveGame -[hidden]> SaveArray
@@ -124,4 +119,6 @@ SaveArray *--"*" IntSaveField
 SaveArray *--"*" FloatSaveField
 SaveArray *--"*" StringSaveField
 }
+
+Save *-- "*" SaveGame
 @enduml

@@ -3,17 +3,17 @@
 skinparam groupInheritance 2
 skinparam backgroundColor #AAAAAA
 
-!include componentPackage.puml
-!include enginePackage.puml
-!include networkingPackage.puml
-!include physicsPackage.puml
-!include particleEmitterPackage.puml
-!include savegamePackage.puml
-!include misc.puml
-!include globalPackage.puml
-!include uiPackage.puml
-!include audioPackage.puml
-!include renderingPackage.puml
+!include classDiagramPackages/componentPackage.puml
+!include classDiagramPackages/enginePackage.puml
+!include classDiagramPackages/networkingPackage.puml
+!include classDiagramPackages/physicsPackage.puml
+!include classDiagramPackages/particleEmitterPackage.puml
+!include classDiagramPackages/savegamePackage.puml
+!include classDiagramPackages/misc.puml
+!include classDiagramPackages/globalPackage.puml
+!include classDiagramPackages/uiPackage.puml
+!include classDiagramPackages/audioPackage.puml
+!include classDiagramPackages/renderingPackage.puml
 
 NetworkManager *-down- Networking
 PhysicsManager *-down- Physics
