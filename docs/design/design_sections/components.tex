@@ -6,28 +6,18 @@ They are the individual features that can be added to a game object to give it f
 \subsection{class diagram}
 \begin{figure}[H]
     \includegraphics[width=1.2\textwidth]{componentsPackageClassDiagram.png}
-    \caption{Class diagram of the components}
+    \caption{Class diagram of the components. Note that the components here are called proxies, because they do not contain the actual members of the component. See the full diagram for their complete functionality.}
     \label{fig:components}
 \end{figure}
 
-\subsection{AudioSourceProxy}
+\subsection{AudioSource}
 See \autoref{sec:audio} for more information.
 Used to add audio to a GameObject.
-
-\subsection{ParticleEmitterProxy}
-See \textbf{TODO: add reference to particle emitter}
-Used to create particle effects.
-
-\subsection{AnimationProxy}
-See \textbf{TODO: add reference to Animation emitter}
-
-\subsection{SpriteProxy}
-See \textbf{TODO: add reference to Sprite emitter}
 
 \subsection{Collider}
 Has \texttt{bodyID}, which is needed for the physics.
 
-\subsection{NetworkObjectProxy}
+\subsection{NetworkObject}
 see \autoref{sec:networking} for more information.
 
 \subsection{Sprite}
