@@ -4,12 +4,16 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(Engine-BRAVO VERSION 0.1)
 
+set(EXECUTABLE ${PROJECT_NAME}_exe)
+set(LIBRARY ${PROJECT_NAME}_lib)
+set(TESTS ${PROJECT_NAME}_tests)
+
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add a CMake option to enable or disable debug mode
-option(ENABLE_DEBUG "Enable debug mode" ON)
+option(ENABLE_DEBUG "Enable debug mode" OFF)
 
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
@@ -146,75 +150,46 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
 include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
 
+# Add the tests directory
+add_subdirectory(test)
+
 # Automatically search for source files
 file(GLOB_RECURSE SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
 # Exclude main.cpp from library sources
-# list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") #TODO add this in later when there are more files than just main.cpp
+list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") 
+
+# Create a library from the main sources
+# only one of the two lines below should be uncommented
+add_library(${LIBRARY} STATIC ${SOURCES})
+#add_library(${LIBRARY} SHARED ${SOURCES})
 
 # Define the libraries to link against
 set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image tmxlite box2d nlohmann_json::nlohmann_json)
 
+# Link libraries to library
+target_link_libraries(${LIBRARY} ${LINK_LIBRARIES})
+
 # Add the executable target
-add_executable(engine_BRAVO ${SOURCES} ${PROJECT_SOURCE_DIR}/src/main.cpp)
+add_executable(${EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
-# Link libraries
-target_link_libraries(engine_BRAVO PRIVATE ${LINK_LIBRARIES})
+# Link library to the executable
+target_link_libraries(${EXECUTABLE} ${LIBRARY})
 
-# Add shared and static library targets
-add_library(engine_BRAVO_shared SHARED ${SOURCES})
-add_library(engine_BRAVO_static STATIC ${SOURCES})
+# Add custom target to run the main program
+add_custom_target(run
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE}
+    DEPENDS ${EXECUTABLE}
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    COMMENT "Running the main program"
+)
 
-# Link SDL2 libraries to the shared and static libraries
-target_link_libraries(engine_BRAVO_shared PRIVATE ${LINK_LIBRARIES})
-target_link_libraries(engine_BRAVO_static PRIVATE ${LINK_LIBRARIES})
-
-# =====================
-# Google Test Integration
-# =====================
-
-# Option to enable or disable Google Test
-option(ENABLE_GTEST "Enable Google Test" OFF)
-
-if(ENABLE_GTEST)
-    # FetchContent module to download GTest
-    include(FetchContent)
-
-    # Download and configure GTest
-    FetchContent_Declare(
-      googletest
-      URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip  # You can use the latest release
-    )
-
-    # Download GTest during configuration step
-    FetchContent_MakeAvailable(googletest)
-
-   # Automatically search for test files in the test directory
-    file(GLOB_RECURSE TEST_SOURCES "${PROJECT_SOURCE_DIR}/test/*.cpp")
-    # Enable testing in the project
-    enable_testing()
-
-    # Add the test source files
-    set(TEST_SOURCES
-        test/test_main.cpp    # Your test source files
-        # Add more test files here
-    )
-
-    # Create an executable for tests
-    add_executable(tests ${TEST_SOURCES})
-
-    # Link GTest and GTest Main to the test executable
-    target_link_libraries(tests gtest gtest_main)
-
-    # Optionally, set up test include directories
-    # target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
-
-    # Add test execution
-    add_test(NAME engine_BRAVO_tests COMMAND tests)
-
-    # Optionally, set up test include directories
-    #target_include_directories(tests PRIVATE ${PROJECT_SOURCE_DIR}/inc)
-endif()
-
+# Add custom target to run Valgrind
+add_custom_target(run_valgrind
+    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE}
+    DEPENDS ${EXECUTABLE}
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    COMMENT "Running Valgrind to check for memory leaks"
+)
