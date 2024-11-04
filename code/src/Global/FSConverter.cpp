@@ -17,12 +17,13 @@ FSConverter::FSConverter(std::string ResourceDir) {
 
 std::string FSConverter::findResourcesFolder() {
     std::filesystem::path execPath = executablePath();
-    
+
     // Try to find the Resources folder in a few places relative to the executable
     std::filesystem::path potentialPaths[] = {
-        execPath / "../Resources",    // Resources in the parent directory of the executable
-        execPath / "Resources",       // Resources in the same directory as the executable
-        execPath / "../../Resources"  // Resources two levels up (in case of a bin/debug layout)
+        execPath / "Resources",         // Resources in the same directory as the executable
+        execPath / "../Resources",      // Resources in the parent directory of the executable
+        execPath / "../../Resources",   // Resources two levels up (in case of a bin/debug layout)
+        execPath / "../../../Resources" // Resources two levels up (in case of a bin/debug layout)
     };
 
     for (const auto& path : potentialPaths) {
