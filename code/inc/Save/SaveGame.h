@@ -13,9 +13,9 @@ public:
     void remove();
 
 public:
-    void addIntField(std::string name, int value);
-    void addFloatField(std::string name, float value);
-    void addStringField(std::string name, std::string value);
+    void addIntField(std::string aName, int value);
+    void addFloatField(std::string aName, float value);
+    void addStringField(std::string aName, std::string value);
 
 public:
     void setIntField(std::string aName, int aValue);
@@ -33,7 +33,7 @@ public:
     const StringSaveField& getStringField(std::string aName) const;
 
 public:
-    void addArray(std::string name);
+    void addArray(std::string aName);
     void setArray(std::string aName, SaveArray aValue);
     SaveArray getArray(std::string aName) const;
 

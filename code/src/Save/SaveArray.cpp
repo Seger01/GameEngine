@@ -6,7 +6,7 @@
 #include "StringSaveField.h"
 #include <iostream>
 
-SaveArray::SaveArray(std::string name) : mName(name) {}
+SaveArray::SaveArray(const std::string aName) : mName(aName) {}
 
 std::string SaveArray::getName() const { return mName; }
 

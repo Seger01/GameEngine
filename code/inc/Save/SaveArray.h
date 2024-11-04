@@ -9,15 +9,15 @@
 
 class SaveArray {
 public:
-    SaveArray(std::string name);
+    SaveArray(const std::string aName);
 
 public:
     std::string getName() const;
 
 public:
-    void addIntField(std::string name, int value);
-    void addFloatField(std::string name, float value);
-    void addStringField(std::string name, std::string value);
+    void addIntField(std::string aName, int aValue);
+    void addFloatField(std::string aName, float aValue);
+    void addStringField(std::string aName, std::string aValue);
 
 public:
     IntSaveField& getIntField(std::string aName);
