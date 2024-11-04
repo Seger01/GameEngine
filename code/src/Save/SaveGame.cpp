@@ -15,31 +15,27 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
         inFile >> j;
 
         // Load fields from JSON
-        if (j.contains("fields")) {
-            for (const auto& field : j["fields"]) {
-                if (field.contains("name") && field.contains("value")) {
-                    addAny(field["name"].get<std::string>(), field["value"]);
-                }
+        for (const auto& field : j["fields"]) {
+            if (field.contains("name") && field.contains("value")) {
+                addAny(field["name"].get<std::string>(), field["value"]);
             }
         }
 
         // Load arrays from JSON
-        if (j.contains("arrays")) {
-            for (const auto& array : j["arrays"]) {
-                if (array.contains("name") && array.contains("fields")) {
-                    SaveArray saveArray(array["name"]);
+        for (const auto& array : j["arrays"]) {
+            if (array.contains("name") && array.contains("fields")) {
+                SaveArray saveArray(array["name"]);
 
-                    // Only add fields if they exist
-                    if (!array["fields"].empty()) {
-                        for (const auto& arrayField : array["fields"]) {
-                            if (arrayField.contains("name") && arrayField.contains("value")) {
-                                saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
-                            }
+                // Only add fields if they exist
+                if (!array["fields"].empty()) {
+                    for (const auto& arrayField : array["fields"]) {
+                        if (arrayField.contains("name") && arrayField.contains("value")) {
+                            saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
                         }
                     }
-
-                    mArrays.push_back(saveArray);
                 }
+
+                mArrays.push_back(saveArray);
             }
         }
     }
