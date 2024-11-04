@@ -23,9 +23,13 @@
 #include "test.h"
 
 void engineTest() {
+    FSConverter fsConverter;
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     SaveGameManager& savegameManager = engine.getSaveGameManager();
+    SaveGame& sg1 = savegameManager.createSaveGame("save1", fsConverter.getResourcePath("saves/save1.save"));
+    sg1.addIntField("x", 0);
+    sg1.addIntField("y", 0);
 
     Scene* scene = sceneManager.createScene("Level1");
     if (scene == nullptr)
@@ -48,6 +52,10 @@ void engineTest() {
 
     engine.initizalize();
     engine.run();
+
+    sg1.setIntField("x", gameObject->getTransform().position.x);
+    sg1.setIntField("y", gameObject->getTransform().position.y);
+    sg1.store();
 
     return;
 }
