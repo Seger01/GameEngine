@@ -6,6 +6,8 @@ project(Engine_BRAVO VERSION 0.1)
 
 set(LIBRARY ${PROJECT_NAME}_lib)
 set(TESTS ${PROJECT_NAME}_tests)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
