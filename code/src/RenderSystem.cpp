@@ -8,6 +8,7 @@
 #include "ParticleEmitter.h"
 #include "SDL_timer.h"
 #include "Sprite.h"
+#include "Time.h"
 
 RenderSystem::RenderSystem() : WindowWidth(640), WindowHeight(360) {
     mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
@@ -41,9 +42,6 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
         static_cast<int>(static_cast<float>(spriteHeight) *
                          (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
 
-    std::cout << "GameObject pos: " << aGameObject->getTransform().position.x << ", "
-              << aGameObject->getTransform().position.y << std::endl;
-
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
                              aSprite->getFlipX(), aSprite->getFlipY(),
                              aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation);
@@ -70,8 +68,6 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
 
     Vector2 drawPosition = particlePosition - cameraOrigin;
 
-    std::cout << "drawPosition: " << drawPosition.x << ", " << drawPosition.y << std::endl;
-
     drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
     drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
 
@@ -80,9 +76,6 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     particleHeight =
         static_cast<int>(static_cast<float>(particleHeight) *
                          (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
-
-    std::cout << "Particle pos: " << aParticle.getPosition().x << ", " << aParticle.getPosition().y << std::endl;
-    std::cout << "Particle size: " << particleWidth << ", " << particleHeight << std::endl;
 
     if (aParticle.getRotation() == 0) {
         mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
@@ -115,6 +108,7 @@ void RenderSystem::render(Scene* aScene) {
         if (gameObject->hasComponent<ParticleEmitter>()) {
             for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
                 if (particleEmitter->isActive()) {
+                    std::cout << "Amount of particles: " << particleEmitter->getParticles().size() << std::endl;
                     for (auto& particle : particleEmitter->getParticles()) {
                         renderParticle(activeCamera, particle);
                     }
@@ -122,7 +116,19 @@ void RenderSystem::render(Scene* aScene) {
             }
         }
     }
+    renderDeubgInfo(aScene);
+
     mRenderer->show();
+}
+
+void RenderSystem::renderDeubgInfo(Scene* aScene) {
+    if (Time::deltaTime == 0) {
+        return;
+    }
+    int fps = 1.0f / Time::deltaTime;
+
+    // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
+    mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }

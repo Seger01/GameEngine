@@ -34,7 +34,7 @@ private:
     float acceleration;
 
     int maxLifeTime;
-    int lifeTimeRemaining;
+    float lifeTimeRemainingSec;
     int initialLifeTime;
 
     Vector2 startSize;
