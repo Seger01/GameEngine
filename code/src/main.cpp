@@ -12,6 +12,7 @@
 #include "PlayerBehaviourScript.h"
 #include "Renderer.h"
 #include "SampleBevahiourScript.h"
+#include "TileMapParser.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Sprite.h"
@@ -51,7 +52,45 @@ void engineTest() {
 }
 
 int main() { 
-    engineTest(); 
+    //engineTest(); 
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("LevelDefs/level.json");
+
+    TileMapParser tileMapParser(path);
+    tileMapParser.parse();
+    tileMapParser.printLayers();
+
+    try {
+        int layerIndex = 1;
+        int x = 1;
+        int y = 1;
+        std::cout << "Layer index: " << layerIndex << ", x: " << x << ", y: " << y << std::endl;
+        auto position = tileMapParser.getGridTilePosition(layerIndex, x, y);
+        std::cout << "Grid Tile Position: (" << position.first << ", " << position.second << ")" << std::endl;
+        int gID = tileMapParser.getGIDFromCoordinate(layerIndex, x, y);
+        std::cout << "gID: " << gID << std::endl;
+        tileMapParser.printTileInfo(gID);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    // Print the contents of tileInfoMap
+    const auto& tileMapData = tileMapParser.getTileMapData();
+    for (const auto& pair : tileMapData.mTileInfoMap) {
+        int gID = pair.first;
+        const TileInfo& info = pair.second;
+        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+    }
+
+    return 0;
+
+    return 0;
+
+    //Struct ParsedScene
+    //vector intergers to save layers
+    //2D array of grid per layer
+    //Map to link gID to tileset
+
     // // Initialize SDL
     // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
