@@ -45,8 +45,6 @@ void engineTest() {
     sceneManager.loadScene(0);
 
     engine.initizalize();
-
-    SDL_Delay(2000);
     engine.run();
 
     return;
