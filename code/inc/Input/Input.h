@@ -100,7 +100,8 @@ private:
         }
     }
 
-    void updateHeldActions() { this->mHeldActions = mContextManager.getCurrentActions(mHeldKeys); }
+    void updateHeldActions() {}
+    // void updateHeldActions() { this->mHeldActions = mContextManager.getCurrentActions(mHeldKeys); }
 
     Input() {
         this->updateCurrentKeys();
@@ -327,10 +328,10 @@ public:
         return false;
     }
 
-    void setActiveContext(std::string aContextName) { mContextManager.setActiveContext(aContextName); }
+    // void setActiveContext(std::string aContextName) { mContextManager.setActiveContext(aContextName); }
 
 private:
-    ContextManager mContextManager;
+    // ContextManager mContextManager;
 
     Mouse mCurrentMouse;
     Mouse mPreviousMouse;
