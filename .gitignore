@@ -58,3 +58,11 @@ output.csv
 # ignore clagd cache
 code/.cache
 
+# ignore puml images
+Diagrams/*.png
+Diagrams/*.svg
+docs/Diagrams/*.png
+docs/Diagrams/*.svg
+
+#ignore output folder
+out/

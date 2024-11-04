@@ -1,0 +1,142 @@
+@startuml componentsPackageClassDiagram
+
+package Components{
+
+class Component{
+    - mActive : bool
+
+}
+
+class AudioSourceProxy implements Component{}
+
+class ParticleEmitterProxy implements Component{}
+
+class AnimationProxy implements Component{}
+
+class SpriteProxy implements Component{}
+
+class NetworkObjectProxy implements Component{}
+
+
+class Collider implements Component{
+    + Collider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+    + getPosition() : point
+
+    ' Relative to position of GameObject
+    - mPosition : Point 
+    - mBodyId : b2Body
+
+    
+}
+
+class CircleColider implements Collider{
+    + CircleCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+
+    ' Position is middle of circle
+    - mRadius : float 
+}
+
+class BoxCollider implements Collider{
+    + BoxCollider(point pos, point size)
+    + setBodyId() : b2BodyId
+    + getBodyId() : b2BodyId
+
+    ' Position is middle of box
+    - mSize : point
+    - mRotation : float
+}
+
+class RigidBody implements Component{
+    + RigidBody(flag, properties)
+    + setMass(float aMass) : void
+    + getMass() : float
+    + setBodyType(BodyType aBodyType) : void
+    + getBodyType() : BodyType
+    + setGravityScale(float aGravityScale) : void
+    + getGravity() : float
+    + getBodyId() : int
+
+    + applyForce(point) : void
+
+    ' SETTERS AND GETTERS FOR MEMBERS
+    - mIsUpdated : bool
+    - mHasGravity : bool
+    - mIsMoveableByForce : bool
+    - mCanRotate : bool
+
+    - mBodyType : Enum 
+
+    - mDensity : float
+    - mFriction : float
+    - mRestitution : float
+
+    - mMass : float
+    - mGravityScale : float
+
+    - mBodyId : int
+
+    - mForcesBuffer : vector<point>
+}
+
+' class RigidBody(b2DynamicBody) {
+
+'     + RigidBody(flags, properties)
+'     + applyForce(point) : void
+'     + getBodyId() : int
+
+'     ' SETTERS AND GETTERS FOR MEMBERS
+'     - mIsUpdated : bool
+'     - mHasGravity : bool true/false
+'     - mIsMoveableByForce : bool false
+'     - mCanRotate : bool true/false
+
+'     - mBodyType : Enum bodyType
+
+'     - mDensity : float 0
+'     - mFriction : float 0
+'     - mRestitution : float 0
+
+'     - mMass : float 0
+'     - mGravityScale : float 0
+
+'     - mBodyId : int
+
+'     - mForcesBuffer : vector<point>
+' }
+' class RigidBody(B2StaticBody) {
+
+'     + RigidBody(flags, properties)
+'     + applyForce(point) : void
+
+'     ' SETTERS AND GETTERS FOR MEMBERS
+'     - mIsUpdated : bool
+'     - mHasGravity : bool false
+'     - mIsMoveable : bool true/false
+'     - mIsMoveableByForce : bool false
+'     - mCanRotate : bool true/false
+
+'     - mDensity : float 0
+'     - mFriction : float 0
+'     - mRestitution : float 0
+
+'     - mMass : float 0
+'     - mGravityScale : float 0
+
+'     - mBodyId : int
+
+'     - mForcesBuffer : vector<point>
+' }
+
+
+interface IBehavourScript implements Component{
+    + {abstract} void onStart()
+    + {abstract} void onUpdate()
+}
+
+}
+
+@enduml

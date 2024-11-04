@@ -1,0 +1,166 @@
+@startuml renderingPackageClassDiagram
+
+package Rendering {
+
+interface IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+class SDLWindow implements IWindow{
+    + Window(int aWindowWidth, int aWindowHeight)
+    + ~Window()
+
+    + getSize() : Vector2 
+
+    + setFullScreen() : void 
+    + setFloating() : void 
+    + toggleFullFloating() : void 
+
+    + getSDLWindow() : SDL_Window* 
+
+    - mWindow = nullptr : SDL_Window* 
+}
+
+interface IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class SDLRenderer implements IRenderer {
+    + Renderer(Window& window)
+    + ~Renderer() 
+
+    + clear(Color aColor) : void 
+    + show() : void 
+
+    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
+                       bool aFlipY, float aRotation) : void
+
+    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+
+    + getSDLRenderer() : SDL_Renderer*& 
+
+    - mRenderer = nullptr : SDL_Renderer* 
+
+}
+
+class Sprite implements Component{
+    + Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect())
+    + ~Sprite()
+
+    + Texture* getTexture()
+
+    + getRelativePosition() : Transform 
+    + setRelativePosition(Transform aNewTransform) : void 
+
+    + getSource() : Rect 
+    + setSource(Rect aSourceRect) : void
+
+    +  setFlipX(bool state) { mFlipX = state; } : void
+    +  getFlipX() { return mFlipX; } : bool
+
+    +  setFlipY(bool state) { mFlipY = state; } : void
+    +  getFlipY() { return mFlipY; } : bool
+
+    +  setWidth(int aWidth) { mWidth = aWidth; } : void
+    +  getWidth() { return mWidth; } : int
+
+    +  setHeight(int aHeight) { mHeight = aHeight; } : void
+    +  getHeight() { return mHeight; } : int
+
+    - Texture* mTexture = nullptr;
+    - Transform mTransform;
+
+    - Rect mSourceRect;
+
+    - std::string mSprite;
+    - int mWidth = 0;
+    - int mHeight = 0;
+    - bool mFlipX;
+    - bool mFlipY;
+
+    - int mLayer;
+}
+
+class Animation implements Component{
+    + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
+    + ~Animation()
+
+    + getTransform() : Transform 
+    + setTransform(Transform aNewTransform) : void 
+
+    + getFrame(int aFrameIndex) : Sprite* 
+    + getFrameAtTime(long aTime) : Sprite* 
+
+    + getTimeBetweenFrames() : int 
+    + setTimeBetweenFrames(int aTimeBetweenFrames) : void 
+
+    + setFlipX(bool state) : void 
+    + getFlipX() : bool 
+
+    + setFlipY(bool state) : void 
+    + getFlipY() : bool 
+
+    + isLooping() : bool 
+    + setIsLooping(bool aIsLooping) : void 
+
+    + getFrameCount() : int 
+
+    - mTransform : Transform 
+
+    - mFlipX : bool 
+    - mFlipY : bool 
+
+    - mAnimationFrames : std::vector<Sprite*> 
+    - mTimeBetweenFrames : int 
+    - mIsLooping : bool 
+}
+
+class Texture {
+    + Texture(SDL_Texture* aTexture)
+    + ~Texture()
+
+    + SDL_Texture* getSDLTexture();
+
+    - SDL_Texture* mTexture = nullptr;
+
+    - bool mTextureLoaded = false;
+}
+
+
+Animation  *-- "2..*" Sprite
+Sprite *-up- "1" Texture
+
+}
+
+Rendering *-- "1" IRenderer
+Rendering *-- "1" IWindow
+@enduml
+
+
+
+

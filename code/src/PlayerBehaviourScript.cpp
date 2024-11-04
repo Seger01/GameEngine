@@ -45,11 +45,7 @@ Animation* playerIdleFrontAnimation = nullptr;
 Animation* playerIdleSideAnimation = nullptr;
 Animation* playerIdleBackAnimation = nullptr;
 
-const float shrinkRate = -0.003f;
-
-ParticleEmitter* emitter = new ParticleEmitter(EmitterMode::Continuous, 0.1f, 0.0f, 100, 3000, Vector2(10, 10),
-                                               Vector2(shrinkRate, shrinkRate), 0.0f, 0.0f, 0.0f,
-                                               {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)});
+ParticleEmitter* emitter = nullptr;
 
 std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
 
@@ -208,6 +204,29 @@ void PlayerBehaviourScript::onStart() {
 
     mGameObject->addComponent(playerIdleFrontAnimation);
     mGameObject->addComponent(playerIdleSideAnimation);
+
+    EmitterMode emitterMode = EmitterMode::Continuous;
+    float speed = 0.1f;
+    float acceleration = 0.0f;
+    int minLifeTimeMs = 100;
+    int maxLifeTimeMs = 3000;
+    Vector2 startSize = Vector2(10, 10);
+
+    // float shrinkRate = -0.003f;
+    float shrinkRate = 0.0f;
+    Vector2 sizeShift = Vector2(shrinkRate, shrinkRate);
+
+    float rotation = 45.0f;
+    float rotationSpeed = 0.1f;
+    float rotationAcceleration = 0.0f;
+
+    // std::vector<Color> colors = {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)};
+    std::vector<Color> colors = {Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),
+                                 Color(0, 0, 255), Color(0, 255, 0), Color(255, 0, 0)};
+
+    emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, sizeShift,
+                                  rotation, rotationSpeed, rotationAcceleration, colors);
+
     mGameObject->addComponent(playerIdleBackAnimation);
 
     emitter->setParticlesPerSecond(200);
