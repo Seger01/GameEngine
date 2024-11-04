@@ -12,6 +12,7 @@
 #include "PlayerBehaviourScript.h"
 #include "Renderer.h"
 #include "SampleBevahiourScript.h"
+#include "SaveGameManager.hpp"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Sprite.h"
@@ -24,6 +25,7 @@
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
+    SaveGameManager& savegameManager = engine.getSaveGameManager();
 
     Scene* scene = sceneManager.createScene("Level1");
     if (scene == nullptr)
