@@ -15,3 +15,10 @@ What is going to be done:
 - Ronan:
 - Sean:
 - Seger:
+
+Roadblocks:
+- Siem:
+- Angel:
+- Ronan:
+- Sean:
+- Seger:

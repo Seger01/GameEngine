@@ -1,0 +1,20 @@
+Minutes assessment first quarter
+- Introduction, discussing what will be Discussed
+- Showing design diagram: various managers / packages were mentioned and briefly explained by the member who is responsible for them.
+    - When associating in uml through an arrow, do not mention it as text in the class
+    - Bob: Why keep a local copy of the physics world, and not have it all be handled by Box2D? Angel:
+    - Bob: What if the physics library needs to be changed? Angel: The World is an abstract way to interface with a physics library.
+    - Seger mentioned that even though multiplayer is added for the required extra points, the particle system was added because it is a nice addition.
+- Showing design document:
+    - Bob q: is not 90% of the design document not more easily to be generated using Doxygen? What is extra value of this document? Sean A: convenience for game programmer.
+    - Bob: does not see enough 'explain why' in this document. If the current contents of the document were written in Doxygen it might be a more clear document.
+- Showing validation app design
+    - Bob q: Has the engine design been modified / changed during the design of the validation app.
+- Showing minutes:
+    - Tip Bob: add a section to standup for 'what problems do I expect to run into'
+- Feedback grade:
+    - Positive about maintaining contact, weekly updates, teams.
+    - Design document: good initiative, not as efficient as it can be.
+    - Previously stated we would start using kanban/scrum -ish methods. Bob q: what is the status on this?
+    - During other's presentations: remain silent!
+    - Technical progress: well on schedule, well thought out
