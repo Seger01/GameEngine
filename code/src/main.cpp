@@ -45,13 +45,15 @@ void engineTest() {
     sceneManager.loadScene(0);
 
     engine.initizalize();
+
+    SDL_Delay(2000);
     engine.run();
 
     return;
 }
 
-int main() { 
-    engineTest(); 
+int main() {
+    engineTest();
     // // Initialize SDL
     // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());

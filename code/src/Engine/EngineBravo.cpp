@@ -31,6 +31,8 @@ void EngineBravo::run() {
     bool quit = false;
     SDL_Event e;
 
+    mRenderSystem.getWindow().showWindow();
+
     while (!quit) {
         Time::update();
         static long startOfFrame = 0;
@@ -41,9 +43,6 @@ void EngineBravo::run() {
                 quit = true;
             }
         }
-
-        std::cout << "Time since start: " << Time::ticks << std::endl;
-        std::cout << "Delta time: " << Time::deltaTime << std::endl;
 
         input.update();
 
@@ -83,8 +82,6 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene == nullptr) {
         std::cout << "retrieved scene is nullptr" << std::endl;
     }
-
-    std::cout << "Amount of registered gameobjects: " << currentScene->getGameObjects().size() << std::endl;
 
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {

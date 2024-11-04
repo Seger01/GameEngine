@@ -11,7 +11,7 @@ Window::Window(int aWindowWidth, int aWindowHeight) {
 
     // Create the window
     mWindow = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, aWindowWidth,
-                               aWindowHeight, SDL_WINDOW_SHOWN);
+                               aWindowHeight, SDL_WINDOW_RESIZABLE);
 
     if (mWindow == nullptr) {
         throw std::runtime_error("Window could not be created! SDL_Error: " + std::string(SDL_GetError()));
@@ -27,6 +27,8 @@ Window::~Window() {
     // Quit SDL subsystems
     SDL_Quit();
 }
+
+void Window::showWindow() { SDL_ShowWindow(mWindow); }
 
 // Get the window size as a Vector2 object
 Vector2 Window::getSize() {
