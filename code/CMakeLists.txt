@@ -2,9 +2,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(Engine-BRAVO VERSION 0.1)
+project(Engine_BRAVO VERSION 0.1)
 
-set(EXECUTABLE ${PROJECT_NAME}_exe)
 set(LIBRARY ${PROJECT_NAME}_lib)
 set(TESTS ${PROJECT_NAME}_tests)
 
@@ -173,15 +172,15 @@ set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image tmxlite box2d nloh
 target_link_libraries(${LIBRARY} ${LINK_LIBRARIES})
 
 # Add the executable target
-add_executable(${EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
 # Link library to the executable
-target_link_libraries(${EXECUTABLE} ${LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${LIBRARY})
 
 # Add custom target to run the main program
 add_custom_target(run
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE}
-    DEPENDS ${EXECUTABLE}
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMMENT "Running the main program"
 )
