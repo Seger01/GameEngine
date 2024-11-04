@@ -33,7 +33,7 @@ public:
     SaveArray getArray(std::string aName) const;
 
 private:
-    void addAnyFromString(std::string aName, std::string aValue);
+    void addAny(const std::string& aName, const nlohmann::json& aValue);
     void createFile();
 
 private:

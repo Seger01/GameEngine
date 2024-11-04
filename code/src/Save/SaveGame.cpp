@@ -17,7 +17,7 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
         if (j.contains("fields")) {
             for (const auto& field : j["fields"]) {
                 if (field.contains("name") && field.contains("value")) {
-                    addAnyFromString(field["name"], field["value"]);
+                    addAny(field["name"].get<std::string>(), field["value"]);
                 }
             }
         }
@@ -32,7 +32,7 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
                     if (!array["fields"].empty()) {
                         for (const auto& arrayField : array["fields"]) {
                             if (arrayField.contains("name") && arrayField.contains("value")) {
-                                saveArray.addAnyFromString(arrayField["name"], arrayField["value"]);
+                                saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
                             }
                         }
                     }
@@ -85,22 +85,38 @@ void SaveGame::store() {
     }
 }
 
-void SaveGame::addAnyFromString(std::string aName, std::string aValue) {
-    if (SaveGameUtil::isInteger(aValue)) {
-        addIntField(aName, std::stoi(aValue));
-    } else if (SaveGameUtil::isFloat(aValue)) {
-        addFloatField(aName, std::stof(aValue));
+void SaveGame::addAny(const std::string& aName, const nlohmann::json& aValue) {
+    if (aValue.is_number_integer()) {
+        int int_value = aValue.get<int>();
+        addIntField(aName, int_value);
+    } else if (aValue.is_number_float()) {
+        float float_value = aValue.get<float>();
+        addFloatField(aName, float_value);
+    } else if (aValue.is_string()) {
+        std::string str_value = aValue.get<std::string>();
+        addStringField(aName, str_value);
     } else {
-        addStringField(aName, aValue);
+        throw std::invalid_argument("Failed to add field with name \"" + aName + "\". Invalid type.");
     }
 }
 
+/**
+ * @brief Add an integer field to the save game
+ *
+ * @param aName The name of the field
+ * @param aValue The value of the field
+ *
+ * @note If a field with the same name already exists, the value will be overwritten
+ */
 void SaveGame::addIntField(std::string aName, int aValue) {
     // Check if the field already exists
     try {
         for (auto& field : mIntFields) {
             if (field.getName() == aName) {
-                throw std::invalid_argument("Int field with name \"" + aName + "\" already exists.");
+                std::cout << "Field with name \"" << field.getName() << "\" already exists. Overwriting value instead."
+                          << std::endl;
+                field.setValue(aValue);
+                return;
             }
         }
     } catch (std::string val) {
@@ -112,12 +128,23 @@ void SaveGame::addIntField(std::string aName, int aValue) {
     mIntFields.emplace_back(aName, aValue);
 }
 
+/**
+ * @brief Add a float field to the save game
+ *
+ * @param aName The name of the field
+ * @param aValue The value of the field
+ *
+ * @note If a field with the same name already exists, the value will be overwritten
+ */
 void SaveGame::addFloatField(std::string aName, float aValue) {
     // Check if the field already exists
     try {
         for (auto& field : mFloatFields) {
             if (field.getName() == aName) {
-                throw(aName);
+                std::cout << "Field with name \"" << field.getName() << "\" already exists. Overwriting value instead."
+                          << std::endl;
+                field.setValue(aValue);
+                return;
             }
         }
     } catch (std::string val) {
@@ -129,12 +156,23 @@ void SaveGame::addFloatField(std::string aName, float aValue) {
     mFloatFields.emplace_back(aName, aValue);
 }
 
+/**
+ * @brief Add a string field to the save game
+ *
+ * @param aName The name of the field
+ * @param aValue The value of the field
+ *
+ * @note If a field with the same name already exists, the value will be overwritten
+ */
 void SaveGame::addStringField(std::string aName, std::string aValue) {
     // Check if the field already exists
     try {
         for (auto& field : mStringFields) {
             if (field.getName() == aName) {
-                throw(aName);
+                std::cout << "Field with name \"" << field.getName() << "\" already exists. Overwriting value instead."
+                          << std::endl;
+                field.setValue(aValue);
+                return;
             }
         }
     } catch (std::string val) {

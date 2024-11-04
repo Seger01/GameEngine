@@ -10,13 +10,18 @@ SaveArray::SaveArray(std::string name) : mName(name) {}
 
 std::string SaveArray::getName() const { return mName; }
 
-void SaveArray::addAnyFromString(std::string aName, std::string aValue) {
-    if (SaveGameUtil::isInteger(aValue)) {
-        addIntField(aName, std::stoi(aValue));
-    } else if (SaveGameUtil::isFloat(aValue)) {
-        addFloatField(aName, std::stof(aValue));
+void SaveArray::addAny(const std::string& aName, const nlohmann::json& aValue) {
+    if (aValue.is_number_integer()) {
+        int int_value = aValue.get<int>();
+        addIntField(aName, int_value);
+    } else if (aValue.is_number_float()) {
+        float float_value = aValue.get<float>();
+        addFloatField(aName, float_value);
+    } else if (aValue.is_string()) {
+        std::string str_value = aValue.get<std::string>();
+        addStringField(aName, str_value);
     } else {
-        addStringField(aName, aValue);
+        throw std::invalid_argument("Failed to add field with name \"" + aName + "\". Invalid type.");
     }
 }
 

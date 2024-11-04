@@ -3,6 +3,7 @@
 #include "FloatSaveField.h"
 #include "IntSaveField.h"
 #include "StringSaveField.h"
+#include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
 
@@ -29,7 +30,7 @@ public:
     const std::vector<StringSaveField>& getStringArray() const;
 
 protected:
-    void addAnyFromString(std::string aName, std::string aValue);
+    void addAny(const std::string& aName, const nlohmann::json& aValue);
 
 private:
     std::string mName;
