@@ -4,8 +4,8 @@
 
 class StringSaveField {
 public:
-    StringSaveField(std::string name);
-    StringSaveField(std::string name, std::string value);
+    StringSaveField(std::string aName);
+    StringSaveField(std::string aName, std::string aValue);
 
     std::string getName() const;
 

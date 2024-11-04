@@ -1,8 +1,8 @@
 #include "IntSaveField.h"
 
-IntSaveField::IntSaveField(std::string name) : mName(name) {}
+IntSaveField::IntSaveField(std::string aName) : mName(aName) {}
 
-IntSaveField::IntSaveField(std::string name, int value) : mName(name), mValue(value) {}
+IntSaveField::IntSaveField(std::string aName, int aValue) : mName(aName), mValue(aValue) {}
 
 std::string IntSaveField::getName() const { return mName; }
 

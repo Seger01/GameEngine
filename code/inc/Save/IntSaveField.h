@@ -4,8 +4,8 @@
 
 class IntSaveField {
 public:
-    IntSaveField(std::string name);
-    IntSaveField(std::string name, int value);
+    IntSaveField(std::string aName);
+    IntSaveField(std::string aName, int aValue);
 
     std::string getName() const;
 

@@ -1,8 +1,8 @@
 #include "FloatSaveField.h"
 
-FloatSaveField::FloatSaveField(std::string name) : mName(name) {}
+FloatSaveField::FloatSaveField(std::string aName) : mName(aName) {}
 
-FloatSaveField::FloatSaveField(std::string name, float value) : mName(name), mValue(value) {}
+FloatSaveField::FloatSaveField(std::string aName, float aValue) : mName(aName), mValue(aValue) {}
 
 std::string FloatSaveField::getName() const { return mName; }
 
