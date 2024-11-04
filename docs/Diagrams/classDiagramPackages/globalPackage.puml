@@ -57,7 +57,7 @@ class Color{
 
 class FSConverter {
     + FSConverter(string) : FSConverter
-    + getResourcePath(const std::string& resourceName) : string
+    + getResourcePath(const std::string& resourceName, bool aCheckExists = false) : string
     - findResourcesFolder() : string
     - executablePath() : string
     - resourceDir : string

@@ -6,6 +6,8 @@ project(Engine_BRAVO VERSION 0.1)
 
 set(LIBRARY ${PROJECT_NAME}_lib)
 set(TESTS ${PROJECT_NAME}_tests)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -136,6 +138,7 @@ add_subdirectory(external/SLikeNet)
 add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_mixer)
 add_subdirectory(external/SDL_image)
+add_subdirectory(external/SDL_ttf)
 add_subdirectory(external/tmxlite/tmxlite)
 add_subdirectory(external/box2d)
 add_subdirectory(external/nlohmann_json)
@@ -166,7 +169,7 @@ add_library(${LIBRARY} STATIC ${SOURCES})
 #add_library(${LIBRARY} SHARED ${SOURCES})
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image tmxlite box2d nlohmann_json::nlohmann_json)
+set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf tmxlite box2d nlohmann_json::nlohmann_json)
 
 # Link libraries to library
 target_link_libraries(${LIBRARY} ${LINK_LIBRARIES})

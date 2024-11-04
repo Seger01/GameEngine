@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #include "Color.h"
 #include "Rect.h"
@@ -25,9 +26,13 @@ public:
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill);
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill);
 
+    void renderText(const std::string& aText, Vector2 aLocation, Color aColor);
+
     SDL_Renderer*& getSDLRenderer();
 
 private:
+    TTF_Font* mFont = nullptr;
+
     SDL_Renderer* mRenderer = nullptr;
 };
 

@@ -35,8 +35,10 @@ private:
     void runBehaviourScripts();
     void startBehaviourScripts();
 
+    void limitFrameRate(int aFrameRate);
+
 private:
-    int mMinFrameTimeMs = 4;
+    int mMinFrameTimeMs = 3;
 
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;

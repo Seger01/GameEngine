@@ -29,12 +29,19 @@ void engineTest() {
     if (scene == nullptr)
         exit(1);
 
+    int cameraID = scene->addCamera();
+    scene->setActiveGamera(cameraID);
+
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+    scene->getActiveCamera().setWidth(160);
+    scene->getActiveCamera().setHeight(90);
+
     GameObject* gameObject = new GameObject;
 
     Transform objectTransform;
 
-    objectTransform.position.x = 400;
-    objectTransform.position.y = 400;
+    objectTransform.position.x = 80;
+    objectTransform.position.y = 0;
 
     gameObject->setTransform(objectTransform);
 
@@ -50,8 +57,8 @@ void engineTest() {
     return;
 }
 
-int main() { 
-    engineTest(); 
+int main() {
+    engineTest();
     // // Initialize SDL
     // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());

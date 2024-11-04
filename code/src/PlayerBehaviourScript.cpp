@@ -75,7 +75,7 @@ void PlayerBehaviourScript::setAnimationActive(Animation* aAnimation, bool aStat
 void PlayerBehaviourScript::onStart() {
     std::cout << "PlayerBehaviourScript::onStart()" << std::endl;
 
-    const int sizeMultiplier = 5;
+    const int sizeMultiplier = 1;
 
     const int spriteWidth = 16;  // Width of each sprite
     const int spriteHeight = 25; // Height of each sprite
@@ -206,35 +206,33 @@ void PlayerBehaviourScript::onStart() {
     mGameObject->addComponent(playerIdleSideAnimation);
 
     EmitterMode emitterMode = EmitterMode::Continuous;
-    float speed = 0.1f;
+    float speed = 50.0f;
     float acceleration = 0.0f;
     int minLifeTimeMs = 100;
-    int maxLifeTimeMs = 3000;
-    Vector2 startSize = Vector2(10, 10);
+    int maxLifeTimeMs = 1000;
+    Vector2 startSize = Vector2(5, 5);
 
-    float shrinkRate = -0.003f;
-    // float shrinkRate = 0.0f;
-    Vector2 sizeShift = Vector2(shrinkRate, shrinkRate);
+    Vector2 endSize = Vector2(0, 0);
 
-    float rotation = 45.0f;
-    float rotationSpeed = 0.1f;
+    float rotation = 0.0f;
+    float rotationSpeed = 0.0f;
     float rotationAcceleration = 0.0f;
 
     std::vector<Color> colors = {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)};
     // std::vector<Color> colors = {Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),
     //                              Color(0, 0, 255), Color(0, 255, 0), Color(255, 0, 0)};
 
-    emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, sizeShift,
+    emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, endSize,
                                   rotation, rotationSpeed, rotationAcceleration, colors);
 
     mGameObject->addComponent(playerIdleBackAnimation);
 
-    emitter->setParticlesPerSecond(200);
+    emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
     mGameObject->addComponent(emitter);
 
-    emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
-    emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
+    // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
+    // emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
 }
 
 void PlayerBehaviourScript::handleAnimations() {
@@ -264,14 +262,13 @@ void PlayerBehaviourScript::handleAnimations() {
 }
 
 void PlayerBehaviourScript::handleMovement() {
-    static const float movementSpeed = 0.5f;
+    static const float movementSpeed = 50.0f;
 
     Input& input = Input::getInstance();
 
     Transform parentTransform = this->mGameObject->getTransform();
 
     if (input.GetKey(Key::Key_E)) {
-        std::cout << "Key E pressed" << std::endl;
         deactivateAllAnimations();
     }
 
@@ -313,6 +310,32 @@ void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
 
+    // Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+    //
+    // static bool direction = true;
+    //
+    // if (direction) {
+    //     Transform pos = currentCam.getTransform();
+    //
+    //     pos.position.x += 0.01f * Time::deltaTime;
+    //
+    //     currentCam.setTransform(pos);
+    // } else {
+    //     Transform pos = currentCam.getTransform();
+    //
+    //     pos.position.x -= 0.01f * Time::deltaTime;
+    //
+    //     currentCam.setTransform(pos);
+    // }
+    //
+    // if (currentCam.getTransform().position.x > 100) {
+    //     direction = false;
+    // } else if (currentCam.getTransform().position.x < 40) {
+    //     direction = true;
+    // }
+
+    // emitter->setActive(false);
+
     static bool emitterMode = false;
 
     if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
@@ -321,7 +344,7 @@ void PlayerBehaviourScript::onUpdate() {
 
     if (emitterMode) {
         emitter->setAngle(0, 45);
-        emitter->getRelativeTransform().rotation += 0.001f * Time::deltaTime;
+        emitter->getRelativeTransform().rotation += 1.0f * Time::deltaTime;
     } else {
         emitter->setAngle(0, 360);
         emitter->getRelativeTransform().rotation = 0.0f;

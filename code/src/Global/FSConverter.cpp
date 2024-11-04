@@ -35,10 +35,10 @@ std::string FSConverter::findResourcesFolder() {
     return ""; // Resources folder not found
 }
 
-std::string FSConverter::getResourcePath(const std::string& resourceName) {
+std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
     std::filesystem::path fullPath = std::filesystem::path(resourceDir) / resourceName;
 
-    if (!std::filesystem::exists(fullPath)) {
+    if (aCheckExists && !std::filesystem::exists(fullPath)) {
         std::cerr << "Error: Resource " << resourceName << " does not exist at " << fullPath.string() << std::endl;
         return "";
     }
