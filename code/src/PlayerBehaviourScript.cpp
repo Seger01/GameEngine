@@ -206,9 +206,9 @@ void PlayerBehaviourScript::onStart() {
     mGameObject->addComponent(playerIdleSideAnimation);
 
     EmitterMode emitterMode = EmitterMode::Continuous;
-    float speed = 0.03f;
+    float speed = 50.0f;
     float acceleration = 0.0f;
-    int minLifeTimeMs = 10;
+    int minLifeTimeMs = 100;
     int maxLifeTimeMs = 1000;
     Vector2 startSize = Vector2(5, 5);
 
@@ -227,7 +227,7 @@ void PlayerBehaviourScript::onStart() {
 
     mGameObject->addComponent(playerIdleBackAnimation);
 
-    emitter->setParticlesPerSecond(200);
+    emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
     mGameObject->addComponent(emitter);
 
@@ -262,7 +262,7 @@ void PlayerBehaviourScript::handleAnimations() {
 }
 
 void PlayerBehaviourScript::handleMovement() {
-    static const float movementSpeed = 0.1f;
+    static const float movementSpeed = 50.0f;
 
     Input& input = Input::getInstance();
 
@@ -344,7 +344,7 @@ void PlayerBehaviourScript::onUpdate() {
 
     if (emitterMode) {
         emitter->setAngle(0, 45);
-        emitter->getRelativeTransform().rotation += 0.001f * Time::deltaTime;
+        emitter->getRelativeTransform().rotation += 1.0f * Time::deltaTime;
     } else {
         emitter->setAngle(0, 360);
         emitter->getRelativeTransform().rotation = 0.0f;
