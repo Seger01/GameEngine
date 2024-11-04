@@ -1,0 +1,6 @@
+
+
+class BodyProxy {
+public:
+private:
+};
