@@ -9,7 +9,7 @@
 #include "SDL_timer.h"
 #include "Sprite.h"
 
-RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(600) {
+RenderSystem::RenderSystem() : WindowWidth(640), WindowHeight(360) {
     mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
     mRenderer = std::make_unique<Renderer>(*mWindow);
 
@@ -18,26 +18,77 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(600) {
     return;
 }
 
-void RenderSystem::renderSprite(GameObject* aGameObject, Sprite* aSprite) {
-    mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(),
-                             aGameObject->getTransform().position + aSprite->getRelativePosition().position,
-                             aSprite->getWidth(), aSprite->getHeight(), aSprite->getFlipX(), aSprite->getFlipY(),
+void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite) {
+    int spriteWidth = aSprite->getWidth();
+    int spriteHeight = aSprite->getHeight();
+
+    int WindowWidth = mWindow->getSize().x;
+    int WindowHeight = mWindow->getSize().y;
+
+    Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
+
+    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+
+    Vector2 drawPosition = texturePosition - cameraOrigin;
+
+    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+    spriteWidth = static_cast<int>(static_cast<float>(spriteWidth) *
+                                   (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth())));
+    spriteHeight =
+        static_cast<int>(static_cast<float>(spriteHeight) *
+                         (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
+
+    std::cout << "GameObject pos: " << aGameObject->getTransform().position.x << ", "
+              << aGameObject->getTransform().position.y << std::endl;
+
+    mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
+                             aSprite->getFlipX(), aSprite->getFlipY(),
                              aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation);
 }
 
-void RenderSystem::renderAnimation(GameObject* aGameObject, Animation* aAnimation) {
+void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
     Sprite* currentFrame = aAnimation->getFrameAtTime(SDL_GetTicks());
     // Sprite* currentFrame = aAnimation->getFrame(0);
 
-    renderSprite(aGameObject, currentFrame);
+    renderSprite(aCurrentCamera, aGameObject, currentFrame);
 }
 
-void RenderSystem::renderParticle(Particle& aParticle) {
+void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
+    float particleWidth = aParticle.getSize().x;
+    float particleHeight = aParticle.getSize().y;
+
+    int WindowWidth = mWindow->getSize().x;
+    int WindowHeight = mWindow->getSize().y;
+
+    Vector2 particlePosition = aParticle.getPosition();
+
+    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+
+    Vector2 drawPosition = particlePosition - cameraOrigin;
+
+    std::cout << "drawPosition: " << drawPosition.x << ", " << drawPosition.y << std::endl;
+
+    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+    particleWidth = static_cast<int>(static_cast<float>(particleWidth) *
+                                     (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth())));
+    particleHeight =
+        static_cast<int>(static_cast<float>(particleHeight) *
+                         (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
+
+    std::cout << "Particle pos: " << aParticle.getPosition().x << ", " << aParticle.getPosition().y << std::endl;
+    std::cout << "Particle size: " << particleWidth << ", " << particleHeight << std::endl;
+
     if (aParticle.getRotation() == 0) {
-        mRenderer->renderSquare(aParticle.getPosition(), aParticle.getSize().x, aParticle.getSize().y,
+        mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
                                 aParticle.getColor(), true);
     } else {
-        mRenderer->renderSquare(aParticle.getPosition(), aParticle.getSize().x, aParticle.getSize().y,
+        mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
                                 aParticle.getRotation(), aParticle.getColor(), true);
     }
 }
@@ -45,24 +96,28 @@ void RenderSystem::renderParticle(Particle& aParticle) {
 void RenderSystem::render(Scene* aScene) {
     mRenderer->clear(mBackgroundColor);
 
+    Camera& activeCamera = aScene->getActiveCamera();
+
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Animation>()) {
             for (auto animation : gameObject->getComponents<Animation>()) {
                 if (animation->isActive()) {
-                    renderAnimation(gameObject, animation);
+                    renderAnimation(activeCamera, gameObject, animation);
                 }
             }
         } else if (gameObject->hasComponent<Sprite>()) {
             for (auto sprite : gameObject->getComponents<Sprite>()) {
                 if (sprite->isActive()) {
-                    renderSprite(gameObject, sprite);
+                    renderSprite(activeCamera, gameObject, sprite);
                 }
             }
         }
         if (gameObject->hasComponent<ParticleEmitter>()) {
             for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
-                for (auto& particle : particleEmitter->getParticles()) {
-                    renderParticle(particle);
+                if (particleEmitter->isActive()) {
+                    for (auto& particle : particleEmitter->getParticles()) {
+                        renderParticle(activeCamera, particle);
+                    }
                 }
             }
         }
