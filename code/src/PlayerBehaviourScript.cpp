@@ -202,6 +202,10 @@ void PlayerBehaviourScript::onStart() {
     playerIdleSideAnimation->setActive(false);
     playerIdleFrontAnimation->setActive(true);
 
+    playerIdleFrontAnimation->setLayer(1);
+    playerIdleSideAnimation->setLayer(1);
+    playerIdleBackAnimation->setLayer(1);
+
     mGameObject->addComponent(playerIdleFrontAnimation);
     mGameObject->addComponent(playerIdleSideAnimation);
 

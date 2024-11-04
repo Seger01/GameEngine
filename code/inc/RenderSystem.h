@@ -13,6 +13,7 @@ class RenderSystem {
 public:
     RenderSystem();
 
+    void renderLayer(Scene* aScene, int aLayer);
     void render(Scene* aScene);
 
     Renderer& getRenderer();
@@ -25,6 +26,10 @@ private:
 
     void renderDeubgInfo(Scene* aScene);
 
+    int getLowestLayer(Scene* aScene);
+    int getHighestLayer(Scene* aScene);
+
+private:
     std::unique_ptr<Renderer> mRenderer;
     std::unique_ptr<Window> mWindow;
 

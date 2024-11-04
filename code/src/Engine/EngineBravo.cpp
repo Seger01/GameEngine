@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -21,6 +21,8 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
+    if (mSceneManager.sceneChanged()) {
+    }
     startBehaviourScripts();
 
     Time::initialize();
@@ -44,6 +46,9 @@ void EngineBravo::run() {
             }
         }
 
+        if (mSceneManager.sceneChanged()) {
+            startBehaviourScripts();
+        }
         input.update();
 
         runBehaviourScripts();
@@ -52,7 +57,7 @@ void EngineBravo::run() {
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
-        limitFrameRate(1000);
+        limitFrameRate(mFrameRateLimit);
     }
 }
 

@@ -31,6 +31,9 @@ public:
 
     int getFrameCount();
 
+    void setLayer(int aLayer);
+    int getLayer();
+
 private:
     Transform mTransform;
 
@@ -40,6 +43,8 @@ private:
     std::vector<Sprite*> mAnimationFrames;
     int mTimeBetweenFrames;
     bool mIsLooping;
+
+    int mLayer = 0;
 };
 
 #endif

@@ -36,15 +36,27 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
     drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
 
-    spriteWidth = static_cast<int>(static_cast<float>(spriteWidth) *
-                                   (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth())));
-    spriteHeight =
+    spriteWidth =
+        std::ceil(static_cast<int>(static_cast<float>(spriteWidth) *
+                                   (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+    spriteHeight = std::ceil(
         static_cast<int>(static_cast<float>(spriteHeight) *
-                         (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
+                         (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
+
+    // std::cout << "RenderSystem::renderSprite: drawPosition: " << drawPosition.x << ", " << drawPosition.y <<
+    // std::endl; std::cout << "RenderSystem::renderSprite: spriteWidth: " << spriteWidth << ", spriteHeight: " <<
+    // spriteHeight
+    //           << std::endl;
 
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
                              aSprite->getFlipX(), aSprite->getFlipY(),
                              aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation);
+
+    // mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, Color(255, 0, 0), false);
+    // drawPosition.x += 30;
+    // mRenderer->renderText("" + std::to_string(aSprite->getTexture()->getID()) + ", " + std::to_string(0),
+    // drawPosition,
+    //                       Color(0, 255, 0));
 }
 
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
@@ -86,28 +98,82 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     }
 }
 
-void RenderSystem::render(Scene* aScene) {
-    mRenderer->clear(mBackgroundColor);
+int RenderSystem::getLowestLayer(Scene* aScene) {
+    int lowestLayer = 0;
+    for (auto& gameObject : aScene->getGameObjects()) {
+        if (gameObject->hasComponent<Sprite>()) {
+            for (auto sprite : gameObject->getComponents<Sprite>()) {
+                if (sprite->getLayer() < lowestLayer) {
+                    lowestLayer = sprite->getLayer();
+                }
+            }
+        }
+        if (gameObject->hasComponent<Animation>()) {
+            for (auto animation : gameObject->getComponents<Animation>()) {
+                if (animation->getLayer() < lowestLayer) {
+                    lowestLayer = animation->getLayer();
+                }
+            }
+        }
+        if (gameObject->hasComponent<ParticleEmitter>()) {
+            for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
+                if (particleEmitter->getLayer() < lowestLayer) {
+                    lowestLayer = particleEmitter->getLayer();
+                }
+            }
+        }
+    }
+    return lowestLayer;
+}
 
+int RenderSystem::getHighestLayer(Scene* aScene) {
+    int highestLayer = 0;
+    for (auto& gameObject : aScene->getGameObjects()) {
+        if (gameObject->hasComponent<Sprite>()) {
+            for (auto sprite : gameObject->getComponents<Sprite>()) {
+                if (sprite->getLayer() > highestLayer) {
+                    highestLayer = sprite->getLayer();
+                }
+            }
+        }
+        if (gameObject->hasComponent<Animation>()) {
+            for (auto animation : gameObject->getComponents<Animation>()) {
+                if (animation->getLayer() > highestLayer) {
+                    highestLayer = animation->getLayer();
+                }
+            }
+        }
+        if (gameObject->hasComponent<ParticleEmitter>()) {
+            for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
+                if (particleEmitter->getLayer() > highestLayer) {
+                    highestLayer = particleEmitter->getLayer();
+                }
+            }
+        }
+    }
+    return highestLayer;
+}
+
+void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
     Camera& activeCamera = aScene->getActiveCamera();
 
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Animation>()) {
             for (auto animation : gameObject->getComponents<Animation>()) {
-                if (animation->isActive()) {
+                if (animation->isActive() && animation->getLayer() == aLayer) {
                     renderAnimation(activeCamera, gameObject, animation);
                 }
             }
         } else if (gameObject->hasComponent<Sprite>()) {
             for (auto sprite : gameObject->getComponents<Sprite>()) {
-                if (sprite->isActive()) {
+                if (sprite->isActive() && sprite->getLayer() == aLayer) {
                     renderSprite(activeCamera, gameObject, sprite);
                 }
             }
         }
         if (gameObject->hasComponent<ParticleEmitter>()) {
             for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
-                if (particleEmitter->isActive()) {
+                if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer) {
                     for (auto& particle : particleEmitter->getParticles()) {
                         renderParticle(activeCamera, particle);
                     }
@@ -115,6 +181,18 @@ void RenderSystem::render(Scene* aScene) {
             }
         }
     }
+}
+
+void RenderSystem::render(Scene* aScene) {
+    mRenderer->clear(mBackgroundColor);
+
+    int lowestLayer = getLowestLayer(aScene);
+    int highestLayer = getHighestLayer(aScene);
+
+    for (int layer = lowestLayer; layer <= highestLayer; ++layer) {
+        renderLayer(aScene, layer);
+    }
+
     renderDeubgInfo(aScene);
 
     mRenderer->show();

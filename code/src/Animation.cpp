@@ -56,3 +56,6 @@ void Animation::setFlipY(bool state) { mFlipY = state; }
 bool Animation::getFlipY() { return mFlipY; }
 
 int Animation::getFrameCount() { return mAnimationFrames.size(); }
+
+void Animation::setLayer(int aLayer) { mLayer = aLayer; }
+int Animation::getLayer() { return mLayer; }

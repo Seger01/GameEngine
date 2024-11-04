@@ -38,7 +38,7 @@ private:
     void limitFrameRate(int aFrameRate);
 
 private:
-    int mMinFrameTimeMs = 3;
+    int mFrameRateLimit;
 
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;

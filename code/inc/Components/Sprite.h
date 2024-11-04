@@ -32,6 +32,9 @@ public:
     void setHeight(int aHeight) { mHeight = aHeight; }
     int getHeight() { return mHeight; }
 
+    void setLayer(int aLayer) { mLayer = aLayer; }
+    int getLayer() { return mLayer; }
+
 private:
     Texture* mTexture = nullptr;
     Transform mTransform;
@@ -45,6 +48,6 @@ private:
     //??? mColor;
     bool mFlipX;
     bool mFlipY;
-    //??? mSortingLayer;
-    //??? mOrderInLayer;
+
+    int mLayer = 0;
 };

@@ -8,15 +8,21 @@
 class SceneManager {
 public:
     friend class EngineBravo;
+
+    bool sceneChanged();
+
     int addScene(const Scene& scene);
     // int addSceneLevel(const Map& map);
-    void loadScene(int index);
-    void loadScene(const std::string& sceneName); // Willen we dit overloaden?
+    void requestSceneChange(const std::string& sceneName);
+    void requestSceneChange(int sceneID);
 
     Scene* getCurrentScene();
     Scene* createScene(std::string aSceneName, int aSceneID = -1);
 
 private:
+    void loadScene(int index);
+    void loadScene(const std::string& sceneName); // Willen we dit overloaden?
+
     bool sceneNameExists(std::string aSceneName);
     bool sceneIDExists(int aSceneID);
     int getNewSceneID();
@@ -27,4 +33,7 @@ private:
 
     std::vector<std::unique_ptr<Scene>> mScenes;
     int mCurrentSceneIndex;
+
+    std::string mNewSceneName;
+    int mNewSceneID;
 };

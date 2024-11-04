@@ -29,6 +29,9 @@ public:
 
     std::vector<Particle>& getParticles();
 
+    void setLayer(int aLayer);
+    int getLayer();
+
 private:
     void spawnParticle();
 
@@ -56,6 +59,8 @@ private:
     float mAngularVelocity;
     float mAngularAcceleration;
     std::vector<Color> mColorGradient;
+
+    int mLayer = 0;
 };
 
 #endif // PARTICLEEMITTER_H

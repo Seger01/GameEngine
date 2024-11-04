@@ -1,11 +1,8 @@
 #include "Components/Sprite.h"
 
-Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect) {
-    mTexture = aTexture;
-    mWidth = aWidth;
-    mHeight = aHeight;
-    mSourceRect = aSourceRect;
-}
+Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect)
+    : mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect), mTransform(Transform()),
+      mFlipX(false), mFlipY(false), mLayer(0) {}
 
 Sprite::~Sprite() {
     // Cleanup resources if necessary

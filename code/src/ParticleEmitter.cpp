@@ -99,3 +99,7 @@ void ParticleEmitter::update() {
 }
 
 std::vector<Particle>& ParticleEmitter::getParticles() { return mParticles; }
+
+void ParticleEmitter::setLayer(int aLayer) { mLayer = aLayer; }
+
+int ParticleEmitter::getLayer() { return mLayer; }

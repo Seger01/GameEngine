@@ -24,7 +24,7 @@ Renderer::Renderer(Window& window) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/KnightWarrior.otf").c_str(), 24); // Specify the
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/KnightWarrior.otf").c_str(), 14); // Specify the
                                                                                                         // font path and
                                                                                                         // size
     if (!font) {
