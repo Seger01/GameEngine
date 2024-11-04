@@ -88,14 +88,6 @@ void ParticleEmitter::update() {
         }
     }
 
-    std::cout << "Amount of particles: " << mParticles.size() << std::endl;
-
-    // for (auto& particle : particles) {
-    //     particle.update();
-    //     if (particle.getLifeTime() <= 0) {
-    //         particles.erase(particles.begin());
-    //     }
-    // }
     for (int i = 0; i < mParticles.size();) { // Note: no increment here
         mParticles[i].update();
         if (mParticles[i].getLifeTime() <= 0) {

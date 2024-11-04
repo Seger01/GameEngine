@@ -47,10 +47,8 @@ void RenderSystem::render(Scene* aScene) {
 
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Animation>()) {
-            std::cout << "Amount of Animtions: " << gameObject->getComponents<Animation>().size() << std::endl;
             for (auto animation : gameObject->getComponents<Animation>()) {
                 if (animation->isActive()) {
-                    std::cout << "Active animation" << std::endl;
                     renderAnimation(gameObject, animation);
                 }
             }

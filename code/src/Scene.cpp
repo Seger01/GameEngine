@@ -2,7 +2,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-Scene::Scene(std::string aSceneName, int aSceneID) : mSceneName(aSceneName), mSceneID(aSceneID) {}
+Scene::Scene(std::string aSceneName, int aSceneID)
+    : mSceneName(aSceneName), mSceneID(aSceneID), mActiveCameraIndex(-1) {}
 
 Scene::~Scene() {
     // Clean up GameObject pointers
@@ -51,45 +52,44 @@ GameObject& Scene::getGameObject(int id) {
 std::string Scene::getName() { return mSceneName; }
 int Scene::getID() { return mSceneID; }
 
+int Scene::addCamera() {
+    Camera newCamera;
+    mCameras.push_back(newCamera);
+    return mCameras.size() - 1; // Return the index of the newly added camera
+}
 
-// int Scene::addCamera() {
-//     Camera newCamera;
-//     mCameras.push_back(newCamera);
-//     return mCameras.size() - 1; // Return the index of the newly added camera
-// }
-//
-// void Scene::removeCamera(int id) {
-//     if (id >= 0 && id < mCameras.size()) {
-//         mCameras.erase(mCameras.begin() + id);
-//         // Adjust active camera if necessary
-//         if (mActiveCameraIndex == id) {
-//             mActiveCameraIndex = -1; // No active camera
-//         } else if (mActiveCameraIndex > id) {
-//             mActiveCameraIndex--;
-//         }
-//     } else {
-//         throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
-//     }
-// }
-//
-// Camera& Scene::getCamera(int id) {
-//     if (id >= 0 && id < mCameras.size()) {
-//         return mCameras[id];
-//     }
-//     throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
-// }
-//
-// void Scene::setActiveGamera(int id) {
-//     if (id >= 0 && id < mCameras.size()) {
-//         mActiveCameraIndex = id;
-//     } else {
-//         throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
-//     }
-// }
-//
-// Camera& Scene::getActiveCamera() {
-//     if (mActiveCameraIndex >= 0 && mActiveCameraIndex < mCameras.size()) {
-//         return mCameras[mActiveCameraIndex];
-//     }
-//     throw std::runtime_error("No active camera set.");
-// }
+void Scene::removeCamera(int id) {
+    if (id >= 0 && id < mCameras.size()) {
+        mCameras.erase(mCameras.begin() + id);
+        // Adjust active camera if necessary
+        if (mActiveCameraIndex == id) {
+            mActiveCameraIndex = -1; // No active camera
+        } else if (mActiveCameraIndex > id) {
+            mActiveCameraIndex--;
+        }
+    } else {
+        throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
+    }
+}
+
+Camera& Scene::getCamera(int id) {
+    if (id >= 0 && id < mCameras.size()) {
+        return mCameras[id];
+    }
+    throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
+}
+
+void Scene::setActiveGamera(int id) {
+    if (id >= 0 && id < mCameras.size()) {
+        mActiveCameraIndex = id;
+    } else {
+        throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
+    }
+}
+
+Camera& Scene::getActiveCamera() {
+    if (mActiveCameraIndex >= 0 && mActiveCameraIndex < mCameras.size()) {
+        return mCameras[mActiveCameraIndex];
+    }
+    throw std::runtime_error("No active camera set.");
+}

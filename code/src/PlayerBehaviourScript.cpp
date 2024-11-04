@@ -271,7 +271,6 @@ void PlayerBehaviourScript::handleMovement() {
     Transform parentTransform = this->mGameObject->getTransform();
 
     if (input.GetKey(Key::Key_E)) {
-        std::cout << "Key E pressed" << std::endl;
         deactivateAllAnimations();
     }
 
