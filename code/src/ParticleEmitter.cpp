@@ -8,10 +8,10 @@
 #include "Time.h"
 
 ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs,
-                                 int aMaxLifeTimeMs, Vector2 aSize, Vector2 aSizeShift, float aRotation,
+                                 int aMaxLifeTimeMs, Vector2 aSize, Vector2 aEndSize, float aRotation,
                                  float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
     : mEmitterMode(aEmitterMode), mVelocity(aSpeed), mAcceleration(aAcceleration), mMinLifeTimeMs(aMinLifeTimeMs),
-      mMaxLifeTimeMs(aMaxLifeTimeMs), mSize(aSize), mSizeShift(aSizeShift), mRotation(aRotation),
+      mMaxLifeTimeMs(aMaxLifeTimeMs), mSize(aSize), mEndSize(aEndSize), mRotation(aRotation),
       mAngularVelocity(angularVelocity), mAngularAcceleration(angularAcceleration), mColorGradient(aColorGradient) {
     mParticlesPerSecond = 0;
     mMinAngle = 0;
@@ -57,9 +57,6 @@ void ParticleEmitter::setAngle(int aMinAngle, int aMaxAngle) {
 }
 
 void ParticleEmitter::spawnParticle() {
-    // Particle particle(Vector2(0, 0), Vector2(0, 0), acceleration, lifeTime, size, rotation, angularVelocity,
-    //                   angularAcceleration, colorGradient[0]);
-
     Vector2 particlePos = mGameObject->getTransform().position + mRelativeTransform.position;
     Vector2 particleVel = generateRandomVelocity(mVelocity, mVelocity, mMinAngle, mMaxAngle);
     float particleAccel = mAcceleration;
@@ -67,14 +64,14 @@ void ParticleEmitter::spawnParticle() {
     int particleLifeTime = mMinLifeTimeMs + (rand() % (mMaxLifeTimeMs - mMinLifeTimeMs + 1));
 
     Vector2 particleSize = mSize;
-    Vector2 particleSizeShift = mSizeShift;
+    Vector2 particleEndSize = mEndSize;
     float particleRotation = mRotation;
     float particleAngularVelocity = mAngularVelocity;
     float particleAngularAcceleration = mAngularAcceleration;
     std::vector<Color> particleColorGradient = mColorGradient;
 
     Particle particle(particlePos, particleVel, particleAccel, particleLifeTime, mMaxLifeTimeMs, particleSize,
-                      particleSizeShift, particleRotation, particleAngularVelocity, particleAngularAcceleration,
+                      particleEndSize, particleRotation, particleAngularVelocity, particleAngularAcceleration,
                       particleColorGradient);
 
     mParticles.push_back(particle);

@@ -14,8 +14,8 @@ enum EmitterMode {
 class ParticleEmitter : public Component {
 public:
     ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs,
-                    Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity,
-                    float angularAcceleration, std::vector<Color> aColorGradient);
+                    Vector2 aSize, Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
+                    std::vector<Color> aColorGradient);
 
     ~ParticleEmitter();
 
@@ -51,7 +51,7 @@ private:
     float mVelocity;
     float mAcceleration;
     Vector2 mSize;
-    Vector2 mSizeShift;
+    Vector2 mEndSize;
     float mRotation;
     float mAngularVelocity;
     float mAngularAcceleration;
