@@ -18,6 +18,8 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
         for (const auto& field : j["fields"]) {
             if (field.contains("name") && field.contains("value")) {
                 addAny(field["name"].get<std::string>(), field["value"]);
+            } else {
+                throw std::logic_error("Failed to load field from JSON: field does not contain \"name\" and \"value\"");
             }
         }
 
@@ -27,15 +29,16 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
                 SaveArray saveArray(array["name"]);
 
                 // Only add fields if they exist
-                if (!array["fields"].empty()) {
-                    for (const auto& arrayField : array["fields"]) {
-                        if (arrayField.contains("name") && arrayField.contains("value")) {
-                            saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
-                        }
+                for (const auto& arrayField : array["fields"]) {
+                    if (arrayField.contains("name") && arrayField.contains("value")) {
+                        saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
                     }
                 }
 
                 mArrays.push_back(saveArray);
+            } else {
+                throw std::logic_error(
+                    "Failed to load array from JSON: array does not contain \"name\" and \"fields\"");
             }
         }
     }
