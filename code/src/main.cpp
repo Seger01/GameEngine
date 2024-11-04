@@ -40,6 +40,9 @@ void engineTest() {
 
     gameObject->addComponent<PlayerBehaviourScript>();
 
+    for (auto& component : gameObject->getComponents<PlayerBehaviourScript()>()) {
+    }
+
     scene->addGameObject(gameObject);
 
     sceneManager.loadScene(0);
