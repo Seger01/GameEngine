@@ -9,7 +9,7 @@
 #include "SDL_timer.h"
 #include "Sprite.h"
 
-RenderSystem::RenderSystem() {
+RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(600) {
     mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
     mRenderer = std::make_unique<Renderer>(*mWindow);
 
