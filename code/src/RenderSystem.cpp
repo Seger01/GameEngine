@@ -108,7 +108,6 @@ void RenderSystem::render(Scene* aScene) {
         if (gameObject->hasComponent<ParticleEmitter>()) {
             for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
                 if (particleEmitter->isActive()) {
-                    std::cout << "Amount of particles: " << particleEmitter->getParticles().size() << std::endl;
                     for (auto& particle : particleEmitter->getParticles()) {
                         renderParticle(activeCamera, particle);
                     }
