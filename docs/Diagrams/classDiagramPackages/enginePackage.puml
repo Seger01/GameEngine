@@ -40,7 +40,7 @@ package Engine {
         + createSaveGame(const string &aId, const string &aPath) : SaveGame&
         + getSaveGame(const string &aId) : SaveGame&
         + deleteSaveGame(const string &aId, bool aDeleteFile) : void
-        - mSaveGames : vector<SaveGame> 
+        - mSaveGames : unordered_map<string, SaveGame> 
     }
 
     class UIManager {
