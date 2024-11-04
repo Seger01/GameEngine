@@ -23,6 +23,11 @@ public:
     void setStringField(std::string aName, std::string aValue);
 
 public:
+    bool hasIntField(std::string aName) const;
+    bool hasFloatField(std::string aName) const;
+    bool hasStringField(std::string aName) const;
+
+public:
     const IntSaveField& getIntField(std::string aName) const;
     const FloatSaveField& getFloatField(std::string aName) const;
     const StringSaveField& getStringField(std::string aName) const;

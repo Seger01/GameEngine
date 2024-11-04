@@ -214,6 +214,33 @@ void SaveGame::setStringField(std::string aName, std::string aValue) {
     throw std::invalid_argument("Failed to find field with name \"" + aName + "\"");
 }
 
+bool SaveGame::hasIntField(std::string aName) const {
+    for (const auto& field : mIntFields) {
+        if (field.getName() == aName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SaveGame::hasFloatField(std::string aName) const {
+    for (const auto& field : mFloatFields) {
+        if (field.getName() == aName) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool SaveGame::hasStringField(std::string aName) const {
+    for (const auto& field : mStringFields) {
+        if (field.getName() == aName) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void SaveGame::remove() { std::remove(mFileName.c_str()); }
 
 const IntSaveField& SaveGame::getIntField(std::string aName) const {

@@ -28,8 +28,6 @@ void engineTest() {
     SceneManager& sceneManager = engine.getSceneManager();
     SaveGameManager& savegameManager = engine.getSaveGameManager();
     SaveGame& sg1 = savegameManager.createSaveGame("save1", fsConverter.getResourcePath("saves/save1.save"));
-    sg1.addIntField("x", 0);
-    sg1.addIntField("y", 0);
 
     Scene* scene = sceneManager.createScene("Level1");
     if (scene == nullptr)
@@ -38,9 +36,18 @@ void engineTest() {
     GameObject* gameObject = new GameObject;
 
     Transform objectTransform;
-
     objectTransform.position.x = 400;
     objectTransform.position.y = 400;
+
+    if (!(sg1.hasIntField("x") && sg1.hasIntField("y"))) {
+        // Fields do not exist yet, so add them
+        sg1.addIntField("x", objectTransform.position.x);
+        sg1.addIntField("y", objectTransform.position.y);
+    } else {
+        // Both fields already exist
+        objectTransform.position.x = sg1.getIntField("x").getValue();
+        objectTransform.position.y = sg1.getIntField("y").getValue();
+    }
 
     gameObject->setTransform(objectTransform);
 
