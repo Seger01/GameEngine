@@ -1,5 +1,6 @@
 #include "SaveGame.h"
 #include "SaveGameUtil.h"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp> // Include nlohmann/json
@@ -244,28 +245,28 @@ bool SaveGame::hasStringField(std::string aName) const {
 void SaveGame::remove() { std::remove(mFileName.c_str()); }
 
 const IntSaveField& SaveGame::getIntField(std::string aName) const {
-    for (const auto& field : mIntFields) {
-        if (field.getName() == aName) {
-            return field;
-        }
+    auto it = std::find_if(mIntFields.begin(), mIntFields.end(),
+                           [aName](const IntSaveField& field) { return field.getName() == aName; });
+    if (it != mIntFields.end()) {
+        return *it;
     }
     throw std::invalid_argument("Failed to get field with name \"" + aName + "\"");
 }
 
 const FloatSaveField& SaveGame::getFloatField(std::string aName) const {
-    for (const auto& field : mFloatFields) {
-        if (field.getName() == aName) {
-            return field;
-        }
+    auto it = std::find_if(mFloatFields.begin(), mFloatFields.end(),
+                           [aName](const FloatSaveField& field) { return field.getName() == aName; });
+    if (it != mFloatFields.end()) {
+        return *it;
     }
     throw std::invalid_argument("Failed to get field with name \"" + aName + "\"");
 }
 
 const StringSaveField& SaveGame::getStringField(std::string aName) const {
-    for (const auto& field : mStringFields) {
-        if (field.getName() == aName) {
-            return field;
-        }
+    auto it = std::find_if(mStringFields.begin(), mStringFields.end(),
+                           [aName](const StringSaveField& field) { return field.getName() == aName; });
+    if (it != mStringFields.end()) {
+        return *it;
     }
     throw std::invalid_argument("Failed to get field with name \"" + aName + "\"");
 }

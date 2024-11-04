@@ -2,11 +2,11 @@
     "fields": [
         {
             "name": "x",
-            "value": 258
+            "value": 400
         },
         {
             "name": "y",
-            "value": 81
+            "value": 105
         }
     ]
 }
