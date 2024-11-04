@@ -1,8 +1,7 @@
-#include <string>
-#include <vector>
 #include "NetworkManager.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -22,30 +21,31 @@
 #include "SpriteDef.h"
 #include "Texture.h"
 #include "Window.h"
-#include "test.h"
-  GameObject defaultPlayerPrefab("Player");
-  NetworkManager networkManager(defaultPlayerPrefab);
 
 void engineTest() {
+    GameObject defaultPlayerPrefab;
+    defaultPlayerPrefab.setName("Player");
+    NetworkManager networkManager(defaultPlayerPrefab);
+
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
-  std::string role;
-  std::cout << "Do you want to be a server or a client? ";
-  std::cin >> role;
 
-  if (role == "server")
-  {
-    networkManager.startServer();
-  }
-  else if (role == "client")
-  {
-    networkManager.startClient();
-  }
-  else
-  {
-    std::cerr << "Invalid input. Please enter 'server' or 'client'." << std::endl;
-    return 1;
-  }
+    std::string role;
+    std::cout << "Do you want to be a server or a client? ";
+    std::cin >> role;
+
+    while (bool roleSet = false) {
+        if (role == "server") {
+            roleSet = true;
+            networkManager.startServer();
+        } else if (role == "client") {
+            roleSet = true;
+            networkManager.startClient();
+        } else {
+            std::cerr << "Invalid input. Please enter 'server' or 'client'." << std::endl;
+            std::cin >> role;
+        }
+    }
 
     Scene* scene = sceneManager.createScene("Level1");
     if (scene == nullptr)
@@ -72,8 +72,8 @@ void engineTest() {
     return;
 }
 
-int main() { 
-    engineTest(); 
+int main() {
+    engineTest();
     // // Initialize SDL
     // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
