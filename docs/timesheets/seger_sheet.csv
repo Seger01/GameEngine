@@ -5,3 +5,39 @@ Date,Time,Duration(in hours),Activity
 2024-09-04, 11:00, 3   , group discussion on plan of attack, general requirements and planning
 2024-09-05, 10:00, 2   , writing poa: project
 2024-09-06, 11:00, 3.5 , writing research 
+2024-09-09, 10:30, 0.5 , Standup
+2024-09-09, 11:00, 2.25, Game speed and graphics research
+2024-09-09, 14:30, 2   , Create graphics SDL2 poc
+2024-09-10, 12:30, 1   , preperations for meeting with client
+2024-09-10, 13:30, 0.5 , Meeting with Bob
+2024-09-11,  9:15, 0.5 , Meeting with team
+2024-09-11, 10:00, 4   , Spent time researching sprites; dealing with stupid sprite sheets; and creating the first animation poc
+2024-09-12, 09:00, 1   , Spent time restructuring animation poc to use a sprite atlas
+2024-09-12, 09:00, 6   , Did research on facade pattern and how people use it in game engines; also spent time creating a poc where there very little SDL structs used anymore
+2024-09-13, 11:00, 1   , Spent time comparing and researching the different ways to implement a facade patter.
+2024-09-22, 13:00, 3   , Researched different ways to make a facade pattern and poc of Bridge pattern.
+2024-09-25, 09:15, 1   , Weekly team meeting
+2024-09-25, 10:15, 6   , Researched different ways to build an input system; thought through a design for a more advanced implementation of an Input system
+2024-09-26, 10:00, 2   , Implemented the first version of the json parser and DefinedAction classes
+2024-09-26, 12:00, 1.5 , Team meeting and standup
+2024-09-28, 13:00, 2   , Worked on input system
+2024-09-28, 13:00, 2   , Worked on input system
+2024-09-30, 13:00, 3   , Discussed Input and Event system with wouter and am now making an entirely different system
+2024-10-02, 09:00, 6   , weekly standup meeting and spent the rest of the day working on the input system doing research and trying different implementations.
+2024-10-03, 09:30, 1.5 , Project lesson 
+2024-10-07, 09:30, 2   , Worked on Events and attended project meeting with Bob.
+2024-19-09, 09:00, 5   , Architecture and design
+2024-19-11, 09:00, 5.5 , Worked on game engine structure with focus on physics and events.
+2024-10-14, 09:00, 2.25, Attending presentations of other groups, conversation with Bob
+2024-10-15, 14:00, 3   , Finished Input system and created a simple poc for controller reading
+2024-10-16, 08:00, 6   , worked with team; fixed origin difference sdl and box2d
+2024-10-17, 15:00, 2   , Project work on input system
+2024-10-22, 09:00, 5   , Project work and physics system design
+2024-10-24, 09:00, 4   , Project work and physics system design
+2024-10-24, 16:00, 3   , Render system design and implementation
+2024-10-25, 16:00, 2.25, Finished first working prototype of render system
+2024-10-27, 14:00, 3   , Created a functioning animation system for the game engine
+2024-10-28, 09:00, 4   , Standup; Worked on rendering system en trying to create a simpel render control script
+2024-11-01, 11:00, 4   , worked on class_diagram/design and documentation
+2024-11-01, 20:00, 4   , worked on and finished first version of particle system
+2024-11-03, 11:00, 3   , working on documentation

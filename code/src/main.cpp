@@ -1,35 +1,93 @@
-#include "SaveArray.hpp"
-#include "SaveGame.hpp"
-#include "SaveGameManager.hpp"
-#include <iostream>
+#include <string>
+#include <vector>
 
-void test1() {
-  SaveGame sg{"code/output/newSave.json"};
-  sg.addStringField("myField", "myValue");
-  sg.setStringField("myField", "newValue");
-  sg.addArray("myArray");
-  SaveArray array{sg.getArray("myArray")};
-  array.addStringField("myArrayField", "myArrayValue");
-  sg.setArray("myArray", array);
-  sg.store();
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_render.h>
+#include <SDL_video.h>
+
+#include "Animation.h"
+#include "EngineBravo.h"
+#include "FSConverter.h"
+#include "PlayerBehaviourScript.h"
+#include "Renderer.h"
+#include "SampleBevahiourScript.h"
+#include "Scene.h"
+#include "SceneManager.h"
+#include "Sprite.h"
+#include "SpriteAtlas.h"
+#include "SpriteDef.h"
+#include "Texture.h"
+#include "Window.h"
+#include "test.h"
+
+void engineTest() {
+    EngineBravo& engine = EngineBravo::getInstance();
+    SceneManager& sceneManager = engine.getSceneManager();
+
+    Scene* scene = sceneManager.createScene("Level1");
+    if (scene == nullptr)
+        exit(1);
+
+    GameObject* gameObject = new GameObject;
+
+    Transform objectTransform;
+
+    objectTransform.position.x = 400;
+    objectTransform.position.y = 400;
+
+    gameObject->setTransform(objectTransform);
+
+    gameObject->addComponent<PlayerBehaviourScript>();
+
+    scene->addGameObject(gameObject);
+
+    sceneManager.loadScene(0);
+
+    engine.initizalize();
+    engine.run();
+
+    return;
 }
 
-void test2() {
-  // Create the manager
-  SaveGameManager sgm;
-  // Create a new save game in the manager
-  SaveGame sg1 = sgm.createSaveGame("save1", "code/output/save1.json");
-  // Add a field to the save game
-  sg1.addStringField("myField", "myValue");
-  // Add an array to the save game and retrieve it
-  sg1.addArray("myArray");
-  SaveArray sga = sg1.getArray("myArray");
-  // Add a field to the array and set it back to the save game
-  sga.addStringField("myArrayField", "myArrayValue");
-  sg1.setArray("myArray", sga);
-  // Store the save game
-  sg1.store();
-  sgm.deleteSaveGame("save1", true);
-}
+int main() {
+    engineTest();
+    // // Initialize SDL
+    // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    //     return 1;
+    // }
 
-int main() { test2(); }
+    // // Create a window
+    // SDL_Window* window = SDL_CreateWindow("SDL Window",
+    //     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    //     640, 480, SDL_WINDOW_SHOWN);
+
+    // if (window == NULL) {
+    //     printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    //     SDL_Quit();
+    //     return 1;
+    // }
+
+    // // Main loop flag
+    // int quit = 0;
+    // SDL_Event event;
+
+    // // Event loop
+    // while (!quit) {
+    //     // Handle events
+    //     while (SDL_PollEvent(&event) != 0) {
+    //         if (event.type == SDL_QUIT) {
+    //             quit = 1;  // Set the quit flag to true
+    //         }
+    //     }
+
+    //     // Here you can add rendering code if needed
+    // }
+
+    // // Clean up and close the window
+    // SDL_DestroyWindow(window);
+    // SDL_Quit();
+
+    // return 0;
+}

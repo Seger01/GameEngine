@@ -1,0 +1,32 @@
+@startuml
+
+
+
+class SceneManager {
+    +int addScene(const Scene& scene)
+    +int addSceneLevel(Map& map)
+    +void loadScene(int index)
+    +void loadScene(const std::string& sceneName)
+    +Scene* getCurrentScene()
+    - SceneManager()
+    - scenes : vector<Scene>
+    - currentSceneIndex : int
+}
+
+class Scene {
+
+    + void addGameObject(GameObject object)
+    + void removeGameObject(int id)
+    + GameObject& getGameObject(int id)
+    - sceneName : string
+    - gameObjects : vector<GameObject>
+}
+
+class EngineBravo {
+    +void initialize()
+    - SceneManager sceneManager
+}
+
+SceneManager "1" *-- "many" Scene
+EngineBravo --> SceneManager : creates
+@enduml

@@ -7,3 +7,38 @@ Date,Time,Duration(in hours),Activity
 2024-09-06, 15:30, 0.5, cleanup git repo and format files
 2024-09-07, 12:30, 0.5, searched for auto file for the cmake and added references for research doc
 2024-09-07, 13:00, 3, tried to fix auto formatting. wrote some research. Change calculate hours
+2024-09-09, 10:30, 0.5, added href to research and found out how to ref figures and pre meeting
+2024-09-09, 11:00, 0.5, meeting
+2024-09-09, 11:30, 3, research multiplayer
+2024-09-09, 16:00, 2, POC multiplayer
+2024-09-10, 12:30, 1, prepare meeting Bob
+2024-09-10, 13:30, 0.5, meeting Bob
+2024-09-11, 8:30, 8.5, POC multiplayer
+2024-09-11, 10:00, 7.5, POC multiplayer and freaking raspberry pi
+2024-09-16, 10:00, 6, poc multiplayer; research AI; Worked on issues with Cmake build system; Tested multiplayer across different laptops.
+2024-09-17, 19:00, 2, multiplayer on the raspberry pi
+2024-09-18, 08:00, 7, research AI
+2024-09-20, 10:00, 4, research AI
+2024-09-24, 12:00, 1.5, trying to fix libraries and cmake
+2024-09-24, 13:30, 1, prepare meeting bob
+2024-09-25, 09:00, 1.5, standup
+2024-09-25, 10:30, 1, fixing libraries with Siem and Ronan
+2024-09-25, 11:30, 5, updates for libraries 
+2024-09-26, 10:00, 2, poc state
+2024-09-26, 12:00, 1.5 , Team meeting and standup
+2024-09-26, 18:00, 2, poc state
+2024-10-02, 09:00, 1.5, standup
+2024-10-02, 10:30, 4.30, poc a*
+2024-10-02, 9:00, 4, poc a*
+2024-10-03, 09:30, 1.5, Project lesson 
+2024-10-07, 11:00, 1.5, Project lesson
+2024-10-09, 8:45, 6.25, Architecture and design discussion with team
+2024-10-10, 8:45, 0.5, research multiplayer in unity
+2024-10-10, 9:15, 1.0, Meeting with team about class diagram
+2024-10-10, 10:15, 8.5, POC multiplayer. Trying to implement notcode multiplayer. Messing around with unity
+2024-10-14, 9:00, 2.15, Attending presentations of other groups, conversation with Bob
+2024-10-16, 10:15, 3.5, Project meeting
+2024-10-22, 09:00, 7, Multiplayer design and discussed fysics design
+2024-10-24, 09:00, 4, Multiplayer design and discussed fysics design
+2024-10-28, 9:00, 4, Standup. Designing multiplayer
+2024-11-03, 11:00, 3.5, working on documentation

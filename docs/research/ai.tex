@@ -1,0 +1,504 @@
+\section{AI}
+\subsection{Commonly Used AI Techniques in Games}
+
+Artificial Intelligence (AI) plays an essential role in game design,
+affecting the behavior of enemies, NPCs, and other dynamic entities in a game world.
+Different genres of games utilize AI techniques that cater to specific needs,
+such as pathfinding, decision-making, and adapting to player behaviors.
+This chapter explores some of the most commonly used AI techniques in modern games,
+ranging from simple, rule-based systems to more advanced,
+machine-learning-based approaches.
+
+\subsubsection{Finite State Machines (FSM)}
+
+Finite State Machines (FSMs) are one of the most basic but widely used AI techniques in game development.
+They define a set of states and transitions between them based on events or inputs.
+For example, an enemy NPC might have states like \textit{idling}, \textit{attacking},
+and \textit{fleeing}. When a specific condition is met,
+such as the player coming within range,
+the FSM triggers a transition from one state to another \cite{Mike_2020}.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Simple to implement and understand.
+    \item Efficient for handling basic enemy behaviors.
+    \item Lightweight with low computational cost.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Limited flexibility; complex behaviors require extensive state management.
+    \item Difficult to scale as complexity grows, leading to the "state explosion problem." \end{itemize}
+
+\subsubsection{Behavior Trees}
+
+Behavior Trees extend FSMs by introducing a hierarchical decision-making process.
+They allow for more structured and flexible AI behavior,
+where agents can prioritize tasks based on conditions,
+making them well-suited for more sophisticated AI \cite{Simpson_2023}.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item More scalable than FSMs, allowing for complex decision-making.
+    \item Modular and reusable: parts of the tree can be reused across different entities.
+    \item Easier to debug and expand compared to FSMs.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item More complex to implement and requires more computational resources.
+    \item Managing large trees can still become cumbersome in certain cases.
+\end{itemize}
+
+\subsubsection{Pathfinding Algorithms}
+
+Pathfinding is a crucial AI component,
+especially for games with complex environments.
+The \textit{A*} algorithm is the most popular for real-time games,
+efficiently finding the shortest path between two points by evaluating the cost of traversing different nodes \cite{Amit_2024}.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item The \textit{A*} algorithm is very efficient and widely supported.
+    \item Provides fast and optimal pathfinding solutions for large maps.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Can become expensive with large numbers of agents or highly complex maps.
+    \item Not suitable for dynamic environments unless paired with other techniques like navigation meshes.
+\end{itemize}
+
+\subsubsection{Dynamic Difficulty Adjustment (DDA)}
+
+Dynamic Difficulty Adjustment (DDA) modifies the difficulty of the game in real-time based on player performance.
+This technique ensures players remain engaged without feeling frustrated or bored,
+as it adjusts factors like enemy strength or spawn rate \cite{Zohaib_2018}.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Keeps gameplay engaging by adapting to player skill levels.
+    \item Extends the game's appeal to a broader audience.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires careful tuning to avoid feeling unfair or too easy.
+    \item More complex to implement as it needs real-time analysis of player behavior.
+\end{itemize}
+
+\subsubsection{Fuzzy Logic Systems}
+
+Fuzzy Logic Systems introduce a degree of uncertainty and imprecision into AI decision-making,
+allowing NPCs to make more human-like decisions.
+Rather than working with strict true/false conditions (like FSMs),
+fuzzy logic allows for various degrees of truth,
+which can be useful for situations like deciding an NPC's reaction to danger based on proximity or player actions \cite{Pirovano_2012}.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Allows for more natural, human-like decision-making.
+    \item Can create more nuanced and dynamic AI behaviors.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item More difficult to implement and requires fine-tuning to achieve desired results.
+    \item Can be computationally expensive depending on the number of variables.
+\end{itemize}
+
+\subsubsection{Utility Systems}
+
+Utility Systems rank potential actions based on a numerical evaluation of their desirability. AI agents constantly evaluate various options and choose the one with the highest utility score. This allows for flexible decision-making, where actions like attacking, fleeing, or patrolling can be dynamically prioritized based on the game state.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Highly flexible and capable of handling complex decision-making scenarios.
+    \item Easier to scale than FSMs or Behavior Trees.
+    \item Allows AI to make more context-sensitive decisions based on multiple factors.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires careful balancing of utility values to prevent undesired behaviors.
+    \item More computationally expensive due to constant evaluation of utility scores.
+\end{itemize}
+
+\subsubsection{Machine Learning (ML) Techniques}
+
+Machine Learning (ML) is an emerging field in game AI, where AI agents can learn and adapt based on player behavior or environmental conditions. Techniques such as Neural Networks, Reinforcement Learning, and Genetic Algorithms are being experimented with to create self-learning NPCs that evolve over time.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Capable of producing highly adaptive and unpredictable AI behavior.
+    \item Can create AI that personalizes its strategy based on the player's habits.
+    \item Reduces the need for manually scripting behaviors.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires large amounts of data and training, making it computationally expensive.
+    \item Difficult to implement and balance, especially in real-time environments.
+    \item Behavior may become too unpredictable or less fun for players.
+\end{itemize}
+
+\subsubsection{Navigation Meshes (NavMesh)}
+
+Navigation Meshes, or NavMeshes, are used in pathfinding to simplify complex environments by mapping walkable areas. Instead of searching an entire map for a path, an agent can move within predefined regions, making pathfinding more efficient, especially in large or dynamic environments.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Reduces the complexity of pathfinding by limiting the search space.
+    \item Efficient for handling dynamic environments and obstacles.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires upfront preprocessing of the map to generate the NavMesh.
+    \item Needs to be updated if the game environment changes frequently.
+\end{itemize}
+
+\subsubsection{Steering Behaviors}
+
+Steering Behaviors are used to simulate more organic movements of AI agents in environments, such as flocking, avoiding obstacles, or following the player. These behaviors are especially useful in simulating crowds or large groups of NPCs.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Creates smooth, natural movement patterns.
+    \item Useful for dynamic, real-time movement like crowd simulations or NPC interactions.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Complex combinations of behaviors can be difficult to manage.
+    \item Can require significant fine-tuning to avoid unnatural or jittery movements.
+\end{itemize}
+
+\subsection{Commonly Used AI Techniques in 2D Bullet Hell Shooters}
+
+In 2D bullet hell shooters, Artificial Intelligence (AI) takes on a specialized role where the focus is on generating challenging bullet patterns and managing enemy waves. This chapter explores the key AI techniques used in these types of games, including bullet management, enemy behavior, and adaptive strategies that create the signature intensity of bullet hell games.
+
+\subsubsection{Bullet Patterns and Trajectory-based AI}
+
+In bullet hell shooters, the complexity of bullet patterns forms the foundation of the game's difficulty. Bullets follow predefined or procedurally generated trajectories, creating patterns like waves, spirals, or grids. These patterns are often carefully crafted to ensure the player has just enough room to dodge while being overwhelmed by projectiles.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Adds depth and challenge to gameplay through complex bullet patterns.
+    \item Bullet patterns can be handcrafted or procedurally generated for variety.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Managing numerous bullets can lead to performance issues.
+    \item Requires meticulous balancing to prevent the game from becoming too difficult or too easy.
+\end{itemize}
+
+\subsubsection{Predictive Targeting}
+
+Some enemies in bullet hell shooters use predictive targeting, where bullets are aimed based on the player's projected movement. This creates a more challenging environment, as players cannot rely solely on dodging but must also outsmart the enemy AI.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Makes the game more challenging and less predictable for players.
+    \item Adds a strategic layer to movement and bullet dodging.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Can become frustrating for players if overused.
+    \item Requires careful balancing to avoid overwhelming the player.
+\end{itemize}
+
+\subsubsection{Finite State Machines (FSM) for Boss AI}
+
+Boss AI in bullet hell shooters typically involves multiple phases, each with unique attack patterns and behaviors. Finite State Machines (FSMs) are often used to manage these transitions, allowing for a structured approach to changing behavior based on health thresholds, time-based triggers, or other conditions.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Effective at managing complex boss behaviors and phase transitions.
+    \item Easier to implement compared to more advanced AI techniques.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Boss AI can become predictable if the FSM is too simple.
+    \item Requires additional design effort to balance boss difficulty.
+\end{itemize}
+
+\subsubsection{Randomized Bullet Patterns}
+
+Randomization adds variability to the bullet hell experience by altering bullet speed, direction, or spawn points in real time. This can make bullet patterns less predictable, forcing players to stay on their toes and adapt to unexpected changes.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Keeps gameplay fresh and prevents players from memorizing patterns.
+    \item Can create unique and unpredictable challenges on each playthrough.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Too much randomness can lead to frustrating, unavoidable deaths.
+    \item Difficult to balance between unpredictability and fairness.
+\end{itemize}
+
+\subsubsection{Adaptive Difficulty AI}
+
+Adaptive difficulty AI adjusts the intensity of enemy waves and bullet patterns based on the player’s performance. For example, if a player is performing well, the AI might increase the number or speed of bullets, while underperforming players might face fewer projectiles.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Helps maintain player engagement by preventing frustration or boredom.
+    \item Can create a more personalized and balanced experience for different skill levels.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires careful tuning to avoid making the game too easy or hard.
+    \item May result in less consistent difficulty progression for players who prefer a steady challenge.
+\end{itemize}
+
+\subsubsection{Steering Behaviors for Enemy Movements}
+
+Steering behaviors can be applied to enemy movements, allowing them to dynamically dodge player attacks, adjust formations, or group together. This technique can be used to create more intelligent and unpredictable enemies that respond to the player's position in real time.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Creates more fluid and realistic enemy movements.
+    \item Enhances the challenge by preventing players from easily predicting enemy movement patterns.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Can be difficult to balance, as overly dynamic movements might frustrate players.
+    \item Requires additional computational resources to manage real-time movement adjustments.
+\end{itemize}
+
+\subsubsection{Pattern Sequencing and Combination}
+
+AI can create bullet patterns by sequencing or combining simpler patterns to generate more complex attacks. By layering waves, spirals, or radial bursts in different sequences, the game can generate intricate attack patterns without needing to design every bullet’s trajectory manually.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Allows for the creation of complex patterns from simpler elements.
+    \item Patterns can be customized dynamically to suit different levels or bosses.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Combining multiple patterns can make the game harder to debug or balance.
+    \item The computational cost of tracking multiple, layered patterns may affect performance.
+\end{itemize}
+
+\subsubsection{Wave-based AI for Enemy Generation}
+
+In many bullet hell shooters, enemies are spawned in waves with specific patterns or behaviors. AI can control the timing, frequency, and positioning of these waves to increase the difficulty as the game progresses. Certain waves may have unique bullet patterns or movement behaviors, adding variety to the game.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Helps maintain a steady challenge throughout gameplay.
+    \item Provides opportunities for mixing up enemy types and patterns, creating a dynamic experience.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Predictable wave structures may reduce long-term replayability.
+    \item Wave design requires careful balancing to avoid overwhelming or under-challenging players.
+\end{itemize}
+
+\subsubsection{Hitbox-based Collision Detection}
+
+In bullet hell shooters, precise hitbox-based collision detection is critical. AI controls the placement and speed of bullets in ways that take advantage of the player’s hitbox size. The AI must ensure that bullet clusters can be narrowly avoided but still provide a significant challenge.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Creates tight, high-stakes gameplay as players dodge bullets that are near their hitbox.
+    \item Encourages skillful play, as players can learn to maneuver through challenging bullet patterns.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Can frustrate players if hitboxes are unclear or inconsistent.
+    \item Requires precise balancing of bullet speed and placement to avoid unfair deaths.
+\end{itemize}
+
+\subsubsection{Procedural Bullet Generation}
+
+Procedural generation techniques are often used to create new and unpredictable bullet patterns in real-time, increasing replayability and variety. This method allows the game to generate complex patterns based on seed values or player inputs.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Increases replayability through unpredictability and variability in bullet patterns.
+    \item Reduces the need for hand-crafting every bullet pattern, saving development time.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Procedurally generated patterns may lack the precision and design of handcrafted ones.
+    \item Balancing can be difficult when bullet patterns are not carefully curated.
+\end{itemize}
+
+\subsection{Commonly Used Game Engine Libraries for AI}
+
+Several game engine libraries and tools are available for implementing AI in C++. This chapter explores commonly used libraries that simplify AI development for various game genres.
+
+\subsubsection{OpenSteer}
+
+\textit{OpenSteer} is a library designed for steering behaviors, which are useful in AI for controlling agent movement. It supports behaviors like seeking, fleeing, and evading, making it ideal for games with dynamic agent movement such as real-time strategy games or simulations.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Lightweight and easy to integrate into existing engines.
+    \item Provides robust solutions for AI movement and steering behaviors.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Primarily focused on steering, limiting its scope for other AI needs.
+    \item Not suited for games with more advanced decision-making or pathfinding requirements.
+\end{itemize}
+
+\subsubsection{Recast and Detour}
+
+\textit{Recast and Detour} is a combination of libraries that handle navigation mesh generation and pathfinding. Recast builds navigation meshes based on 3D geometry, while Detour is responsible for efficient pathfinding across those meshes.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Provides efficient and scalable navigation solutions for complex environments.
+    \item Widely used and supported in both 2D and 3D games.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Primarily designed for 3D games, requiring adaptation for 2D environments.
+    \item Complex setup compared to simpler AI movement libraries.
+\end{itemize}
+
+\subsubsection{Behavior3Cpp}
+
+\textit{Behavior3Cpp} is a C++ library for implementing Behavior Trees. It allows developers to structure complex AI decision-making processes and easily manage hierarchical behaviors.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Powerful for creating complex, reusable AI logic.
+    \item More flexible than FSMs, allowing for scalable decision trees.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item More difficult to learn and implement than basic FSMs.
+    \item Requires careful management of large behavior trees to avoid performance issues.
+\end{itemize}
+
+\subsection{AI Behavior Libraries for 2D Bullet Hell Shooters in C++ for Students}
+
+Developing a 2D bullet hell shooter in C++ requires robust AI behavior libraries to manage complex tasks like enemy movements, bullet patterns, and decision-making processes. This chapter highlights AI libraries that are specifically designed for behavior modeling in C++ game engines. These libraries provide tools for managing AI decision trees, state machines, and behavior trees, which are essential for controlling enemy actions and bullet trajectories in bullet hell shooters.
+
+\subsubsection{libBehaviour}
+
+\textit{libBehaviour} is a lightweight C++ library focused on implementing behavior trees. Behavior trees are highly structured decision-making models commonly used in games for controlling AI behavior. In bullet hell shooters, \textit{libBehaviour} can be used to control enemy actions, such as attacking, dodging, or changing bullet patterns depending on the player’s movements.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Simple to integrate into custom game engines, with a clean and minimalistic API.
+    \item Ideal for students looking to learn about behavior trees and AI decision-making.
+    \item Extensible and flexible for use in various AI systems.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Lacks more advanced features like dynamic pathfinding or navigation.
+    \item Requires additional work to implement complex behaviors in a bullet hell context.
+\end{itemize}
+
+\subsubsection{BehaviorTree.CPP}
+
+\textit{BehaviorTree.CPP} is a highly efficient C++ library that allows you to create and manage behavior trees. This library is especially useful for controlling complex AI behaviors in 2D games like bullet hell shooters, where the AI needs to make decisions based on player actions or predefined scenarios. It allows you to build modular, hierarchical AI behaviors, making it ideal for managing complex attack patterns and enemy decision-making.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Modular and scalable; behavior trees can be reused across multiple enemy types.
+    \item Well-documented and actively maintained, making it a good choice for educational projects.
+    \item Flexible enough to handle complex AI requirements, such as boss fights or dynamic bullet patterns.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Requires a learning curve, especially for those unfamiliar with behavior trees.
+    \item More suited for large, structured AI systems, which may be overkill for simple projects.
+\end{itemize}
+
+\subsubsection{SimpleAI}
+
+\textit{SimpleAI} is a C++ library designed to provide easy-to-use AI solutions, including decision-making tools such as Finite State Machines (FSMs) and goal-oriented behavior. In a bullet hell shooter, \textit{SimpleAI} can be employed to manage enemy states such as idle, attack, and retreat, as well as to make decisions based on the player's actions or the enemy’s health.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Extremely easy to integrate and understand, making it ideal for student projects.
+    \item Provides FSMs, which are perfect for handling simple enemy AI states in bullet hell shooters.
+    \item Lightweight and doesn’t impose much overhead on the game engine.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Limited in scope compared to more feature-rich libraries; best suited for simpler AI tasks.
+    \item Does not natively support more advanced AI techniques such as behavior trees or machine learning.
+\end{itemize}
+
+\subsubsection{AI-Toolbox}
+
+\textit{AI-Toolbox} is a C++ library that provides a range of utilities for implementing AI techniques such as Markov Decision Processes (MDPs), Reinforcement Learning (RL), and other planning algorithms. While not specifically designed for bullet hell shooters, this library can be used to introduce more adaptive AI that learns and reacts to the player’s behavior in real time.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Provides a diverse set of AI algorithms, allowing for more advanced decision-making and learning systems.
+    \item Well-documented and suitable for research-oriented AI projects.
+    \item Can be adapted for more dynamic bullet patterns and enemy behaviors in bullet hell shooters.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item More complex than necessary for simple AI behaviors, requiring substantial effort to integrate into a game engine.
+    \item Heavy focus on decision-making algorithms rather than real-time behavior modeling.
+\end{itemize}
+
+\subsubsection{Goal-Oriented Action Planning (GOAP)}
+
+\textit{GOAP} is a popular AI framework for creating goal-driven agents in C++. It allows AI entities to choose actions based on a set of goals and available actions. In bullet hell shooters, \textit{GOAP} can be used to manage enemy behaviors like dodging, shooting, and reacting to player actions dynamically. By using a goal-driven approach, AI agents can prioritize their actions based on the current state of the game.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Provides flexibility in AI decision-making, allowing for adaptive and dynamic behavior.
+    \item Easy to integrate into existing game engines, providing a modular approach to AI.
+    \item Great for creating intelligent and reactive enemy behaviors in a bullet hell shooter.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item May be overkill for simple projects or student-level games, requiring additional setup.
+    \item Complexity grows with the number of goals and actions, leading to a more time-consuming development process.
+\end{itemize}
+
+\subsubsection{FlexiAI}
+
+\textit{FlexiAI} is a flexible AI framework designed for C++ game engines, which supports both FSMs and behavior trees. It allows developers to mix different AI paradigms, enabling the creation of more complex behaviors without locking into a single model. This is particularly useful for bullet hell shooters, where enemies may switch between simple state-based behavior and more complex decision trees.
+
+\textbf{Advantages}:
+\begin{itemize}
+    \item Combines FSMs and behavior trees, allowing for flexible AI design.
+    \item Easy to use and integrates well with custom game engines.
+    \item Lightweight, making it suitable for performance-critical environments like bullet hell shooters.
+\end{itemize}
+
+\textbf{Challenges}:
+\begin{itemize}
+    \item Lacks advanced machine learning or adaptive behavior capabilities.
+    \item More suited for predefined or semi-dynamic behavior, limiting its use in more advanced AI.
+\end{itemize}
+
+\subsubsection{recastnavigation}
+https://github.com/recastnavigation/recastnavigation
+
+\subsubsection{todo}
+https://github.com/digint/tinyfsm
+https://github.com/BehaviorTree/BehaviorTree.CPP

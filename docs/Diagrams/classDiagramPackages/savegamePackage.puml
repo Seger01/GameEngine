@@ -1,0 +1,124 @@
+@startuml savePackageClassDiagram
+
+package Save{
+class SaveGame {
+-mFileName : string
+    - mIntFields : vector<IntSaveField>
+    - mFloatFields : vector<FloatSaveField>
+    - mStringFields : vector<StringSaveField>
+    - mArrays : vector<SaveArray>
+    + SaveGame(const string &aFileName)
+    + store() : void
+    + remove() : void
+
+    - addAnyFromString(string name, string value) : void
+    + addIntField(string name, int value) : void
+    + addFloatField(string name, float value) : void
+    + addStringField(string name, string value) : void
+
+    + setIntField(string name, int value) : void
+    + setFloatField(string name, float value) : void
+    + setStringField(string name, float value) : void
+
+    + getIntField(string name) : const IntSaveField&
+    + getFloatField(string name) : const FloatSaveField&
+    + getStringField(string name) : const StringSaveField&
+
+    + addArray(string name) : void
+    + setArray(string name, SaveArray value) : void
+    + getArray(string aName) const : SaveArray
+
+    - createFile() : void
+}
+
+class SaveArray {
+    - mName : string
+    - mIntFields : vector<IntSaveField>
+    - mFloatFields : vector<FloatSaveField>
+    - mStringFields : vector<StringSaveField>
+    + SaveArray(string name)
+
+    + getName() : string
+
+    - addAnyFromString(string name, string value) : void
+    + addIntField(string name, int value) : void
+    + addFloatField(string name, float value) : void
+    + addStringField(string name, string value) : void
+
+    + getIntField(string name) : IntSaveField&
+    + getFloatField(string name) : FloatSaveField&
+    + getStringField(string name) : StringSaveField&
+
+    + getIntArray() : const vector&
+    + getFloatArray() : const vector&
+    + getStringArray() : const vector&
+
+    + getSizeIntArray() : unsigned
+    + getSizeFloatArray() : unsigned
+    + getSizeStringArray() : unsigned
+}
+
+
+
+class SaveGameUtil {
+  + isInteger(string aValue) : static bool
+  + isFloat(string aValue) : static bool
+}
+
+together {
+class IntSaveField {
+  - mName : string
+  - mValue : int
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(int) : void
+  + getValue() : int
+}
+
+class FloatSaveField {
+  - mName : string
+  - mValue : float
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(float) : void
+  + getValue() : float
+}
+
+class StringSaveField {
+  - mName : string
+  - mValue : string
+
+  + SaveField(string name)
+
+  + getName() : string
+
+  + setValue(string) : void
+  + getValue() : string
+}
+}
+
+SaveGame *-- "*" SaveField
+SaveGame *-- "*" SaveArray
+SaveArray *-- "*" SaveField
+
+SaveGame <-left- SaveGameUtil
+SaveGame *--"*" SaveArray
+SaveGame -[hidden]> SaveArray
+SaveGame *--"*" IntSaveField
+SaveGame *--"*" FloatSaveField
+SaveGame *--"*" StringSaveField
+
+SaveArray <-up- SaveGameUtil
+SaveArray *--"*" IntSaveField
+SaveArray *--"*" FloatSaveField
+SaveArray *--"*" StringSaveField
+}
+
+Save *-- "*" SaveGame
+@enduml
