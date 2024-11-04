@@ -1,0 +1,80 @@
+@startuml physicsPackageClassDiagram
+
+package Physics{
+class PhysicsEngine {
+
+    + updateReferences(vector<GameObject*>&) : void
+    + update() : void
+    + setSubStep() : void
+    + getSubStep() : int
+    + executeCollisionScripts(vector<int>) : void
+    + getBody(int bodyID) : GameObject
+
+    - GameObjects : vector<GameObject*>
+    - step : float
+    - subStep : int
+
+}
+
+class BodyProxy {
+    + BodyProxy(GameObject&)
+    + defineBodyType() : void
+    + getBodyFlags() : struct
+    + getBodyProperties() : struct
+    + getBodyType() : enum
+    + getPosition() : point
+    + getSize() : point
+
+
+    - mPosition : point
+    - mSize : point
+
+    - mHasGravity : bool
+    - mIsMoveableByForce : bool
+    - mCanRotate : bool
+
+    - mBodyType : Enum 
+
+    - mDensity : float
+    - mFriction : float
+    - mRestitution : float
+
+    - mMass : float
+    - mGravityScale : float
+
+}
+
+class World {
+
+    + World(b2Vec2 Gravity)
+
+    + executeWorldStep(float step, int subStep) : void
+    + reset() : void
+
+    + createBody(BodyProxy& bodyProxy) : b2BoxId
+    + updateBody(b2BodyId bodyID, BodyProxy&) : void
+    + applyForce(b2BodyId bodyID, point force): void
+
+    + setPosition(b2BodyId bodyID, point pos) : void
+    + setGravity(point gravity) : void
+
+    + getPosition(b2BodyId bodyID) : point
+    + getGravity() : point
+
+    + checkContactEvent() : vector<int>
+
+    - mWorldID : b2worldId
+}
+
+PhysicsEngine *-- "1" World
+BodyProxy -left-> PhysicsEngine
+
+}
+
+Physics *-- "1" PhysicsEngine
+
+' check oncollide events van game objecten
+' collisions uitlezen via contact array
+' maak functie die body id terug kan leiden naar game object
+@enduml
+

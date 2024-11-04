@@ -46,10 +46,23 @@
 
 #ignore build folder
 code/build/
+code/.cache
+.cache
 
 .vscode/
 
-code/slikenet/**
+output.csv
 
 code/external/tmxlite-master/**
 output.csv
+# ignore clagd cache
+code/.cache
+
+# ignore puml images
+Diagrams/*.png
+Diagrams/*.svg
+docs/Diagrams/*.png
+docs/Diagrams/*.svg
+
+#ignore output folder
+out/

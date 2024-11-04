@@ -1,0 +1,113 @@
+#include <iostream>
+
+#include "Animation.h"
+#include "Rect.h"
+#include "Renderer.h"
+#include "SDL_render.h"
+#include "Window.h"
+
+Renderer::Renderer(Window& window) {
+    // Create renderer
+    mRenderer = SDL_CreateRenderer(window.getSDLWindow(), -1, SDL_RENDERER_ACCELERATED);
+    if (mRenderer == NULL) {
+        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        return;
+    }
+}
+
+void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
+                             bool aFlipX, bool aFlipY, float aRotation) {
+    // Get the SDL_Texture from the Texture class
+    SDL_Texture* sdlTexture = aTexture.getSDLTexture();
+
+    // Define the destination rectangle where the texture will be drawn
+    SDL_Rect dstRect;
+    dstRect.x = aLocation.x;
+    dstRect.y = aLocation.y;
+    dstRect.w = aWidth;
+    dstRect.h = aHeight;
+
+    // SDL_Rect sourceRect(aSourceRect);
+    SDL_Rect* sourceRect = nullptr;
+    if (aSourceRect.w != 0) {
+        sourceRect = new SDL_Rect(aSourceRect);
+    }
+
+    // Set the flipping mode based on input flags
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    if (aFlipX && aFlipY) {
+        flip = (SDL_RendererFlip)(SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL);
+    } else if (aFlipX) {
+        flip = SDL_FLIP_HORIZONTAL;
+    } else if (aFlipY) {
+        flip = SDL_FLIP_VERTICAL;
+    }
+
+    // Render the texture with flipping and rotation
+    SDL_RenderCopyEx(mRenderer,  // The renderer associated with the texture
+                     sdlTexture, // The texture to render
+                     sourceRect, // The source rectangle (nullptr means the entire texture)
+                     &dstRect,   // The destination rectangle
+                     aRotation,  // The angle of rotation (in degrees)
+                     nullptr,    // The point around which to rotate (nullptr means center)
+                     flip        // The flipping mode
+    );
+}
+
+void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill) {
+    // Create a rectangle to define the size and position
+    SDL_Rect rect;
+    rect.x = aLocation.x;
+    rect.y = aLocation.y;
+    rect.w = aWidth;
+    rect.h = aHeight;
+
+    // Set the render color
+    SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+
+    // Create a texture from a surface
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, aWidth, aHeight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+    if (aFill) {
+        SDL_FillRect(surface, nullptr, SDL_MapRGBA(surface->format, aColor.r, aColor.g, aColor.b, aColor.a));
+    } else {
+        SDL_Rect outlineRect = {0, 0, aWidth, aHeight};
+        SDL_FillRect(surface, &outlineRect, SDL_MapRGBA(surface->format, aColor.r, aColor.g, aColor.b, aColor.a));
+    }
+
+    // Create a texture from the surface
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, surface);
+    SDL_FreeSurface(surface); // Free the surface after creating the texture
+
+    // Render the texture with rotation
+    SDL_Point center = {aWidth / 2, aHeight / 2}; // Rotation center
+    SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, rotation, &center, SDL_FLIP_NONE);
+
+    // Destroy the texture after rendering
+    SDL_DestroyTexture(texture);
+}
+
+void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) {
+    SDL_Rect rect;
+    rect.x = aLocation.x;
+    rect.y = aLocation.y;
+    rect.w = aWidth;
+    rect.h = aHeight;
+
+    SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+    if (aFill) {
+        SDL_RenderFillRect(mRenderer, &rect);
+    } else {
+        SDL_RenderDrawRect(mRenderer, &rect);
+    }
+}
+
+Renderer::~Renderer() { SDL_DestroyRenderer(this->mRenderer); }
+
+void Renderer::clear(Color aColor) {
+    SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
+    SDL_RenderClear(mRenderer);
+}
+
+void Renderer::show() { SDL_RenderPresent(mRenderer); }
+
+SDL_Renderer*& Renderer::getSDLRenderer() { return mRenderer; }

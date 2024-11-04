@@ -1,0 +1,38 @@
+Minutes 24-10-2024
+
+What was discussed:
+
+What has been done:
+- Siem:
+Worked on Physics system design 
+Worked on implementing save game system
+
+- Angel:
+Physics system design (class diagram)
+
+- Ronan:
+Worked on game engine structure for gameObject scenes and a bit of multithreading research
+
+- Sean:
+Getting distracted by physics system
+Reworked multiplayer design
+- Seger:
+Physiscs system design 
+Worked on game engine scene functions
+
+What is going to be done:
+- Siem:
+Audio system design 
+save game system implementation
+
+- Angel:
+Implementing physics design
+
+- Ronan:
+Update class diagram for recent game engine structure changes.
+
+- Sean:
+Finishing multiplayer system design for review
+
+- Seger:
+Impelement rendering system for game engine

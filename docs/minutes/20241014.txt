@@ -1,0 +1,53 @@
+Meeting with all the other teams
+
+Group Alpha:
+- 2D tilemaps: is part of the API, and uses its own renderer.
+- In-game map editor: Predefining an editing process for the game developer
+- Adaptive audio: audio is split in buffer, to adjust pitch and speed per source while playing.
+- Use an adapter design pattern for letting the developer interface with behavior scripts.
+- i.hendrkks2@student.avans.nl
+
+Group Delta:
+- Viewport: System to conveniently render a section (/window) of the world at a certain resolution.
+- Level editor: delivered as a separate package.
+- Input manager: based on Unity 6. Used to separate physical input from corresponding action.
+- They use ECS!
+- Conclusion from PoCs: trouble with physics, spritesheets and audio are relatively easy
+- Why do they struggle with physics? A: Physics as a whole was a large subject, they need extra time to encapsulate the whole physics system (also to create a Box2D facade)
+
+Group Echo:
+- Multiplayer!. Researched client-server or peer 2 peer. Decide on peer 2 peer, because it is less complex, costs less time.
+- Researched synchronisation between clients. Done this using JSON.
+- Decided ENet as a package for networking.
+- GameObjects contain components, components are either children or parents?
+- Regard UI objects as game objects, to more easily give them a place in the game world.
+- Added anchor points to use as a reference for transforming game objects.
+
+Group Hotel:
+- Multiplayer focus!
+- TCP vs UDP consideration.
+- Game engines accept packet loss. How do you keep track of the order of packets in UDP.
+- Authoritative vs. non-authoritative considered, foor for thought.
+- Ask them a question about their client-server comms activity diagram, looks interesting.
+- Multithreading: context switching causes overhead, is undesirable. Unity attempts to limit the amount of threads, using job switching.
+
+Group Crepe:
+- Cross-platform building using find_package in cmake, git submodules did *not* work for them.
+- PoCs and unit tests kan link individual parts of the engine, so the engine internals can be used.
+- Event system for keyboard and mouse, events can be created in behavior script. How is the link between physical input and desired action managed?
+- Resources are owned by a scene, when a scene ends, the resources are unloaded.
+- Simple, handmade physics: square and circle collision (no polygons).
+
+Group India:
+- Subject workprocess: PvA, user stories and retrospectives
+- Dissected the user stories into... more user stories. How do these differ from requirements? Is there a DoD?
+- Put deeper work in how to grade the other group members. With the intention to empower the group.
+- Does the planning leave room for error? How is this handled?
+
+Group Foxtrot:
+- Multiplayer!
+- PrefabBuilder: is it like a GameObject factory? Or similar to a builder pattern?
+
+Group Golf:
+- Boomerang animations? Useful to us?
+- Library modularity: some functionalities added as a DLL. Does this not create more effort the developer?
