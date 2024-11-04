@@ -1,34 +1,45 @@
 #pragma once
 
-#include "SaveArray.h"
-#include "IntSaveField.h"
 #include "FloatSaveField.h"
+#include "IntSaveField.h"
+#include "SaveArray.h"
 #include "StringSaveField.h"
-//#include "SaveField.hpp"
 #include <string>
-#include <vector>
 
 class SaveGame {
 public:
-  SaveGame(const std::string &aFileName);
+    SaveGame(const std::string& aFileName);
+    void store();
+    void remove();
 
 public:
-  void store();
-  void remove();
-  void addIntField(std::string name, int value);
-  void addFloatField(std::string name, float value);
-  void addStringField(std::string name, std::string value);
-  IntSaveField& getIntField(std::string name);
-  FloatSaveField& getFloatField(std::string name);
-  StringSaveField& getStringField(std::string name);
-  
-  void addArray(std::string name);
-  void setArray(std::string name, SaveArray value);
-  SaveArray getArray(std::string name) const;
+    void addIntField(std::string name, int value);
+    void addFloatField(std::string name, float value);
+    void addStringField(std::string name, std::string value);
+
+public:
+    void setIntField(std::string aName, int aValue);
+    void setFloatField(std::string aName, float aValue);
+    void setStringField(std::string aName, std::string aValue);
+
+public:
+    const IntSaveField& getIntField(std::string aName) const;
+    const FloatSaveField& getFloatField(std::string aName) const;
+    const StringSaveField& getStringField(std::string aName) const;
+
+public:
+    void addArray(std::string name);
+    void setArray(std::string aName, SaveArray aValue);
+    SaveArray getArray(std::string aName) const;
 
 private:
-  void createFile();
-  std::string mFileName;
-  //std::vector<SaveField> mFields;
-  std::vector<SaveArray> mArrays;
+    void addAnyFromString(std::string aName, std::string aValue);
+    void createFile();
+
+private:
+    std::string mFileName;
+    std::vector<IntSaveField> mIntFields;
+    std::vector<FloatSaveField> mFloatFields;
+    std::vector<StringSaveField> mStringFields;
+    std::vector<SaveArray> mArrays;
 };

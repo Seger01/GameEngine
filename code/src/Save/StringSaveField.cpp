@@ -1,9 +1,8 @@
-#include "StringSaveField.hpp"
+#include "StringSaveField.h"
 
 StringSaveField::StringSaveField(std::string name) : mName(name) {}
 
-StringSaveField::StringSaveField(std::string name, std::string value)
-    : mName(name), mValue(value) {}
+StringSaveField::StringSaveField(std::string name, std::string value) : mName(name), mValue(value) {}
 
 std::string StringSaveField::getName() const { return mName; }
 
