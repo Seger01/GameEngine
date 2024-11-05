@@ -4,6 +4,6 @@ mkdir -p build
 
 cd build
 
-cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+cmake .. -DENABLE_DEBUG=OFF -DENABLE_TESTS=ON
 
 cmake --build . -- -j$(nproc)
