@@ -96,6 +96,7 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
+SaveGameManager& EngineBravo::getSaveGameManager() { return saveGameManager; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();

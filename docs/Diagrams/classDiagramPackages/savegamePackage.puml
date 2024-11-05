@@ -3,51 +3,41 @@
 package Save{
 class SaveGame {
 -mFileName : string
-    - mIntFields : vector<IntSaveField>
-    - mFloatFields : vector<FloatSaveField>
-    - mStringFields : vector<StringSaveField>
-    - mArrays : vector<SaveArray>
     + SaveGame(const string &aFileName)
     + store() : void
     + remove() : void
 
-    - addAnyFromString(string name, string value) : void
-    + addIntField(string name, int value) : void
-    + addFloatField(string name, float value) : void
-    + addStringField(string name, string value) : void
+    + setIntField(string aName, int aValue) : void
+    + setFloatField(string aName, float aValue) : void
+    + setStringField(string aName, float aValue) : void
 
-    + setIntField(string name, int value) : void
-    + setFloatField(string name, float value) : void
-    + setStringField(string name, float value) : void
+    + hasIntField(string aName) : bool
+    + hasFloatField(string aName) : bool
+    + hasStringField(string aName) : bool
 
-    + getIntField(string name) : const IntSaveField&
-    + getFloatField(string name) : const FloatSaveField&
-    + getStringField(string name) : const StringSaveField&
+    + getIntField(string aName) : const IntSaveField&
+    + getFloatField(string aName) : const FloatSaveField&
+    + getStringField(string aName) : const StringSaveField&
 
-    + addArray(string name) : void
-    + setArray(string name, SaveArray value) : void
+    + addArray(string aName) : void
+    + setArray(string aName, SaveArray aValue) : void
     + getArray(string aName) const : SaveArray
 
+    - addAny(const string &aName, string aValue) : void
     - createFile() : void
 }
 
 class SaveArray {
     - mName : string
-    - mIntFields : vector<IntSaveField>
-    - mFloatFields : vector<FloatSaveField>
-    - mStringFields : vector<StringSaveField>
-    + SaveArray(string name)
+    + SaveArray(const string &aName)
 
     + getName() : string
 
-    - addAnyFromString(string name, string value) : void
-    + addIntField(string name, int value) : void
-    + addFloatField(string name, float value) : void
-    + addStringField(string name, string value) : void
+    - addAny(const string &aName, string aValue) : void
 
-    + getIntField(string name) : IntSaveField&
-    + getFloatField(string name) : FloatSaveField&
-    + getStringField(string name) : StringSaveField&
+    + getIntField(string aName) : IntSaveField&
+    + getFloatField(string aName) : FloatSaveField&
+    + getStringField(string aName) : StringSaveField&
 
     + getIntArray() : const vector&
     + getFloatArray() : const vector&
@@ -70,7 +60,7 @@ class IntSaveField {
   - mName : string
   - mValue : int
 
-  + SaveField(string name)
+  + IntSaveField(string aName)
 
   + getName() : string
 
@@ -82,7 +72,7 @@ class FloatSaveField {
   - mName : string
   - mValue : float
 
-  + SaveField(string name)
+  + FloatSaveField(string aName)
 
   + getName() : string
 
@@ -94,7 +84,7 @@ class StringSaveField {
   - mName : string
   - mValue : string
 
-  + SaveField(string name)
+  + StringSaveField(string aName)
 
   + getName() : string
 
@@ -103,12 +93,9 @@ class StringSaveField {
 }
 }
 
-SaveGame *-- "*" SaveField
 SaveGame *-- "*" SaveArray
-SaveArray *-- "*" SaveField
 
 SaveGame <-left- SaveGameUtil
-SaveGame *--"*" SaveArray
 SaveGame -[hidden]> SaveArray
 SaveGame *--"*" IntSaveField
 SaveGame *--"*" FloatSaveField
