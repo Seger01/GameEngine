@@ -18,9 +18,10 @@ private:
     void toggleAnimaionEnabled();
     void setAnimationActive(std::string aAnimationTag, bool aState);
     void deactivateAllAnimations();
-    void handleAnimations();
 
+    void handleAnimations();
     void handleMovement();
+    void hanldeCameraMovement();
 };
 
 #endif
