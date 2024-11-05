@@ -1,4 +1,5 @@
 #include "SaveGame.h"
+#include "FSConverter.h"
 #include "SaveGameUtil.h"
 #include <algorithm>
 #include <fstream>
@@ -7,7 +8,9 @@
 
 using json = nlohmann::json;
 
-SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
+SaveGame::SaveGame(const std::string& aFileName) {
+    FSConverter fsConverter;
+    mFileName = fsConverter.getResourcePath(aFileName);
     std::ifstream inFile(mFileName);
     if (inFile) {
         // File exists, load the data
@@ -25,10 +28,10 @@ SaveGame::SaveGame(const std::string& aFileName) : mFileName(aFileName) {
 
         // Load arrays from JSON
         for (const auto& array : j["arrays"]) {
-            if (array.contains("name") && array.contains("fields")) {
+            if (array.contains("name")) {
                 SaveArray saveArray(array["name"]);
 
-                // Only add fields if they exist
+                // Add all fields
                 for (const auto& arrayField : array["fields"]) {
                     if (arrayField.contains("name") && arrayField.contains("value")) {
                         saveArray.addAny(arrayField["name"].get<std::string>(), arrayField["value"]);
@@ -241,7 +244,11 @@ bool SaveGame::hasStringField(std::string aName) const {
     return false;
 }
 
-void SaveGame::remove() { std::remove(mFileName.c_str()); }
+void SaveGame::remove() {
+    if (std::remove(mFileName.c_str()) != 0) {
+        throw std::logic_error("Failed to remove the file: " + mFileName);
+    }
+}
 
 const IntSaveField& SaveGame::getIntField(std::string aName) const {
     auto it = std::find_if(mIntFields.begin(), mIntFields.end(),
@@ -272,45 +279,36 @@ const StringSaveField& SaveGame::getStringField(std::string aName) const {
 
 void SaveGame::addArray(std::string aName) {
     // Check if the array already exists
-    try {
-        for (auto& array : mArrays) {
-            if (array.getName() == aName) {
-                throw(aName);
-            }
-        }
-    } catch (std::string val) {
-        std::cout << "SaveGame::addArray(): cannot add array with name \"" << aName << "\", field already exists."
-                  << std::endl;
-        return;
+    auto it = std::find_if(mArrays.begin(), mArrays.end(),
+                           [aName](const SaveArray& array) { return array.getName() == aName; });
+    if (it != mArrays.end()) {
+        // Array already exists
+        throw std::invalid_argument("Failed to add array with name \"" + aName + "\". Array already exists.");
     }
 
-    SaveArray array(aName);
-    mArrays.push_back(array);
+    mArrays.emplace_back(aName);
 }
 
 void SaveGame::setArray(std::string aName, SaveArray aValue) {
-
-    for (SaveArray& array : mArrays) {
-        if (array.getName() == aName) {
-            array = aValue;
-            return;
-        }
+    // Search for the array
+    auto it = std::find_if(mArrays.begin(), mArrays.end(),
+                           [aName](const SaveArray& array) { return array.getName() == aName; });
+    if (it == mArrays.end()) {
+        // Array does not exist
+        throw std::invalid_argument("Failed to set array with name \"" + aName + "\". Array does not exist.");
     }
-    throw std::invalid_argument("Failed to find array with name \"" + aName + "\"");
+
+    // Overwrite the array
+    *it = aValue;
 }
 
 SaveArray SaveGame::getArray(std::string aName) const {
-    try {
-        for (SaveArray array : mArrays) {
-            if (array.getName() == aName) {
-                return array;
-            }
-        }
-        throw(aName);
-    } catch (std::string aName) {
-        std::cout << "SaveArray::getField(): failed to find field with name \"" << aName << "\"" << std::endl;
-        return mArrays[0];
+    auto it = std::find_if(mArrays.begin(), mArrays.end(),
+                           [aName](const SaveArray& array) { return array.getName() == aName; });
+    if (it == mArrays.end()) {
+        throw std::invalid_argument("Failed to get array with name \"" + aName + "\"");
     }
+    return *it;
 }
 
 void SaveGame::createFile() {

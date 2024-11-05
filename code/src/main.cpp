@@ -20,14 +20,12 @@
 #include "SpriteDef.h"
 #include "Texture.h"
 #include "Window.h"
-#include "test.h"
 
 void engineTest() {
-    FSConverter fsConverter;
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     SaveGameManager& savegameManager = engine.getSaveGameManager();
-    SaveGame& sg1 = savegameManager.createSaveGame("save1", fsConverter.getResourcePath("saves/save1.save"));
+    SaveGame& sg1 = savegameManager.createSaveGame("save1", "saves/save1.save");
 
     Scene* scene = sceneManager.createScene("Level1");
     if (scene == nullptr)

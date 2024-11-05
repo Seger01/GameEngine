@@ -1,9 +1,11 @@
+#include "FSConverter.h"
 #include "SaveGame.h"
 #include <fstream>
 #include <gtest/gtest.h>
 
 TEST(SaveGame, ValidWriteRead) {
-    std::string path = "code/output/newSave.json";
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
     std::remove(path.c_str());
     SaveGame sg{path};
     sg.addStringField("string1", "value1");
@@ -20,7 +22,10 @@ TEST(SaveGame, ValidWriteRead) {
 }
 
 TEST(SaveGame, InvalidWriteRead) {
-    SaveGame sg{"code/output/newSave.json"};
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
 
     ASSERT_THROW(sg.getStringField("string1"), std::invalid_argument);
     ASSERT_THROW(sg.getIntField("int1"), std::invalid_argument);
@@ -34,9 +39,11 @@ TEST(SaveGame, InvalidWriteRead) {
 }
 
 TEST(SaveGame, Store) {
-    std::string path{"code/output/newSave.json"};
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
     std::remove(path.c_str());
     SaveGame sg{path};
+
     sg.addIntField("int1", 1);
     sg.addFloatField("float1", 1.0f);
     sg.addArray("array1");
@@ -82,9 +89,11 @@ TEST(SaveGame, Store) {
 }
 
 TEST(SaveGame, InvalidStore) {
-    std::string invalidPath{"invalid/invalid.json"};
-    std::remove(invalidPath.c_str());
-    SaveGame sg{invalidPath};
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("invalid/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
     sg.addIntField("int1", 1);
     sg.addFloatField("float1", 1.0f);
     sg.addArray("array1");
@@ -94,18 +103,55 @@ TEST(SaveGame, InvalidStore) {
     ASSERT_THROW(sg.store(), std::invalid_argument);
 
     // Check if the file contents are correct
-    std::ifstream file(invalidPath);
+    std::ifstream file(path);
     ASSERT_FALSE(file.is_open());
 
-    std::remove(invalidPath.c_str());
+    std::remove(path.c_str());
 }
 
 TEST(SaveGame, Remove) {
-    // Test SaveGame::remove
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
+    sg.addIntField("int1", 1);
+
+    sg.store();
+    sg.remove();
+
+    // Check if the file was removed
+    std::ifstream file(path);
+    ASSERT_FALSE(file.is_open());
 }
 
-TEST(SaveGame, InvalidRemove) {}
+TEST(SaveGame, InvalidRemove) {
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
+    sg.addIntField("int1", 1);
+
+    EXPECT_THROW(sg.remove(), std::logic_error);
+}
 
 TEST(SaveGame, ArrayWriteRead) {
-    // Test SaveGame::addArray, SaveGame::setArray, SaveGame::getArray
+
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
+    sg.addArray("array1");
+    SaveArray array{sg.getArray("array1")};
+    array.addIntField("int1", 1);
+    array.addFloatField("float1", 1.0f);
+    array.addStringField("string1", "value1");
+    sg.setArray("array1", array);
+
+    SaveArray array2{sg.getArray("array1")};
+    ASSERT_EQ(array2.getIntField("int1").getValue(), 1);
+    ASSERT_FLOAT_EQ(array2.getFloatField("float1").getValue(), 1.0f);
+    ASSERT_EQ(array2.getStringField("string1").getValue(), "value1");
 }

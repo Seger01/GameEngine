@@ -1,9 +1,5 @@
 #!/bin/bash
 
-mkdir -p build
-
 cd build
 
-cmake .. -DENABLE_DEBUG=OFF -DENABLE_TESTS=ON
-
-cmake --build . --target run_tests -- -j$(nproc)
+bin/Engine_BRAVO_tests
