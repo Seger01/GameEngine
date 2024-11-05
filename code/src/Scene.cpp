@@ -15,6 +15,16 @@ Scene::~Scene() {
 
 std::vector<GameObject*>& Scene::getGameObjects() { return mGameObjects; }
 
+std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag) {
+    std::vector<GameObject*> objectsWithTag;
+    for (GameObject* obj : mGameObjects) {
+        if (obj->getTag() == tag) {
+            objectsWithTag.push_back(obj);
+        }
+    }
+    return objectsWithTag;
+}
+
 void Scene::addGameObject(GameObject* object) {
     if (object) {
         mGameObjects.push_back(object);

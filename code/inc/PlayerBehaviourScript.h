@@ -13,8 +13,10 @@ private:
     void setFlipX(bool aState);
     void setFlipY(bool aState);
 
+    void initEmitter();
+
     void toggleAnimaionEnabled();
-    void setAnimationActive(Animation* aAnimation, bool aState);
+    void setAnimationActive(std::string aAnimationTag, bool aState);
     void deactivateAllAnimations();
     void handleAnimations();
 
