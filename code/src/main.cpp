@@ -14,6 +14,7 @@
 #include "PlayerBehaviourScript.h"
 #include "Renderer.h"
 #include "SampleBevahiourScript.h"
+#include "SaveGameManager.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Sprite.h"
@@ -23,11 +24,12 @@
 #include "TileMapParser.h"
 #include "Transform.h"
 #include "Window.h"
-#include "test.h"
 
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
+    SaveGameManager& savegameManager = engine.getSaveGameManager();
+    SaveGame& sg1 = savegameManager.createSaveGame("save1", "saves/save1.save");
 
     Scene* scene = sceneManager.createScene("initscene");
     if (scene == nullptr)
@@ -50,6 +52,10 @@ void engineTest() {
 
     engine.initizalize();
     engine.run();
+
+    sg1.setIntField("x", gameObject->getTransform().position.x);
+    sg1.setIntField("y", gameObject->getTransform().position.y);
+    sg1.store();
 
     return;
 }
