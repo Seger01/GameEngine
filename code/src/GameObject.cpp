@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject() : mID(0), mIsActive(true) {}
+GameObject::GameObject() : mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
 
 GameObject::~GameObject() {
     for (auto component : mComponents) {
@@ -25,10 +25,6 @@ void GameObject::removeComponent(Component* component) {
         }
     }
 }
-
-bool GameObject::isActiveInWorld() { return isActiveSelf(); }
-
-bool GameObject::isActiveSelf() { return mIsActive; }
 
 void GameObject::setID(int id) { mID = id; }
 

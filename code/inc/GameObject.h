@@ -13,13 +13,10 @@
 class GameObject {
 public:
     GameObject();
-    ~GameObject();
+    virtual ~GameObject();
 
     void addComponent(Component* aComponent);
     void removeComponent(Component* component);
-
-    bool isActiveInWorld();
-    bool isActiveSelf();
 
     void setID(int id);
     int getID();
@@ -68,7 +65,7 @@ public:
         return newComponent;
     }
 
-private:
+protected:
     std::vector<Component*> mComponents;
     Transform mTransform;
 

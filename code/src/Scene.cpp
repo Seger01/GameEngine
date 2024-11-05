@@ -1,6 +1,10 @@
 #include "Scene.h"
+
 #include <algorithm>
 #include <stdexcept>
+
+#include "Text.h"
+#include "UIObject.h"
 
 Scene::Scene(std::string aSceneName, int aSceneID)
     : mSceneName(aSceneName), mSceneID(aSceneID), mActiveCameraIndex(-1) {}

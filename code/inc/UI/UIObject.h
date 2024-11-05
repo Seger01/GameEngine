@@ -1,15 +1,13 @@
-#pragma once
+#ifndef UIOBJECT_H
+#define UIOBJECT_H
+
 #include "Button.h"
-#include "Text.h"
 #include "GameObject.h"
 
-class UIObject : public GameObject
-{
-    public:
-        UIObject();
-        ~UIObject();
-        //add UIObject functions and remove UIObject functions?
-    private:
-        int mWidth;
-        int mHeight;
+class UIObject : public GameObject {
+public:
+    UIObject();
+    virtual ~UIObject();
 };
+
+#endif // UIOBJECT_H
