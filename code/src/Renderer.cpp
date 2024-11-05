@@ -24,9 +24,9 @@ Renderer::Renderer(Window& window) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/KnightWarrior.otf").c_str(), 14); // Specify the
-                                                                                                        // font path and
-                                                                                                        // size
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/SupremeSpike.otf").c_str(), 26); // Specify the
+                                                                                                       // font path and
+                                                                                                       // size
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         TTF_Quit();
