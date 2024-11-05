@@ -106,7 +106,9 @@ class Sprite implements Component{
     - int mLayer;
 }
 
-class Animation implements Component{
+class Component_Proxy {}
+
+class Animation implements Component_Proxy{
     + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
     + ~Animation()
 

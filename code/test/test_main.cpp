@@ -1,8 +1,13 @@
+#include "FloatSaveField.h"
+#include "IntSaveField.h"
+#include "SaveGame.h"
+#include "StringSaveField.h"
+#include <cstdio>
+#include <fstream>
 #include <gtest/gtest.h>
-#include "test.h"
+#include <iostream>
 
-TEST(ExampleSuite, ExampleTest) {
-    ASSERT_EQ(1,1);
-    ASSERT_NE(1,0);
-    ASSERT_EQ(1,returnsOne());
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

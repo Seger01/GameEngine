@@ -46,11 +46,15 @@
 
 #ignore build folder
 code/build/
+code/.cache
+.cache
 
 .vscode/
 
 output.csv
 
+code/external/tmxlite-master/**
+output.csv
 # ignore clagd cache
 code/.cache
 

@@ -41,7 +41,9 @@ enum EmitterMode {
     Burst
 }
 
-class ParticleEmitter implements Component{
+class Component_Proxy{}
+
+class ParticleEmitter implements Component_Proxy{
     + ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs, Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
 
     + ~ParticleEmitter()
