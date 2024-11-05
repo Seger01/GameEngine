@@ -36,6 +36,8 @@ public:
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
+    std::vector<Component*> getComponentsWithTag(const std::string& tag) const;
+
     // Templated functions
     template <typename T> bool hasComponent() const {
         for (const auto& component : mComponents) {

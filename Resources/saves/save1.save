@@ -1,0 +1,17 @@
+{
+    "arrays": [
+        {
+            "name": "myArray"
+        }
+    ],
+    "fields": [
+        {
+            "name": "x",
+            "value": 618
+        },
+        {
+            "name": "y",
+            "value": 181
+        }
+    ]
+}

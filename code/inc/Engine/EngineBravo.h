@@ -2,6 +2,8 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
+#include "AudioManager.h"
+#include "EventManager.h"
 #include "ParticleSystem.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
@@ -19,9 +21,13 @@ public:
     void initizalize();
     void run();
 
+    void setFrameRateLimit(int aFrameRate);
+
     SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
+    SaveGameManager& getSaveGameManager();
+    AudioManager& getAudioManager();
 
 private:
     // Private constructor and destructor
@@ -37,14 +43,19 @@ private:
 
     void limitFrameRate(int aFrameRate);
 
+    void handleEvent(const Event& aEvent);
+
 private:
     int mFrameRateLimit;
+    bool mRunning;
 
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;
     ResourceManager mResourceManager;
     ParticleSystem mParticleSystem;
-    // SaveGameManager saveGameManager;
+    EventManager mEventManager;
+    SaveGameManager mSaveGameManager;
+    AudioManager mAudioManager;
     // AnimationManager animationManager;
     // UIManager uiManager;
 };
