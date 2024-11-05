@@ -13,16 +13,23 @@ class RenderSystem {
 public:
     RenderSystem();
 
+    void renderLayer(Scene* aScene, int aLayer);
     void render(Scene* aScene);
 
     Renderer& getRenderer();
     Window& getWindow();
 
 private:
-    void renderSprite(GameObject* aGameObject, Sprite* aSprite);
-    void renderAnimation(GameObject* aGameObject, Animation* aAnimation);
-    void renderParticle(Particle& aParticle);
+    void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);
+    void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
+    void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
 
+    void renderDeubgInfo(Scene* aScene);
+
+    int getLowestLayer(Scene* aScene);
+    int getHighestLayer(Scene* aScene);
+
+private:
     std::unique_ptr<Renderer> mRenderer;
     std::unique_ptr<Window> mWindow;
 

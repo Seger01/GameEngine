@@ -1,8 +1,21 @@
 #include "Engine/SceneManager.h"
 
-SceneManager::SceneManager() : mCurrentSceneIndex(-1) {}
+SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1) {}
 
 SceneManager::~SceneManager() {}
+
+bool SceneManager::sceneChanged() {
+    if (mNewSceneName != "") {
+        loadScene(mNewSceneName);
+        mNewSceneName = "";
+        return true;
+    } else if (mNewSceneID != -1) {
+        loadScene(mNewSceneID);
+        mNewSceneID = -1;
+        return true;
+    }
+    return false;
+}
 
 int SceneManager::addScene(const Scene& scene) {
     mScenes.push_back(std::make_unique<Scene>(scene));
@@ -11,6 +24,10 @@ int SceneManager::addScene(const Scene& scene) {
     }
     return mScenes.size() - 1;
 }
+
+void SceneManager::requestSceneChange(const std::string& sceneName) { mNewSceneName = sceneName; }
+
+void SceneManager::requestSceneChange(int sceneID) { mNewSceneID = sceneID; }
 
 void SceneManager::loadScene(int index) {
     if (index >= 0 && index < mScenes.size()) {
@@ -65,12 +82,13 @@ Scene* SceneManager::createScene(std::string aSceneName, int aSceneID) {
 
     mScenes.push_back(std::unique_ptr<Scene>(new Scene(aSceneName, aSceneID)));
     return mScenes.back().get();
-    //return mScenes[mScenes.size() - 1].get();
+    // return mScenes[mScenes.size() - 1].get();
 }
 
 void SceneManager::loadScene(const std::string& sceneName) {
     for (int i = 0; i < mScenes.size(); ++i) {
         if (mScenes[i]->getName() == sceneName) {
+            std::cout << "Loading scene: " << sceneName << std::endl;
             mCurrentSceneIndex = i;
             break;
         }

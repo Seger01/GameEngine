@@ -5,16 +5,18 @@
 #include "Time.h"
 
 Particle::Particle()
-    : velocity(Vector2(0, 0)), acceleration(0), lifeTimeRemaining(0), size(Vector2(0, 0)), sizeShift(Vector2(0, 0)),
+    : velocity(Vector2(0, 0)), acceleration(0), lifeTimeRemainingSec(0), size(Vector2(0, 0)), endSize(Vector2(0, 0)),
       rotation(0), angularVelocity(0), angularAcceleration(0), colorGradient(std::vector<Color>()) {}
 
 Particle::Particle(Vector2 aPosition, Vector2 aVelocity, float aAcceleration, int aLifeTime, int aMaxLifeTime,
                    Vector2 aSize, Vector2 aSizeShift, float aRotation, float aAngularVelocity,
                    float aAngularAcceleration, std::vector<Color> aColorGradient)
-    : position(aPosition), velocity(aVelocity), acceleration(aAcceleration), maxLifeTime(aMaxLifeTime),
-      lifeTimeRemaining(aLifeTime), size(aSize), sizeShift(aSizeShift), rotation(aRotation),
-      angularVelocity(aAngularVelocity), angularAcceleration(aAngularAcceleration), colorGradient(aColorGradient) {
+    : position(aPosition), velocity(aVelocity), acceleration(aAcceleration), maxLifeTime(aMaxLifeTime), size(aSize),
+      endSize(aSizeShift), rotation(aRotation), angularVelocity(aAngularVelocity),
+      angularAcceleration(aAngularAcceleration), colorGradient(aColorGradient) {
 
+    lifeTimeRemainingSec = static_cast<double>(aLifeTime) / 1000;
+    startSize = aSize;
     initialLifeTime = aLifeTime;
 }
 
@@ -26,18 +28,22 @@ void Particle::update() {
 
     velocity.x += acceleration * Time::deltaTime;
     velocity.y += acceleration * Time::deltaTime;
-    lifeTimeRemaining -= Time::deltaTime;
-    size.x += sizeShift.x * Time::deltaTime;
-    size.y += sizeShift.y * Time::deltaTime;
+    lifeTimeRemainingSec -= Time::deltaTime;
+
+    float percentage = (static_cast<float>(maxLifeTime) / 1000) -
+                       (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime) / 1000));
+
+    size.x = startSize.x + ((endSize.x - startSize.x) * percentage);
+    size.y = startSize.y + ((endSize.y - startSize.y) * percentage);
 
     if (size.x < 0) {
         size.x = 0;
-        lifeTimeRemaining = 0;
+        lifeTimeRemainingSec = 0;
     }
 
     if (size.y < 0) {
         size.y = 0;
-        lifeTimeRemaining = 0;
+        lifeTimeRemainingSec = 0;
     }
 
     rotation += angularVelocity * Time::deltaTime;
@@ -46,7 +52,7 @@ void Particle::update() {
 
 Vector2 Particle::getPosition() { return position; }
 
-float Particle::getLifeTime() { return lifeTimeRemaining; }
+float Particle::getLifeTime() { return lifeTimeRemainingSec; }
 
 Vector2 Particle::getSize() { return size; }
 
@@ -74,8 +80,8 @@ Color Particle::calculateColor() {
 
 Color Particle::calculateInterpolatedColor() {
     // Calculate the percentage of life time remaining
-    float percentage =
-        static_cast<float>(maxLifeTime - (lifeTimeRemaining + (maxLifeTime - initialLifeTime))) / maxLifeTime;
+    float percentage = (static_cast<float>(maxLifeTime) / 1000) -
+                       (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime) / 1000));
 
     // Calculate the index of the color gradient
     int index = static_cast<int>(percentage * (colorGradient.size() - 1));
@@ -104,7 +110,8 @@ Color Particle::calculateInterpolatedColor() {
 
 Color Particle::getNearestColor() {
     // Calculate the percentage of life time remaining
-    float percentage = static_cast<float>(maxLifeTime - lifeTimeRemaining) / maxLifeTime;
+    float percentage = (static_cast<float>(maxLifeTime) / 1000) -
+                       (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime)));
 
     // Calculate the index of the color gradient
     int index = static_cast<int>(percentage * (colorGradient.size() - 1));

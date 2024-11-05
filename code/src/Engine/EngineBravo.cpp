@@ -1,13 +1,15 @@
 #include "EngineBravo.h"
 
 #include <SDL.h>
+#include <chrono>
+#include <thread>
 
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -19,6 +21,8 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
+    if (mSceneManager.sceneChanged()) {
+    }
     startBehaviourScripts();
 
     Time::initialize();
@@ -35,8 +39,6 @@ void EngineBravo::run() {
 
     while (!quit) {
         Time::update();
-        static long startOfFrame = 0;
-        startOfFrame = Time::ticks;
         // Event handling
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -44,6 +46,9 @@ void EngineBravo::run() {
             }
         }
 
+        if (mSceneManager.sceneChanged()) {
+            startBehaviourScripts();
+        }
         input.update();
 
         runBehaviourScripts();
@@ -52,10 +57,31 @@ void EngineBravo::run() {
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
-        if (Time::ticks - startOfFrame < mMinFrameTimeMs) {
-            SDL_Delay(mMinFrameTimeMs - (Time::ticks - startOfFrame));
-        }
+        limitFrameRate(mFrameRateLimit);
     }
+}
+
+// function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next frame
+// if it renders too quickly
+void EngineBravo::limitFrameRate(int aFrameRate) {
+    // Minimum time per frame in milliseconds
+    int mMinFrameTimeMs = 1000 / aFrameRate;
+
+    // Record the start time of the frame
+    static auto frameStart = std::chrono::high_resolution_clock::now();
+
+    // Calculate the time it took to render the frame
+    auto frameEnd = std::chrono::high_resolution_clock::now();
+    auto frameDurationMs = std::chrono::duration_cast<std::chrono::milliseconds>(frameEnd - frameStart).count();
+
+    // Calculate the delay needed to achieve the target frame rate
+    int delayTime = mMinFrameTimeMs - frameDurationMs;
+
+    // Delay if the frame rendered too quickly
+    if (delayTime > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
+    }
+    frameStart = std::chrono::high_resolution_clock::now();
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }

@@ -11,7 +11,6 @@ FSConverter::FSConverter(std::string ResourceDir) {
         std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
         throw std::runtime_error("Resources folder not found.");
     } else {
-        std::cout << "Resources folder located at: " << resourceDir << std::endl;
     }
 }
 
