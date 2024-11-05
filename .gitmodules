@@ -19,3 +19,9 @@
 [submodule "code/external/BehaviorTree"]
 	path = code/external/BehaviorTree
 	url = https://github.com/BehaviorTree/BehaviorTree.CPP.git
+[submodule "code/external/nlohmann_json"]
+	path = code/external/nlohmann_json
+	url = https://github.com/nlohmann/json.git
+[submodule "code/external/SDL_ttf"]
+	path = code/external/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git

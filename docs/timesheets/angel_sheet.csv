@@ -44,3 +44,10 @@ Date,Time,Duration(in hours),Activity
 2024-10-14, 11:00, 1.0, updated movement system of new physics poc; now trying to fix origin difference between sdl and box2d
 2024-10-16, 8:00, 6.0, worked with team; fixed origin difference sdl and box2d
 2024-10-17, 15:00, 1.5 , Physics engine design and group discussions
+2024-10-22, 09:00, 7.0, discussed and continued physics design
+2024-10-24, 09:00, 4.0, discussed physics design; tested out contact listeners box2d
+2024-10-28, 9:00, 4.0, Standup; physics design
+2024-10-30, 22:00, 1.0, added physics design to class diagram
+2024-11-01, 11:45, 5.25, worked on engine design and validation app
+2024-11-02, 19:15, 0.5, added library choice to design doc
+2024-11-03, 18:45, 0.5, added intro for physics section; small addition to library choice

@@ -1,0 +1,27 @@
+@startuml uiPackageClassDiagram
+package UI{
+class UIObject implements GameObject_Proxy{
+    - mWidth : int
+    - mHeight : int
+}
+
+class Button implements UIObject{
+    - mInteractable : bool
+    - mOnClick : ???
+}
+
+class Text implements UIObject{
+    - mText : string
+    - mFont : ???
+    - mSize : ???
+    - mAllignment : ???
+    - mColor : ???
+}
+
+class GameObject_Proxy{}
+
+UI o-- "*" UIObject
+
+}
+
+@enduml

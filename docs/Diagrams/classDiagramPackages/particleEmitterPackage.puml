@@ -1,0 +1,97 @@
+@startuml particleEmitterPackageClassDiagram
+
+package ParticlePackage{
+class Particle {
+    + Particle()
+    + Particle(Vector2 aPosition, Vector2 aVelocity, float aAcceleration, int aLifeTime, int aMaxLifeTime, Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
+    + ~Particle() 
+
+    + update() : void 
+
+    + getPosition() : Vector2 
+    + getLifeTime() : float 
+    + getSize() : Vector2 
+    + getRotation() : float 
+    + getColor() : Color 
+
+    - calculateColor() : Color 
+    - calculateInterpolatedColor() : Color 
+    - getNearestColor() : Color 
+
+    - position : Vector2 
+    - velocity : Vector2 
+    - acceleration : float 
+
+    - maxLifeTime : int 
+    - lifeTimeRemaining : int 
+    - initialLifeTime : int 
+
+    - size : Vector2 
+    - sizeShift : Vector2 
+    - rotation : float 
+    - angularVelocity : float 
+    - angularAcceleration : float 
+    - colorGradient : std::vector<Color> 
+
+    - interpolateColor = true : bool 
+}
+
+enum EmitterMode {
+    Continuous
+    Burst
+}
+
+class Component_Proxy{}
+
+class ParticleEmitter implements Component_Proxy{
+    + ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs, Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
+
+    + ~ParticleEmitter()
+
+    + update() : void
+
+    + burst(int aAmount) : void
+
+    + setRelativeTransform(Transform aTransform) : void
+    + getRelativeTransform() : Transform& 
+
+    + setParticlesPerSecond(int aParticlesPerSecond) : void 
+    + setAngle(int aMinAngle, int aMaxAngle) : void 
+
+    + getParticles() : std::vector<Particle>& 
+
+    - spawnParticle() : void 
+
+    - generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle) : Vector2 
+
+    - mRelativeTransform : Transform 
+
+    - mParticlesPerSecond : int 
+    - mParticles : std::vector<Particle> 
+
+    - mEmitterMode : EmitterMode 
+
+    - mMinAngle : int 
+    - mMaxAngle : int 
+
+    - mMinLifeTimeMs : int 
+    - mMaxLifeTimeMs : int 
+
+    - mVelocity : float 
+    - mAcceleration : float 
+    - mSize : Vector2 
+    - mSizeShift : Vector2 
+    - mRotation : float 
+    - mAngularVelocity : float 
+    - mAngularAcceleration : float 
+    - mColorGradient : std::vector<Color> 
+}
+
+ParticleEmitter *-- "0..*" Particle
+ParticleEmitter --> EmitterMode
+
+}
+
+ParticlePackage *-- "*" ParticleEmitter
+
+@enduml
