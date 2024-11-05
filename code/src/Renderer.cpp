@@ -117,6 +117,9 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
     rect.w = aWidth;
     rect.h = aHeight;
 
+    if (aColor.a != 255)
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
     if (aFill) {
         SDL_RenderFillRect(mRenderer, &rect);

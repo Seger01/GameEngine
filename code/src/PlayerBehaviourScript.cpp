@@ -73,8 +73,6 @@ void PlayerBehaviourScript::setAnimationActive(Animation* aAnimation, bool aStat
 }
 
 void PlayerBehaviourScript::onStart() {
-    std::cout << "PlayerBehaviourScript::onStart()" << std::endl;
-
     const int sizeMultiplier = 1;
 
     const int spriteWidth = 16;  // Width of each sprite
@@ -202,9 +200,9 @@ void PlayerBehaviourScript::onStart() {
     playerIdleSideAnimation->setActive(false);
     playerIdleFrontAnimation->setActive(true);
 
-    playerIdleFrontAnimation->setLayer(1);
-    playerIdleSideAnimation->setLayer(1);
-    playerIdleBackAnimation->setLayer(1);
+    playerIdleFrontAnimation->setLayer(3);
+    playerIdleSideAnimation->setLayer(3);
+    playerIdleBackAnimation->setLayer(3);
 
     mGameObject->addComponent(playerIdleFrontAnimation);
     mGameObject->addComponent(playerIdleSideAnimation);
@@ -222,7 +220,7 @@ void PlayerBehaviourScript::onStart() {
     float rotationSpeed = 0.0f;
     float rotationAcceleration = 0.0f;
 
-    std::vector<Color> colors = {Color(255, 49, 3), Color(255, 100, 3), Color(0, 0, 0), Color(0, 0, 0)};
+    std::vector<Color> colors = {Color(255, 49, 3, 90), Color(255, 100, 3, 90), Color(0, 0, 0, 90), Color(0, 0, 0, 90)};
     // std::vector<Color> colors = {Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),
     //                              Color(0, 0, 255), Color(0, 255, 0), Color(255, 0, 0)};
 
@@ -233,6 +231,7 @@ void PlayerBehaviourScript::onStart() {
 
     emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
+    emitter->setLayer(4);
     mGameObject->addComponent(emitter);
 
     // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);

@@ -33,8 +33,6 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath) {
         return nullptr;
     }
 
-    std::cout << "Loaded texture from " << FSConverter().getResourcePath(aPngPath).c_str() << std::endl;
-
     static int textureIDCounter = 0;
     textureIDCounter++;
     // Create a new Texture object

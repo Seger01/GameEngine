@@ -8,7 +8,6 @@
 #include "TileMapParser.h"
 
 void InitBehaviourScript::createLevel1() {
-    std::cout << "InitBehaviourScript::onStart()" << std::endl;
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
 
@@ -45,17 +44,16 @@ void InitBehaviourScript::createLevel1() {
 
     const TileMapData& tileMapData = tileMapParser.getTileMapData();
 
-    // print mTileInfoMap
-    for (const auto& pair : tileMapData.mTileInfoMap) {
-        int gID = pair.first;
-        const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-                  << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-    }
+    // // print mTileInfoMap
+    // for (const auto& pair : tileMapData.mTileInfoMap) {
+    //     int gID = pair.first;
+    //     const TileInfo& info = pair.second;
+    //     std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
+    //               << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+    // }
 
     // Assuming tileMapData is a const reference to TileMapData
     for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
-        std::cout << "Layer " << layerIndex << ":\n";
         // Access rows within the layer by index
         for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
             // Access each tile in the row by index
@@ -66,8 +64,6 @@ void InitBehaviourScript::createLevel1() {
                     auto it = tileMapData.mTileInfoMap.find(tile);
                     if (it != tileMapData.mTileInfoMap.end()) {
                         const TileInfo& tileInfo = it->second; // Access as const
-                        std::cout << "gID: " << tile << ", Tileset: " << tileInfo.mTilesetName << ", Coordinates: ("
-                                  << tileInfo.mCoordinates.first << ", " << tileInfo.mCoordinates.second << ")\n";
 
                         SpriteDef spriteDef = {tileInfo.mTilesetName,
                                                Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16},
@@ -87,9 +83,6 @@ void InitBehaviourScript::createLevel1() {
 
                         gameObject->addComponent(sprite);
 
-                        std::cout << "GameObject at (" << objectTransform.position.x << ", "
-                                  << objectTransform.position.y << ")\n";
-
                         scene->addGameObject(gameObject);
 
                     } else {
@@ -98,7 +91,6 @@ void InitBehaviourScript::createLevel1() {
                     }
                 }
             }
-            std::cout << "\n";
         }
     }
     return;
