@@ -38,10 +38,10 @@ interface IAudioFacade {
 }
 
 'This class is probably useless, because the path can be retrieved directly from the audiosource. The actual functionality it was intended for can be found in the MixerContainer::mSfx
-class ComponentPathPair {
-    - mComponent : const AudioSource&
-    - mPath : const string
-}
+' class ComponentPathPair {
+'     - mComponent : const AudioSource&
+'     - mPath : const string
+' }
 
 class MixerFacade implements IAudioFacade {
     - mChannelCount : const unsigned
@@ -60,17 +60,17 @@ class MixerContainer {
     + clear() : void
 }
 
-class AudioResourceManager {
-    - mPaths : vector<ComponentPathPair>
-    + getPath(const AudioSource&) : string
-}
+' class AudioResourceManager {
+'     - mPaths : vector<ComponentPathPair>
+'     + getPath(const AudioSource&) : string
+' }
 
 MixerFacade *-- MixerContainer
+'AudioResourceManager *--"*" ComponentPathPair
 
 }
 
 Audio *--IAudioFacade
-Audio <-- ComponentPathPair
-Audio *-- AudioResourceManager
+'Audio *-- AudioResourceManager
 
 @enduml
