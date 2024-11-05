@@ -203,7 +203,7 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
 }
 
 void RenderSystem::render(Scene* aScene) {
-    ScopedTimer scopedTimer("RenderSystem::render");
+    // ScopedTimer scopedTimer("RenderSystem::render");
     mRenderer->clear(mBackgroundColor);
 
     int lowestLayer = getLowestLayer(aScene);

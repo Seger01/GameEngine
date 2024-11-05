@@ -9,8 +9,6 @@
 void FPSCounterBehaviourScript::onStart() {}
 
 void FPSCounterBehaviourScript::onUpdate() {
-    std::cout << "FPSCounterBehaviourScript::onUpdate()" << std::endl;
-
     if (dynamic_cast<Text*>(mGameObject)) {
         Text* text = dynamic_cast<Text*>(mGameObject);
 
