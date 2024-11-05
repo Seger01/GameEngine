@@ -1,6 +1,8 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include <string>
+
 class GameObject;
 
 class Component {
@@ -13,9 +15,13 @@ public:
     bool isActive() { return mActive; }
     void setActive(bool aState) { mActive = aState; }
 
+    std::string getTag() { return mTag; }
+    void setTag(const std::string& aTag) { mTag = aTag; }
+
 protected:
     GameObject* mGameObject = nullptr;
 
+    std::string mTag = "";
     bool mActive = true;
 };
 

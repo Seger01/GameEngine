@@ -21,6 +21,8 @@ public:
     std::string getName();
     std::vector<GameObject*>& getGameObjects();
 
+    std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
+
 private:
     Scene(std::string aSceneName, int aSceneID);
 

@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(60) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(1000), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -32,19 +32,16 @@ void EngineBravo::initizalize() {
 void EngineBravo::run() {
     Input& input = Input::getInstance();
 
-    bool quit = false;
-    SDL_Event e;
+    mRunning = true;
+
+    mEventManager.subscribe([this](const Event& aEvent) { handleEvent(aEvent); }, EventType::Quit);
 
     mRenderSystem.getWindow().showWindow();
 
-    while (!quit) {
+    while (mRunning) {
         Time::update();
-        // Event handling
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
+
+        mEventManager.handleEvents();
 
         if (mSceneManager.sceneChanged()) {
             startBehaviourScripts();
@@ -58,6 +55,18 @@ void EngineBravo::run() {
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
         limitFrameRate(mFrameRateLimit);
+    }
+}
+
+void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRate; }
+
+void EngineBravo::handleEvent(const Event& aEvent) {
+    switch (aEvent.type) {
+    case EventType::Quit:
+        mRunning = false;
+        break;
+    default:
+        break;
     }
 }
 

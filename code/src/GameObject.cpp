@@ -49,3 +49,13 @@ bool GameObject::isActive() { return mIsActive; }
 Transform GameObject::getTransform() { return mTransform; }
 
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
+
+std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag) const {
+    std::vector<Component*> componentsWithTag;
+    for (const auto& component : mComponents) {
+        if (component->getTag() == tag) {
+            componentsWithTag.push_back(component);
+        }
+    }
+    return componentsWithTag;
+}
