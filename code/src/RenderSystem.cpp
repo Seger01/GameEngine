@@ -94,6 +94,16 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     }
 }
 
+void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor) {
+
+    float scaleX = mWindow->getSize().x / aCurrentCamera.getWidth();
+    float scaleY = mWindow->getSize().y / aCurrentCamera.getHeight();
+
+    std::cout << "scaleX: " << scaleX << " scaleY: " << scaleY << std::endl;
+
+    mRenderer->renderText(aText, aLocation, aColor, scaleX, scaleY);
+}
+
 int RenderSystem::getLowestLayer(Scene* aScene) {
     int lowestLayer = 0;
     for (auto& gameObject : aScene->getGameObjects()) {
@@ -202,7 +212,8 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
     int fps = 1.0f / Time::deltaTime;
 
     // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
-    mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
+    renderText(aScene->getActiveCamera(), "FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 0, 0));
+    // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }

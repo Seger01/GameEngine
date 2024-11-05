@@ -128,12 +128,22 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
     }
 }
 
-void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor) {
+void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY) {
+    // Determine if text is fully opaque
+    bool isOpaque = (aColor.a == 255);
 
-    // Create a surface from the text
-    SDL_Surface* surface = TTF_RenderText_Solid(mFont, aText.c_str(),
-                                                {static_cast<Uint8>(aColor.r), static_cast<Uint8>(aColor.g),
-                                                 static_cast<Uint8>(aColor.b), static_cast<Uint8>(aColor.a)});
+    // Create a surface from the text, choosing method based on transparency
+    SDL_Surface* surface = nullptr;
+    if (isOpaque) {
+        surface = TTF_RenderText_Solid(mFont, aText.c_str(),
+                                       {static_cast<Uint8>(aColor.r), static_cast<Uint8>(aColor.g),
+                                        static_cast<Uint8>(aColor.b), static_cast<Uint8>(aColor.a)});
+    } else {
+        surface = TTF_RenderText_Blended(mFont, aText.c_str(),
+                                         {static_cast<Uint8>(aColor.r), static_cast<Uint8>(aColor.g),
+                                          static_cast<Uint8>(aColor.b), static_cast<Uint8>(aColor.a)});
+    }
+
     if (surface == nullptr) {
         std::cerr << "Failed to create surface from text: " << TTF_GetError() << std::endl;
         return;
@@ -143,19 +153,26 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
     SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, surface);
     if (texture == nullptr) {
         std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
         return;
     }
 
-    // Get the width and height of the text
+    // Set the texture alpha mode for translucency if needed
+    if (!isOpaque) {
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        SDL_SetTextureAlphaMod(texture, aColor.a); // Apply the alpha level from the color
+    }
+
+    // Get the original width and height of the text
     int width, height;
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
-    // Create a rectangle to define the size and position
+    // Create a rectangle for the position and scaled size
     SDL_Rect rect;
     rect.x = aLocation.x;
     rect.y = aLocation.y;
-    rect.w = width;
-    rect.h = height;
+    rect.w = static_cast<int>(width * scaleX);
+    rect.h = static_cast<int>(height * scaleY);
 
     // Render the texture
     SDL_RenderCopy(mRenderer, texture, nullptr, &rect);
@@ -164,7 +181,6 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
 }
-
 void Renderer::clear(Color aColor) {
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
     SDL_RenderClear(mRenderer);
