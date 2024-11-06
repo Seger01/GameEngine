@@ -3,6 +3,14 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
+TEST(IntSaveField, settingGetting) {
+    IntSaveField intSaveField{"int1"};
+    intSaveField.setValue(1);
+    ASSERT_EQ(intSaveField.getValue(), 1);
+    intSaveField.setValue(2);
+    ASSERT_EQ(intSaveField.getValue(), 2);
+}
+
 TEST(SaveGame, ValidWriteRead) {
     FSConverter fsConverter;
     std::string path = fsConverter.getResourcePath("saves/newSave.json");
@@ -136,7 +144,7 @@ TEST(SaveGame, InvalidRemove) {
     EXPECT_THROW(sg.remove(), std::logic_error);
 }
 
-TEST(SaveGame, ArrayWriteRead) {
+TEST(SaveArray, WriteRead) {
 
     FSConverter fsConverter;
     std::string path = fsConverter.getResourcePath("saves/newSave.json");
