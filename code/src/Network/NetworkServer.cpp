@@ -1,46 +1,35 @@
 #include "NetworkServer.h"
-#include <stdexcept>
-#include <slikenet/peerinterface.h>
-#include <slikenet/MessageIdentifiers.h>
-#include <slikenet/BitStream.h>
-#include <slikenet/PacketLogger.h>
 #include <iostream>
+#include <slikenet/BitStream.h>
+#include <slikenet/MessageIdentifiers.h>
+#include <slikenet/PacketLogger.h>
+#include <slikenet/peerinterface.h>
+#include <stdexcept>
 
 NetworkServer::NetworkServer()
-    : mPeer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance)
-{
+    : mPeer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance) {
     SLNet::SocketDescriptor sd(SERVER_PORT, SERVER_ADDRESS);
     SLNet::StartupResult result = mPeer->Startup(10, &sd, 1);
-    if (result != SLNet::RAKNET_STARTED)
-    {
+    if (result != SLNet::RAKNET_STARTED) {
         throw std::runtime_error("Failed to start server");
     }
     mPeer->SetMaximumIncomingConnections(10);
 }
 
-// Other methods remain unchanged
-void NetworkServer::handleClientConnection()
-{
+void NetworkServer::handleClientConnection() {
     throw std::runtime_error("NetworkServer::handleClientConnection() not implemented");
 }
 
-void NetworkServer::receiveGameState()
-{
+void NetworkServer::receiveGameState() {
     throw std::runtime_error("NetworkServer::receiveGameState() not implemented");
 }
 
-void NetworkServer::sendGameState()
-{
-    throw std::runtime_error("NetworkServer::sendGameState() not implemented");
-}
+void NetworkServer::sendGameState() { throw std::runtime_error("NetworkServer::sendGameState() not implemented"); }
 
-void NetworkServer::update()
-{
-    SLNet::Packet *packet;
-    for (packet = mPeer->Receive(); packet; mPeer->DeallocatePacket(packet), packet = mPeer->Receive())
-    {
-        switch (packet->data[0])
-        {
+void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
+    SLNet::Packet* packet;
+    for (packet = mPeer->Receive(); packet; mPeer->DeallocatePacket(packet), packet = mPeer->Receive()) {
+        switch (packet->data[0]) {
         case ID_NEW_INCOMING_CONNECTION:
             std::cout << "A connection is incoming.\n";
             break;

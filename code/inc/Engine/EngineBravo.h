@@ -2,6 +2,7 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
+#include "Network/NetworkManager.h"
 #include "ParticleSystem.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
@@ -22,6 +23,7 @@ public:
     SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
+    NetworkManager& getNetworkManager();
 
 private:
     // Private constructor and destructor
@@ -42,6 +44,7 @@ private:
     RenderSystem mRenderSystem;
     ResourceManager mResourceManager;
     ParticleSystem mParticleSystem;
+    NetworkManager mNetworkManager;
     // SaveGameManager saveGameManager;
     // AnimationManager animationManager;
     // UIManager uiManager;

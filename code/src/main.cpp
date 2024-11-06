@@ -25,16 +25,18 @@
 void engineTest() {
     GameObject defaultPlayerPrefab;
     defaultPlayerPrefab.setName("Player");
-    NetworkManager networkManager(defaultPlayerPrefab);
-
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
+    NetworkManager& networkManager = engine.getNetworkManager();
+
+    networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
 
     std::string role;
     std::cout << "Do you want to be a server or a client? ";
     std::cin >> role;
+    bool roleSet = false;
 
-    while (bool roleSet = false) {
+    while (!roleSet) {
         if (role == "server") {
             roleSet = true;
             networkManager.startServer();

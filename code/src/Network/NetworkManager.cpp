@@ -69,83 +69,66 @@
 //     }
 // }
 
-#include "NetworkManager.h"
+#include "Network/NetworkManager.h"
 
-NetworkManager::NetworkManager(GameObject &aDefaultPlayerPrefab) : mDefaultPlayerPrefab(aDefaultPlayerPrefab), mIsClient(false), mIsServer(false), mIsHost(false), mTickRate(60), mEnableSceneManagement(false)
-{
-}
+NetworkManager::NetworkManager()
+    : mIsClient(false), mIsServer(false), mIsHost(false), mTickRate(60), mEnableSceneManagement(false) {}
 
-void NetworkManager::startServer()
-{
-    if (mIsClient || mIsHost)
-    {
+void NetworkManager::startServer() {
+    if (mIsClient || mIsHost) {
         throw std::runtime_error("Cannot start server when client or host is already running");
     }
     mIsServer = true;
     mServer = std::make_unique<NetworkServer>();
 }
 
-void NetworkManager::startClient()
-{
-    if (mIsServer || mIsHost)
-    {
+void NetworkManager::startClient() {
+    if (mIsServer || mIsHost) {
         throw std::runtime_error("Cannot start client when server or host is already running");
     }
     mIsClient = true;
     mClient = std::make_unique<NetworkClient>();
 }
 
-void NetworkManager::startHost()
-{
-    if (mIsServer || mIsClient)
-    {
+void NetworkManager::startHost() {
+    if (mIsServer || mIsClient) {
         throw std::runtime_error("Cannot start host when server or client is already running");
     }
     mIsHost = true;
     mHost = std::make_unique<NetworkHost>();
 }
 
-void NetworkManager::shutdown()
-{
-    throw std::runtime_error("NetworkManager::shutdown() not implemented");
+void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shutdown() not implemented"); }
+
+void NetworkManager::update() {
+    if (mIsServer) {
+        mServer->update(mGameObjects);
+    } else if (mIsClient) {
+        mClient->update(mGameObjects);
+    } else if (mIsHost) {
+        throw std::runtime_error("NetworkManager::update() isHost not implemented");
+        // mHost->update();
+    }
 }
 
-void NetworkManager::update()
-{
-    throw std::runtime_error("NetworkManager::update() not implemented");
-}
+bool NetworkManager::getIsServer() const { return mIsServer; }
 
-bool NetworkManager::getIsServer() const
-{
-    return mIsServer;
-}
+bool NetworkManager::getIsClient() const { return mIsClient; }
 
-bool NetworkManager::getIsClient() const
-{
-    return mIsClient;
-}
+bool NetworkManager::getIsHost() const { return mIsHost; }
 
-bool NetworkManager::getIsHost() const
-{
-    return mIsHost;
-}
+void NetworkManager::setTickRate(int aTickRate) { mTickRate = aTickRate; }
 
-void NetworkManager::setTickRate(int aTickRate)
-{
-    mTickRate = aTickRate;
-}
+int NetworkManager::getTickRate() const { return mTickRate; }
 
-int NetworkManager::getTickRate() const
-{
-    return mTickRate;
-}
-
-void NetworkManager::setEnableSceneManagement(bool aEnableSceneManagement)
-{
+void NetworkManager::setEnableSceneManagement(bool aEnableSceneManagement) {
     mEnableSceneManagement = aEnableSceneManagement;
 }
 
-bool NetworkManager::getEnableSceneManagement() const
-{
-    return mEnableSceneManagement;
+bool NetworkManager::getEnableSceneManagement() const { return mEnableSceneManagement; }
+
+void NetworkManager::setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab) {
+    mDefaultPlayerPrefab = &aDefaultPlayerPrefab;
 }
+
+GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }

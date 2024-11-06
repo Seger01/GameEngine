@@ -1,8 +1,10 @@
 #ifndef NETWORKCLIENT_H
 #define NETWORKCLIENT_H
 
+#include "GameObject.h"
 #include <memory>
 #include <slikenet/peerinterface.h>
+#include <vector>
 
 class NetworkClient {
 public:
@@ -10,7 +12,7 @@ public:
     void connectToServer();
     void sendGameState();
     void receiveGameState();
-    void update();
+    void update(std::vector<GameObject*>& aGameObjects);
 
 private:
     bool mIsConnected;

@@ -224,17 +224,18 @@ void PlayerBehaviourScript::onStart() {
     // std::vector<Color> colors = {Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),
     //                              Color(0, 0, 255), Color(0, 255, 0), Color(255, 0, 0)};
 
-    emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, sizeShift,
-                                  rotation, rotationSpeed, rotationAcceleration, colors);
+    // emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize,
+    // sizeShift,
+    //                               rotation, rotationSpeed, rotationAcceleration, colors);
 
     mGameObject->addComponent(playerIdleBackAnimation);
 
-    emitter->setParticlesPerSecond(200);
-    emitter->setAngle(0, 45);
-    mGameObject->addComponent(emitter);
+    // emitter->setParticlesPerSecond(200);
+    // emitter->setAngle(0, 45);
+    // mGameObject->addComponent(emitter);
 
-    emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
-    emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
+    // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
+    // emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
 }
 
 void PlayerBehaviourScript::handleAnimations() {
@@ -313,17 +314,17 @@ void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
 
-    static bool emitterMode = false;
+    // static bool emitterMode = false;
 
-    if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
-        emitterMode = !emitterMode;
-    }
+    // if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
+    //     emitterMode = !emitterMode;
+    // }
 
-    if (emitterMode) {
-        emitter->setAngle(0, 45);
-        emitter->getRelativeTransform().rotation += 0.001f * Time::deltaTime;
-    } else {
-        emitter->setAngle(0, 360);
-        emitter->getRelativeTransform().rotation = 0.0f;
-    }
+    // if (emitterMode) {
+    //     emitter->setAngle(0, 45);
+    //     emitter->getRelativeTransform().rotation += 0.001f * Time::deltaTime;
+    // } else {
+    //     emitter->setAngle(0, 360);
+    //     emitter->getRelativeTransform().rotation = 0.0f;
+    // }
 }

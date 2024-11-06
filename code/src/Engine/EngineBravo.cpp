@@ -42,8 +42,8 @@ void EngineBravo::run() {
             }
         }
 
-        std::cout << "Time since start: " << Time::ticks << std::endl;
-        std::cout << "Delta time: " << Time::deltaTime << std::endl;
+        // std::cout << "Time since start: " << Time::ticks << std::endl;
+        // std::cout << "Delta time: " << Time::deltaTime << std::endl;
 
         input.update();
 
@@ -60,8 +60,12 @@ void EngineBravo::run() {
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
+
+NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
@@ -84,7 +88,7 @@ void EngineBravo::runBehaviourScripts() {
         std::cout << "retrieved scene is nullptr" << std::endl;
     }
 
-    std::cout << "Amount of registered gameobjects: " << currentScene->getGameObjects().size() << std::endl;
+    // std::cout << "Amount of registered gameobjects: " << currentScene->getGameObjects().size() << std::endl;
 
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {

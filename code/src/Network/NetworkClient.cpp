@@ -1,47 +1,36 @@
 #include "NetworkClient.h"
-#include <stdexcept>
-#include <slikenet/peerinterface.h>
-#include <slikenet/MessageIdentifiers.h>
-#include <slikenet/BitStream.h>
 #include <iostream>
+#include <slikenet/BitStream.h>
+#include <slikenet/MessageIdentifiers.h>
+#include <slikenet/peerinterface.h>
+#include <stdexcept>
 
 NetworkClient::NetworkClient()
-    : mPeer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false)
-{
+    : mPeer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false) {
     connectToServer();
 }
 
-void NetworkClient::connectToServer()
-{
-    if (mIsConnected || mIsConnecting)
-    {
+void NetworkClient::connectToServer() {
+    if (mIsConnected || mIsConnecting) {
         return;
     }
     SLNet::SocketDescriptor sd(CLIENT_PORT, SERVER_ADDRESS);
     SLNet::ConnectionAttemptResult result = mPeer->Connect(SERVER_ADDRESS, SERVER_PORT, nullptr, 0);
-    if (result != SLNet::CONNECTION_ATTEMPT_STARTED)
-    {
+    if (result != SLNet::CONNECTION_ATTEMPT_STARTED) {
         throw std::runtime_error("Failed to start connection attempt");
     }
 }
 
-void NetworkClient::sendGameState()
-{
-    throw std::runtime_error("NetworkClient::sendGameState() not implemented");
-}
+void NetworkClient::sendGameState() { throw std::runtime_error("NetworkClient::sendGameState() not implemented"); }
 
-void NetworkClient::receiveGameState()
-{
+void NetworkClient::receiveGameState() {
     throw std::runtime_error("NetworkClient::receiveGameState() not implemented");
 }
 
-void NetworkClient::update()
-{
-    SLNet::Packet *packet;
-    for (packet = mPeer->Receive(); packet; mPeer->DeallocatePacket(packet), packet = mPeer->Receive())
-    {
-        switch (packet->data[0])
-        {
+void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
+    SLNet::Packet* packet;
+    for (packet = mPeer->Receive(); packet; mPeer->DeallocatePacket(packet), packet = mPeer->Receive()) {
+        switch (packet->data[0]) {
         case ID_CONNECTION_REQUEST_ACCEPTED:
             std::cout << "Connected to server.\n";
             mIsConnected = true;
@@ -64,8 +53,7 @@ void NetworkClient::update()
         }
     }
 
-    if (!mIsConnected && !mIsConnecting)
-    {
+    if (!mIsConnected && !mIsConnecting) {
         connectToServer();
     }
 }

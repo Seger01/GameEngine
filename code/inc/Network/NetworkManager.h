@@ -50,17 +50,16 @@
 #ifndef NETWORKMANAGER_H
 #define NETWORKMANAGER_H
 
-#include <stdexcept>
-#include <memory>
-#include "NetworkClient.h"
-#include "NetworkServer.h"
-#include "NetworkHost.h"
 #include "GameObject.h"
+#include "NetworkClient.h"
+#include "NetworkHost.h"
+#include "NetworkServer.h"
+#include <memory>
+#include <stdexcept>
 
-class NetworkManager
-{
+class NetworkManager {
 public:
-    NetworkManager(GameObject &aDefaultPlayerPrefab);
+    NetworkManager();
 
     void startServer();
     void startClient();
@@ -79,13 +78,17 @@ public:
     void setEnableSceneManagement(bool aEnableSceneManagement);
     bool getEnableSceneManagement() const;
 
+    void setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab);
+    GameObject& getDefaultPlayerPrefab() const;
+
 private:
     bool mIsServer;
     bool mIsClient;
     bool mIsHost;
     int mTickRate;
-    GameObject &mDefaultPlayerPrefab;
+    GameObject* mDefaultPlayerPrefab;
     bool mEnableSceneManagement;
+    std::vector<GameObject*> mGameObjects;
 
     std::unique_ptr<NetworkServer> mServer;
     std::unique_ptr<NetworkClient> mClient;
