@@ -54,4 +54,7 @@ void engineTest() {
     return;
 }
 
-int main() { engineTest(); }
+int main() {
+    engineTest();
+    return 0;
+}

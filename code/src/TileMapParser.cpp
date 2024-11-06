@@ -59,7 +59,7 @@ std::pair<int, int> TileMapParser::getTilePosition(int gID) const {
 void TileMapParser::storeTileInfo() {
     std::unordered_set<int> usedGIDs;
 
-    // Get all used gIDs from the layers
+    // Collect all used gIDs from the layers
     for (const auto& layer : mTileMapData.mLayers) {
         for (const auto& row : layer) {
             for (int gID : row) {
@@ -79,7 +79,33 @@ void TileMapParser::storeTileInfo() {
 
             if (gID >= firstGID && gID < firstGID + tileCount) {
                 auto position = getTilePosition(gID);
-                mTileMapData.mTileInfoMap[gID] = {tilesetName, position};
+                TileInfo tileInfo = {tilesetName, position, {}};
+
+                // Check for colliders
+                int localID = gID - firstGID;
+                if (tileset.contains("tiles")) {
+                    for (const auto& tile : tileset["tiles"]) {
+                        if (tile["id"] == localID && tile.contains("objectgroup")) {
+                            for (const auto& object : tile["objectgroup"]["objects"]) {
+                                try {
+                                    ColliderData collider = {
+                                        object.at("x").get<float>(),
+                                        object.at("y").get<float>(),
+                                        object.at("width").get<float>(),
+                                        object.at("height").get<float>()
+                                    };
+                                    tileInfo.mColliders.push_back(collider);
+                                    // Debug print to verify collider parsing
+                                    std::cout << "Added collider to gID " << gID << ": x=" << collider.x << ", y=" << collider.y << ", width=" << collider.mWidth << ", height=" << collider.mHeight << std::endl;
+                                } catch (const nlohmann::json::type_error& e) {
+                                    std::cerr << "Error parsing collider for gID " << gID << ": " << e.what() << std::endl;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                mTileMapData.mTileInfoMap[gID] = tileInfo;
                 break;
             }
         }
@@ -90,8 +116,10 @@ void TileMapParser::printTileInfo(int gID) const {
     auto it = mTileMapData.mTileInfoMap.find(gID);
     if (it != mTileMapData.mTileInfoMap.end()) {
         const TileInfo& info = it->second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-                  << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        for (const auto& collider : info.mColliders) {
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
+        }
     } else {
         std::cerr << "gID " << gID << " not found in tile info map" << std::endl;
     }
@@ -101,8 +129,10 @@ void TileMapParser::printTileInfoMap() const {
     for (const auto& pair : mTileMapData.mTileInfoMap) {
         int gID = pair.first;
         const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-                  << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        for (const auto& collider : info.mColliders) {
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
+        }
     }
 }
 
@@ -139,4 +169,6 @@ std::pair<int, int> TileMapParser::getGridTilePosition(int layerIndex, int x, in
     return getTilePosition(gID);
 }
 
-const TileMapData& TileMapParser::getTileMapData() const { return mTileMapData; }
+const TileMapData& TileMapParser::getTileMapData() const {
+    return mTileMapData;
+}

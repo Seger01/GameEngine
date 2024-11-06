@@ -1,11 +1,13 @@
 #include "InitBehaviourScript.h"
 
+#include "BoxCollider.h"
 #include "EngineBravo.h"
 #include "FSConverter.h"
 #include "PlayerBehaviourScript.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "TileMapParser.h"
+#include "Transform.h"
 
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -36,7 +38,7 @@ void InitBehaviourScript::createLevel1() {
     sceneManager.requestSceneChange("Level-1");
 
     FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/level.json");
+    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
     TileMapParser tileMapParser(path);
     tileMapParser.parse();
@@ -82,6 +84,12 @@ void InitBehaviourScript::createLevel1() {
                         sprite->setLayer(layerIndex);
 
                         gameObject->addComponent(sprite);
+                        // Add BoxCollider components to the GameObject
+                        for (const auto& collider : tileInfo.mColliders) {
+                            BoxCollider* boxCollider = new BoxCollider();
+                            boxCollider->setTransformFromColliderData(collider);
+                            gameObject->addComponent(boxCollider);
+                        }
 
                         scene->addGameObject(gameObject);
 

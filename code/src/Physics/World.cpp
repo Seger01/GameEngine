@@ -35,7 +35,7 @@ int World::createBody(BodyProxy& aBodyProxy) {
     b2BodyId bodId = b2CreateBody(mWorldID, &bodyDef);
 
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
-        b2Polygon shape = b2MakeBox({boxCollider->get().x, boxCollider->getSize().y});
+        b2Polygon shape = b2MakeBox({boxCollider->getWidth(), boxCollider->getHeight()});
         b2_polygonShape shape = b2DefaultPolygonShape();
         shape.SetAsBox(boxCollider->getSize().x, boxCollider->getSize().y);
 
