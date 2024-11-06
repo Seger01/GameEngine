@@ -47,8 +47,10 @@ TEST_F(RendererTest, RenderTexture) {
         int textureIDCounter = 0;
         Texture* texture = new Texture(sdlTexture, textureIDCounter);
 
-        Rect sourceRect{0, 0, 100, 100};
+        Rect sourceRect{0, 0, 10, 10};
         Vector2 location{100, 100};
+
+        mRenderer->clear(Color{0, 0, 0, 255});
         mRenderer->renderTexture(*texture, sourceRect, location, 100, 100, false, false, 0.0f);
 
         sourceRect = {2000, 2000, -100, -100};
@@ -56,6 +58,8 @@ TEST_F(RendererTest, RenderTexture) {
 
         sourceRect = {-2000, -2000, -100, -100};
         mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, false, true, 45.0f);
+
+        mRenderer->show();
     }()));
 }
 

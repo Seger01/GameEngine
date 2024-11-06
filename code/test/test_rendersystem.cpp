@@ -88,17 +88,18 @@ protected:
 
     void TearDown() override {
         // Clean up
+        EngineBravo::getInstance().getSceneManager().removeScene("Test Scene");
     }
 };
 
-TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer) {
-    // Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
-    ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 100)); // Check for exceptions when an invalid layer is
-                                                              // passed
-}
-
 TEST_F(RenderSystemTest, RenderLayer_NoExceptions) {
     ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0)); // Check that no exception is thrown
+}
+
+TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer) {
+    // Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
+    ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0)); // Check for exceptions when an invalid layer is
+                                                            // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions) {
