@@ -30,6 +30,10 @@ void Particle::update() {
     velocity.y += acceleration * Time::deltaTime;
     lifeTimeRemainingSec -= Time::deltaTime;
 
+    if (lifeTimeRemainingSec <= 0) {
+        lifeTimeRemainingSec = 0;
+    }
+
     float percentage = (static_cast<float>(maxLifeTime) / 1000) -
                        (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime) / 1000));
 
