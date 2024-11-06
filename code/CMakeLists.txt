@@ -86,6 +86,9 @@ target_link_libraries(${PROJECT_NAME} private ${LINK_LIBRARIES})
 # Add the executable target
 add_executable(${PROJECT_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
 
+# Add the library as a dependency
+add_dependencies(${PROJECT_EXECUTABLE} ${PROJECT_NAME})
+
 # Link library to the executable
 target_link_libraries(${PROJECT_EXECUTABLE} public ${PROJECT_NAME})
 
