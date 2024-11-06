@@ -9,12 +9,15 @@
 class Texture {
 public:
     // Texture(SDL_Renderer*& aRenderer);
-    Texture(SDL_Texture* aTexture);
+    Texture(SDL_Texture* aTexture, int aID = 0);
     ~Texture();
 
     SDL_Texture* getSDLTexture();
 
+    int getID() const { return mID; }
+
 private:
+    int mID = 0;
     SDL_Texture* mTexture = nullptr;
 
     bool mTextureLoaded = false;

@@ -1,9 +1,12 @@
 #include <iostream>
 
+#include <SDL_render.h>
+#include <SDL_ttf.h>
+
 #include "Animation.h"
+#include "FSConverter.h"
 #include "Rect.h"
 #include "Renderer.h"
-#include "SDL_render.h"
 #include "Window.h"
 
 Renderer::Renderer(Window& window) {
@@ -13,7 +16,28 @@ Renderer::Renderer(Window& window) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
     }
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        SDL_Log("Unable to initialize SDL_ttf: %s", TTF_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // Load a font
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/SupremeSpike.otf").c_str(), 26); // Specify the
+                                                                                                       // font path and
+                                                                                                       // size
+    if (!font) {
+        SDL_Log("Failed to load font: %s", TTF_GetError());
+        TTF_Quit();
+        SDL_Quit();
+        return;
+    }
+
+    mFont = font;
 }
+
+Renderer::~Renderer() { SDL_DestroyRenderer(this->mRenderer); }
 
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
                              bool aFlipX, bool aFlipY, float aRotation) {
@@ -93,6 +117,9 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
     rect.w = aWidth;
     rect.h = aHeight;
 
+    if (aColor.a != 255)
+        SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
     if (aFill) {
         SDL_RenderFillRect(mRenderer, &rect);
@@ -101,7 +128,42 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
     }
 }
 
-Renderer::~Renderer() { SDL_DestroyRenderer(this->mRenderer); }
+void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor) {
+
+    // Create a surface from the text
+    SDL_Surface* surface = TTF_RenderText_Solid(mFont, aText.c_str(),
+                                                {static_cast<Uint8>(aColor.r), static_cast<Uint8>(aColor.g),
+                                                 static_cast<Uint8>(aColor.b), static_cast<Uint8>(aColor.a)});
+    if (surface == nullptr) {
+        std::cerr << "Failed to create surface from text: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    // Create a texture from the surface
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, surface);
+    if (texture == nullptr) {
+        std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    // Get the width and height of the text
+    int width, height;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+
+    // Create a rectangle to define the size and position
+    SDL_Rect rect;
+    rect.x = aLocation.x;
+    rect.y = aLocation.y;
+    rect.w = width;
+    rect.h = height;
+
+    // Render the texture
+    SDL_RenderCopy(mRenderer, texture, nullptr, &rect);
+
+    // Destroy the texture and surface after rendering
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+}
 
 void Renderer::clear(Color aColor) {
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red

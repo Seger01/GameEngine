@@ -10,6 +10,8 @@ struct Vector2 {
 
     // Overload the + operator for Vector2
     Vector2 operator+(const Vector2& other) const { return Vector2(x + other.x, y + other.y); }
+    // Overload the - operator for Vector2
+    Vector2 operator-(const Vector2& other) const { return Vector2(x - other.x, y - other.y); }
 };
 
 #endif

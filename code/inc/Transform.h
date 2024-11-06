@@ -11,6 +11,7 @@ struct Transform {
     // Constructors
     Transform() : position(0, 0), rotation(0), scale(1, 1) {}
 
+    Transform(Vector2 aPosition) : position(aPosition), rotation(0), scale(Vector2(0, 0)) {}
     Transform(Vector2 aPosition, float aRotation, Vector2 aScale)
         : position(aPosition), rotation(aRotation), scale(aScale) {}
 

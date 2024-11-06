@@ -10,6 +10,8 @@ public:
     Window(int aWindowWidth, int aWindowHeight);
     ~Window();
 
+    void showWindow();
+
     Vector2 getSize();
 
     void setFullScreen();

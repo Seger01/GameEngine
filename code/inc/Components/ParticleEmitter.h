@@ -14,8 +14,8 @@ enum EmitterMode {
 class ParticleEmitter : public Component {
 public:
     ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs,
-                    Vector2 aSize, Vector2 aSizeShift, float aRotation, float angularVelocity,
-                    float angularAcceleration, std::vector<Color> aColorGradient);
+                    Vector2 aSize, Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
+                    std::vector<Color> aColorGradient);
 
     ~ParticleEmitter();
 
@@ -28,6 +28,9 @@ public:
     void setAngle(int aMinAngle, int aMaxAngle);
 
     std::vector<Particle>& getParticles();
+
+    void setLayer(int aLayer);
+    int getLayer();
 
 private:
     void spawnParticle();
@@ -51,11 +54,13 @@ private:
     float mVelocity;
     float mAcceleration;
     Vector2 mSize;
-    Vector2 mSizeShift;
+    Vector2 mEndSize;
     float mRotation;
     float mAngularVelocity;
     float mAngularAcceleration;
     std::vector<Color> mColorGradient;
+
+    int mLayer = 0;
 };
 
 #endif // PARTICLEEMITTER_H

@@ -1,11 +1,11 @@
 Game engine project for Systems Programming C++
 
-## Prerequisites
+# Prerequisites
 - CMake 3.10 or higher
 - A C++ compiler that supports C++17
 - GoogleTest library installed on your system (only if you want to run the tests)
 
-## How to Download and Install
+# How to Download and Install
 
 To download and install the library, follow these steps:
 
@@ -33,27 +33,41 @@ To download and install the library, follow these steps:
 ```sh
     make -j$(nproc)
 ```
-
-    or
-
 ```sh
     cmake --build . -- -j$(nproc)
 ```
 
-## How to Run the Program
+# How to Build with Debug Options
+
+To build the project with debug options enabled, follow these steps:
+
+1. Run CMake to configure the project with debug options:
+```sh
+    cmake .. -DENABLE_DEBUG=ON
+```
+
+2. Build the project using `make` or `cmake` with the appropriate number of jobs:
+```sh
+    make -j$(nproc)
+```
+```sh
+    cmake --build . -- -j$(nproc)
+```
+
+# How to Run the Program
 
 To run the program, use the following command:
 ```sh
     cmake --build . --target run -- -j$(nproc)
 ```
 
-## How to Run the Program with Valgrind
+# How to Run the Program with Valgrind
 To run the program with valgrind, use the following command:
 ```sh
     cmake --build . --target run_valgrind -- -j$(nproc)
 ```
 
-## How to Build and Run the Tests
+# How to Build and Run the Tests
 
 1. Configure the project with tests enabled by setting `ENABLE_TESTS=ON`:
     ```sh
@@ -67,7 +81,7 @@ To run the program with valgrind, use the following command:
 
 Note: GoogleTest and GoogleMock libraries must be installed on your system to build the tests.
 
-## How to Install Google Mock
+# How to Install Google Mock
 
 1. Go to the downloads folder:
 ```sh
