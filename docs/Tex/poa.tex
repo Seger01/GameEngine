@@ -274,7 +274,7 @@ the following points are applied to ensure the technical quality of the project:
     \item Code is written in c++23.
     \item Code standard is written in ./codestandard.tex.
     \item Text editor of choice can be used.
-    \item Unit test are written for every function except for setters without validation and getters.
+    \item Unit test are written for all parts of the engine, except for the libraries it uses. Unit tests will have to cover at least 80\% of the code, beforing being merged to the development branch.
     \item Third party libraries must be discussed with the whole team.
     \item One person must check git commits before merging.
     \item No commits may be made directly to the main branch.
@@ -297,6 +297,7 @@ the following tools are used to ensure the quality of the project:
     \item Valgrind is used for memory leak checking.
     \item Gtest testing framework is used for testing.
     \item PlantUML is used for UML diagrams. This is used so git can be used as version control, which is not possible for visual editors.
+    \item Gcov is used to determine test coverage.
 \end{itemize}
 \newpage
 
