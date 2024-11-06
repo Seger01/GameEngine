@@ -24,7 +24,7 @@ set(SDL_OPENGL ON CACHE BOOL "Enable OpenGL support" FORCE)
 set(SDL_VULKAN OFF CACHE BOOL "Enable Vulkan support" FORCE)
 
 # Input settings
-set(SDL_INPUT_LINUX OFF CACHE BOOL "Enable Linux input support" FORCE)
+set(SDL_INPUT_LINUX ON CACHE BOOL "Enable Linux input support" FORCE)
 set(SDL_JOYSTICK ON CACHE BOOL "Enable joystick support" FORCE)
 set(SDL_HAPTIC ON CACHE BOOL "Enable haptic (force feedback) support" FORCE)
 
