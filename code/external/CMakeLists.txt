@@ -4,6 +4,46 @@ set(RAKNET_ENABLE_DLL OFF CACHE BOOL "Generate the DLL project if true." FORCE)
 set(RAKNET_ENABLE_STATIC ON CACHE BOOL "Generate the static library project if true." FORCE)
 set(RAKNET_GENERATE_INCLUDE_ONLY_DIR OFF CACHE BOOL "Setup a include/RakNet/ directory in which all the headers are copied." FORCE)
 
+# Set options for SDL
+set(SDL_SHARED ON CACHE BOOL "Build SDL as a shared library" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "Build SDL as a static library" FORCE)
+
+# Audio settings
+set(SDL_AUDIO ON CACHE BOOL "Enable audio support" FORCE)
+set(SDL_ALSA ON CACHE BOOL "Enable ALSA audio support" FORCE)
+set(SDL_PULSEAUDIO ON CACHE BOOL "Enable PulseAudio support" FORCE)
+set(SDL_DISKAUDIO OFF CACHE BOOL "Enable disk audio support" FORCE)
+set(SDL_DUMMYAUDIO OFF CACHE BOOL "Enable dummy audio support" FORCE)
+set(SDL_OPENSLES OFF CACHE BOOL "Enable OpenSLES audio support" FORCE)
+set(SDL_NAS OFF CACHE BOOL "Enable NAS audio support" FORCE)
+
+# Video settings
+set(SDL_VIDEO ON CACHE BOOL "Enable video support" FORCE)
+set(SDL_RENDER ON CACHE BOOL "Enable render support" FORCE)
+set(SDL_OPENGL ON CACHE BOOL "Enable OpenGL support" FORCE)
+set(SDL_VULKAN OFF CACHE BOOL "Enable Vulkan support" FORCE)
+
+# Input settings
+set(SDL_INPUT_LINUX OFF CACHE BOOL "Enable Linux input support" FORCE)
+set(SDL_JOYSTICK ON CACHE BOOL "Enable joystick support" FORCE)
+set(SDL_HAPTIC ON CACHE BOOL "Enable haptic (force feedback) support" FORCE)
+
+# Platform-specific options
+set(SDL_DIRECTX OFF CACHE BOOL "Enable DirectX support (Windows)" FORCE)
+set(SDL_WAYLAND ON CACHE BOOL "Enable Wayland support (Linux)" FORCE)
+set(SDL_X11 ON CACHE BOOL "Enable X11 video support (Linux)" FORCE)
+
+# Miscellaneous options
+set(SDL_THREADS ON CACHE BOOL "Enable thread support" FORCE)
+set(SDL_TIMERS OFF CACHE BOOL "Enable timer support" FORCE)
+set(SDL_LOADSO ON CACHE BOOL "Enable shared object loading support" FORCE)
+set(SDL_FILESYSTEM ON CACHE BOOL "Enable filesystem support" FORCE)
+set(SDL_SENSOR OFF CACHE BOOL "Enable sensor support" FORCE)
+
+# Disable building SDL test programs (if not needed)
+set(SDL_TEST OFF CACHE BOOL "Build SDL test programs" FORCE)
+
+
 # set options for SDL_mixer
 set(SDL2MIXER_INSTALL OFF CACHE BOOL "Enable SDL2mixer install target" FORCE)
 set(SDL2MIXER_DEPS_SHARED OFF CACHE BOOL "Default value for loading dependencies dynamically" FORCE)

@@ -78,7 +78,7 @@ list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$")
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf tmxlite box2d nlohmann_json::nlohmann_json)
+set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json)
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
