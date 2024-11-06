@@ -24,10 +24,16 @@ struct TileInfo {
     std::vector<ColliderData> mColliders;
 };
 
+struct SpawnPoint {
+    float x;
+    float y;
+    bool isPlayerSpawn;
+};
 
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
     std::unordered_map<int, TileInfo> mTileInfoMap;
+    std::vector<SpawnPoint> mSpawnPoints;
 };
 
 class TileMapParser {
@@ -38,6 +44,7 @@ public:
     std::pair<int, int> getTilePosition(int gID) const;
     int getGIDFromCoordinate(int layer, int x, int y) const;
     void storeTileInfo();
+    void parseObjectLayer(const nlohmann::json& layer);
     void printTileInfo(int gID) const;
     void printLayers() const;
     void printTileInfoMap() const;

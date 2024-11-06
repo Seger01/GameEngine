@@ -33,12 +33,28 @@ void TileMapParser::parse() {
             mLayerNames.push_back(layer["name"]);
         }
         else if (layer["type"] == "objectgroup") {
-            //parseObjectLayer(layer);
+            parseObjectLayer(layer);
         }
     }
 
     // Store tile information in a map
     storeTileInfo();
+}
+
+void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
+    for (const auto& object : layer["objects"]) {
+        SpawnPoint spawnPoint;
+        spawnPoint.x = object["x"];
+        spawnPoint.y = object["y"];
+        if (object.contains("properties")) {
+            for (const auto& property : object["properties"]) {
+                if (property["name"] == "isPlayerSpawn" && property["type"] == "bool") {
+                    spawnPoint.isPlayerSpawn = property["value"];
+                }
+            }
+        }
+        mTileMapData.mSpawnPoints.push_back(spawnPoint);
+    }
 }
 
 std::pair<int, int> TileMapParser::getTilePosition(int gID) const {
