@@ -66,3 +66,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-04, 8:45, 7, Assessment with team, standup, work on implementing savegame in engine
 2024-11-04, 20:00, 1.5, Improving savegame implementation, updating savegame design
 2024-11-05, 15:00, 3, Savegame tests / improvements, audio implementation
+2024-11-06, 9:15, 6.45, Automating test coverage reports
