@@ -15,11 +15,13 @@ public:
     int addCamera();
     void removeCamera(int id);
     Camera& getCamera(int id);
-    void setActiveGamera(int id);
+    void setActiveCamera(int id);
     Camera& getActiveCamera();
     int getID();
     std::string getName();
     std::vector<GameObject*>& getGameObjects();
+
+    std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
 
 private:
     Scene(std::string aSceneName, int aSceneID);

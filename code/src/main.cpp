@@ -14,6 +14,7 @@
 #include "PlayerBehaviourScript.h"
 #include "Renderer.h"
 #include "SampleBevahiourScript.h"
+#include "SaveGameManager.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Sprite.h"
@@ -23,7 +24,6 @@
 #include "TileMapParser.h"
 #include "Transform.h"
 #include "Window.h"
-#include "test.h"
 
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -34,7 +34,7 @@ void engineTest() {
         exit(1);
 
     int cameraID = scene->addCamera();
-    scene->setActiveGamera(cameraID);
+    scene->setActiveCamera(cameraID);
 
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
     scene->getActiveCamera().setWidth(160);
@@ -57,40 +57,4 @@ void engineTest() {
 int main() {
     engineTest();
     return 0;
-    FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
-
-    TileMapParser tileMapParser(path);
-    tileMapParser.parse();
-    // tileMapParser.printLayers();
-
-    // Print the contents of tileInfoMap
-    const TileMapData& tileMapData = tileMapParser.getTileMapData();
-    // print layers in tilemap
-    for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
-        std::cout << "Layer " << layerIndex << ":\n";
-        for (const auto& row : tileMapData.mLayers[layerIndex]) {
-            for (int tile : row) {
-                std::cout << tile << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-
-    // Print the contents of tileInfoMap
-    for (const auto& pair : tileMapData.mTileInfoMap) {
-        int gID = pair.first;
-        const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-        for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
-        }
-    }
-
-    return 0;
-
-    // Struct ParsedScene
-    // vector intergers to save layers
-    // 2D array of grid per layer
-    // Map to link gID to tileset
 }

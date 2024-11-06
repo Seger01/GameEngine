@@ -19,6 +19,8 @@ public:
     Scene* getCurrentScene();
     Scene* createScene(std::string aSceneName, int aSceneID = -1);
 
+    void removeScene(const std::string& sceneName);
+
 private:
     void loadScene(int index);
     void loadScene(const std::string& sceneName); // Willen we dit overloaden?

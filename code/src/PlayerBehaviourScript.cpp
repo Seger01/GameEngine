@@ -9,6 +9,25 @@
 #include "ParticleEmitter.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
+#include "SpriteDefUtil.h"
+
+const int spriteWidth = 16;  // Width of each sprite
+const int spriteHeight = 25; // Height of each sprite
+
+const Point playerIdleBackPosition = {21, 95};
+SpriteDef firstFramePlayerIdleBack = {
+    "enter_the_gungeon_spritesheet.png",
+    Rect{playerIdleBackPosition.x, playerIdleBackPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
+
+Point playerIdleSidePosition = {21, 66};
+SpriteDef firstFramePlayerIdleSize = {
+    "enter_the_gungeon_spritesheet.png",
+    Rect{playerIdleSidePosition.x, playerIdleSidePosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
+
+const Point playerIdleFrontPosition = {21, 37};
+SpriteDef firstFramePlayerIdleFront = {
+    "enter_the_gungeon_spritesheet.png",
+    Rect{playerIdleFrontPosition.x, playerIdleFrontPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
 
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
@@ -33,180 +52,23 @@ void PlayerBehaviourScript::setFlipY(bool aState) {
     }
 }
 
-void PlayerBehaviourScript::toggleAnimaionEnabled() {
-    if (mGameObject->hasComponent<Animation>()) {
-        for (auto animation : mGameObject->getComponents<Animation>()) {
-            animation->setActive(!animation->isActive());
+ParticleEmitter* emitter = nullptr;
+
+void PlayerBehaviourScript::deactivateAllAnimations() {
+    for (auto animation : mGameObject->getComponents<Animation>()) {
+        animation->setActive(false);
+    }
+}
+
+void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool aState) {
+    for (auto animation : mGameObject->getComponents<Animation>()) {
+        if (animation->getTag() == aAnimationTag) {
+            animation->setActive(aState);
         }
     }
 }
 
-Animation* playerIdleFrontAnimation = nullptr;
-Animation* playerIdleSideAnimation = nullptr;
-Animation* playerIdleBackAnimation = nullptr;
-
-ParticleEmitter* emitter = nullptr;
-
-std::vector<Animation*> playerAnimations = {playerIdleFrontAnimation, playerIdleSideAnimation, playerIdleBackAnimation};
-
-void PlayerBehaviourScript::deactivateAllAnimations() {
-    // for (auto animation : playerAnimations) {
-    //     if (animation != nullptr) {
-    //         animation->setActive(false);
-    //     }
-    // }
-    if (playerIdleFrontAnimation != nullptr) {
-        playerIdleFrontAnimation->setActive(false);
-    }
-    if (playerIdleSideAnimation != nullptr) {
-        playerIdleSideAnimation->setActive(false);
-    }
-    if (playerIdleBackAnimation != nullptr) {
-        playerIdleBackAnimation->setActive(false);
-    }
-}
-
-void PlayerBehaviourScript::setAnimationActive(Animation* aAnimation, bool aState) {
-    if (aAnimation != nullptr) {
-        aAnimation->setActive(aState);
-    }
-}
-
-void PlayerBehaviourScript::onStart() {
-    const int sizeMultiplier = 1;
-
-    const int spriteWidth = 16;  // Width of each sprite
-    const int spriteHeight = 25; // Height of each sprite
-    const int frameCount = 6;    // Total number of frames in the sprite sheet
-
-    // SDL_Texture* spriteSheetTexture = loadTexture(renderer, "enter_the_gungeon_spritesheet.png");
-    // SpriteAtlas spriteAtlas(myRenderer, "enter_the_gungeon_spritesheet.png");
-
-    // Rectangle startOfAnimation;
-    // startOfAnimation.x = 22;           // Move horizontally in the sprite sheet
-    // startOfAnimation.y = 187;          // Keep the vertical position constant (you can change this for vertical
-    // movement) startOfAnimation.w = spriteWidth;  // The width of the sprite startOfAnimation.h = spriteHeight; // The
-    // height of the sprite
-
-    // SpriteDef playerAnimationSprite1 = {"enter_the_gungeon_spritesheet.png", Rect{22, 187, spriteWidth,
-    // spriteHeight},
-    //                                     16 * 5, 25 * 5};
-    // SpriteDef playerAnimationSprite2 = {"enter_the_gungeon_spritesheet.png",
-    //                                     Rect{22 + (spriteWidth * 1), 187, spriteWidth, spriteHeight}, 16 * 5, 25 *
-    //                                     5};
-    // SpriteDef playerAnimationSprite3 = {"enter_the_gungeon_spritesheet.png",
-    //                                     Rect{22 + (spriteWidth * 2), 187, spriteWidth, spriteHeight}, 16 * 5, 25 *
-    //                                     5};
-    // SpriteDef playerAnimationSprite4 = {"enter_the_gungeon_spritesheet.png",
-    //                                     Rect{22 + (spriteWidth * 3), 187, spriteWidth, spriteHeight}, 16 * 5, 25 *
-    //                                     5};
-    // SpriteDef playerAnimationSprite5 = {"enter_the_gungeon_spritesheet.png",
-    //                                     Rect{22 + (spriteWidth * 4), 187, spriteWidth, spriteHeight}, 16 * 5, 25 *
-    //                                     5};
-    // SpriteDef playerAnimationSprite6 = {"enter_the_gungeon_spritesheet.png",
-    //                                     Rect{22 + (spriteWidth * 5), 187, spriteWidth, spriteHeight}, 16 * 5, 25 *
-    //                                     5};
-    //
-    // std::vector<SpriteDef> playerAnimationJump = {playerAnimationSprite1, playerAnimationSprite2,
-    //                                               playerAnimationSprite3, playerAnimationSprite4,
-    //                                               playerAnimationSprite5, playerAnimationSprite6};
-    {
-        const int spriteWidth = 16;  // Width of each sprite
-        const int spriteHeight = 25; // Height of each sprite
-
-        const int AnimationStartInSpriteSheetX = 21;
-        const int AnimationStartInSpriteSheetY = 95;
-
-        SpriteDef playerFrameIdle1 = {
-            "enter_the_gungeon_spritesheet.png",
-            Rect{AnimationStartInSpriteSheetX, AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-            spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle2 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (1 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle3 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (2 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        std::vector<SpriteDef> playerAnimationIdleBack = {playerFrameIdle1, playerFrameIdle2, playerFrameIdle3,
-                                                          playerFrameIdle2};
-
-        playerIdleBackAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationIdleBack, 200, true);
-    }
-
-    {
-        const int spriteWidth = 16;  // Width of each sprite
-        const int spriteHeight = 25; // Height of each sprite
-
-        const int AnimationStartInSpriteSheetX = 21;
-        const int AnimationStartInSpriteSheetY = 66;
-
-        SpriteDef playerFrameIdle1 = {
-            "enter_the_gungeon_spritesheet.png",
-            Rect{AnimationStartInSpriteSheetX, AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-            spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle2 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (1 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle3 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (2 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        std::vector<SpriteDef> playerAnimationIdleSide = {playerFrameIdle1, playerFrameIdle2, playerFrameIdle3,
-                                                          playerFrameIdle2};
-
-        playerIdleSideAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationIdleSide, 200, true);
-    }
-    {
-        const int spriteWidth = 16;  // Width of each sprite
-        const int spriteHeight = 25; // Height of each sprite
-
-        const int AnimationStartInSpriteSheetX = 21;
-        const int AnimationStartInSpriteSheetY = 37;
-
-        SpriteDef playerFrameIdle1 = {
-            "enter_the_gungeon_spritesheet.png",
-            Rect{AnimationStartInSpriteSheetX, AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-            spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle2 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (1 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        SpriteDef playerFrameIdle3 = {"enter_the_gungeon_spritesheet.png",
-                                      Rect{AnimationStartInSpriteSheetX + (2 * spriteWidth),
-                                           AnimationStartInSpriteSheetY, spriteWidth, spriteHeight},
-                                      spriteWidth * sizeMultiplier, spriteHeight * sizeMultiplier};
-
-        std::vector<SpriteDef> playerAnimaionIdleFront = {playerFrameIdle1, playerFrameIdle2, playerFrameIdle3,
-                                                          playerFrameIdle2};
-
-        playerIdleFrontAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
-    }
-
-    playerIdleBackAnimation->setActive(false);
-    playerIdleSideAnimation->setActive(false);
-    playerIdleFrontAnimation->setActive(true);
-
-    playerIdleFrontAnimation->setLayer(3);
-    playerIdleSideAnimation->setLayer(3);
-    playerIdleBackAnimation->setLayer(3);
-
-    mGameObject->addComponent(playerIdleFrontAnimation);
-    mGameObject->addComponent(playerIdleSideAnimation);
-
+void PlayerBehaviourScript::initEmitter() {
     EmitterMode emitterMode = EmitterMode::Continuous;
     float speed = 50.0f;
     float acceleration = 0.0f;
@@ -220,22 +82,76 @@ void PlayerBehaviourScript::onStart() {
     float rotationSpeed = 0.0f;
     float rotationAcceleration = 0.0f;
 
-    std::vector<Color> colors = {Color(255, 49, 3, 90), Color(255, 100, 3, 90), Color(0, 0, 0, 90), Color(0, 0, 0, 90)};
+    std::vector<Color> colors = {Color(255, 49, 3, 170), Color(255, 100, 3, 150), Color(0, 0, 0, 90),
+                                 Color(0, 0, 0, 90)};
     // std::vector<Color> colors = {Color(255, 0, 0), Color(0, 255, 0), Color(0, 0, 255),
     //                              Color(0, 0, 255), Color(0, 255, 0), Color(255, 0, 0)};
 
     emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, endSize,
                                   rotation, rotationSpeed, rotationAcceleration, colors);
 
-    mGameObject->addComponent(playerIdleBackAnimation);
-
     emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
     emitter->setLayer(4);
     mGameObject->addComponent(emitter);
+}
 
-    // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
-    // emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
+void PlayerBehaviourScript::onStart() {
+    Animation* playerIdleFrontAnimation = nullptr;
+    Animation* playerIdleSideAnimation = nullptr;
+    Animation* playerIdleBackAnimation = nullptr;
+
+    {
+        std::vector<SpriteDef> playerIdleBackAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleBack, 3);
+
+        std::vector<SpriteDef> playerAnimationIdleBack = {
+            playerIdleBackAnimationFrames[0], playerIdleBackAnimationFrames[1], playerIdleBackAnimationFrames[2],
+            playerIdleBackAnimationFrames[1]};
+
+        playerIdleBackAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationIdleBack, 200, true);
+    }
+
+    {
+        std::vector<SpriteDef> playerIdleSideAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleSize, 3);
+
+        std::vector<SpriteDef> playerAnimationIdleSide = {
+            playerIdleSideAnimationFrames[0], playerIdleSideAnimationFrames[1], playerIdleSideAnimationFrames[2],
+            playerIdleSideAnimationFrames[1]};
+
+        playerIdleSideAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationIdleSide, 200, true);
+    }
+    {
+        std::vector<SpriteDef> playerIdleFrontAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleFront, 3);
+
+        std::vector<SpriteDef> playerAnimaionIdleFront = {
+            playerIdleFrontAnimationFrames[0], playerIdleFrontAnimationFrames[1], playerIdleFrontAnimationFrames[2],
+            playerIdleFrontAnimationFrames[1]};
+
+        playerIdleFrontAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
+    }
+
+    mGameObject->addComponent(playerIdleFrontAnimation);
+    mGameObject->addComponent(playerIdleSideAnimation);
+    mGameObject->addComponent(playerIdleBackAnimation);
+
+    for (auto animation : mGameObject->getComponents<Animation>()) {
+        animation->setActive(false);
+        animation->setLayer(3);
+    }
+
+    playerIdleFrontAnimation->setActive(true);
+
+    playerIdleBackAnimation->setTag("playerIdleBack");
+    playerIdleSideAnimation->setTag("playerIdleSide");
+    playerIdleFrontAnimation->setTag("playerIdleFront");
+
+    initEmitter();
 }
 
 void PlayerBehaviourScript::handleAnimations() {
@@ -284,34 +200,44 @@ void PlayerBehaviourScript::handleMovement() {
 
     if (input.GetKey(Key::Key_W)) {
         deactivateAllAnimations();
-        setAnimationActive(playerIdleBackAnimation, true);
+        setAnimationActive("playerIdleBack", true);
         setFlipX(false);
         parentTransform.position.y -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_A)) {
         deactivateAllAnimations();
-        setAnimationActive(playerIdleSideAnimation, true);
+        setAnimationActive("playerIdleSide", true);
         setFlipX(true);
         parentTransform.position.x -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_S)) {
         deactivateAllAnimations();
-        setAnimationActive(playerIdleFrontAnimation, true);
+        setAnimationActive("playerIdleFront", true);
         setFlipX(false);
         parentTransform.position.y += (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_D)) {
         deactivateAllAnimations();
-        setAnimationActive(playerIdleSideAnimation, true);
+        setAnimationActive("playerIdleSide", true);
         setFlipX(false);
         parentTransform.position.x += (movementSpeed * Time::deltaTime);
     }
     this->mGameObject->setTransform(parentTransform);
 }
 
+void PlayerBehaviourScript::hanldeCameraMovement() {
+    Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+
+    Transform playerTransform = this->mGameObject->getTransform();
+
+    currentCam.setTransform(playerTransform);
+}
+
 void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
+
+    hanldeCameraMovement();
 
     // Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
     //

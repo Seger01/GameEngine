@@ -13,12 +13,15 @@ private:
     void setFlipX(bool aState);
     void setFlipY(bool aState);
 
-    void toggleAnimaionEnabled();
-    void setAnimationActive(Animation* aAnimation, bool aState);
-    void deactivateAllAnimations();
-    void handleAnimations();
+    void initEmitter();
 
+    void toggleAnimaionEnabled();
+    void setAnimationActive(std::string aAnimationTag, bool aState);
+    void deactivateAllAnimations();
+
+    void handleAnimations();
     void handleMovement();
+    void hanldeCameraMovement();
 };
 
 #endif
