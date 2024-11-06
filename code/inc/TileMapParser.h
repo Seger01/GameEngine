@@ -24,6 +24,7 @@ struct TileInfo {
     std::vector<ColliderData> mColliders;
 };
 
+
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
     std::unordered_map<int, TileInfo> mTileInfoMap;

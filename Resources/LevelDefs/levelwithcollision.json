@@ -53,6 +53,34 @@
          "y":0
         }, 
         {
+         "draworder":"topdown",
+         "id":8,
+         "name":"Spawnpoints",
+         "objects":[
+                {
+                 "height":9,
+                 "id":6,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"isPlayerSpawn",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":9,
+                 "x":36,
+                 "y":67
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 102, 104, 0, 0, 0, 0,
             0, 0, 163, 195, 198, 136, 195, 196, 0, 0,
@@ -77,8 +105,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":6,
+ "nextlayerid":9,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",
@@ -257,7 +285,7 @@
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":3,
+                             "width":6,
                              "x":5,
                              "y":0
                             }, 
@@ -268,8 +296,8 @@
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":8,
-                             "x":8,
+                             "width":5,
+                             "x":11,
                              "y":12
                             }],
                      "opacity":1,
@@ -294,8 +322,8 @@
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":4,
-                             "x":7,
+                             "width":6,
+                             "x":5,
                              "y":0
                             }, 
                             {
@@ -305,7 +333,7 @@
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":7,
+                             "width":5,
                              "x":0,
                              "y":12
                             }],

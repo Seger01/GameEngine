@@ -32,6 +32,9 @@ void TileMapParser::parse() {
             mTileMapData.mLayers.push_back(grid);
             mLayerNames.push_back(layer["name"]);
         }
+        else if (layer["type"] == "objectgroup") {
+            //parseObjectLayer(layer);
+        }
     }
 
     // Store tile information in a map
