@@ -18,7 +18,7 @@ void InitBehaviourScript::createLevel1() {
         exit(1);
 
     int cameraID = scene->addCamera();
-    scene->setActiveGamera(cameraID);
+    scene->setActiveCamera(cameraID);
 
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
