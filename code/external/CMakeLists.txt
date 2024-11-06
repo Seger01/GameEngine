@@ -108,6 +108,14 @@ set(BT_NO_RTTI OFF CACHE BOOL "Disable usage of RTTI" FORCE)
 set(BT_NO_THREADS OFF CACHE BOOL "Disable usage of threads" FORCE)
 set(BT_USE_STD_FUNCTION OFF CACHE BOOL "Use std::function instead of std::function_view" FORCE)
 
+# Set options for FreeType
+set(FT_WITH_ZLIB ON CACHE BOOL "Enable Zlib support" FORCE)
+set(FT_WITH_PNG OFF CACHE BOOL "Enable PNG support" FORCE)
+set(FT_WITH_HARFBUZZ OFF CACHE BOOL "Enable HarfBuzz support" FORCE)
+set(FT_WITH_BZIP2 OFF CACHE BOOL "Enable Bzip2 support" FORCE)
+set(FT_WITH_BROTLI OFF CACHE BOOL "Enable Brotli support" FORCE)
+set(FT_WITH_GZIP OFF CACHE BOOL "Enable Gzip support" FORCE)
+
 # Add the external libraries
 add_subdirectory(SLikeNet)
 add_subdirectory(SDL)

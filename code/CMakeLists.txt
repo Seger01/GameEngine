@@ -81,7 +81,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf tmxlite box2d nlohmann_json::nlohmann_json)
 
 # Link libraries to library
-target_link_libraries(${PROJECT_NAME} private ${LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
 
 # Add the executable target
 add_executable(${PROJECT_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
@@ -90,7 +90,7 @@ add_executable(${PROJECT_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
 add_dependencies(${PROJECT_EXECUTABLE} ${PROJECT_NAME})
 
 # Link library to the executable
-target_link_libraries(${PROJECT_EXECUTABLE} public ${PROJECT_NAME})
+target_link_libraries(${PROJECT_EXECUTABLE} PUBLIC ${PROJECT_NAME})
 
 # Add custom target to run the main program
 add_custom_target(run

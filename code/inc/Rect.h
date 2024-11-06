@@ -1,7 +1,7 @@
 #ifndef RECT_H
 #define RECT_H
 
-#include "SDL.h"
+#include <SDL.h>
 
 struct Rect {
     int x = 0, y = 0;
