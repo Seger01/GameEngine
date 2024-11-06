@@ -53,3 +53,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-03, 13:00, 1.5, worked on design document
 2024-11-04, 9:00, 1.5, preparing meeting bob and meeting with bob
 2024-11-04, 10:30, 5, working on implementation of tilemap parser
+2024-11-06, 9:15, 0.75, standup and project meeting
+2024-11-06, 10:00, 6, worked on tilemap parser and adding colliders to tiled map
