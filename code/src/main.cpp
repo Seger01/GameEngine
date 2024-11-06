@@ -58,7 +58,7 @@ int main() {
     engineTest();
     return 0;
     FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/level.json");
+    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
     TileMapParser tileMapParser(path);
     tileMapParser.parse();
@@ -77,11 +77,14 @@ int main() {
         }
     }
 
+    // Print the contents of tileInfoMap
     for (const auto& pair : tileMapData.mTileInfoMap) {
         int gID = pair.first;
         const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-                  << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+        for (const auto& collider : info.mColliders) {
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.width << ", height: " << collider.height << std::endl;
+        }
     }
 
     return 0;

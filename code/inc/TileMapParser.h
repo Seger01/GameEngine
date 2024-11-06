@@ -11,9 +11,17 @@
 #include <unordered_map>
 #include <unordered_set>
 
+struct Collider {
+    float x;
+    float y;
+    float width;
+    float height;
+};
+
 struct TileInfo {
     std::string mTilesetName;
     std::pair<int, int> mCoordinates;
+    std::vector<Collider> mColliders;
 };
 
 struct TileMapData {
