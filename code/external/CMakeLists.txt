@@ -1,10 +1,3 @@
-# Set options for TmxLite
-set(TMXLITE_STATIC_LIB OFF CACHE BOOL "Should tmxlite be built as a static or shared lib?" FORCE)
-set(PROJECT_STATIC_RUNTIME OFF CACHE BOOL "Use statically linked standard/runtime libraries?" FORCE)
-set(USE_RTTI OFF CACHE BOOL "Use run time type information?" FORCE)
-set(USE_EXTLIBS OFF CACHE BOOL "Use external zlib, zstd and pugixml libraries instead of the included source?" FORCE)
-set(USE_ZSTD OFF CACHE BOOL "Enable zstd compression? (Already set to true if USE_EXTLIBS is true)" FORCE)
-
 # Set options for SlikeNet
 set(RAKNET_ENABLE_SAMPLES OFF CACHE BOOL "Generate RakNet sample projects if true." FORCE)
 set(RAKNET_ENABLE_DLL OFF CACHE BOOL "Generate the DLL project if true." FORCE)
@@ -122,7 +115,6 @@ add_subdirectory(SDL)
 add_subdirectory(SDL_mixer)
 add_subdirectory(SDL_image)
 add_subdirectory(SDL_ttf)
-add_subdirectory(tmxlite/tmxlite)
 add_subdirectory(box2d)
 add_subdirectory(nlohmann_json)
 # add_subdirectory(BehaviorTree)
