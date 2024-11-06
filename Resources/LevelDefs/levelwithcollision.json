@@ -87,7 +87,7 @@
         {
          "columns":7,
          "firstgid":1,
-         "image":"..\/Dungeontileset\/atlas_floor-16x16.png",
+         "image":"Dungeontileset\/atlas_floor-16x16.png",
          "imageheight":112,
          "imagewidth":112,
          "margin":0,
@@ -101,7 +101,7 @@
         {
          "columns":12,
          "firstgid":50,
-         "image":"..\/Dungeontileset\/atlas_walls_low-16x16.png",
+         "image":"Dungeontileset\/atlas_walls_low-16x16.png",
          "imageheight":64,
          "imagewidth":192,
          "margin":0,
@@ -115,7 +115,7 @@
         {
          "columns":32,
          "firstgid":98,
-         "image":"..\/Dungeontileset\/0x72_DungeonTilesetII_v1.7.png",
+         "image":"Dungeontileset\/0x72_DungeonTilesetII_v1.7.png",
          "imageheight":512,
          "imagewidth":512,
          "margin":0,
@@ -129,7 +129,7 @@
         {
          "columns":24,
          "firstgid":1122,
-         "image":"..\/Dungeontileset\/atlas_walls_high-16x32.png",
+         "image":"Dungeontileset\/atlas_walls_high-16x32.png",
          "imageheight":128,
          "imagewidth":384,
          "margin":0,
@@ -234,6 +234,17 @@
                              "width":6,
                              "x":5,
                              "y":0
+                            }, 
+                            {
+                             "height":3,
+                             "id":2,
+                             "name":"",
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":5,
+                             "x":11,
+                             "y":13
                             }],
                      "opacity":1,
                      "type":"objectgroup",
@@ -243,7 +254,7 @@
                     }
                 }, 
                 {
-                 "id":49,
+                 "id":27,
                  "objectgroup":
                     {
                      "draworder":"index",
@@ -251,15 +262,15 @@
                      "name":"",
                      "objects":[
                             {
-                             "height":5,
+                             "height":3,
                              "id":1,
                              "name":"",
                              "rotation":0,
                              "type":"",
                              "visible":true,
                              "width":11,
-                             "x":5,
-                             "y":11
+                             "x":0,
+                             "y":13
                             }],
                      "opacity":1,
                      "type":"objectgroup",
@@ -286,32 +297,6 @@
                              "width":6,
                              "x":5,
                              "y":0
-                            }],
-                     "opacity":1,
-                     "type":"objectgroup",
-                     "visible":true,
-                     "x":0,
-                     "y":0
-                    }
-                }, 
-                {
-                 "id":99,
-                 "objectgroup":
-                    {
-                     "draworder":"index",
-                     "id":2,
-                     "name":"",
-                     "objects":[
-                            {
-                             "height":5,
-                             "id":1,
-                             "name":"",
-                             "rotation":0,
-                             "type":"",
-                             "visible":true,
-                             "width":11,
-                             "x":0,
-                             "y":11
                             }],
                      "opacity":1,
                      "type":"objectgroup",

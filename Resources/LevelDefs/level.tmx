@@ -32,21 +32,17 @@
   <tile id="25">
    <objectgroup draworder="index" id="2">
     <object id="1" x="5" y="0" width="6" height="16"/>
+    <object id="2" x="11" y="13" width="5" height="3"/>
    </objectgroup>
   </tile>
-  <tile id="49">
+  <tile id="27">
    <objectgroup draworder="index" id="2">
-    <object id="1" x="5" y="11" width="11" height="5"/>
+    <object id="1" x="0" y="13" width="11" height="3"/>
    </objectgroup>
   </tile>
   <tile id="72">
    <objectgroup draworder="index" id="2">
     <object id="1" x="5" y="0" width="6" height="16"/>
-   </objectgroup>
-  </tile>
-  <tile id="99">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="11" width="11" height="5"/>
    </objectgroup>
   </tile>
   <tile id="121">
