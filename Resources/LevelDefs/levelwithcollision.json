@@ -53,6 +53,34 @@
          "y":0
         }, 
         {
+         "draworder":"topdown",
+         "id":8,
+         "name":"Spawnpoints",
+         "objects":[
+                {
+                 "height":9,
+                 "id":6,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"isPlayerSpawn",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":9,
+                 "x":36,
+                 "y":67
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 102, 104, 0, 0, 0, 0,
             0, 0, 163, 195, 198, 136, 195, 196, 0, 0,
@@ -77,8 +105,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":6,
+ "nextlayerid":9,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",
@@ -139,58 +167,6 @@
          "tileheight":16,
          "tiles":[
                 {
-                 "id":1,
-                 "objectgroup":
-                    {
-                     "draworder":"index",
-                     "id":2,
-                     "name":"",
-                     "objects":[
-                            {
-                             "height":5,
-                             "id":1,
-                             "name":"",
-                             "rotation":0,
-                             "type":"",
-                             "visible":true,
-                             "width":11,
-                             "x":5,
-                             "y":11
-                            }],
-                     "opacity":1,
-                     "type":"objectgroup",
-                     "visible":true,
-                     "x":0,
-                     "y":0
-                    }
-                }, 
-                {
-                 "id":3,
-                 "objectgroup":
-                    {
-                     "draworder":"index",
-                     "id":2,
-                     "name":"",
-                     "objects":[
-                            {
-                             "height":5,
-                             "id":1,
-                             "name":"",
-                             "rotation":0,
-                             "type":"",
-                             "visible":true,
-                             "width":11,
-                             "x":0,
-                             "y":11
-                            }],
-                     "opacity":1,
-                     "type":"objectgroup",
-                     "visible":true,
-                     "x":0,
-                     "y":0
-                    }
-                }, 
-                {
                  "id":24,
                  "objectgroup":
                     {
@@ -225,26 +201,15 @@
                      "name":"",
                      "objects":[
                             {
-                             "height":16,
-                             "id":1,
-                             "name":"",
-                             "rotation":0,
-                             "type":"",
-                             "visible":true,
-                             "width":6,
-                             "x":5,
-                             "y":0
-                            }, 
-                            {
-                             "height":3,
+                             "height":4,
                              "id":2,
                              "name":"",
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":5,
-                             "x":11,
-                             "y":13
+                             "width":11,
+                             "x":5,
+                             "y":12
                             }],
                      "opacity":1,
                      "type":"objectgroup",
@@ -262,7 +227,7 @@
                      "name":"",
                      "objects":[
                             {
-                             "height":3,
+                             "height":4,
                              "id":1,
                              "name":"",
                              "rotation":0,
@@ -270,7 +235,7 @@
                              "visible":true,
                              "width":11,
                              "x":0,
-                             "y":13
+                             "y":12
                             }],
                      "opacity":1,
                      "type":"objectgroup",
@@ -320,20 +285,57 @@
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":3,
+                             "width":6,
                              "x":5,
                              "y":0
                             }, 
                             {
-                             "height":8.00117368665593,
-                             "id":2,
+                             "height":4,
+                             "id":5,
                              "name":"",
-                             "rotation":90,
+                             "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":3,
-                             "x":16,
-                             "y":13
+                             "width":5,
+                             "x":11,
+                             "y":12
+                            }],
+                     "opacity":1,
+                     "type":"objectgroup",
+                     "visible":true,
+                     "x":0,
+                     "y":0
+                    }
+                }, 
+                {
+                 "id":123,
+                 "objectgroup":
+                    {
+                     "draworder":"index",
+                     "id":2,
+                     "name":"",
+                     "objects":[
+                            {
+                             "height":16,
+                             "id":1,
+                             "name":"",
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":6,
+                             "x":5,
+                             "y":0
+                            }, 
+                            {
+                             "height":4,
+                             "id":2,
+                             "name":"",
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":5,
+                             "x":0,
+                             "y":12
                             }],
                      "opacity":1,
                      "type":"objectgroup",
