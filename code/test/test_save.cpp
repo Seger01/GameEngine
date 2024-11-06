@@ -144,6 +144,45 @@ TEST(SaveGame, InvalidRemove) {
     EXPECT_THROW(sg.remove(), std::logic_error);
 }
 
+TEST(SaveArray, readExistingFile) {
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
+    sg.addArray("array1");
+    SaveArray array{sg.getArray("array1")};
+    array.addIntField("int1", 1);
+    array.addFloatField("float1", 1.0f);
+    array.addStringField("string1", "value1");
+    sg.setArray("array1", array);
+    sg.store();
+
+    sg.addArray("array2");
+    SaveArray array2{sg.getArray("array2")};
+    array2.addIntField("int2", 2);
+    array2.addFloatField("float2", 2.0f);
+    array2.addStringField("string2", "value2");
+    sg.setArray("array2", array2);
+
+    sg.addIntField("int1", 1);
+    sg.addFloatField("float1", 1.0f);
+    sg.addStringField("string1", "value1");
+
+    SaveGame sg2{path};
+    SaveArray array3{sg2.getArray("array1")};
+    ASSERT_EQ(array3.getIntField("int1").getValue(), 1);
+    ASSERT_FLOAT_EQ(array3.getFloatField("float1").getValue(), 1.0f);
+    ASSERT_EQ(array3.getStringField("string1").getValue(), "value1");
+    SaveArray array4{sg2.getArray("array2")};
+    ASSERT_EQ(array4.getIntField("int2").getValue(), 2);
+    ASSERT_FLOAT_EQ(array4.getFloatField("float2").getValue(), 2.0f);
+    ASSERT_EQ(array4.getStringField("string2").getValue(), "value2");
+    ASSERT_EQ(sg2.getIntField("int1").getValue(), 1);
+    ASSERT_FLOAT_EQ(sg2.getFloatField("float1").getValue(), 1.0f);
+    ASSERT_EQ(sg2.getStringField("string1").getValue(), "value1");
+}
+
 TEST(SaveArray, WriteRead) {
 
     FSConverter fsConverter;
