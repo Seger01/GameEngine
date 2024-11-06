@@ -11,7 +11,7 @@
 
 // Define an enum class for all keyboard, mouse, and controller keys
 enum class EventType {
-    KeyUp,
+    KeyUp = 0,
     KeyDown,
 
     MouseButtonUp,
