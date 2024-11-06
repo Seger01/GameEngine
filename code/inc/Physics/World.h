@@ -1,3 +1,6 @@
+#ifndef WORLD_H
+#define WORLD_H
+
 #include "Physics/BodyProxy.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
@@ -25,4 +28,7 @@ public:
 
 private:
     b2WorldId mWorldID;
+    Vector2 mGravity;
 };
+
+#endif // WORLD_H

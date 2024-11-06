@@ -12,14 +12,32 @@ public:
     RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties);
     ~RigidBody();
 
-    void setMass(float aMass);
-    float getMass() const;
+    bool getHasGravity() const;
+    void setHasGravity(bool aHasGravity);
 
-    void processBodyType();
+    bool getIsMoveableByForce() const;
+    void setIsMoveableByForce(bool aIsMoveableByForce);
+
+    bool getCanRotate() const;
+    void setCanRotate(bool aCanRotate);
+
+    float getDensity() const;
+    void setDensity(float aDensity);
+
+    float getFriction() const;
+    void setFriction(float aFriction);
+
+    float getRestitution() const;
+    void setRestitution(float aRestitution);
+
+    float getMass() const;
+    void setMass(float aMass);
+
+    float getGravityScale() const;
+    void setGravityScale(float aGravityScale);
+
     void setBodyType(BodyType aBodyType);
     BodyType getBodyType() const;
-    void setGravityScale(float aGravityScale);
-    float getGravityScale() const;
 
     int getBodyId() const;
 
