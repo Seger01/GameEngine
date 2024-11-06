@@ -83,7 +83,7 @@ int main() {
         const TileInfo& info = pair.second;
         std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
         for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.width << ", height: " << collider.height << std::endl;
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
         }
     }
 

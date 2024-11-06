@@ -88,7 +88,7 @@ void TileMapParser::storeTileInfo() {
                         if (tile["id"] == localID && tile.contains("objectgroup")) {
                             for (const auto& object : tile["objectgroup"]["objects"]) {
                                 try {
-                                    Collider collider = {
+                                    ColliderData collider = {
                                         object.at("x").get<float>(),
                                         object.at("y").get<float>(),
                                         object.at("width").get<float>(),
@@ -96,7 +96,7 @@ void TileMapParser::storeTileInfo() {
                                     };
                                     tileInfo.mColliders.push_back(collider);
                                     // Debug print to verify collider parsing
-                                    std::cout << "Added collider to gID " << gID << ": x=" << collider.x << ", y=" << collider.y << ", width=" << collider.width << ", height=" << collider.height << std::endl;
+                                    std::cout << "Added collider to gID " << gID << ": x=" << collider.x << ", y=" << collider.y << ", width=" << collider.mWidth << ", height=" << collider.mHeight << std::endl;
                                 } catch (const nlohmann::json::type_error& e) {
                                     std::cerr << "Error parsing collider for gID " << gID << ": " << e.what() << std::endl;
                                 }
@@ -118,7 +118,7 @@ void TileMapParser::printTileInfo(int gID) const {
         const TileInfo& info = it->second;
         std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
         for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.width << ", height: " << collider.height << std::endl;
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
         }
     } else {
         std::cerr << "gID " << gID << " not found in tile info map" << std::endl;
@@ -131,7 +131,7 @@ void TileMapParser::printTileInfoMap() const {
         const TileInfo& info = pair.second;
         std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
         for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.width << ", height: " << collider.height << std::endl;
+            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
         }
     }
 }

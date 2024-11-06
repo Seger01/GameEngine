@@ -11,17 +11,17 @@
 #include <unordered_map>
 #include <unordered_set>
 
-struct Collider {
+struct ColliderData {
     float x;
     float y;
-    float width;
-    float height;
+    float mWidth;
+    float mHeight;
 };
 
 struct TileInfo {
     std::string mTilesetName;
     std::pair<int, int> mCoordinates;
-    std::vector<Collider> mColliders;
+    std::vector<ColliderData> mColliders;
 };
 
 struct TileMapData {
@@ -32,6 +32,7 @@ struct TileMapData {
 class TileMapParser {
 public:
     TileMapParser(const std::string& aFilePath);
+    //virtual ~TileMapParser();
     void parse();
     std::pair<int, int> getTilePosition(int gID) const;
     int getGIDFromCoordinate(int layer, int x, int y) const;

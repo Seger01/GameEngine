@@ -6,6 +6,8 @@
 #include "Scene.h"
 #include "SceneManager.h"
 #include "TileMapParser.h"
+#include "Transform.h"
+#include "BoxCollider.h"
 
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -82,6 +84,13 @@ void InitBehaviourScript::createLevel1() {
                         sprite->setLayer(layerIndex);
 
                         gameObject->addComponent(sprite);
+                        // Add BoxCollider components to the GameObject
+                        for (const auto& collider : tileInfo.mColliders) {
+                            BoxCollider* boxCollider = new BoxCollider();
+                            boxCollider->setTransformFromColliderData(collider);
+                            gameObject->addComponent(boxCollider);
+                        }
+
 
                         scene->addGameObject(gameObject);
 
