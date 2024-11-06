@@ -33,19 +33,54 @@ TEST(EventManagerTest, ParseSDLEvent_KeyDown) {
 }
 
 TEST(EventManagerTest, ParseSDLEvent_MouseButtonDown) {
-    EventManager eventManager;
-    SDL_Event sdlEvent;
-    sdlEvent.type = SDL_MOUSEBUTTONDOWN;
-    sdlEvent.button.button = SDL_BUTTON_LEFT;
-    sdlEvent.motion.x = 100;
-    sdlEvent.motion.y = 150;
+    {
 
-    Event parsedEvent = eventManager.parseSDLEvent(sdlEvent);
+        EventManager eventManager;
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEBUTTONDOWN;
+        sdlEvent.button.button = SDL_BUTTON_LEFT;
+        sdlEvent.motion.x = 100;
+        sdlEvent.motion.y = 150;
 
-    ASSERT_EQ(parsedEvent.type, EventType::MouseButtonDown);
-    ASSERT_TRUE(parsedEvent.mouse.left);
-    ASSERT_EQ(parsedEvent.mouse.position.x, 100);
-    ASSERT_EQ(parsedEvent.mouse.position.y, 150);
+        Event parsedEvent = eventManager.parseSDLEvent(sdlEvent);
+
+        ASSERT_EQ(parsedEvent.type, EventType::MouseButtonDown);
+        ASSERT_TRUE(parsedEvent.mouse.left);
+        ASSERT_EQ(parsedEvent.mouse.position.x, 100);
+        ASSERT_EQ(parsedEvent.mouse.position.y, 150);
+    }
+    {
+
+        EventManager eventManager;
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEBUTTONUP;
+        sdlEvent.button.button = SDL_BUTTON_MIDDLE;
+        sdlEvent.motion.x = 100;
+        sdlEvent.motion.y = 150;
+
+        Event parsedEvent = eventManager.parseSDLEvent(sdlEvent);
+
+        ASSERT_EQ(parsedEvent.type, EventType::MouseButtonUp);
+        ASSERT_TRUE(parsedEvent.mouse.middle);
+        ASSERT_EQ(parsedEvent.mouse.position.x, 100);
+        ASSERT_EQ(parsedEvent.mouse.position.y, 150);
+    }
+    {
+
+        EventManager eventManager;
+        SDL_Event sdlEvent;
+        sdlEvent.type = SDL_MOUSEBUTTONUP;
+        sdlEvent.button.button = SDL_BUTTON_RIGHT;
+        sdlEvent.motion.x = 100;
+        sdlEvent.motion.y = 150;
+
+        Event parsedEvent = eventManager.parseSDLEvent(sdlEvent);
+
+        ASSERT_EQ(parsedEvent.type, EventType::MouseButtonUp);
+        ASSERT_TRUE(parsedEvent.mouse.right);
+        ASSERT_EQ(parsedEvent.mouse.position.x, 100);
+        ASSERT_EQ(parsedEvent.mouse.position.y, 150);
+    }
 }
 
 TEST(EventManagerTest, HandleEvents) {
