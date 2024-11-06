@@ -13,6 +13,3 @@ cd ..
 
 # Generate the coverage report (ignoring external and build directories)
 gcovr -e external -e build --html --html-details -o build/coverage_reports/coverage.html --print-summary --delete
-
-# Remove gcno files
-find . -name "*.gcno" -exec rm {} \;
