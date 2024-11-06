@@ -14,16 +14,6 @@
  </tileset>
  <tileset firstgid="1122" name="atlas_walls_high-16x32" tilewidth="16" tileheight="16" tilecount="192" columns="24">
   <image source="../Dungeontileset/atlas_walls_high-16x32.png" trans="ff00ff" width="384" height="128"/>
-  <tile id="1">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="5" y="11" width="11" height="5"/>
-   </objectgroup>
-  </tile>
-  <tile id="3">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="11" width="11" height="5"/>
-   </objectgroup>
-  </tile>
   <tile id="24">
    <objectgroup draworder="index" id="2">
     <object id="1" x="5" y="0" width="6" height="16"/>
@@ -31,13 +21,12 @@
   </tile>
   <tile id="25">
    <objectgroup draworder="index" id="2">
-    <object id="1" x="5" y="0" width="6" height="16"/>
-    <object id="2" x="11" y="13" width="5" height="3"/>
+    <object id="2" x="5" y="12" width="11" height="4"/>
    </objectgroup>
   </tile>
   <tile id="27">
    <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="13" width="11" height="3"/>
+    <object id="1" x="0" y="12" width="11" height="4"/>
    </objectgroup>
   </tile>
   <tile id="72">
@@ -48,7 +37,13 @@
   <tile id="121">
    <objectgroup draworder="index" id="2">
     <object id="1" x="5" y="0" width="3" height="16"/>
-    <object id="2" x="16" y="13" width="3" height="8.00117" rotation="90"/>
+    <object id="5" x="8" y="12" width="8" height="4"/>
+   </objectgroup>
+  </tile>
+  <tile id="123">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="7" y="0" width="4" height="16"/>
+    <object id="2" x="0" y="12" width="7" height="4"/>
    </objectgroup>
   </tile>
   <tile id="170">
