@@ -33,6 +33,9 @@ public:
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
+    void setParent(GameObject* parent);
+    GameObject* getParent();
+
     std::vector<Component*> getComponentsWithTag(const std::string& tag) const;
 
     // Templated functions
@@ -66,6 +69,8 @@ public:
     }
 
 protected:
+    GameObject* mParent;
+
     std::vector<Component*> mComponents;
     Transform mTransform;
 
