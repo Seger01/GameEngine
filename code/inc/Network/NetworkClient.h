@@ -9,28 +9,22 @@
 
 class NetworkClient {
 public:
-    NetworkClient(unsigned short aClientPort, unsigned short aServerPort, unsigned short aBroadcastPort);
+    NetworkClient();
     void connectToServer();
     void sendGameState();
     void receiveGameState();
     void update(std::vector<GameObject*>& aGameObjects);
-    void discoverServers(int aTimeoutMs);
-    bool getServerAddresses(std::vector<std::string>& aServerAddresses);
+    void discoverServers();
+    std::vector<std::string>& getServerAddresses();
     void setServerAddress(std::string aServerAddress);
 
 private:
     bool mIsConnected;
     bool mIsConnecting;
     int mClientID;
-    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mPeer;
-    std::string SERVER_ADDRESS;
-    unsigned short SERVER_PORT;
-    unsigned short CLIENT_PORT;
-    unsigned short BROADCAST_PORT;
-
-    int mBroadcastSocket;
-    std::chrono::time_point<std::chrono::steady_clock> mStartServerDiscovery;
-    int mDiscoveryTimeoutMs;
+    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient;
+    std::vector<std::string> mServerAddresses;
+    std::string mServerAddress;
 };
 
 #endif // NETWORKCLIENT_H

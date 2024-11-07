@@ -97,10 +97,6 @@ private:
     std::unique_ptr<NetworkServer> mServer;
     std::unique_ptr<NetworkClient> mClient;
     std::unique_ptr<NetworkHost> mHost;
-
-    unsigned short SERVER_PORT;
-    unsigned short CLIENT_PORT;
-    unsigned short BROADCAST_PORT;
 };
 
 #endif // NETWORKMANAGER_H

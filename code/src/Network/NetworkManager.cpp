@@ -72,15 +72,14 @@
 #include "Network/NetworkManager.h"
 
 NetworkManager::NetworkManager()
-    : mIsClient(false), mIsServer(false), mIsHost(false), mTickRate(60), mEnableSceneManagement(false),
-      SERVER_PORT(60001), CLIENT_PORT(60002), BROADCAST_PORT(60003) {}
+    : mIsClient(false), mIsServer(false), mIsHost(false), mTickRate(60), mEnableSceneManagement(false) {}
 
 void NetworkManager::startServer() {
     if (mIsClient || mIsHost) {
         throw std::runtime_error("Cannot start server when client or host is already running");
     }
     mIsServer = true;
-    mServer = std::make_unique<NetworkServer>(SERVER_PORT, BROADCAST_PORT);
+    mServer = std::make_unique<NetworkServer>();
 }
 
 void NetworkManager::startClient() {
@@ -88,7 +87,7 @@ void NetworkManager::startClient() {
         throw std::runtime_error("Cannot start client when server or host is already running");
     }
     mIsClient = true;
-    mClient = std::make_unique<NetworkClient>(CLIENT_PORT, SERVER_PORT, BROADCAST_PORT);
+    mClient = std::make_unique<NetworkClient>();
 }
 
 void NetworkManager::startHost() {

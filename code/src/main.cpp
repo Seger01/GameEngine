@@ -5,6 +5,8 @@
 
 #include "EngineBravo.h"
 
+#include "PlayerBehaviourScript.h"
+
 void engineTest() {
     GameObject defaultPlayerPrefab;
     defaultPlayerPrefab.setName("Player");
@@ -32,7 +34,6 @@ void engineTest() {
         }
     }
 
-    Scene* scene = sceneManager.createScene("Level1");
     Scene* scene = sceneManager.createScene("initscene");
     if (scene == nullptr)
         exit(1);
@@ -46,7 +47,7 @@ void engineTest() {
 
     GameObject* gameObject = new GameObject;
 
-    gameObject->addComponent<InitBehaviourScript>();
+    gameObject->addComponent<PlayerBehaviourScript>();
 
     scene->addGameObject(gameObject);
 
@@ -55,28 +56,7 @@ void engineTest() {
     engine.initialize();
 
     if (role == "client") {
-        std::vector<std::string> serverAddresses;
-        networkManager.getClient().discoverServers(2000);
-        while (!networkManager.getClient().getServerAddresses(serverAddresses)) {
-            std::cout << "Searching for servers..." << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        if (serverAddresses.empty()) {
-            std::cerr << "No servers found" << std::endl;
-            return;
-        }
-
-        std::cout << "Discovered servers:" << std::endl;
-        for (const auto& address : serverAddresses) {
-            std::cout << address << std::endl;
-        }
-
-        std::string serverAddress;
-        std::cout << "Enter the IP address of the server you want to connect to: ";
-        std::cin >> serverAddress;
-
-        networkManager.getClient().setServerAddress(serverAddress);
-        networkManager.getClient().connectToServer();
+        networkManager.getClient().discoverServers();
     }
 
     engine.run();

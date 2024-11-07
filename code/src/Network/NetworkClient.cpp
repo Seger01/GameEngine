@@ -1,4 +1,5 @@
 #include "NetworkClient.h"
+#include "Network/NetworkInformation.h"
 #include <iostream>
 #include <regex>
 #include <slikenet/BitStream.h>
@@ -6,20 +7,26 @@
 #include <slikenet/peerinterface.h>
 #include <stdexcept>
 
-NetworkClient::NetworkClient(unsigned short aClientPort, unsigned short aServerPort, unsigned short aBroadcastPort)
-    : mPeer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
-      mIsConnecting(false), mClientID(-1), SERVER_PORT(aServerPort), CLIENT_PORT(aClientPort),
-      BROADCAST_PORT(aBroadcastPort), SERVER_ADDRESS("0.0.0.0") {}
+NetworkClient::NetworkClient()
+    : mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
+      mIsConnecting(false), mClientID(-1), mServerAddress("0.0.0.0") {
+    std::cout << "Client Address: " << mClient->GetLocalIP(0) << std::endl;
+    SLNet::SocketDescriptor sd(CLIENT_PORT, mClient->GetLocalIP(0));
+    sd.socketFamily = AF_INET;
+    SLNet::StartupResult result = mClient->Startup(1, &sd, 1);
+    if (result != SLNet::RAKNET_STARTED) {
+        throw std::runtime_error("Failed to start client");
+    }
+}
 
 void NetworkClient::connectToServer() {
     if (mIsConnected || mIsConnecting) {
         return;
     }
-    if (SERVER_ADDRESS == "0.0.0.0") {
+    if (mServerAddress == "0.0.0.0") {
         throw std::runtime_error("Server address not set");
     }
-    SLNet::SocketDescriptor sd(CLIENT_PORT, SERVER_ADDRESS.c_str());
-    SLNet::ConnectionAttemptResult result = mPeer->Connect(SERVER_ADDRESS.c_str(), SERVER_PORT, nullptr, 0);
+    SLNet::ConnectionAttemptResult result = mClient->Connect(mServerAddress.c_str(), SERVER_PORT, nullptr, 0);
     if (result != SLNet::CONNECTION_ATTEMPT_STARTED) {
         throw std::runtime_error("Failed to start connection attempt");
     }
@@ -33,7 +40,7 @@ void NetworkClient::receiveGameState() {
 
 void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
     SLNet::Packet* packet;
-    for (packet = mPeer->Receive(); packet; mPeer->DeallocatePacket(packet), packet = mPeer->Receive()) {
+    for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
         switch (packet->data[0]) {
         case ID_CONNECTION_REQUEST_ACCEPTED:
             std::cout << "Connected to server.\n";
@@ -51,66 +58,29 @@ void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
             std::cout << "Connection lost or disconnected.\n";
             mIsConnected = false;
             break;
+        case ID_UNCONNECTED_PONG: {
+            // Handle the pong response from the server
+            SLNet::BitStream bs(packet->data, packet->length, false);
+            bs.IgnoreBytes(sizeof(SLNet::MessageID));
+            char serverIp[32];
+            packet->systemAddress.ToString(false, serverIp);
+            std::cout << "Discovered server at: " << serverIp << std::endl;
+            mServerAddresses.push_back(serverIp);
+            break;
+        }
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
             break;
         }
     }
-
-    if (!mIsConnected && !mIsConnecting) {
-        connectToServer();
-    }
 }
 
-void NetworkClient::discoverServers(int aTimeoutMs) {
-    int mBroadcastSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    struct sockaddr_in broadcastAddr;
-    socklen_t addrLen = sizeof(broadcastAddr);
-
-    if (mBroadcastSocket < 0) {
-        throw std::runtime_error("Failed to create UDP socket");
-    }
-
-    int broadcastEnable = 1;
-    setsockopt(mBroadcastSocket, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
-
-    memset(&broadcastAddr, 0, sizeof(broadcastAddr));
-    broadcastAddr.sin_family = AF_INET;
-    broadcastAddr.sin_addr.s_addr = inet_addr("255.255.255.255"); // Broadcast address
-    broadcastAddr.sin_port = htons(60000);                        // Discovery port
-
-    const char* message = "DISCOVER_SERVER";
-    sendto(mBroadcastSocket, message, strlen(message), 0, (struct sockaddr*)&broadcastAddr, addrLen);
-
-    mStartServerDiscovery = std::chrono::steady_clock::now();
-    mDiscoveryTimeoutMs = aTimeoutMs;
+void NetworkClient::discoverServers() {
+    mClient->Ping("255.255.255.255", SERVER_PORT, false); // Send discovery ping to the broadcast address
+    mServerAddresses.clear();
 }
 
-bool NetworkClient::getServerAddresses(std::vector<std::string>& aServerAddresses) {
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - mStartServerDiscovery)
-            .count() >= mDiscoveryTimeoutMs) {
-        return false;
-    }
-
-    struct sockaddr_in broadcastAddr;
-    socklen_t addrLen = sizeof(broadcastAddr);
-
-    char buffer[1024];
-    int bytesReceived;
-    while (bytesReceived =
-               recvfrom(mBroadcastSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&broadcastAddr, &addrLen)) {
-        if (bytesReceived < 0) {
-            break;
-        }
-        buffer[bytesReceived] = '\0';
-        std::cout << "Discovered server at: " << buffer << std::endl;
-        aServerAddresses.push_back(buffer);
-    }
-
-    close(mBroadcastSocket);
-
-    return true;
-}
+std::vector<std::string>& NetworkClient::getServerAddresses() { return mServerAddresses; }
 
 void NetworkClient::setServerAddress(std::string aServerAddress) {
     const std::regex ipPattern(
@@ -119,5 +89,5 @@ void NetworkClient::setServerAddress(std::string aServerAddress) {
         throw std::runtime_error("Invalid IP address");
     }
 
-    SERVER_ADDRESS = aServerAddress;
+    mServerAddress = aServerAddress;
 }

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <thread>
 
+#include "slikenet/sleep.h"
+
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
@@ -89,7 +91,8 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 
     // Delay if the frame rendered too quickly
     if (delayTime > 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
+        RakSleep(delayTime);
+        // std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
     }
     frameStart = std::chrono::high_resolution_clock::now();
 }
