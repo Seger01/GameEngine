@@ -4,12 +4,16 @@
 
 class StringSaveField {
 public:
-  StringSaveField(std::string name);
-  std::string getName() const;
-  void setValue(std::string aValue);
-  std::string getValue() const;
-  
+    StringSaveField(std::string aName);
+    StringSaveField(std::string aName, std::string aValue);
+
+    std::string getName() const;
+
+    void setValue(std::string aValue);
+
+    std::string getValue() const;
+
 private:
-  std::string mName;
-  std::string mValue;
+    std::string mName;
+    std::string mValue;
 };

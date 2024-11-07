@@ -8,7 +8,12 @@
 ResourceManager::ResourceManager() : mRenderer(nullptr) {}
 ResourceManager::ResourceManager(Renderer* aRenderer) : mRenderer(aRenderer) {}
 
-ResourceManager::~ResourceManager() {}
+ResourceManager::~ResourceManager() {
+    for (auto& texture : mTextureMap) {
+        SDL_DestroyTexture(texture.second->getSDLTexture());
+    }
+    mTextureMap.clear();
+}
 
 void ResourceManager::setRenderer(Renderer* aRenderer) { mRenderer = aRenderer; }
 
@@ -33,10 +38,10 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath) {
         return nullptr;
     }
 
-    std::cout << "Loaded texture from " << FSConverter().getResourcePath(aPngPath).c_str() << std::endl;
-
+    static int textureIDCounter = 0;
+    textureIDCounter++;
     // Create a new Texture object
-    auto texture = std::make_unique<Texture>(sdlTexture);
+    auto texture = std::make_unique<Texture>(sdlTexture, textureIDCounter);
 
     // Store the texture in the map and return its pointer
     Texture* texturePtr = texture.get();

@@ -11,7 +11,7 @@ class Particle {
 public:
     Particle();
     Particle(Vector2 aPosition, Vector2 aVelocity, float aAcceleration, int aLifeTime, int aMaxLifeTime, Vector2 aSize,
-             Vector2 aSizeShift, float aRotation, float angularVelocity, float angularAcceleration,
+             Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
              std::vector<Color> aColorGradient);
     ~Particle();
 
@@ -34,11 +34,12 @@ private:
     float acceleration;
 
     int maxLifeTime;
-    int lifeTimeRemaining;
+    float lifeTimeRemainingSec;
     int initialLifeTime;
 
+    Vector2 startSize;
     Vector2 size;
-    Vector2 sizeShift;
+    Vector2 endSize;
     float rotation;
     float angularVelocity;
     float angularAcceleration;

@@ -3,6 +3,7 @@
 
 #include "AnimationManager.h"
 #include "Network/NetworkManager.h"
+#include "EventManager.h"
 #include "ParticleSystem.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
@@ -20,10 +21,13 @@ public:
     void initialize();
     void run();
 
+    void setFrameRateLimit(int aFrameRate);
+
     SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
     NetworkManager& getNetworkManager();
+    SaveGameManager& getSaveGameManager();
 
 private:
     // Private constructor and destructor
@@ -37,15 +41,21 @@ private:
     void runBehaviourScripts();
     void startBehaviourScripts();
 
+    void limitFrameRate(int aFrameRate);
+
+    void handleEvent(const Event& aEvent);
+
 private:
-    int mMinFrameTimeMs = 4;
+    int mFrameRateLimit;
+    bool mRunning;
 
     SceneManager mSceneManager;
     RenderSystem mRenderSystem;
     ResourceManager mResourceManager;
     ParticleSystem mParticleSystem;
     NetworkManager mNetworkManager;
-    // SaveGameManager saveGameManager;
+    EventManager mEventManager;
+    SaveGameManager saveGameManager;
     // AnimationManager animationManager;
     // UIManager uiManager;
 };

@@ -33,23 +33,24 @@ void engineTest() {
     }
 
     Scene* scene = sceneManager.createScene("Level1");
+    Scene* scene = sceneManager.createScene("initscene");
     if (scene == nullptr)
         exit(1);
 
+    int cameraID = scene->addCamera();
+    scene->setActiveCamera(cameraID);
+
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+    scene->getActiveCamera().setWidth(160);
+    scene->getActiveCamera().setHeight(90);
+
     GameObject* gameObject = new GameObject;
 
-    Transform objectTransform;
-
-    objectTransform.position.x = 400;
-    objectTransform.position.y = 400;
-
-    gameObject->setTransform(objectTransform);
-
-    // gameObject->addComponent<PlayerBehaviourScript>();
+    gameObject->addComponent<InitBehaviourScript>();
 
     scene->addGameObject(gameObject);
 
-    sceneManager.loadScene(0);
+    sceneManager.requestSceneChange("initscene");
 
     engine.initialize();
 
