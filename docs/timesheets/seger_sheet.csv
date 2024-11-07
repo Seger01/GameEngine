@@ -46,3 +46,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-04, 19:00, 3   , finished first version of camera functionality and level loading
 2024-11-05, 14:00, 3   , Worked on improving animation systen for player animations worked; scoped timers; fps counter 
 2024-11-05, 19:00, 2.5 , In world text rendering and camera funcionality refinements
+2024-11-06, 09:00, 7   , Design meetings and test creation and collider creation system work
+2024-11-07, 12:00, 5   , Designed and implemented the first version of the UI system (also reviewed prs)
