@@ -26,6 +26,8 @@ public:
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
     SaveGameManager& getSaveGameManager();
+    EventManager& getEventManager();
+    // UIManager& getUIManager();
 
 private:
     // Private constructor and destructor
@@ -52,7 +54,8 @@ private:
     ResourceManager mResourceManager;
     ParticleSystem mParticleSystem;
     EventManager mEventManager;
-    SaveGameManager saveGameManager;
+    SaveGameManager mSaveGameManager;
+    UIManager mUIManager;
 
     // AnimationManager animationManager;
     // UIManager uiManager;

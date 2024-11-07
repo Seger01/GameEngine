@@ -24,7 +24,7 @@ Renderer::Renderer(Window& window) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/SupremeSpike.otf").c_str(), 22); // Specify the
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/MinimalPixel.ttf").c_str(), 22); // Specify the
                                                                                                        // font path and
                                                                                                        // size
     if (!font) {

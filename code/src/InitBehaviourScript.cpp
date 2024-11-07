@@ -1,5 +1,6 @@
 #include "InitBehaviourScript.h"
 
+#include "Button.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
@@ -8,6 +9,8 @@
 #include "SceneManager.h"
 #include "Text.h"
 #include "TileMapParser.h"
+
+SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{0, 287, 64, 16}, 64, 16};
 
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -96,11 +99,23 @@ void InitBehaviourScript::createLevel1() {
         }
     }
 
-    GameObject* textObject = new Text("Hello, World!", "undefined", Color(0, 0, 0), Vector2(10, 10), Vector2(1, 1));
+    GameObject* textObject = new Text("Hello, World!", "undefined", Color(0, 0, 0), Vector2(10, 0), Vector2(1, 1));
 
     textObject->addComponent<FPSCounterBehaviourScript>();
 
     scene->addGameObject(textObject);
+
+    Button* buttonObject = new Button;
+    buttonObject->setTransform(Transform(Vector2(80, -20)));
+
+    Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
+    sprite->setLayer(4);
+    buttonObject->addComponent(sprite);
+
+    buttonObject->setWidth(sprite->getWidth());
+    buttonObject->setHeight(sprite->getHeight());
+
+    scene->addGameObject(buttonObject);
 
     return;
 }

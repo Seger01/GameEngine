@@ -11,21 +11,15 @@ Text::Text(const std::string& aText, const std::string& aFont, const Color& aCol
 Text::~Text() {}
 
 std::string Text::getText() const { return mText; }
-
 void Text::setText(const std::string& aText) { mText = aText; }
-
-std::string Text::getFont() const { return mFont; }
 
 void Text::setFont(const std::string& aFont) { mFont = aFont; }
 
 Color Text::getColor() const { return mColor; }
-
 void Text::setColor(const Color& aColor) { mColor = aColor; }
 
 Vector2 Text::getScale() const { return mScale; }
-
 void Text::setScale(const Vector2& aScale) { mScale = aScale; }
 
 int Text::getLayer() const { return mLayer; }
-
 void Text::setLayer(int aLayer) { mLayer = aLayer; }
