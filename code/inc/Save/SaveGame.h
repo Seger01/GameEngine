@@ -39,7 +39,6 @@ public:
 
 private:
     void addAny(const std::string& aName, const nlohmann::json& aValue);
-    void createFile();
 
 private:
     std::string mFileName;

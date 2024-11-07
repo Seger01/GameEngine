@@ -85,6 +85,15 @@ Scene* SceneManager::createScene(std::string aSceneName, int aSceneID) {
     // return mScenes[mScenes.size() - 1].get();
 }
 
+void SceneManager::removeScene(const std::string& sceneName) {
+    for (int i = 0; i < mScenes.size(); ++i) {
+        if (mScenes[i]->getName() == sceneName) {
+            mScenes.erase(mScenes.begin() + i);
+            break;
+        }
+    }
+}
+
 void SceneManager::loadScene(const std::string& sceneName) {
     for (int i = 0; i < mScenes.size(); ++i) {
         if (mScenes[i]->getName() == sceneName) {
