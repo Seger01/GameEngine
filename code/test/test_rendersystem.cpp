@@ -24,6 +24,12 @@ protected:
         EngineBravo& engineBravo = EngineBravo::getInstance();
         mRenderSystem = &engineBravo.getRenderSystem();
 
+        mRenderSystem->getWindow().showWindow();
+
+        mRenderSystem->getWindow().setFloating();
+        mRenderSystem->getWindow().toggleFullFloating();
+        mRenderSystem->getWindow().setFullScreen();
+
         engineBravo.getResourceManager().setRenderer(&mRenderSystem->getRenderer());
 
         mScene = engineBravo.getSceneManager().createScene("Test Scene", 1);
