@@ -39,6 +39,7 @@ TEST(SaveGame, InvalidWriteRead) {
     ASSERT_THROW(sg.getStringField("string1"), std::invalid_argument);
     ASSERT_THROW(sg.getIntField("int1"), std::invalid_argument);
     ASSERT_THROW(sg.getFloatField("float1"), std::invalid_argument);
+    ASSERT_THROW(sg.getArray("array1"), std::invalid_argument);
 
     ASSERT_THROW(sg.setStringField("string1", "value1"), std::invalid_argument);
     ASSERT_THROW(sg.setIntField("int1", 1), std::invalid_argument);
@@ -153,12 +154,35 @@ TEST(SaveGame, addExistingFields) {
     sg.addIntField("int1", 1);
     sg.addFloatField("float1", 1.0f);
     sg.addStringField("string1", "value1");
+    sg.addArray("array1");
     sg.addIntField("int1", 2);
     sg.addFloatField("float1", 2.0f);
     sg.addStringField("string1", "value2");
+    EXPECT_THROW(sg.addArray("array1"), std::invalid_argument);
     ASSERT_EQ(sg.getIntField("int1").getValue(), 2);
     ASSERT_FLOAT_EQ(sg.getFloatField("float1").getValue(), 2.0f);
     ASSERT_EQ(sg.getStringField("string1").getValue(), "value2");
+}
+
+TEST(SaveGame, hasFieldCheck) {
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+
+    // Check if none of the fields exist
+    ASSERT_FALSE(sg.hasIntField("int1"));
+    ASSERT_FALSE(sg.hasFloatField("float1"));
+    ASSERT_FALSE(sg.hasStringField("string1"));
+
+    sg.addIntField("int1", 1);
+    sg.addFloatField("float1", 1.0f);
+    sg.addStringField("string1", "value1");
+
+    // Check if all of the fields exists
+    ASSERT_TRUE(sg.hasIntField("int1"));
+    ASSERT_TRUE(sg.hasFloatField("float1"));
+    ASSERT_TRUE(sg.hasStringField("string1"));
 }
 
 TEST(SaveArray, readExistingFile) {
