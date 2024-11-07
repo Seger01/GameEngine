@@ -1,5 +1,6 @@
 #include "FSConverter.h"
 #include "SaveGame.h"
+#include "SaveGameUtil.h"
 #include <fstream>
 #include <gtest/gtest.h>
 
@@ -144,6 +145,22 @@ TEST(SaveGame, InvalidRemove) {
     EXPECT_THROW(sg.remove(), std::logic_error);
 }
 
+TEST(SaveGame, addExistingFields) {
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("saves/newSave.json");
+    std::remove(path.c_str());
+    SaveGame sg{path};
+    sg.addIntField("int1", 1);
+    sg.addFloatField("float1", 1.0f);
+    sg.addStringField("string1", "value1");
+    sg.addIntField("int1", 2);
+    sg.addFloatField("float1", 2.0f);
+    sg.addStringField("string1", "value2");
+    ASSERT_EQ(sg.getIntField("int1").getValue(), 2);
+    ASSERT_FLOAT_EQ(sg.getFloatField("float1").getValue(), 2.0f);
+    ASSERT_EQ(sg.getStringField("string1").getValue(), "value2");
+}
+
 TEST(SaveArray, readExistingFile) {
     FSConverter fsConverter;
     std::string path = fsConverter.getResourcePath("saves/newSave.json");
@@ -168,6 +185,8 @@ TEST(SaveArray, readExistingFile) {
     sg.addIntField("int1", 1);
     sg.addFloatField("float1", 1.0f);
     sg.addStringField("string1", "value1");
+
+    sg.store();
 
     SaveGame sg2{path};
     SaveArray array3{sg2.getArray("array1")};
@@ -201,4 +220,35 @@ TEST(SaveArray, WriteRead) {
     ASSERT_EQ(array2.getIntField("int1").getValue(), 1);
     ASSERT_FLOAT_EQ(array2.getFloatField("float1").getValue(), 1.0f);
     ASSERT_EQ(array2.getStringField("string1").getValue(), "value1");
+}
+
+TEST(SaveArray, getInvalidFields) {
+    SaveArray array{"array1"};
+    ASSERT_THROW(array.getIntField("int1"), std::invalid_argument);
+    ASSERT_THROW(array.getFloatField("float1"), std::invalid_argument);
+    ASSERT_THROW(array.getStringField("string1"), std::invalid_argument);
+}
+
+TEST(SaveArray, addExistingFields) {
+    SaveArray array{"array1"};
+    array.addIntField("int1", 1);
+    array.addFloatField("float1", 1.0f);
+    array.addStringField("string1", "value1");
+    array.addIntField("int1", 2);
+    array.addFloatField("float1", 2.0f);
+    array.addStringField("string1", "value2");
+    ASSERT_EQ(array.getIntField("int1").getValue(), 2);
+    ASSERT_FLOAT_EQ(array.getFloatField("float1").getValue(), 2.0f);
+    ASSERT_EQ(array.getStringField("string1").getValue(), "value2");
+}
+
+TEST(SaveGameUtil, SaveGameUtil) {
+    ASSERT_TRUE(SaveGameUtil::isFloat("0.1"));
+    ASSERT_FALSE(SaveGameUtil::isFloat("0.1.1"));
+    ASSERT_FALSE(SaveGameUtil::isFloat("0.1a"));
+    ASSERT_FALSE(SaveGameUtil::isFloat("a"));
+    ASSERT_TRUE(SaveGameUtil::isInteger("1"));
+    ASSERT_FALSE(SaveGameUtil::isInteger("1.1"));
+    ASSERT_FALSE(SaveGameUtil::isInteger("1a"));
+    ASSERT_FALSE(SaveGameUtil::isInteger("a"));
 }
