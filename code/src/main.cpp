@@ -1,26 +1,9 @@
-#include "NetworkManager.h"
 #include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
-
-#include "Animation.h"
 #include "EngineBravo.h"
-#include "FSConverter.h"
-#include "PlayerBehaviourScript.h"
-#include "Renderer.h"
-#include "SampleBevahiourScript.h"
-#include "Scene.h"
-#include "SceneManager.h"
-#include "Sprite.h"
-#include "SpriteAtlas.h"
-#include "SpriteDef.h"
-#include "Texture.h"
-#include "Window.h"
 
 void engineTest() {
     GameObject defaultPlayerPrefab;
@@ -62,13 +45,39 @@ void engineTest() {
 
     gameObject->setTransform(objectTransform);
 
-    gameObject->addComponent<PlayerBehaviourScript>();
+    // gameObject->addComponent<PlayerBehaviourScript>();
 
     scene->addGameObject(gameObject);
 
     sceneManager.loadScene(0);
 
-    engine.initizalize();
+    engine.initialize();
+
+    if (role == "client") {
+        std::vector<std::string> serverAddresses;
+        networkManager.getClient().discoverServers(2000);
+        while (!networkManager.getClient().getServerAddresses(serverAddresses)) {
+            std::cout << "Searching for servers..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        if (serverAddresses.empty()) {
+            std::cerr << "No servers found" << std::endl;
+            return;
+        }
+
+        std::cout << "Discovered servers:" << std::endl;
+        for (const auto& address : serverAddresses) {
+            std::cout << address << std::endl;
+        }
+
+        std::string serverAddress;
+        std::cout << "Enter the IP address of the server you want to connect to: ";
+        std::cin >> serverAddress;
+
+        networkManager.getClient().setServerAddress(serverAddress);
+        networkManager.getClient().connectToServer();
+    }
+
     engine.run();
 
     return;
@@ -76,42 +85,6 @@ void engineTest() {
 
 int main() {
     engineTest();
-    // // Initialize SDL
-    // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-    //     return 1;
-    // }
 
-    // // Create a window
-    // SDL_Window* window = SDL_CreateWindow("SDL Window",
-    //     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    //     640, 480, SDL_WINDOW_SHOWN);
-
-    // if (window == NULL) {
-    //     printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-    //     SDL_Quit();
-    //     return 1;
-    // }
-
-    // // Main loop flag
-    // int quit = 0;
-    // SDL_Event event;
-
-    // // Event loop
-    // while (!quit) {
-    //     // Handle events
-    //     while (SDL_PollEvent(&event) != 0) {
-    //         if (event.type == SDL_QUIT) {
-    //             quit = 1;  // Set the quit flag to true
-    //         }
-    //     }
-
-    //     // Here you can add rendering code if needed
-    // }
-
-    // // Clean up and close the window
-    // SDL_DestroyWindow(window);
-    // SDL_Quit();
-
-    // return 0;
+    return 0;
 }

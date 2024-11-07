@@ -16,7 +16,7 @@ EngineBravo& EngineBravo::getInstance() {
     return instance;
 }
 
-void EngineBravo::initizalize() {
+void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
     startBehaviourScripts();
@@ -52,6 +52,8 @@ void EngineBravo::run() {
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
+
+        mNetworkManager.update();
 
         if (Time::ticks - startOfFrame < mMinFrameTimeMs) {
             SDL_Delay(mMinFrameTimeMs - (Time::ticks - startOfFrame));

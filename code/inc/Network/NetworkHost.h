@@ -1,8 +1,7 @@
 #ifndef NETWORKHOST_H
 #define NETWORKHOST_H
 
-class NetworkHost
-{
+class NetworkHost {
 public:
     void actAsClient();
     void actAsServer();

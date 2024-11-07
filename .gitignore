@@ -66,3 +66,5 @@ docs/Diagrams/*.svg
 
 #ignore output folder
 out/
+
+code/external/

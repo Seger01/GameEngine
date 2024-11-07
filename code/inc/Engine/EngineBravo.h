@@ -17,7 +17,7 @@ public:
     // Get the single instance of EngineBravo
     static EngineBravo& getInstance();
 
-    void initizalize();
+    void initialize();
     void run();
 
     SceneManager& getSceneManager();
