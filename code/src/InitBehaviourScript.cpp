@@ -1,10 +1,12 @@
 #include "InitBehaviourScript.h"
 
 #include "EngineBravo.h"
+#include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
 #include "PlayerBehaviourScript.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include "Text.h"
 #include "TileMapParser.h"
 
 void InitBehaviourScript::createLevel1() {
@@ -16,11 +18,11 @@ void InitBehaviourScript::createLevel1() {
         exit(1);
 
     int cameraID = scene->addCamera();
-    scene->setActiveGamera(cameraID);
+    scene->setActiveCamera(cameraID);
 
-    scene->getActiveCamera().setTransform(Transform(Vector2(80, 100)));
-    scene->getActiveCamera().setWidth(160 * 3);
-    scene->getActiveCamera().setHeight(90 * 3);
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
+    scene->getActiveCamera().setWidth(16 * 30);
+    scene->getActiveCamera().setHeight(9 * 30);
 
     GameObject* gameObject = new GameObject;
 
@@ -93,6 +95,13 @@ void InitBehaviourScript::createLevel1() {
             }
         }
     }
+
+    GameObject* textObject = new Text("Hello, World!", "undefined", Color(0, 0, 0), Vector2(10, 10), Vector2(1, 1));
+
+    textObject->addComponent<FPSCounterBehaviourScript>();
+
+    scene->addGameObject(textObject);
+
     return;
 }
 

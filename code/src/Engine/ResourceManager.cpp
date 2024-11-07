@@ -8,7 +8,12 @@
 ResourceManager::ResourceManager() : mRenderer(nullptr) {}
 ResourceManager::ResourceManager(Renderer* aRenderer) : mRenderer(aRenderer) {}
 
-ResourceManager::~ResourceManager() {}
+ResourceManager::~ResourceManager() {
+    for (auto& texture : mTextureMap) {
+        SDL_DestroyTexture(texture.second->getSDLTexture());
+    }
+    mTextureMap.clear();
+}
 
 void ResourceManager::setRenderer(Renderer* aRenderer) { mRenderer = aRenderer; }
 

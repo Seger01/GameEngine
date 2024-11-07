@@ -200,7 +200,7 @@ void PlayerBehaviourScript::handleMovement() {
 
     if (input.GetKey(Key::Key_W)) {
         deactivateAllAnimations();
-        setAnimationActive("playerIdleSide", true);
+        setAnimationActive("playerIdleBack", true);
         setFlipX(false);
         parentTransform.position.y -= (movementSpeed * Time::deltaTime);
     }
@@ -225,9 +225,19 @@ void PlayerBehaviourScript::handleMovement() {
     this->mGameObject->setTransform(parentTransform);
 }
 
+void PlayerBehaviourScript::hanldeCameraMovement() {
+    Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+
+    Transform playerTransform = this->mGameObject->getTransform();
+
+    currentCam.setTransform(playerTransform);
+}
+
 void PlayerBehaviourScript::onUpdate() {
     handleMovement();
     handleAnimations();
+
+    hanldeCameraMovement();
 
     // Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
     //

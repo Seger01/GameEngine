@@ -1,9 +1,14 @@
 #include "Scene.h"
+
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
+#include "Text.h"
+#include "UIObject.h"
+
 Scene::Scene(std::string aSceneName, int aSceneID)
-    : mSceneName(aSceneName), mSceneID(aSceneID), mActiveCameraIndex(-1) {}
+    : mSceneName(aSceneName), mSceneID(aSceneID), mActiveCameraIndex(0) {}
 
 Scene::~Scene() {
     // Clean up GameObject pointers
@@ -89,7 +94,7 @@ Camera& Scene::getCamera(int id) {
     throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
 }
 
-void Scene::setActiveGamera(int id) {
+void Scene::setActiveCamera(int id) {
     if (id >= 0 && id < mCameras.size()) {
         mActiveCameraIndex = id;
     } else {

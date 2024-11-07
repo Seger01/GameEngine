@@ -129,15 +129,13 @@ void sdlMixer() {
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
-    SaveGameManager& savegameManager = engine.getSaveGameManager();
-    SaveGame& sg1 = savegameManager.createSaveGame("save1", "saves/save1.save");
 
     Scene* scene = sceneManager.createScene("initscene");
     if (scene == nullptr)
         exit(1);
 
     int cameraID = scene->addCamera();
-    scene->setActiveGamera(cameraID);
+    scene->setActiveCamera(cameraID);
 
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
     scene->getActiveCamera().setWidth(160);
@@ -153,10 +151,6 @@ void engineTest() {
 
     engine.initizalize();
     engine.run();
-
-    sg1.setIntField("x", gameObject->getTransform().position.x);
-    sg1.setIntField("y", gameObject->getTransform().position.y);
-    sg1.store();
 
     return;
 }
