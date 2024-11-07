@@ -104,12 +104,6 @@ void InitBehaviourScript::createLevel1() {
         }
     }
 
-    GameObject* textObject = new Text("Hello, World!", "undefined", Color(0, 0, 0), Vector2(10, 0), Vector2(1, 1));
-
-    textObject->addComponent<FPSCounterBehaviourScript>();
-
-    scene->addGameObject(textObject);
-
     return;
 }
 

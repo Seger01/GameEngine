@@ -69,6 +69,7 @@ void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool a
 }
 
 void PlayerBehaviourScript::initEmitter() {
+
     EmitterMode emitterMode = EmitterMode::Continuous;
     float speed = 50.0f;
     float acceleration = 0.0f;
@@ -97,6 +98,7 @@ void PlayerBehaviourScript::initEmitter() {
 }
 
 void PlayerBehaviourScript::onStart() {
+    std::cout << "on start called" << std::endl;
     Animation* playerIdleFrontAnimation = nullptr;
     Animation* playerIdleSideAnimation = nullptr;
     Animation* playerIdleBackAnimation = nullptr;
@@ -187,6 +189,10 @@ void PlayerBehaviourScript::handleMovement() {
 
     Transform parentTransform = this->mGameObject->getTransform();
 
+    if (input.GetKeyDown(Key::Key_P)) {
+        emitter->setActive(!emitter->isActive());
+    }
+
     if (input.GetKey(Key::Key_E)) {
         deactivateAllAnimations();
     }
@@ -265,17 +271,19 @@ void PlayerBehaviourScript::onUpdate() {
 
     // emitter->setActive(false);
 
-    static bool emitterMode = false;
+    if (emitter != nullptr) {
+        static bool emitterMode = false;
 
-    if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
-        emitterMode = !emitterMode;
-    }
+        if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
+            emitterMode = !emitterMode;
+        }
 
-    if (emitterMode) {
-        emitter->setAngle(0, 45);
-        emitter->getRelativeTransform().rotation += 1.0f * Time::deltaTime;
-    } else {
-        emitter->setAngle(0, 360);
-        emitter->getRelativeTransform().rotation = 0.0f;
+        if (emitterMode) {
+            emitter->setAngle(0, 45);
+            emitter->getRelativeTransform().rotation += 1.0f * Time::deltaTime;
+        } else {
+            emitter->setAngle(0, 360);
+            emitter->getRelativeTransform().rotation = 0.0f;
+        }
     }
 }

@@ -91,14 +91,17 @@ void ParticleEmitter::spawnParticle() {
 }
 
 void ParticleEmitter::update() {
-    if (mEmitterMode == EmitterMode::Continuous) {
-        static float amountOfParticlesToSpawn;
-        amountOfParticlesToSpawn += mParticlesPerSecond * Time::deltaTime;
-        int i = 0;
-        for (i = 0; i < amountOfParticlesToSpawn; i++) {
-            spawnParticle();
+    if (mActive) {
+
+        if (mEmitterMode == EmitterMode::Continuous) {
+            static float amountOfParticlesToSpawn;
+            amountOfParticlesToSpawn += mParticlesPerSecond * Time::deltaTime;
+            int i = 0;
+            for (i = 0; i < amountOfParticlesToSpawn; i++) {
+                spawnParticle();
+            }
+            amountOfParticlesToSpawn -= i;
         }
-        amountOfParticlesToSpawn -= i;
     }
 
     for (int i = 0; i < mParticles.size();) { // Note: no increment here
