@@ -67,3 +67,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-04, 20:00, 1.5, Improving savegame implementation, updating savegame design
 2024-11-05, 15:00, 3, Savegame tests / improvements, audio implementation
 2024-11-06, 9:15, 6.45, Automating test coverage reports
+2024-11-07, 10:00, 3, Added savegame tests, debugging sdl mixer runtime issues
