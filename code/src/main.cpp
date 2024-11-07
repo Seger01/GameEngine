@@ -25,7 +25,7 @@
 #include "Transform.h"
 #include "Window.h"
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -57,10 +57,10 @@ int loadSound(const char* filename) {
 
 int init() {
     // Initialize SDL with audio support
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return -1;
-    }
+    // if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    //     return -1;
+    // }
 
     // Initialize SDL_mixer
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -102,10 +102,12 @@ void finalize() {
 
 void sdlMixer() {
     init();
-    loadMusic("../../../resources/gun1.wav"); // Sound and music are swapped for
-                                              // the demo; hearing the music
-                                              // rotate is easier to distinguish
-    loadSound("../../../resources/music.wav");
+    std::string soundPath = FSConverter().getResourcePath("gun1.wav");
+    std::string musicPath = FSConverter().getResourcePath("music.wav");
+    loadMusic(soundPath.c_str()); // Sound and music are swapped for
+                                  // the demo; hearing the music
+                                  // rotate is easier to distinguish
+    loadSound(musicPath.c_str());
 
     playMusic(0); // Play music at index 0
     int angle = 0;
@@ -156,39 +158,7 @@ void engineTest() {
 }
 
 int main() {
-    engineTest();
-    return 0;
-    FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/level.json");
+    // engineTest();
 
-    TileMapParser tileMapParser(path);
-    tileMapParser.parse();
-    // tileMapParser.printLayers();
-
-    // Print the contents of tileInfoMap
-    const TileMapData& tileMapData = tileMapParser.getTileMapData();
-    // print layers in tilemap
-    for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
-        std::cout << "Layer " << layerIndex << ":\n";
-        for (const auto& row : tileMapData.mLayers[layerIndex]) {
-            for (int tile : row) {
-                std::cout << tile << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-
-    for (const auto& pair : tileMapData.mTileInfoMap) {
-        int gID = pair.first;
-        const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-                  << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-    }
-
-    return 0;
-
-    // Struct ParsedScene
-    // vector intergers to save layers
-    // 2D array of grid per layer
-    // Map to link gID to tileset
+    sdlMixer();
 }
