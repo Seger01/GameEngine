@@ -43,4 +43,6 @@ Date,Time,Duration(in hours),Activity
 2024-10-28, 9:00, 4, Standup. Designing multiplayer
 2024-11-03, 11:00, 3.5, working on documentation
 2024-11-04, 09:00, 1.5, assessment project
-2024-11-04, 10:30, 4.5, build system and networking
+2024-11-04, 10:30, 4.5, build system and network
+2024-11-06, 09:00, 7.0, cmake build system problems and server dynamic IP
+2024-11-07, 8:30, 2.5, client connection to server
