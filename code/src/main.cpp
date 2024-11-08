@@ -53,11 +53,6 @@ void engineTest() {
     sceneManager.requestSceneChange("initscene");
 
     engine.initialize();
-
-    // if (networkManager.getIsClient()) {
-    //     networkManager.getClient().discoverServers();
-    // }
-
     engine.run();
 
     return;

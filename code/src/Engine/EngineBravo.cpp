@@ -97,8 +97,7 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 
     // Delay if the frame rendered too quickly
     if (delayTime > 0) {
-        RakSleep(delayTime);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
     }
     frameStart = std::chrono::high_resolution_clock::now();
 }
