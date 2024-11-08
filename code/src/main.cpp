@@ -1,11 +1,6 @@
 #include <string>
 #include <vector>
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
-
 #include "Animation.h"
 #include "EngineBravo.h"
 #include "FSConverter.h"

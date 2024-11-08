@@ -12,4 +12,4 @@ mkdir -p coverage_reports
 cd ..
 
 # Generate the coverage report (ignoring external and build directories)
-gcovr -e external -e build --html --html-details -o build/coverage_reports/coverage.html --print-summary --delete
+gcovr -e external -e build --html --html-details -o build/coverage_reports/coverage.html --print-summary --delete 
