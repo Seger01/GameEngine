@@ -111,7 +111,12 @@ void InitBehaviourScript::createLevel1() {
                         // Add BoxCollider components to the GameObject
                         for (const auto& collider : tileInfo.mColliders) {
                             BoxCollider* boxCollider = new BoxCollider();
-                            boxCollider->setTransformFromColliderData(collider);
+                            Transform transform;
+                            transform.position.x = collider.x;
+                            transform.position.y = collider.y;
+                            boxCollider->setTransform(transform);
+                            boxCollider->setWidth(collider.mWidth);
+                            boxCollider->setHeight(collider.mHeight);
                             gameObject->addComponent(boxCollider);
                         }
 
