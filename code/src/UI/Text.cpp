@@ -14,6 +14,7 @@ std::string Text::getText() const { return mText; }
 void Text::setText(const std::string& aText) { mText = aText; }
 
 void Text::setFont(const std::string& aFont) { mFont = aFont; }
+std::string Text::getFont() const { return mFont; }
 
 Color Text::getColor() const { return mColor; }
 void Text::setColor(const Color& aColor) { mColor = aColor; }
