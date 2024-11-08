@@ -1,6 +1,7 @@
 #include "Engine/UIManager.h"
 
 #include "Button.h"
+#include "Components/IButtonBehaviourScript.h"
 #include "Engine/EngineBravo.h"
 #include "EventManager.h"
 #include "Scene.h"
@@ -49,7 +50,14 @@ void UIManager::update(Scene* aScene) {
                 if (button->interactable()) {
                     if (mouseScreenPos.x >= drawPosition.x && mouseScreenPos.x <= drawPosition.x + buttonWidth &&
                         mouseScreenPos.y >= drawPosition.y && mouseScreenPos.y <= drawPosition.y + buttonHeight) {
-                        button->OnClick();
+                        if (button->getComponents<IButtonBehaviourScript>().size() > 0) {
+                            if (event.type == EventType::MouseButtonDown) {
+                                for (IButtonBehaviourScript* buttonBehaviourScript :
+                                     button->getComponents<IButtonBehaviourScript>()) {
+                                    buttonBehaviourScript->onButtonPressed();
+                                }
+                            }
+                        }
                     }
                 }
             }

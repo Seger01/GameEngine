@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
+#include "HelloWorldButtonBehaviour.h"
 #include "PlayerStatsBehaviourScript.h"
 #include "Text.h"
 
@@ -16,6 +17,7 @@ void CanvasBehaviourScript::onStart() {
 
     Button* buttonObject = new Button;
     buttonObject->setTransform(Transform(Vector2(10, 50)));
+    buttonObject->addComponent<HelloWorldButtonBehaviour>();
 
     Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
     sprite->setLayer(4);
