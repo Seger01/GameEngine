@@ -1,0 +1,237 @@
+        -:    0:Source:/home/ronan/Documents/2024-2025/Minor/Engine-BRAVO/code/external/SLikeNet/Source/src/DS_ByteQueue.cpp
+        -:    0:Graph:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/DS_ByteQueue.cpp.gcno
+        -:    0:Data:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/DS_ByteQueue.cpp.gcda
+        -:    0:Runs:0
+        -:    1:/*
+        -:    2: *  Copyright (c) 2014, Oculus VR, Inc.
+        -:    3: *  All rights reserved.
+        -:    4: *
+        -:    5: *  This source code is licensed under the BSD-style license found in the
+        -:    6: *  RakNet License.txt file in the licenses directory of this source tree. An additional grant 
+        -:    7: *  of patent rights can be found in the RakNet Patents.txt file in the same directory.
+        -:    8: *
+        -:    9: *
+        -:   10: *  Modified work: Copyright (c) 2017, SLikeSoft UG (haftungsbeschränkt)
+        -:   11: *
+        -:   12: *  This source code was modified by SLikeSoft. Modifications are licensed under the MIT-style
+        -:   13: *  license found in the license.txt file in the root directory of this source tree.
+        -:   14: */
+        -:   15:
+        -:   16:#include "slikenet/DS_ByteQueue.h"
+        -:   17:#include <string.h> // Memmove
+        -:   18:#include <stdlib.h> // realloc
+        -:   19:#include <stdio.h>
+        -:   20:
+        -:   21:
+        -:   22:using namespace DataStructures;
+        -:   23:
+function DataStructures::ByteQueue::ByteQueue() called 0 returned 0% blocks executed 0%
+    #####:   24:ByteQueue::ByteQueue()
+        -:   25:{
+    #####:   26:	readOffset=writeOffset=lengthAllocated=0;
+    #####:   27:	data=0;
+    #####:   28:}
+function DataStructures::ByteQueue::~ByteQueue() called 0 returned 0% blocks executed 0%
+    #####:   29:ByteQueue::~ByteQueue()
+        -:   30:{
+    #####:   31:	Clear(_FILE_AND_LINE_);
+    %%%%%:   31-block  0
+call    0 never executed
+        -:   32:	
+        -:   33:
+    #####:   34:}
+function DataStructures::ByteQueue::WriteBytes(char const*, unsigned int, char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:   35:void ByteQueue::WriteBytes(const char *in, unsigned length, const char *file, unsigned int line)
+        -:   36:{
+        -:   37:	unsigned bytesWritten;
+    #####:   38:	bytesWritten=GetBytesWritten();
+    %%%%%:   38-block  0
+call    0 never executed
+    #####:   39:	if (lengthAllocated==0 || length > lengthAllocated-bytesWritten-1)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   39-block  0
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:   40:	{
+    #####:   41:		unsigned oldLengthAllocated=lengthAllocated;
+        -:   42:		// Always need to waste 1 byte for the math to work, else writeoffset==readoffset
+    #####:   43:		unsigned newAmountToAllocate=length+oldLengthAllocated+1;
+    #####:   44:		if (newAmountToAllocate<256)
+    %%%%%:   44-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:   45:			newAmountToAllocate=256;
+    %%%%%:   45-block  0
+    #####:   46:		lengthAllocated=lengthAllocated + newAmountToAllocate;
+    #####:   47:		data=(char*)rakRealloc_Ex(data, lengthAllocated, file, line);
+    %%%%%:   47-block  0
+call    0 never executed
+    #####:   48:		if (writeOffset < readOffset)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:   49:		{
+    #####:   50:			if (writeOffset <= newAmountToAllocate)
+    %%%%%:   50-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:   51:			{
+    #####:   52:				memcpy(data + oldLengthAllocated, data, writeOffset);
+    #####:   53:				writeOffset=readOffset+bytesWritten;
+    %%%%%:   53-block  0
+        -:   54:			}
+        -:   55:			else
+        -:   56:			{
+    #####:   57:				memcpy(data + oldLengthAllocated, data, newAmountToAllocate);
+    #####:   58:				memmove(data, data+newAmountToAllocate, writeOffset-newAmountToAllocate);
+    #####:   59:                writeOffset-=newAmountToAllocate;
+    %%%%%:   59-block  0
+        -:   60:			}
+        -:   61:		}
+        -:   62:	}
+        -:   63:
+    #####:   64:	if (length <= lengthAllocated-writeOffset)
+    %%%%%:   64-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:   65:		memcpy(data+writeOffset, in, length);
+    %%%%%:   65-block  0
+        -:   66:	else
+        -:   67:	{
+        -:   68:		// Wrap
+    #####:   69:		memcpy(data+writeOffset, in, lengthAllocated-writeOffset);
+    #####:   70:		memcpy(data, in+(lengthAllocated-writeOffset), length-(lengthAllocated-writeOffset));
+    %%%%%:   70-block  0
+        -:   71:	}
+    #####:   72:	writeOffset=(writeOffset+length) % lengthAllocated;
+    #####:   73:}
+function DataStructures::ByteQueue::ReadBytes(char*, unsigned int, bool) called 0 returned 0% blocks executed 0%
+    #####:   74:bool ByteQueue::ReadBytes(char *out, unsigned maxLengthToRead, bool peek)
+        -:   75:{
+    #####:   76:	unsigned bytesWritten = GetBytesWritten();
+    %%%%%:   76-block  0
+call    0 never executed
+    #####:   77:	unsigned bytesToRead = bytesWritten < maxLengthToRead ? bytesWritten : maxLengthToRead;
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   77-block  0
+    %%%%%:   77-block  1
+    #####:   78:	if (bytesToRead==0)
+    %%%%%:   78-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:   79:		return false;
+    %%%%%:   79-block  0
+    #####:   80:	if (writeOffset>=readOffset)
+    %%%%%:   80-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:   81:	{
+    #####:   82:		memcpy(out, data+readOffset, bytesToRead);
+    %%%%%:   82-block  0
+        -:   83:	}
+        -:   84:	else
+        -:   85:	{
+    #####:   86:		unsigned availableUntilWrap = lengthAllocated-readOffset;
+    #####:   87:		if (bytesToRead <= availableUntilWrap)
+    %%%%%:   87-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:   88:		{
+    #####:   89:			memcpy(out, data+readOffset, bytesToRead);
+    %%%%%:   89-block  0
+        -:   90:		}
+        -:   91:		else
+        -:   92:		{
+    #####:   93:			memcpy(out, data+readOffset, availableUntilWrap);
+    #####:   94:			memcpy(out+availableUntilWrap, data, bytesToRead-availableUntilWrap);
+    %%%%%:   94-block  0
+        -:   95:		}
+        -:   96:	}
+        -:   97:
+    #####:   98:	if (peek==false)
+    %%%%%:   98-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:   99:		IncrementReadOffset(bytesToRead);
+    %%%%%:   99-block  0
+call    0 never executed
+        -:  100:		
+    #####:  101:	return true;
+    %%%%%:  101-block  0
+        -:  102:}
+function DataStructures::ByteQueue::PeekContiguousBytes(unsigned int*) const called 0 returned 0% blocks executed 0%
+    #####:  103:char* ByteQueue::PeekContiguousBytes(unsigned int *outLength) const
+        -:  104:{
+    #####:  105:	if (writeOffset>=readOffset)
+    %%%%%:  105-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  106:		*outLength=writeOffset-readOffset;
+    %%%%%:  106-block  0
+        -:  107:	else
+    #####:  108:		*outLength=lengthAllocated-readOffset;
+    %%%%%:  108-block  0
+    #####:  109:	return data+readOffset;
+    %%%%%:  109-block  0
+        -:  110:}
+function DataStructures::ByteQueue::Clear(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  111:void ByteQueue::Clear(const char *file, unsigned int line)
+        -:  112:{
+    #####:  113:	if (lengthAllocated)
+    %%%%%:  113-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  114:		rakFree_Ex(data, file, line );
+    %%%%%:  114-block  0
+call    0 never executed
+    #####:  115:	readOffset=writeOffset=lengthAllocated=0;
+    #####:  116:	data=0;
+    #####:  117:}
+function DataStructures::ByteQueue::GetBytesWritten() const called 0 returned 0% blocks executed 0%
+    #####:  118:unsigned ByteQueue::GetBytesWritten(void) const
+        -:  119:{
+    #####:  120:	if (writeOffset>=readOffset)
+    %%%%%:  120-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  121:		return writeOffset-readOffset;
+    %%%%%:  121-block  0
+        -:  122:	else
+    #####:  123:		return writeOffset+(lengthAllocated-readOffset);
+    %%%%%:  123-block  0
+        -:  124:}
+function DataStructures::ByteQueue::IncrementReadOffset(unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  125:void ByteQueue::IncrementReadOffset(unsigned length)
+        -:  126:{
+    #####:  127:	readOffset=(readOffset+length) % lengthAllocated;
+    #####:  128:}
+function DataStructures::ByteQueue::DecrementReadOffset(unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  129:void ByteQueue::DecrementReadOffset(unsigned length)
+        -:  130:{
+    #####:  131:	if (length>readOffset)
+    %%%%%:  131-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  132:		readOffset=lengthAllocated-(length-readOffset);
+    %%%%%:  132-block  0
+        -:  133:	else
+    #####:  134:		readOffset-=length;
+    %%%%%:  134-block  0
+    #####:  135:}
+function DataStructures::ByteQueue::Print() called 0 returned 0% blocks executed 0%
+    #####:  136:void ByteQueue::Print(void)
+        -:  137:{
+        -:  138:	unsigned i;
+    #####:  139:	for (i=readOffset; i!=writeOffset; i++)
+    %%%%%:  139-block  0
+    %%%%%:  139-block  1
+branch  0 never executed
+branch  1 never executed (fallthrough)
+    #####:  140:		RAKNET_DEBUG_PRINTF("%i ", data[i]);
+    %%%%%:  140-block  0
+call    0 never executed
+    #####:  141:	RAKNET_DEBUG_PRINTF("\n");
+    %%%%%:  141-block  0
+call    0 never executed
+    #####:  142:}

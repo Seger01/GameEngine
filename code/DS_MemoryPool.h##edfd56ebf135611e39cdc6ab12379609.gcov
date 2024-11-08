@@ -1,0 +1,1245 @@
+        -:    0:Source:/home/ronan/Documents/2024-2025/Minor/Engine-BRAVO/code/external/SLikeNet/Source/include/slikenet/DS_MemoryPool.h
+        -:    0:Graph:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/ReliabilityLayer.cpp.gcno
+        -:    0:Data:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/ReliabilityLayer.cpp.gcda
+        -:    0:Runs:0
+        -:    1:/*
+        -:    2: *  Original work: Copyright (c) 2014, Oculus VR, Inc.
+        -:    3: *  All rights reserved.
+        -:    4: *
+        -:    5: *  This source code is licensed under the BSD-style license found in the
+        -:    6: *  RakNet License.txt file in the licenses directory of this source tree. An additional grant 
+        -:    7: *  of patent rights can be found in the RakNet Patents.txt file in the same directory.
+        -:    8: *
+        -:    9: *
+        -:   10: *  Modified work: Copyright (c) 2016-2017, SLikeSoft UG (haftungsbeschränkt)
+        -:   11: *
+        -:   12: *  This source code was modified by SLikeSoft. Modifications are licensed under the MIT-style
+        -:   13: *  license found in the license.txt file in the root directory of this source tree.
+        -:   14: */
+        -:   15:
+        -:   16:/// \file DS_MemoryPool.h
+        -:   17:///
+        -:   18:
+        -:   19:
+        -:   20:#ifndef __MEMORY_POOL_H
+        -:   21:#define __MEMORY_POOL_H
+        -:   22:
+        -:   23:#ifndef __APPLE__
+        -:   24:// Use stdlib and not malloc for compatibility
+        -:   25:#include <stdlib.h>
+        -:   26:#endif
+        -:   27:#include "assert.h"
+        -:   28:#include "Export.h"
+        -:   29:
+        -:   30:#include "memoryoverride.h"
+        -:   31:
+        -:   32:// DS_MEMORY_POOL_MAX_FREE_PAGES must be > 1
+        -:   33:#define DS_MEMORY_POOL_MAX_FREE_PAGES 4
+        -:   34:
+        -:   35://#define _DISABLE_MEMORY_POOL
+        -:   36:
+        -:   37:namespace DataStructures
+        -:   38:{
+        -:   39:	/// Very fast memory pool for allocating and deallocating structures that don't have constructors or destructors.
+        -:   40:	/// Contains a list of pages, each of which has an array of the user structures
+        -:   41:	template <class MemoryBlockType>
+        -:   42:	class RAK_DLL_EXPORT MemoryPool
+        -:   43:	{
+        -:   44:	public:
+        -:   45:		struct Page;
+        -:   46:		struct MemoryWithPage
+        -:   47:		{
+        -:   48:			MemoryBlockType userMemory;
+        -:   49:			Page *parentPage;
+        -:   50:		};
+        -:   51:		struct Page
+        -:   52:		{
+        -:   53:			MemoryWithPage** availableStack;
+        -:   54:			int availableStackSize;
+        -:   55:			MemoryWithPage* block;
+        -:   56:			Page *next, *prev;
+        -:   57:		};
+        -:   58:
+        -:   59:		MemoryPool();
+        -:   60:		~MemoryPool();
+        -:   61:		void SetPageSize(int size); // Defaults to 16384 bytes
+        -:   62:		MemoryBlockType *Allocate(const char *file, unsigned int line);
+        -:   63:		void Release(MemoryBlockType *m, const char *file, unsigned int line);
+        -:   64:		void Clear(const char *file, unsigned int line);
+        -:   65:
+        -:   66:		int GetAvailablePagesSize(void) const {return availablePagesSize;}
+        -:   67:		int GetUnavailablePagesSize(void) const {return unavailablePagesSize;}
+        -:   68:		int GetMemoryPoolPageSize(void) const {return memoryPoolPageSize;}
+        -:   69:	protected:
+        -:   70:		int BlocksPerPage(void) const;
+        -:   71:		void AllocateFirst(void);
+        -:   72:		bool InitPage(Page *page, Page *prev, const char *file, unsigned int line);
+        -:   73:
+        -:   74:		// availablePages contains pages which have room to give the user new blocks.  We return these blocks from the head of the list
+        -:   75:		// unavailablePages are pages which are totally full, and from which we do not return new blocks.
+        -:   76:		// Pages move from the head of unavailablePages to the tail of availablePages, and from the head of availablePages to the tail of unavailablePages
+        -:   77:		Page *availablePages, *unavailablePages;
+        -:   78:		int availablePagesSize, unavailablePagesSize;
+        -:   79:		int memoryPoolPageSize;
+        -:   80:	};
+        -:   81:
+        -:   82:	template<class MemoryBlockType>
+    #####:   83:	MemoryPool<MemoryBlockType>::MemoryPool()
+        -:   84:	{
+        -:   85:#ifndef _DISABLE_MEMORY_POOL
+        -:   86:		//AllocateFirst();
+    #####:   87:		availablePagesSize=0;
+    #####:   88:		unavailablePagesSize=0;
+    #####:   89:		memoryPoolPageSize=16384;
+        -:   90:#endif
+    #####:   91:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::MemoryPool():
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   83:	MemoryPool<MemoryBlockType>::MemoryPool()
+        -:   84:	{
+        -:   85:#ifndef _DISABLE_MEMORY_POOL
+        -:   86:		//AllocateFirst();
+    #####:   87:		availablePagesSize=0;
+    #####:   88:		unavailablePagesSize=0;
+    #####:   89:		memoryPoolPageSize=16384;
+        -:   90:#endif
+    #####:   91:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::MemoryPool():
+function DataStructures::MemoryPool<SLNet::InternalPacket>::MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   83:	MemoryPool<MemoryBlockType>::MemoryPool()
+        -:   84:	{
+        -:   85:#ifndef _DISABLE_MEMORY_POOL
+        -:   86:		//AllocateFirst();
+    #####:   87:		availablePagesSize=0;
+    #####:   88:		unavailablePagesSize=0;
+    #####:   89:		memoryPoolPageSize=16384;
+        -:   90:#endif
+    #####:   91:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::MemoryPool():
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   83:	MemoryPool<MemoryBlockType>::MemoryPool()
+        -:   84:	{
+        -:   85:#ifndef _DISABLE_MEMORY_POOL
+        -:   86:		//AllocateFirst();
+    #####:   87:		availablePagesSize=0;
+    #####:   88:		unavailablePagesSize=0;
+    #####:   89:		memoryPoolPageSize=16384;
+        -:   90:#endif
+    #####:   91:	}
+------------------
+        -:   92:	template<class MemoryBlockType>
+    #####:   93:	MemoryPool<MemoryBlockType>::~MemoryPool()
+        -:   94:	{
+        -:   95:#ifndef _DISABLE_MEMORY_POOL
+    #####:   96:		Clear(_FILE_AND_LINE_);
+        -:   97:#endif
+    #####:   98:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::~MemoryPool():
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::~MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   93:	MemoryPool<MemoryBlockType>::~MemoryPool()
+        -:   94:	{
+        -:   95:#ifndef _DISABLE_MEMORY_POOL
+    #####:   96:		Clear(_FILE_AND_LINE_);
+    %%%%%:   96-block  0
+call    0 never executed
+        -:   97:#endif
+    #####:   98:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::~MemoryPool():
+function DataStructures::MemoryPool<SLNet::InternalPacket>::~MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   93:	MemoryPool<MemoryBlockType>::~MemoryPool()
+        -:   94:	{
+        -:   95:#ifndef _DISABLE_MEMORY_POOL
+    #####:   96:		Clear(_FILE_AND_LINE_);
+    %%%%%:   96-block  0
+call    0 never executed
+        -:   97:#endif
+    #####:   98:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::~MemoryPool():
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::~MemoryPool() called 0 returned 0% blocks executed 0%
+    #####:   93:	MemoryPool<MemoryBlockType>::~MemoryPool()
+        -:   94:	{
+        -:   95:#ifndef _DISABLE_MEMORY_POOL
+    #####:   96:		Clear(_FILE_AND_LINE_);
+    %%%%%:   96-block  0
+call    0 never executed
+        -:   97:#endif
+    #####:   98:	}
+------------------
+        -:   99:
+        -:  100:	template<class MemoryBlockType>
+    #####:  101:	void MemoryPool<MemoryBlockType>::SetPageSize(int size)
+        -:  102:	{
+    #####:  103:		memoryPoolPageSize=size;
+    #####:  104:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::SetPageSize(int):
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::SetPageSize(int) called 0 returned 0% blocks executed 0%
+    #####:  101:	void MemoryPool<MemoryBlockType>::SetPageSize(int size)
+        -:  102:	{
+    #####:  103:		memoryPoolPageSize=size;
+    #####:  104:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::SetPageSize(int):
+function DataStructures::MemoryPool<SLNet::InternalPacket>::SetPageSize(int) called 0 returned 0% blocks executed 0%
+    #####:  101:	void MemoryPool<MemoryBlockType>::SetPageSize(int size)
+        -:  102:	{
+    #####:  103:		memoryPoolPageSize=size;
+    #####:  104:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::SetPageSize(int):
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::SetPageSize(int) called 0 returned 0% blocks executed 0%
+    #####:  101:	void MemoryPool<MemoryBlockType>::SetPageSize(int size)
+        -:  102:	{
+    #####:  103:		memoryPoolPageSize=size;
+    #####:  104:	}
+------------------
+        -:  105:
+        -:  106:	template<class MemoryBlockType>
+    #####:  107:	MemoryBlockType* MemoryPool<MemoryBlockType>::Allocate(const char *file, unsigned int line)
+        -:  108:	{
+        -:  109:#ifdef _DISABLE_MEMORY_POOL
+        -:  110:		return (MemoryBlockType*) rakMalloc_Ex(sizeof(MemoryBlockType), file, line);
+        -:  111:#else
+        -:  112:
+    #####:  113:		if (availablePagesSize>0)
+        -:  114:		{
+        -:  115:			MemoryBlockType *retVal;
+        -:  116:			Page *curPage;
+    #####:  117:			curPage=availablePages;
+    #####:  118:			retVal = (MemoryBlockType*) curPage->availableStack[--(curPage->availableStackSize)];
+    #####:  119:			if (curPage->availableStackSize==0)
+        -:  120:			{
+    #####:  121:				--availablePagesSize;
+    #####:  122:				availablePages=curPage->next;
+        -:  123:				RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  124:				curPage->next->prev=curPage->prev;
+    #####:  125:				curPage->prev->next=curPage->next;
+        -:  126:
+    #####:  127:				if (unavailablePagesSize++==0)
+        -:  128:				{
+    #####:  129:					unavailablePages=curPage;
+    #####:  130:					curPage->next=curPage;
+    #####:  131:					curPage->prev=curPage;	
+        -:  132:				}
+        -:  133:				else
+        -:  134:				{
+    #####:  135:					curPage->next=unavailablePages;
+    #####:  136:					curPage->prev=unavailablePages->prev;
+    #####:  137:					unavailablePages->prev->next=curPage;
+    #####:  138:					unavailablePages->prev=curPage;
+        -:  139:				}			
+        -:  140:			}
+        -:  141:
+        -:  142:			RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  143:			return retVal;
+        -:  144:		}
+        -:  145:
+    #####:  146:		availablePages = (Page *) rakMalloc_Ex(sizeof(Page), file, line);
+    #####:  147:		if (availablePages==0)
+    #####:  148:			return 0;
+    #####:  149:		availablePagesSize=1;
+    #####:  150:		if (InitPage(availablePages, availablePages, file, line)==false)
+    #####:  151:			return 0;
+        -:  152:		// If this assert hits, we couldn't allocate even 1 block per page. Increase the page size
+        -:  153:		RakAssert(availablePages->availableStackSize>1);
+        -:  154:
+    #####:  155:		return (MemoryBlockType *) availablePages->availableStack[--availablePages->availableStackSize];
+        -:  156:#endif
+        -:  157:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Allocate(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Allocate(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  107:	MemoryBlockType* MemoryPool<MemoryBlockType>::Allocate(const char *file, unsigned int line)
+        -:  108:	{
+        -:  109:#ifdef _DISABLE_MEMORY_POOL
+        -:  110:		return (MemoryBlockType*) rakMalloc_Ex(sizeof(MemoryBlockType), file, line);
+        -:  111:#else
+        -:  112:
+    #####:  113:		if (availablePagesSize>0)
+    %%%%%:  113-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  114:		{
+        -:  115:			MemoryBlockType *retVal;
+        -:  116:			Page *curPage;
+    #####:  117:			curPage=availablePages;
+    #####:  118:			retVal = (MemoryBlockType*) curPage->availableStack[--(curPage->availableStackSize)];
+    #####:  119:			if (curPage->availableStackSize==0)
+    %%%%%:  119-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  120:			{
+    #####:  121:				--availablePagesSize;
+    #####:  122:				availablePages=curPage->next;
+        -:  123:				RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  124:				curPage->next->prev=curPage->prev;
+    #####:  125:				curPage->prev->next=curPage->next;
+        -:  126:
+    #####:  127:				if (unavailablePagesSize++==0)
+    %%%%%:  127-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  128:				{
+    #####:  129:					unavailablePages=curPage;
+    #####:  130:					curPage->next=curPage;
+    #####:  131:					curPage->prev=curPage;	
+    %%%%%:  131-block  0
+        -:  132:				}
+        -:  133:				else
+        -:  134:				{
+    #####:  135:					curPage->next=unavailablePages;
+    #####:  136:					curPage->prev=unavailablePages->prev;
+    #####:  137:					unavailablePages->prev->next=curPage;
+    #####:  138:					unavailablePages->prev=curPage;
+    %%%%%:  138-block  0
+        -:  139:				}			
+        -:  140:			}
+        -:  141:
+        -:  142:			RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  143:			return retVal;
+    %%%%%:  143-block  0
+        -:  144:		}
+        -:  145:
+    #####:  146:		availablePages = (Page *) rakMalloc_Ex(sizeof(Page), file, line);
+    %%%%%:  146-block  0
+call    0 never executed
+    #####:  147:		if (availablePages==0)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  148:			return 0;
+    %%%%%:  148-block  0
+    #####:  149:		availablePagesSize=1;
+    #####:  150:		if (InitPage(availablePages, availablePages, file, line)==false)
+    %%%%%:  150-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:  151:			return 0;
+    %%%%%:  151-block  0
+        -:  152:		// If this assert hits, we couldn't allocate even 1 block per page. Increase the page size
+        -:  153:		RakAssert(availablePages->availableStackSize>1);
+        -:  154:
+    #####:  155:		return (MemoryBlockType *) availablePages->availableStack[--availablePages->availableStackSize];
+    %%%%%:  155-block  0
+        -:  156:#endif
+        -:  157:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Allocate(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Allocate(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  107:	MemoryBlockType* MemoryPool<MemoryBlockType>::Allocate(const char *file, unsigned int line)
+        -:  108:	{
+        -:  109:#ifdef _DISABLE_MEMORY_POOL
+        -:  110:		return (MemoryBlockType*) rakMalloc_Ex(sizeof(MemoryBlockType), file, line);
+        -:  111:#else
+        -:  112:
+    #####:  113:		if (availablePagesSize>0)
+    %%%%%:  113-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  114:		{
+        -:  115:			MemoryBlockType *retVal;
+        -:  116:			Page *curPage;
+    #####:  117:			curPage=availablePages;
+    #####:  118:			retVal = (MemoryBlockType*) curPage->availableStack[--(curPage->availableStackSize)];
+    #####:  119:			if (curPage->availableStackSize==0)
+    %%%%%:  119-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  120:			{
+    #####:  121:				--availablePagesSize;
+    #####:  122:				availablePages=curPage->next;
+        -:  123:				RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  124:				curPage->next->prev=curPage->prev;
+    #####:  125:				curPage->prev->next=curPage->next;
+        -:  126:
+    #####:  127:				if (unavailablePagesSize++==0)
+    %%%%%:  127-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  128:				{
+    #####:  129:					unavailablePages=curPage;
+    #####:  130:					curPage->next=curPage;
+    #####:  131:					curPage->prev=curPage;	
+    %%%%%:  131-block  0
+        -:  132:				}
+        -:  133:				else
+        -:  134:				{
+    #####:  135:					curPage->next=unavailablePages;
+    #####:  136:					curPage->prev=unavailablePages->prev;
+    #####:  137:					unavailablePages->prev->next=curPage;
+    #####:  138:					unavailablePages->prev=curPage;
+    %%%%%:  138-block  0
+        -:  139:				}			
+        -:  140:			}
+        -:  141:
+        -:  142:			RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  143:			return retVal;
+    %%%%%:  143-block  0
+        -:  144:		}
+        -:  145:
+    #####:  146:		availablePages = (Page *) rakMalloc_Ex(sizeof(Page), file, line);
+    %%%%%:  146-block  0
+call    0 never executed
+    #####:  147:		if (availablePages==0)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  148:			return 0;
+    %%%%%:  148-block  0
+    #####:  149:		availablePagesSize=1;
+    #####:  150:		if (InitPage(availablePages, availablePages, file, line)==false)
+    %%%%%:  150-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:  151:			return 0;
+    %%%%%:  151-block  0
+        -:  152:		// If this assert hits, we couldn't allocate even 1 block per page. Increase the page size
+        -:  153:		RakAssert(availablePages->availableStackSize>1);
+        -:  154:
+    #####:  155:		return (MemoryBlockType *) availablePages->availableStack[--availablePages->availableStackSize];
+    %%%%%:  155-block  0
+        -:  156:#endif
+        -:  157:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::Allocate(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacket>::Allocate(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  107:	MemoryBlockType* MemoryPool<MemoryBlockType>::Allocate(const char *file, unsigned int line)
+        -:  108:	{
+        -:  109:#ifdef _DISABLE_MEMORY_POOL
+        -:  110:		return (MemoryBlockType*) rakMalloc_Ex(sizeof(MemoryBlockType), file, line);
+        -:  111:#else
+        -:  112:
+    #####:  113:		if (availablePagesSize>0)
+    %%%%%:  113-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  114:		{
+        -:  115:			MemoryBlockType *retVal;
+        -:  116:			Page *curPage;
+    #####:  117:			curPage=availablePages;
+    #####:  118:			retVal = (MemoryBlockType*) curPage->availableStack[--(curPage->availableStackSize)];
+    #####:  119:			if (curPage->availableStackSize==0)
+    %%%%%:  119-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  120:			{
+    #####:  121:				--availablePagesSize;
+    #####:  122:				availablePages=curPage->next;
+        -:  123:				RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  124:				curPage->next->prev=curPage->prev;
+    #####:  125:				curPage->prev->next=curPage->next;
+        -:  126:
+    #####:  127:				if (unavailablePagesSize++==0)
+    %%%%%:  127-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  128:				{
+    #####:  129:					unavailablePages=curPage;
+    #####:  130:					curPage->next=curPage;
+    #####:  131:					curPage->prev=curPage;	
+    %%%%%:  131-block  0
+        -:  132:				}
+        -:  133:				else
+        -:  134:				{
+    #####:  135:					curPage->next=unavailablePages;
+    #####:  136:					curPage->prev=unavailablePages->prev;
+    #####:  137:					unavailablePages->prev->next=curPage;
+    #####:  138:					unavailablePages->prev=curPage;
+    %%%%%:  138-block  0
+        -:  139:				}			
+        -:  140:			}
+        -:  141:
+        -:  142:			RakAssert(availablePagesSize==0 || availablePages->availableStackSize>0);
+    #####:  143:			return retVal;
+    %%%%%:  143-block  0
+        -:  144:		}
+        -:  145:
+    #####:  146:		availablePages = (Page *) rakMalloc_Ex(sizeof(Page), file, line);
+    %%%%%:  146-block  0
+call    0 never executed
+    #####:  147:		if (availablePages==0)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  148:			return 0;
+    %%%%%:  148-block  0
+    #####:  149:		availablePagesSize=1;
+    #####:  150:		if (InitPage(availablePages, availablePages, file, line)==false)
+    %%%%%:  150-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:  151:			return 0;
+    %%%%%:  151-block  0
+        -:  152:		// If this assert hits, we couldn't allocate even 1 block per page. Increase the page size
+        -:  153:		RakAssert(availablePages->availableStackSize>1);
+        -:  154:
+    #####:  155:		return (MemoryBlockType *) availablePages->availableStack[--availablePages->availableStackSize];
+    %%%%%:  155-block  0
+        -:  156:#endif
+        -:  157:	}
+------------------
+        -:  158:	template<class MemoryBlockType>
+    #####:  159:	void MemoryPool<MemoryBlockType>::Release(MemoryBlockType *m, const char *file, unsigned int line)
+        -:  160:	{
+        -:  161:#ifdef _DISABLE_MEMORY_POOL
+        -:  162:		rakFree_Ex(m, file, line);
+        -:  163:		return;
+        -:  164:#else
+        -:  165:		// Find the page this block is in and return it.
+        -:  166:		Page *curPage;
+    #####:  167:		MemoryWithPage *memoryWithPage = (MemoryWithPage*)m;
+    #####:  168:		curPage=memoryWithPage->parentPage;
+        -:  169:
+    #####:  170:		if (curPage->availableStackSize==0)
+        -:  171:		{
+        -:  172:			// The page is in the unavailable list so move it to the available list
+    #####:  173:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+    #####:  174:			unavailablePagesSize--;
+        -:  175:
+        -:  176:			// As this page is no longer totally empty, move it to the end of available pages
+    #####:  177:			curPage->next->prev=curPage->prev;
+    #####:  178:			curPage->prev->next=curPage->next;
+        -:  179:			
+    #####:  180:			if (unavailablePagesSize>0 && curPage==unavailablePages)
+    #####:  181:				unavailablePages=unavailablePages->next;
+        -:  182:			
+    #####:  183:			if (availablePagesSize++==0)
+        -:  184:			{
+    #####:  185:				availablePages=curPage;
+    #####:  186:				curPage->next=curPage;
+    #####:  187:				curPage->prev=curPage;
+        -:  188:			}
+        -:  189:			else
+        -:  190:			{
+    #####:  191:				curPage->next=availablePages;
+    #####:  192:				curPage->prev=availablePages->prev;
+    #####:  193:				availablePages->prev->next=curPage;
+    #####:  194:				availablePages->prev=curPage;	
+        -:  195:			}
+        -:  196:		}
+        -:  197:		else
+        -:  198:		{
+    #####:  199:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+        -:  200:
+    #####:  201:			if (curPage->availableStackSize==BlocksPerPage() &&
+    #####:  202:				availablePagesSize>=DS_MEMORY_POOL_MAX_FREE_PAGES)
+        -:  203:			{
+        -:  204:				// After a certain point, just deallocate empty pages rather than keep them around
+    #####:  205:				if (curPage==availablePages)
+        -:  206:				{
+    #####:  207:					availablePages=curPage->next;
+        -:  208:					RakAssert(availablePages->availableStackSize>0);
+        -:  209:				}
+    #####:  210:				curPage->prev->next=curPage->next;
+    #####:  211:				curPage->next->prev=curPage->prev;
+    #####:  212:				availablePagesSize--;
+    #####:  213:				rakFree_Ex(curPage->availableStack, file, line );
+    #####:  214:				rakFree_Ex(curPage->block, file, line );
+    #####:  215:				rakFree_Ex(curPage, file, line );
+        -:  216:			}
+        -:  217:		}
+        -:  218:#endif
+    #####:  219:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Release(SLNet::InternalPacketRefCountedData*, char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Release(SLNet::InternalPacketRefCountedData*, char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  159:	void MemoryPool<MemoryBlockType>::Release(MemoryBlockType *m, const char *file, unsigned int line)
+        -:  160:	{
+        -:  161:#ifdef _DISABLE_MEMORY_POOL
+        -:  162:		rakFree_Ex(m, file, line);
+        -:  163:		return;
+        -:  164:#else
+        -:  165:		// Find the page this block is in and return it.
+        -:  166:		Page *curPage;
+    #####:  167:		MemoryWithPage *memoryWithPage = (MemoryWithPage*)m;
+    #####:  168:		curPage=memoryWithPage->parentPage;
+        -:  169:
+    #####:  170:		if (curPage->availableStackSize==0)
+    %%%%%:  170-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  171:		{
+        -:  172:			// The page is in the unavailable list so move it to the available list
+    #####:  173:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+    #####:  174:			unavailablePagesSize--;
+        -:  175:
+        -:  176:			// As this page is no longer totally empty, move it to the end of available pages
+    #####:  177:			curPage->next->prev=curPage->prev;
+    #####:  178:			curPage->prev->next=curPage->next;
+        -:  179:			
+    #####:  180:			if (unavailablePagesSize>0 && curPage==unavailablePages)
+    %%%%%:  180-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  180-block  1
+branch  2 never executed (fallthrough)
+branch  3 never executed
+    #####:  181:				unavailablePages=unavailablePages->next;
+    %%%%%:  181-block  0
+        -:  182:			
+    #####:  183:			if (availablePagesSize++==0)
+    %%%%%:  183-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  184:			{
+    #####:  185:				availablePages=curPage;
+    #####:  186:				curPage->next=curPage;
+    #####:  187:				curPage->prev=curPage;
+    %%%%%:  187-block  0
+        -:  188:			}
+        -:  189:			else
+        -:  190:			{
+    #####:  191:				curPage->next=availablePages;
+    #####:  192:				curPage->prev=availablePages->prev;
+    #####:  193:				availablePages->prev->next=curPage;
+    #####:  194:				availablePages->prev=curPage;	
+    %%%%%:  194-block  0
+        -:  195:			}
+        -:  196:		}
+        -:  197:		else
+        -:  198:		{
+    #####:  199:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+        -:  200:
+    #####:  201:			if (curPage->availableStackSize==BlocksPerPage() &&
+    %%%%%:  201-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  201-block  1
+    %%%%%:  201-block  2
+    %%%%%:  201-block  3
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  202:				availablePagesSize>=DS_MEMORY_POOL_MAX_FREE_PAGES)
+    %%%%%:  202-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  203:			{
+        -:  204:				// After a certain point, just deallocate empty pages rather than keep them around
+    #####:  205:				if (curPage==availablePages)
+    %%%%%:  205-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  206:				{
+    #####:  207:					availablePages=curPage->next;
+    %%%%%:  207-block  0
+        -:  208:					RakAssert(availablePages->availableStackSize>0);
+        -:  209:				}
+    #####:  210:				curPage->prev->next=curPage->next;
+    #####:  211:				curPage->next->prev=curPage->prev;
+    #####:  212:				availablePagesSize--;
+    #####:  213:				rakFree_Ex(curPage->availableStack, file, line );
+    %%%%%:  213-block  0
+call    0 never executed
+    #####:  214:				rakFree_Ex(curPage->block, file, line );
+call    0 never executed
+    #####:  215:				rakFree_Ex(curPage, file, line );
+call    0 never executed
+        -:  216:			}
+        -:  217:		}
+        -:  218:#endif
+    #####:  219:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Release(SLNet::ReliabilityLayer::MessageNumberNode*, char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Release(SLNet::ReliabilityLayer::MessageNumberNode*, char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  159:	void MemoryPool<MemoryBlockType>::Release(MemoryBlockType *m, const char *file, unsigned int line)
+        -:  160:	{
+        -:  161:#ifdef _DISABLE_MEMORY_POOL
+        -:  162:		rakFree_Ex(m, file, line);
+        -:  163:		return;
+        -:  164:#else
+        -:  165:		// Find the page this block is in and return it.
+        -:  166:		Page *curPage;
+    #####:  167:		MemoryWithPage *memoryWithPage = (MemoryWithPage*)m;
+    #####:  168:		curPage=memoryWithPage->parentPage;
+        -:  169:
+    #####:  170:		if (curPage->availableStackSize==0)
+    %%%%%:  170-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  171:		{
+        -:  172:			// The page is in the unavailable list so move it to the available list
+    #####:  173:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+    #####:  174:			unavailablePagesSize--;
+        -:  175:
+        -:  176:			// As this page is no longer totally empty, move it to the end of available pages
+    #####:  177:			curPage->next->prev=curPage->prev;
+    #####:  178:			curPage->prev->next=curPage->next;
+        -:  179:			
+    #####:  180:			if (unavailablePagesSize>0 && curPage==unavailablePages)
+    %%%%%:  180-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  180-block  1
+branch  2 never executed (fallthrough)
+branch  3 never executed
+    #####:  181:				unavailablePages=unavailablePages->next;
+    %%%%%:  181-block  0
+        -:  182:			
+    #####:  183:			if (availablePagesSize++==0)
+    %%%%%:  183-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  184:			{
+    #####:  185:				availablePages=curPage;
+    #####:  186:				curPage->next=curPage;
+    #####:  187:				curPage->prev=curPage;
+    %%%%%:  187-block  0
+        -:  188:			}
+        -:  189:			else
+        -:  190:			{
+    #####:  191:				curPage->next=availablePages;
+    #####:  192:				curPage->prev=availablePages->prev;
+    #####:  193:				availablePages->prev->next=curPage;
+    #####:  194:				availablePages->prev=curPage;	
+    %%%%%:  194-block  0
+        -:  195:			}
+        -:  196:		}
+        -:  197:		else
+        -:  198:		{
+    #####:  199:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+        -:  200:
+    #####:  201:			if (curPage->availableStackSize==BlocksPerPage() &&
+    %%%%%:  201-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  201-block  1
+    %%%%%:  201-block  2
+    %%%%%:  201-block  3
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  202:				availablePagesSize>=DS_MEMORY_POOL_MAX_FREE_PAGES)
+    %%%%%:  202-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  203:			{
+        -:  204:				// After a certain point, just deallocate empty pages rather than keep them around
+    #####:  205:				if (curPage==availablePages)
+    %%%%%:  205-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  206:				{
+    #####:  207:					availablePages=curPage->next;
+    %%%%%:  207-block  0
+        -:  208:					RakAssert(availablePages->availableStackSize>0);
+        -:  209:				}
+    #####:  210:				curPage->prev->next=curPage->next;
+    #####:  211:				curPage->next->prev=curPage->prev;
+    #####:  212:				availablePagesSize--;
+    #####:  213:				rakFree_Ex(curPage->availableStack, file, line );
+    %%%%%:  213-block  0
+call    0 never executed
+    #####:  214:				rakFree_Ex(curPage->block, file, line );
+call    0 never executed
+    #####:  215:				rakFree_Ex(curPage, file, line );
+call    0 never executed
+        -:  216:			}
+        -:  217:		}
+        -:  218:#endif
+    #####:  219:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::Release(SLNet::InternalPacket*, char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacket>::Release(SLNet::InternalPacket*, char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  159:	void MemoryPool<MemoryBlockType>::Release(MemoryBlockType *m, const char *file, unsigned int line)
+        -:  160:	{
+        -:  161:#ifdef _DISABLE_MEMORY_POOL
+        -:  162:		rakFree_Ex(m, file, line);
+        -:  163:		return;
+        -:  164:#else
+        -:  165:		// Find the page this block is in and return it.
+        -:  166:		Page *curPage;
+    #####:  167:		MemoryWithPage *memoryWithPage = (MemoryWithPage*)m;
+    #####:  168:		curPage=memoryWithPage->parentPage;
+        -:  169:
+    #####:  170:		if (curPage->availableStackSize==0)
+    %%%%%:  170-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  171:		{
+        -:  172:			// The page is in the unavailable list so move it to the available list
+    #####:  173:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+    #####:  174:			unavailablePagesSize--;
+        -:  175:
+        -:  176:			// As this page is no longer totally empty, move it to the end of available pages
+    #####:  177:			curPage->next->prev=curPage->prev;
+    #####:  178:			curPage->prev->next=curPage->next;
+        -:  179:			
+    #####:  180:			if (unavailablePagesSize>0 && curPage==unavailablePages)
+    %%%%%:  180-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  180-block  1
+branch  2 never executed (fallthrough)
+branch  3 never executed
+    #####:  181:				unavailablePages=unavailablePages->next;
+    %%%%%:  181-block  0
+        -:  182:			
+    #####:  183:			if (availablePagesSize++==0)
+    %%%%%:  183-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  184:			{
+    #####:  185:				availablePages=curPage;
+    #####:  186:				curPage->next=curPage;
+    #####:  187:				curPage->prev=curPage;
+    %%%%%:  187-block  0
+        -:  188:			}
+        -:  189:			else
+        -:  190:			{
+    #####:  191:				curPage->next=availablePages;
+    #####:  192:				curPage->prev=availablePages->prev;
+    #####:  193:				availablePages->prev->next=curPage;
+    #####:  194:				availablePages->prev=curPage;	
+    %%%%%:  194-block  0
+        -:  195:			}
+        -:  196:		}
+        -:  197:		else
+        -:  198:		{
+    #####:  199:			curPage->availableStack[curPage->availableStackSize++]=memoryWithPage;
+        -:  200:
+    #####:  201:			if (curPage->availableStackSize==BlocksPerPage() &&
+    %%%%%:  201-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:  201-block  1
+    %%%%%:  201-block  2
+    %%%%%:  201-block  3
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  202:				availablePagesSize>=DS_MEMORY_POOL_MAX_FREE_PAGES)
+    %%%%%:  202-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  203:			{
+        -:  204:				// After a certain point, just deallocate empty pages rather than keep them around
+    #####:  205:				if (curPage==availablePages)
+    %%%%%:  205-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  206:				{
+    #####:  207:					availablePages=curPage->next;
+    %%%%%:  207-block  0
+        -:  208:					RakAssert(availablePages->availableStackSize>0);
+        -:  209:				}
+    #####:  210:				curPage->prev->next=curPage->next;
+    #####:  211:				curPage->next->prev=curPage->prev;
+    #####:  212:				availablePagesSize--;
+    #####:  213:				rakFree_Ex(curPage->availableStack, file, line );
+    %%%%%:  213-block  0
+call    0 never executed
+    #####:  214:				rakFree_Ex(curPage->block, file, line );
+call    0 never executed
+    #####:  215:				rakFree_Ex(curPage, file, line );
+call    0 never executed
+        -:  216:			}
+        -:  217:		}
+        -:  218:#endif
+    #####:  219:	}
+------------------
+        -:  220:	template<class MemoryBlockType>
+    #####:  221:	void MemoryPool<MemoryBlockType>::Clear(const char *file, unsigned int line)
+        -:  222:	{
+        -:  223:#ifdef _DISABLE_MEMORY_POOL
+        -:  224:		return;
+        -:  225:#else
+        -:  226:		Page *cur, *freed;
+        -:  227:
+    #####:  228:		if (availablePagesSize>0)
+        -:  229:		{
+    #####:  230:			cur = availablePages;
+        -:  231:			for (;;)
+        -:  232:			// do
+        -:  233:			{
+    #####:  234:				rakFree_Ex(cur->availableStack, file, line );
+    #####:  235:				rakFree_Ex(cur->block, file, line );
+    #####:  236:				freed=cur;
+    #####:  237:				cur=cur->next;
+    #####:  238:				if (cur==availablePages)
+        -:  239:				{
+    #####:  240:					rakFree_Ex(freed, file, line );
+    #####:  241:					break;
+        -:  242:				}
+    #####:  243:				rakFree_Ex(freed, file, line );
+        -:  244:			}// while(cur!=availablePages);
+        -:  245:		}
+        -:  246:		
+    #####:  247:		if (unavailablePagesSize>0)
+        -:  248:		{
+    #####:  249:			cur = unavailablePages;
+        -:  250:			for(;;)
+        -:  251:			//do 
+        -:  252:			{
+    #####:  253:				rakFree_Ex(cur->availableStack, file, line );
+    #####:  254:				rakFree_Ex(cur->block, file, line );
+    #####:  255:				freed=cur;
+    #####:  256:				cur=cur->next;
+    #####:  257:				if (cur==unavailablePages)
+        -:  258:				{
+    #####:  259:					rakFree_Ex(freed, file, line );
+    #####:  260:					break;
+        -:  261:				}
+    #####:  262:				rakFree_Ex(freed, file, line );
+        -:  263:			} // while(cur!=unavailablePages);
+        -:  264:		}
+        -:  265:
+    #####:  266:		availablePagesSize=0;
+    #####:  267:		unavailablePagesSize=0;
+        -:  268:#endif
+    #####:  269:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Clear(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::Clear(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  221:	void MemoryPool<MemoryBlockType>::Clear(const char *file, unsigned int line)
+        -:  222:	{
+        -:  223:#ifdef _DISABLE_MEMORY_POOL
+        -:  224:		return;
+        -:  225:#else
+        -:  226:		Page *cur, *freed;
+        -:  227:
+    #####:  228:		if (availablePagesSize>0)
+    %%%%%:  228-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  229:		{
+    #####:  230:			cur = availablePages;
+    %%%%%:  230-block  0
+        -:  231:			for (;;)
+        -:  232:			// do
+        -:  233:			{
+    #####:  234:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  234-block  0
+call    0 never executed
+    #####:  235:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  236:				freed=cur;
+    #####:  237:				cur=cur->next;
+    #####:  238:				if (cur==availablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  239:				{
+    #####:  240:					rakFree_Ex(freed, file, line );
+    %%%%%:  240-block  0
+call    0 never executed
+    #####:  241:					break;
+        -:  242:				}
+    #####:  243:				rakFree_Ex(freed, file, line );
+    %%%%%:  243-block  0
+call    0 never executed
+        -:  244:			}// while(cur!=availablePages);
+        -:  245:		}
+        -:  246:		
+    #####:  247:		if (unavailablePagesSize>0)
+    %%%%%:  247-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  248:		{
+    #####:  249:			cur = unavailablePages;
+    %%%%%:  249-block  0
+        -:  250:			for(;;)
+        -:  251:			//do 
+        -:  252:			{
+    #####:  253:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  253-block  0
+call    0 never executed
+    #####:  254:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  255:				freed=cur;
+    #####:  256:				cur=cur->next;
+    #####:  257:				if (cur==unavailablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  258:				{
+    #####:  259:					rakFree_Ex(freed, file, line );
+    %%%%%:  259-block  0
+call    0 never executed
+    #####:  260:					break;
+        -:  261:				}
+    #####:  262:				rakFree_Ex(freed, file, line );
+    %%%%%:  262-block  0
+call    0 never executed
+        -:  263:			} // while(cur!=unavailablePages);
+        -:  264:		}
+        -:  265:
+    #####:  266:		availablePagesSize=0;
+    #####:  267:		unavailablePagesSize=0;
+        -:  268:#endif
+    #####:  269:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Clear(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::Clear(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  221:	void MemoryPool<MemoryBlockType>::Clear(const char *file, unsigned int line)
+        -:  222:	{
+        -:  223:#ifdef _DISABLE_MEMORY_POOL
+        -:  224:		return;
+        -:  225:#else
+        -:  226:		Page *cur, *freed;
+        -:  227:
+    #####:  228:		if (availablePagesSize>0)
+    %%%%%:  228-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  229:		{
+    #####:  230:			cur = availablePages;
+    %%%%%:  230-block  0
+        -:  231:			for (;;)
+        -:  232:			// do
+        -:  233:			{
+    #####:  234:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  234-block  0
+call    0 never executed
+    #####:  235:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  236:				freed=cur;
+    #####:  237:				cur=cur->next;
+    #####:  238:				if (cur==availablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  239:				{
+    #####:  240:					rakFree_Ex(freed, file, line );
+    %%%%%:  240-block  0
+call    0 never executed
+    #####:  241:					break;
+        -:  242:				}
+    #####:  243:				rakFree_Ex(freed, file, line );
+    %%%%%:  243-block  0
+call    0 never executed
+        -:  244:			}// while(cur!=availablePages);
+        -:  245:		}
+        -:  246:		
+    #####:  247:		if (unavailablePagesSize>0)
+    %%%%%:  247-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  248:		{
+    #####:  249:			cur = unavailablePages;
+    %%%%%:  249-block  0
+        -:  250:			for(;;)
+        -:  251:			//do 
+        -:  252:			{
+    #####:  253:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  253-block  0
+call    0 never executed
+    #####:  254:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  255:				freed=cur;
+    #####:  256:				cur=cur->next;
+    #####:  257:				if (cur==unavailablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  258:				{
+    #####:  259:					rakFree_Ex(freed, file, line );
+    %%%%%:  259-block  0
+call    0 never executed
+    #####:  260:					break;
+        -:  261:				}
+    #####:  262:				rakFree_Ex(freed, file, line );
+    %%%%%:  262-block  0
+call    0 never executed
+        -:  263:			} // while(cur!=unavailablePages);
+        -:  264:		}
+        -:  265:
+    #####:  266:		availablePagesSize=0;
+    #####:  267:		unavailablePagesSize=0;
+        -:  268:#endif
+    #####:  269:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::Clear(char const*, unsigned int):
+function DataStructures::MemoryPool<SLNet::InternalPacket>::Clear(char const*, unsigned int) called 0 returned 0% blocks executed 0%
+    #####:  221:	void MemoryPool<MemoryBlockType>::Clear(const char *file, unsigned int line)
+        -:  222:	{
+        -:  223:#ifdef _DISABLE_MEMORY_POOL
+        -:  224:		return;
+        -:  225:#else
+        -:  226:		Page *cur, *freed;
+        -:  227:
+    #####:  228:		if (availablePagesSize>0)
+    %%%%%:  228-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  229:		{
+    #####:  230:			cur = availablePages;
+    %%%%%:  230-block  0
+        -:  231:			for (;;)
+        -:  232:			// do
+        -:  233:			{
+    #####:  234:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  234-block  0
+call    0 never executed
+    #####:  235:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  236:				freed=cur;
+    #####:  237:				cur=cur->next;
+    #####:  238:				if (cur==availablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  239:				{
+    #####:  240:					rakFree_Ex(freed, file, line );
+    %%%%%:  240-block  0
+call    0 never executed
+    #####:  241:					break;
+        -:  242:				}
+    #####:  243:				rakFree_Ex(freed, file, line );
+    %%%%%:  243-block  0
+call    0 never executed
+        -:  244:			}// while(cur!=availablePages);
+        -:  245:		}
+        -:  246:		
+    #####:  247:		if (unavailablePagesSize>0)
+    %%%%%:  247-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  248:		{
+    #####:  249:			cur = unavailablePages;
+    %%%%%:  249-block  0
+        -:  250:			for(;;)
+        -:  251:			//do 
+        -:  252:			{
+    #####:  253:				rakFree_Ex(cur->availableStack, file, line );
+    %%%%%:  253-block  0
+call    0 never executed
+    #####:  254:				rakFree_Ex(cur->block, file, line );
+call    0 never executed
+    #####:  255:				freed=cur;
+    #####:  256:				cur=cur->next;
+    #####:  257:				if (cur==unavailablePages)
+branch  0 never executed (fallthrough)
+branch  1 never executed
+        -:  258:				{
+    #####:  259:					rakFree_Ex(freed, file, line );
+    %%%%%:  259-block  0
+call    0 never executed
+    #####:  260:					break;
+        -:  261:				}
+    #####:  262:				rakFree_Ex(freed, file, line );
+    %%%%%:  262-block  0
+call    0 never executed
+        -:  263:			} // while(cur!=unavailablePages);
+        -:  264:		}
+        -:  265:
+    #####:  266:		availablePagesSize=0;
+    #####:  267:		unavailablePagesSize=0;
+        -:  268:#endif
+    #####:  269:	}
+------------------
+        -:  270:	template<class MemoryBlockType>
+    #####:  271:	int MemoryPool<MemoryBlockType>::BlocksPerPage(void) const
+        -:  272:	{
+    #####:  273:		return memoryPoolPageSize / sizeof(MemoryWithPage);
+        -:  274:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::BlocksPerPage() const:
+function DataStructures::MemoryPool<SLNet::InternalPacketRefCountedData>::BlocksPerPage() const called 0 returned 0% blocks executed 0%
+    #####:  271:	int MemoryPool<MemoryBlockType>::BlocksPerPage(void) const
+        -:  272:	{
+    #####:  273:		return memoryPoolPageSize / sizeof(MemoryWithPage);
+    %%%%%:  273-block  0
+        -:  274:	}
+------------------
+DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::BlocksPerPage() const:
+function DataStructures::MemoryPool<SLNet::ReliabilityLayer::MessageNumberNode>::BlocksPerPage() const called 0 returned 0% blocks executed 0%
+    #####:  271:	int MemoryPool<MemoryBlockType>::BlocksPerPage(void) const
+        -:  272:	{
+    #####:  273:		return memoryPoolPageSize / sizeof(MemoryWithPage);
+    %%%%%:  273-block  0
+        -:  274:	}
+------------------
+DataStructures::MemoryPool<SLNet::InternalPacket>::BlocksPerPage() const:
+function DataStructures::MemoryPool<SLNet::InternalPacket>::BlocksPerPage() const called 0 returned 0% blocks executed 0%
+    #####:  271:	int MemoryPool<MemoryBlockType>::BlocksPerPage(void) const
+        -:  272:	{
+    #####:  273:		return memoryPoolPageSize / sizeof(MemoryWithPage);
+    %%%%%:  273-block  0
+        -:  274:	}
+------------------
+        -:  275:	template<class MemoryBlockType>
+    #####:  276:	bool MemoryPool<MemoryBlockType>::InitPage(Page *page, Page *prev, const char *file, unsigned int line)
+        -:  277:	{
+    #####:  278:		int i=0;
+    #####:  279:		const int bpp = BlocksPerPage();
+    #####:  280:		page->block=(MemoryWithPage*) rakMalloc_Ex(memoryPoolPageSize, file, line);
+    #####:  281:		if (page->block==0)
+    #####:  282:			return false;
+    #####:  283:		page->availableStack=(MemoryWithPage**)rakMalloc_Ex(sizeof(MemoryWithPage*)*bpp, file, line);
+    #####:  284:		if (page->availableStack==0)
+        -:  285:		{
+    #####:  286:			rakFree_Ex(page->block, file, line );
+    #####:  287:			return false;
+        -:  288:		}
+    #####:  289:		MemoryWithPage *curBlock = page->block;
+    #####:  290:		MemoryWithPage **curStack = page->availableStack;
+    #####:  291:		while (i < bpp)
+        -:  292:		{
+    #####:  293:			curBlock->parentPage=page;
+    #####:  294:			curStack[i]=curBlock++;
+    #####:  295:			i++;
+        -:  296:		}
+    #####:  297:		page->availableStackSize=bpp;
+    #####:  298:		page->next=availablePages;
+    #####:  299:		page->prev=prev;
+    #####:  300:		return true;
+        -:  301:	}
+        -:  302:}
+        -:  303:
+        -:  304:#endif
+        -:  305:
+        -:  306:/*
+        -:  307:#include "DS_MemoryPool.h"
+        -:  308:#include "DS_List.h"
+        -:  309:
+        -:  310:struct TestMemoryPool
+        -:  311:{
+        -:  312:	int allocationId;
+        -:  313:};
+        -:  314:
+        -:  315:int main(void)
+        -:  316:{
+        -:  317:	DataStructures::MemoryPool<TestMemoryPool> memoryPool;
+        -:  318:	DataStructures::List<TestMemoryPool*> returnList;
+        -:  319:
+        -:  320:	for (int i=0; i < 100000; i++)
+        -:  321:		returnList.Push(memoryPool.Allocate(_FILE_AND_LINE_), _FILE_AND_LINE_);
+        -:  322:	for (int i=0; i < returnList.Size(); i+=2)
+        -:  323:	{
+        -:  324:		memoryPool.Release(returnList[i], _FILE_AND_LINE_);
+        -:  325:		returnList.RemoveAtIndexFast(i);
+        -:  326:	}
+        -:  327:	for (int i=0; i < 100000; i++)
+        -:  328:		returnList.Push(memoryPool.Allocate(_FILE_AND_LINE_), _FILE_AND_LINE_);
+        -:  329:	while (returnList.Size())
+        -:  330:	{
+        -:  331:		memoryPool.Release(returnList[returnList.Size()-1], _FILE_AND_LINE_);
+        -:  332:		returnList.RemoveAtIndex(returnList.Size()-1);
+        -:  333:	}
+        -:  334:	for (int i=0; i < 100000; i++)
+        -:  335:		returnList.Push(memoryPool.Allocate(_FILE_AND_LINE_), _FILE_AND_LINE_);
+        -:  336:	while (returnList.Size())
+        -:  337:	{
+        -:  338:		memoryPool.Release(returnList[returnList.Size()-1], _FILE_AND_LINE_);
+        -:  339:		returnList.RemoveAtIndex(returnList.Size()-1);
+        -:  340:	}
+        -:  341:	for (int i=0; i < 100000; i++)
+        -:  342:		returnList.Push(memoryPool.Allocate(_FILE_AND_LINE_), _FILE_AND_LINE_);
+        -:  343:	for (int i=100000-1; i <= 0; i-=2)
+        -:  344:	{
+        -:  345:		memoryPool.Release(returnList[i], _FILE_AND_LINE_);
+        -:  346:		returnList.RemoveAtIndexFast(i);
+        -:  347:	}
+        -:  348:	for (int i=0; i < 100000; i++)
+        -:  349:		returnList.Push(memoryPool.Allocate(_FILE_AND_LINE_), _FILE_AND_LINE_);
+        -:  350:	while (returnList.Size())
+        -:  351:	{
+        -:  352:		memoryPool.Release(returnList[returnList.Size()-1], _FILE_AND_LINE_);
+        -:  353:		returnList.RemoveAtIndex(returnList.Size()-1);
+        -:  354:	}
+        -:  355:
+        -:  356:	return 0;
+        -:  357:}
+        -:  358:*/

@@ -9,6 +9,10 @@ protected:
     void SetUp() override {
         // Create a sample JSON file for testing
         std::ofstream file("test_map.json");
+        if (!file) {
+            std::cerr << "Error opening file for writing" << std::endl;
+            FAIL() << "Failed to open test_map.json";
+        }
         file << R"({
             "tilesets": [
                 {

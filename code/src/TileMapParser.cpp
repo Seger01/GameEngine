@@ -11,6 +11,10 @@ void TileMapParser::parse() {
         throw std::runtime_error("Unable to open file: " + mFilePath);
     }
 
+    if (mJsonData.empty()) {
+        throw std::runtime_error("File is empty: " + mFilePath);
+    }
+    
     // Extract tilesets
     for (const auto& tileset : mJsonData["tilesets"]) {
         mTilesets.push_back(tileset);

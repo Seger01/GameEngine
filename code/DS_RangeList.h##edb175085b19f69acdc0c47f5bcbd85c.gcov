@@ -1,0 +1,840 @@
+        -:    0:Source:/home/ronan/Documents/2024-2025/Minor/Engine-BRAVO/code/external/SLikeNet/Source/include/slikenet/DS_RangeList.h
+        -:    0:Graph:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/ReliabilityLayer.cpp.gcno
+        -:    0:Data:build/external/SLikeNet/Lib/LibStatic/CMakeFiles/RakNetLibStatic.dir/__/__/Source/src/ReliabilityLayer.cpp.gcda
+        -:    0:Runs:0
+        -:    1:/*
+        -:    2: *  Original work: Copyright (c) 2014, Oculus VR, Inc.
+        -:    3: *  All rights reserved.
+        -:    4: *
+        -:    5: *  This source code is licensed under the BSD-style license found in the
+        -:    6: *  RakNet License.txt file in the licenses directory of this source tree. An additional grant 
+        -:    7: *  of patent rights can be found in the RakNet Patents.txt file in the same directory.
+        -:    8: *
+        -:    9: *
+        -:   10: *  Modified work: Copyright (c) 2017-2018, SLikeSoft UG (haftungsbeschränkt)
+        -:   11: *
+        -:   12: *  This source code was modified by SLikeSoft. Modifications are licensed under the MIT-style
+        -:   13: *  license found in the license.txt file in the root directory of this source tree.
+        -:   14: */
+        -:   15:
+        -:   16:/// \file DS_RangeList.h
+        -:   17:/// \internal
+        -:   18:/// \brief A queue implemented as a linked list.
+        -:   19:///
+        -:   20:
+        -:   21:
+        -:   22:#ifndef __RANGE_LIST_H
+        -:   23:#define __RANGE_LIST_H
+        -:   24:
+        -:   25:#include "DS_OrderedList.h"
+        -:   26:#include "BitStream.h"
+        -:   27:#include "memoryoverride.h"
+        -:   28:#include "assert.h"
+        -:   29:
+        -:   30:namespace DataStructures
+        -:   31:{
+        -:   32:	template <class range_type>
+        -:   33:	struct RangeNode
+        -:   34:    {
+function DataStructures::RangeNode<SLNet::uint24_t>::RangeNode() called 0 returned 0% blocks executed 0%
+    #####:   35:        RangeNode() {}
+    %%%%%:   35-block  0
+call    0 never executed
+call    1 never executed
+function DataStructures::RangeNode<SLNet::uint24_t>::~RangeNode() called 0 returned 0% blocks executed 0%
+    #####:   36:        ~RangeNode() {}
+function DataStructures::RangeNode<SLNet::uint24_t>::RangeNode(SLNet::uint24_t, SLNet::uint24_t) called 0 returned 0% blocks executed 0%
+    #####:   37:        RangeNode(range_type min, range_type max) {minIndex=min; maxIndex=max;}
+    %%%%%:   37-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+        -:   38:        range_type minIndex;
+        -:   39:        range_type maxIndex;
+        -:   40:    };
+        -:   41:
+        -:   42:
+        -:   43:    template <class range_type>
+function int DataStructures::RangeNodeComp<SLNet::uint24_t>(SLNet::uint24_t const&, DataStructures::RangeNode<SLNet::uint24_t> const&) called 0 returned 0% blocks executed 0%
+    #####:   44:    int RangeNodeComp(const range_type &a, const RangeNode<range_type> &b)
+        -:   45:    {
+    #####:   46:        if (a < b.minIndex) {
+    %%%%%:   46-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:   47:            return -1;
+    %%%%%:   47-block  0
+        -:   48:		}
+    #####:   49:        if (a > b.maxIndex) {
+    %%%%%:   49-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:   50:            return 1;
+    %%%%%:   50-block  0
+        -:   51:		}
+    #####:   52:        return 0;
+    %%%%%:   52-block  0
+        -:   53:    }
+        -:   54:
+        -:   55:	template <class range_type>
+        -:   56:	class RAK_DLL_EXPORT RangeList
+        -:   57:	{
+        -:   58:	public:
+        -:   59:		RangeList();
+        -:   60:		~RangeList();
+        -:   61:		void Insert(range_type index);
+        -:   62:		void Clear(void);
+        -:   63:		bool IsWithinRange(range_type value) const;
+        -:   64:		unsigned Size(void) const;
+        -:   65:		unsigned RangeSum(void) const;
+        -:   66:		SLNet::BitSize_t Serialize(SLNet::BitStream *in, SLNet::BitSize_t maxBits, bool clearSerialized);
+        -:   67:		bool Deserialize(SLNet::BitStream *out);
+        -:   68:
+        -:   69:		DataStructures::OrderedList<range_type, RangeNode<range_type> , RangeNodeComp<range_type> > ranges;
+        -:   70:
+        -:   71:		// internal helpers
+        -:   72:	private:
+        -:   73:		static bool DeserializeSingleRange(SLNet::BitStream *out, range_type& min, range_type& max);
+        -:   74:	};
+        -:   75:
+        -:   76:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::Serialize(SLNet::BitStream*, unsigned int, bool) called 0 returned 0% blocks executed 0%
+    #####:   77:	SLNet::BitSize_t RangeList<range_type>::Serialize(SLNet::BitStream *in, SLNet::BitSize_t maxBits, bool clearSerialized)
+        -:   78:	{
+        -:   79:		RakAssert(ranges.Size() < (unsigned short)-1);
+    #####:   80:		SLNet::BitStream tempBS;
+    %%%%%:   80-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:   81:		SLNet::BitSize_t bitsWritten;
+        -:   82:		unsigned short countWritten;
+        -:   83:		unsigned i;
+    #####:   84:		countWritten=0;
+    #####:   85:		bitsWritten=0;
+    #####:   86:		for (i=0; i < ranges.Size(); i++)
+    %%%%%:   86-block  0
+    %%%%%:   86-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   86-block  2
+branch  3 never executed
+branch  4 never executed (fallthrough)
+        -:   87:		{
+    #####:   88:			if ((int)sizeof(unsigned short)*8+bitsWritten+(int)sizeof(range_type)*8*2+1>maxBits)
+    %%%%%:   88-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:   89:				break;
+    %%%%%:   89-block  0
+        -:   90:			unsigned char minEqualsMax;
+    #####:   91:			if (ranges[i].minIndex==ranges[i].maxIndex)
+    %%%%%:   91-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   91-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   91-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed
+    #####:   92:				minEqualsMax=1;
+    %%%%%:   92-block  0
+        -:   93:			else
+    #####:   94:				minEqualsMax=0;
+    %%%%%:   94-block  0
+    #####:   95:			tempBS.Write(minEqualsMax); // Use one byte, intead of one bit, for speed, as this is done a lot
+    %%%%%:   95-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   96:			tempBS.Write(ranges[i].minIndex);
+    %%%%%:   96-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   96-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    #####:   97:			bitsWritten+=sizeof(range_type)*8+8;
+    #####:   98:			if (ranges[i].minIndex!=ranges[i].maxIndex)
+    %%%%%:   98-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   98-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   98-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed
+        -:   99:			{
+    #####:  100:				tempBS.Write(ranges[i].maxIndex);
+    %%%%%:  100-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  100-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    #####:  101:				bitsWritten+=sizeof(range_type)*8;
+    %%%%%:  101-block  0
+        -:  102:			}
+    #####:  103:			countWritten++;
+    %%%%%:  103-block  0
+        -:  104:		}
+        -:  105:
+    #####:  106:		in->AlignWriteToByteBoundary();
+    %%%%%:  106-block  0
+call    0 never executed
+    #####:  107:		SLNet::BitSize_t before=in->GetWriteOffset();
+call    0 never executed
+    #####:  108:		in->Write(countWritten);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  109:		bitsWritten+=in->GetWriteOffset()-before;
+    %%%%%:  109-block  0
+call    0 never executed
+        -:  110:	//	RAKNET_DEBUG_PRINTF("%i ", in->GetNumberOfBitsUsed());
+    #####:  111:		in->Write(&tempBS, tempBS.GetNumberOfBitsUsed());
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  111-block  0
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+        -:  112:	//	RAKNET_DEBUG_PRINTF("%i %i \n", tempBS.GetNumberOfBitsUsed(),in->GetNumberOfBitsUsed());
+        -:  113:
+    #####:  114:		if (clearSerialized && countWritten)
+    %%%%%:  114-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  114-block  1
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  115:		{
+    #####:  116:			unsigned rangeSize=ranges.Size();
+    %%%%%:  116-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  117:			for (i=0; i < rangeSize-countWritten; i++)
+    %%%%%:  117-block  0
+    %%%%%:  117-block  1
+branch  0 never executed
+branch  1 never executed (fallthrough)
+        -:  118:			{
+    #####:  119:				ranges[i]=ranges[i+countWritten];
+    %%%%%:  119-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  119-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  119-block  2
+call    6 never executed
+        -:  120:			}
+    #####:  121:			ranges.RemoveFromEnd(countWritten);
+    %%%%%:  121-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  122:		}
+        -:  123:
+    #####:  124:		return bitsWritten;
+    %%%%%:  124-block  0
+    #####:  125:	}
+    %%%%%:  125-block  0
+call    0 never executed
+    $$$$$:  125-block  1
+call    1 never executed
+        -:  126:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::Deserialize(SLNet::BitStream*) called 0 returned 0% blocks executed 0%
+    #####:  127:	bool RangeList<range_type>::Deserialize(SLNet::BitStream *out)
+        -:  128:	{
+    #####:  129:		ranges.Clear(true, _FILE_AND_LINE_);
+    %%%%%:  129-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  130:		unsigned short count;
+    #####:  131:		out->AlignReadToByteBoundary();
+    %%%%%:  131-block  0
+call    0 never executed
+    #####:  132:		if (!out->Read(count)) {
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  132-block  0
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  133:			return false;
+    %%%%%:  133-block  0
+        -:  134:		}
+        -:  135:		unsigned short i;
+    #####:  136:		range_type absMin;
+    %%%%%:  136-block  0
+call    0 never executed
+    #####:  137:		range_type min, max;
+call    0 never executed
+call    1 never executed
+        -:  138:
+    #####:  139:		if (count == 0) {
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  140:			return true;
+    %%%%%:  140-block  0
+        -:  141:		}
+        -:  142:
+    #####:  143:		if (!DeserializeSingleRange(out, min, max)) {
+    %%%%%:  143-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  143-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  144:			return false;
+    %%%%%:  144-block  0
+        -:  145:		}
+    #####:  146:		ranges.InsertAtEnd(RangeNode<range_type>(min, max), _FILE_AND_LINE_);
+    %%%%%:  146-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  146-block  1
+call    6 never executed
+    $$$$$:  146-block  2
+call    7 never executed
+    $$$$$:  146-block  3
+    $$$$$:  146-block  4
+    $$$$$:  146-block  5
+        -:  147:
+    #####:  148:		for (i = 1; i < count; i++) {
+    %%%%%:  148-block  0
+branch  0 never executed
+branch  1 never executed (fallthrough)
+    #####:  149:			absMin = max;
+    %%%%%:  149-block  0
+call    0 never executed
+        -:  150:
+    #####:  151:			if (!DeserializeSingleRange(out, min, max)) {
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  151-block  0
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  152:				return false;
+    %%%%%:  152-block  0
+        -:  153:			}
+    #####:  154:			if (min <= absMin) {
+    %%%%%:  154-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+    #####:  155:				return false;
+    %%%%%:  155-block  0
+        -:  156:			}
+    #####:  157:			ranges.InsertAtEnd(RangeNode<range_type>(min, max), _FILE_AND_LINE_);
+    %%%%%:  157-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  157-block  1
+call    6 never executed
+    $$$$$:  157-block  2
+call    7 never executed
+    $$$$$:  157-block  3
+    $$$$$:  157-block  4
+    $$$$$:  157-block  5
+        -:  158:		}
+    #####:  159:		return true;
+    %%%%%:  159-block  0
+        -:  160:	}
+        -:  161:
+        -:  162:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::DeserializeSingleRange(SLNet::BitStream*, SLNet::uint24_t&, SLNet::uint24_t&) called 0 returned 0% blocks executed 0%
+    #####:  163:	bool RangeList<range_type>::DeserializeSingleRange(SLNet::BitStream *out, range_type& min, range_type& max)
+        -:  164:	{
+        -:  165:		unsigned char maxEqualToMin;
+        -:  166:
+    #####:  167:		if (!out->Read(maxEqualToMin)) {
+    %%%%%:  167-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  167-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  168:			return false;
+    %%%%%:  168-block  0
+        -:  169:		}
+    #####:  170:		if (!out->Read(min)) {
+    %%%%%:  170-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  170-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  171:			return false;
+    %%%%%:  171-block  0
+        -:  172:		}
+    #####:  173:		if (maxEqualToMin == 0) {
+    %%%%%:  173-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  174:			if (!out->Read(max)) {
+    %%%%%:  174-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  174-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    #####:  175:				return false;
+    %%%%%:  175-block  0
+        -:  176:			}
+    #####:  177:			if (max <= min) {
+    %%%%%:  177-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+    #####:  178:				return false;
+    %%%%%:  178-block  0
+        -:  179:			}
+        -:  180:		} else {
+    #####:  181:			max = min;
+    %%%%%:  181-block  0
+call    0 never executed
+        -:  182:		}
+        -:  183:
+    #####:  184:		return true;
+    %%%%%:  184-block  0
+        -:  185:	}
+        -:  186:
+        -:  187:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::RangeList() called 0 returned 0% blocks executed 0%
+    #####:  188:	RangeList<range_type>::RangeList()
+    %%%%%:  188-block  0
+call    0 never executed
+        -:  189:	{
+    #####:  190:		RangeNodeComp<range_type>(0, RangeNode<range_type>());
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+    #####:  191:	}
+        -:  192:
+        -:  193:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::~RangeList() called 0 returned 0% blocks executed 0%
+    #####:  194:	RangeList<range_type>::~RangeList()
+        -:  195:	{
+    #####:  196:		Clear();
+    %%%%%:  196-block  0
+call    0 never executed
+    #####:  197:	}
+call    0 never executed
+        -:  198:
+        -:  199:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::Insert(SLNet::uint24_t) called 0 returned 0% blocks executed 0%
+    #####:  200:	void RangeList<range_type>::Insert(range_type index)
+        -:  201:	{
+    #####:  202:		if (ranges.Size()==0)
+    %%%%%:  202-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  202-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+        -:  203:		{
+    #####:  204:			ranges.Insert(index, RangeNode<range_type>(index, index), true, _FILE_AND_LINE_);
+    %%%%%:  204-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  204-block  1
+call    6 never executed
+    $$$$$:  204-block  2
+call    7 never executed
+    $$$$$:  204-block  3
+    $$$$$:  204-block  4
+    $$$$$:  204-block  5
+    #####:  205:			return;
+    %%%%%:  205-block  0
+        -:  206:		}
+        -:  207:
+        -:  208:		bool objectExists;
+    #####:  209:		unsigned insertionIndex=ranges.GetIndexFromKey(index, &objectExists);
+    %%%%%:  209-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  210:		if (objectExists) {
+    %%%%%:  210-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    #####:  211:			return; // index already covered by a range entry - do not create a duplicated entry
+    %%%%%:  211-block  0
+        -:  212:		}
+        -:  213:
+    #####:  214:		if (insertionIndex==ranges.Size())
+    %%%%%:  214-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  214-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+        -:  215:		{
+    #####:  216:			if (index == ranges[insertionIndex-1].maxIndex+(range_type)1)
+    %%%%%:  216-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  216-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  216-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed
+    $$$$$:  216-block  3
+    $$$$$:  216-block  4
+    $$$$$:  216-block  5
+    #####:  217:				ranges[insertionIndex-1].maxIndex++;
+    %%%%%:  217-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  217-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  217-block  2
+    $$$$$:  217-block  3
+    #####:  218:			else if (index > ranges[insertionIndex-1].maxIndex+(range_type)1)
+    %%%%%:  218-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  218-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  218-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed
+    $$$$$:  218-block  3
+    $$$$$:  218-block  4
+    $$$$$:  218-block  5
+        -:  219:			{
+        -:  220:				// Insert at end
+    #####:  221:				ranges.Insert(index, RangeNode<range_type>(index, index), true, _FILE_AND_LINE_);
+    %%%%%:  221-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  221-block  1
+call    6 never executed
+    $$$$$:  221-block  2
+call    7 never executed
+    $$$$$:  221-block  3
+    $$$$$:  221-block  4
+    $$$$$:  221-block  5
+        -:  222:			}
+        -:  223:
+    #####:  224:			return;
+    %%%%%:  224-block  0
+        -:  225:		}
+        -:  226:
+        -:  227:		// verify it's really not within the current range (otherwise objectExists should have been true)
+        -:  228:		RakAssert(index < ranges[insertionIndex].minIndex || index > ranges[insertionIndex].maxIndex);
+        -:  229:
+    #####:  230:		if (index < ranges[insertionIndex].minIndex-(range_type)1)
+    %%%%%:  230-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  230-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  230-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed
+    $$$$$:  230-block  3
+    $$$$$:  230-block  4
+    $$$$$:  230-block  5
+        -:  231:		{
+        -:  232:			// Insert here
+    #####:  233:			ranges.InsertAtIndex(RangeNode<range_type>(index, index), insertionIndex, _FILE_AND_LINE_);
+    %%%%%:  233-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  233-block  1
+call    6 never executed
+    $$$$$:  233-block  2
+call    7 never executed
+    $$$$$:  233-block  3
+    $$$$$:  233-block  4
+    $$$$$:  233-block  5
+        -:  234:
+    #####:  235:			return;
+        -:  236:		}
+    #####:  237:		else if (index == ranges[insertionIndex].minIndex-(range_type)1)
+    %%%%%:  237-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  237-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  237-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed
+    $$$$$:  237-block  3
+    $$$$$:  237-block  4
+    $$$$$:  237-block  5
+        -:  238:		{
+        -:  239:			// Decrease minIndex and join left
+    #####:  240:			ranges[insertionIndex].minIndex--;
+    %%%%%:  240-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  240-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    $$$$$:  240-block  2
+    #####:  241:			if (insertionIndex>0 && ranges[insertionIndex-1].maxIndex+(range_type)1==ranges[insertionIndex].minIndex)
+    %%%%%:  241-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  241-block  1
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%:  241-block  2
+call    5 never executed
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  241-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  241-block  4
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed
+    %%%%%:  241-block  5
+    %%%%%:  241-block  6
+    %%%%%:  241-block  7
+branch 15 never executed (fallthrough)
+branch 16 never executed
+    $$$$$:  241-block  8
+    $$$$$:  241-block  9
+    $$$$$:  241-block 10
+        -:  242:			{
+    #####:  243:				ranges[insertionIndex-1].maxIndex=ranges[insertionIndex].maxIndex;
+    %%%%%:  243-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  243-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  243-block  2
+call    6 never executed
+    #####:  244:				ranges.RemoveAtIndex(insertionIndex);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  245:			}
+        -:  246:
+    #####:  247:			return;
+    %%%%%:  247-block  0
+        -:  248:		}
+        -:  249:
+    #####:  250:		if (index == ranges[insertionIndex].maxIndex+(range_type)1)
+    %%%%%:  250-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  250-block  1
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  250-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed
+    $$$$$:  250-block  3
+    $$$$$:  250-block  4
+    $$$$$:  250-block  5
+        -:  251:		{
+        -:  252:			// Increase maxIndex and join right
+    #####:  253:			ranges[insertionIndex].maxIndex++;
+    %%%%%:  253-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  253-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    $$$$$:  253-block  2
+    #####:  254:			if (insertionIndex<ranges.Size()-1 && ranges[insertionIndex+(range_type)1].minIndex==ranges[insertionIndex].maxIndex+(range_type)1)
+    %%%%%:  254-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  254-block  1
+branch  3 never executed (fallthrough)
+branch  4 never executed
+    %%%%%:  254-block  2
+call    5 never executed
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  254-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  254-block  4
+call   12 never executed
+call   13 never executed
+call   14 never executed
+branch 15 never executed (fallthrough)
+branch 16 never executed (throw)
+    %%%%%:  254-block  5
+call   17 never executed
+branch 18 never executed (fallthrough)
+branch 19 never executed
+    %%%%%:  254-block  6
+    %%%%%:  254-block  7
+    %%%%%:  254-block  8
+branch 20 never executed (fallthrough)
+branch 21 never executed
+    $$$$$:  254-block  9
+    $$$$$:  254-block 10
+    $$$$$:  254-block 11
+    $$$$$:  254-block 12
+    $$$$$:  254-block 13
+        -:  255:			{
+    #####:  256:				ranges[insertionIndex+1].minIndex=ranges[insertionIndex].minIndex;
+    %%%%%:  256-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  256-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  256-block  2
+call    6 never executed
+    #####:  257:				ranges.RemoveAtIndex(insertionIndex);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  258:			}
+        -:  259:
+    #####:  260:			return;
+    %%%%%:  260-block  0
+        -:  261:		}
+        -:  262:	}
+        -:  263:
+        -:  264:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::Clear() called 0 returned 0% blocks executed 0%
+    #####:  265:	void RangeList<range_type>::Clear(void)
+        -:  266:	{
+    #####:  267:		ranges.Clear(true, _FILE_AND_LINE_);
+    %%%%%:  267-block  0
+call    0 never executed
+    #####:  268:	}
+        -:  269:
+        -:  270:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::IsWithinRange(SLNet::uint24_t) const called 0 returned 0% blocks executed 0%
+    #####:  271:	bool RangeList<range_type>::IsWithinRange(range_type value) const
+        -:  272:	{
+        -:  273:		bool objectExists;
+        -:  274:		// not interested in the return value
+    #####:  275:		(void)ranges.GetIndexFromKey(value, &objectExists);
+    %%%%%:  275-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  276:		return objectExists;
+    %%%%%:  276-block  0
+    %%%%%:  276-block  1
+        -:  277:	}
+        -:  278:
+        -:  279:	template <class range_type>
+function DataStructures::RangeList<SLNet::uint24_t>::Size() const called 0 returned 0% blocks executed 0%
+    #####:  280:	unsigned RangeList<range_type>::Size(void) const
+        -:  281:	{
+    #####:  282:		return ranges.Size();
+    %%%%%:  282-block  0
+call    0 never executed
+        -:  283:	}
+        -:  284:
+        -:  285:	template <class range_type>
+        -:  286:	unsigned RangeList<range_type>::RangeSum(void) const
+        -:  287:	{
+        -:  288:		unsigned sum=0,i;
+        -:  289:		for (i=0; i < ranges.Size(); i++)
+        -:  290:			sum+=ranges[i].maxIndex-ranges[i].minIndex+1;
+        -:  291:        return sum;
+        -:  292:	}
+        -:  293:
+        -:  294:}
+        -:  295:
+        -:  296:#endif
