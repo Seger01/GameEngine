@@ -19,11 +19,13 @@ void CanvasBehaviourScript::onStart() {
     buttonObject->setTransform(Transform(Vector2(10, 50)));
     buttonObject->addComponent<HelloWorldButtonBehaviour>();
 
-    Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
-    sprite->setLayer(4);
-    buttonObject->addComponent(sprite);
-    buttonObject->setWidth(sprite->getWidth());
-    buttonObject->setHeight(sprite->getHeight());
+    Text* buttonText = new Text("Button1", "werkt niet", Color(15, 110, 47), Vector2(0, 0), Vector2(0.3, 0.3));
+    buttonText->setParent(buttonObject);
+    // Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
+    // sprite->setLayer(4);
+    // buttonObject->addComponent(sprite);
+    buttonObject->setWidth(40);
+    buttonObject->setHeight(10);
     buttonObject->setParent(mGameObject);
 
     GameObject* textObject = new Text("Hello, World!", "undefined", Color(15, 110, 47), Vector2(10, 10), Vector2(1, 1));
@@ -38,6 +40,7 @@ void CanvasBehaviourScript::onStart() {
     scene->addGameObject(playerStats);
     scene->addGameObject(textObject);
     scene->addGameObject(buttonObject);
+    scene->addGameObject(buttonText);
 
     return;
 }
