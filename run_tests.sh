@@ -1,19 +1,28 @@
 #!/bin/bash
 
-mkdir code/build
+BUILD_DIR="code/build"
 
-cd code/build
+# Create build directory if it does not exist
+if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p "$BUILD_DIR"
+fi
 
-# Run the tests 
-cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+cd "$BUILD_DIR"
 
+# Check CMakeCache for ENABLE_DEBUG status
+if grep -q "ENABLE_TESTS:BOOL=OFF" CMakeCache.txt; then
+    # Switch to debug mode if currently in standard mode
+    cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+fi
+
+# Build and run tests with multiple cores
 cmake --build . --target run_tests -- -j$(nproc)
 
-# Create an output directory for the coverage reports
-rm -rf coverage_reports
-mkdir -p coverage_reports
-
+# Create or clear output directory for coverage reports
 cd ..
+COVERAGE_DIR="build/coverage_reports"
+rm -rf "$COVERAGE_DIR"
+mkdir -p "$COVERAGE_DIR"
 
-# Generate the coverage report (ignoring external and build directories)
-gcovr -e external -e build --html --html-details -o build/coverage_reports/coverage.html --print-summary --delete 
+# Generate the coverage report, excluding external and build directories
+gcovr -e external -e build --html --html-details -o "$COVERAGE_DIR/coverage.html" --print-summary --delete
