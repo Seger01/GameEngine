@@ -1,8 +1,9 @@
 #ifndef NETWORKOBJECT_H
 #define NETWORKOBJECT_H
 
-class NetworkObject
-{
+#include "Components/Component.h"
+
+class NetworkObject : public Component {
 public:
     void spawn();
     void despawn();

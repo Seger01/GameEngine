@@ -18,9 +18,9 @@ public:
     void update(std::vector<GameObject*>& aGameObjects);
 
 private:
-    void getLocalIPAddress();
-    void setupBroadcastListener();
-    void listenForBroadcasts();
+    void handleIncomingPackets();
+    void sendTransform();
+    void handleTransform(SLNet::Packet* aPacket);
 
 private:
     std::list<std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)>> mConnectedClients;
@@ -28,6 +28,8 @@ private:
     std::string mServerAddress;
     int mBroadcastSocket;
     std::chrono::time_point<std::chrono::steady_clock> mLastBroadcastCheck;
+
+    std::vector<GameObject*>* mGameObjects;
 };
 
 #endif // NETWORKSERVER_H

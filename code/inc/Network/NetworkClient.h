@@ -19,12 +19,19 @@ public:
     void setServerAddress(std::string aServerAddress);
 
 private:
+    void handleIncomingPackets();
+    void sendTransform();
+    void handleTransform(SLNet::Packet* aPacket);
+
+private:
     bool mIsConnected;
     bool mIsConnecting;
     int mClientID;
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient;
     std::vector<std::string> mServerAddresses;
     std::string mServerAddress;
+
+    std::vector<GameObject*>* mGameObjects;
 };
 
 #endif // NETWORKCLIENT_H

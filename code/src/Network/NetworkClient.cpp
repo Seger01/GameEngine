@@ -9,7 +9,7 @@
 
 NetworkClient::NetworkClient()
     : mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
-      mIsConnecting(false), mClientID(-1), mServerAddress("0.0.0.0") {
+      mIsConnecting(false), mClientID(-1), mServerAddress("0.0.0.0"), mGameObjects(nullptr) {
     // std::cout << "Client Address: " << mClient->GetLocalIP(0) << std::endl;
     // SLNet::SocketDescriptor sd(CLIENT_PORT, mClient->GetLocalIP(0));
     SLNet::SocketDescriptor sd(CLIENT_PORT, 0);
@@ -40,9 +40,31 @@ void NetworkClient::receiveGameState() {
 }
 
 void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
+    mGameObjects = &aGameObjects;
     if (!mClient->IsActive()) {
         throw std::runtime_error("Client is not running");
     }
+    handleIncomingPackets();
+}
+
+void NetworkClient::discoverServers() {
+    mClient->Ping("255.255.255.255", SERVER_PORT, false); // Send discovery ping to the broadcast address
+    mServerAddresses.clear();
+}
+
+std::vector<std::string>& NetworkClient::getServerAddresses() { return mServerAddresses; }
+
+void NetworkClient::setServerAddress(std::string aServerAddress) {
+    const std::regex ipPattern(
+        R"(\b((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\b)");
+    if (!std::regex_match(aServerAddress, ipPattern)) {
+        throw std::runtime_error("Invalid IP address");
+    }
+
+    mServerAddress = aServerAddress;
+}
+
+void NetworkClient::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
         SLNet::BitStream bs(packet->data, packet->length, false);
@@ -81,6 +103,9 @@ void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
         case ID_UNCONNECTED_PING_OPEN_CONNECTIONS: {
             std::cout << "Got open connection ping from " << packet->systemAddress.ToString() << std::endl;
         }
+        case NetworkMessage::ID_TRANSFORM_PACKET:
+            handleTransform(packet);
+            break;
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
             break;
@@ -88,19 +113,25 @@ void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
     }
 }
 
-void NetworkClient::discoverServers() {
-    mClient->Ping("255.255.255.255", SERVER_PORT, false); // Send discovery ping to the broadcast address
-    mServerAddresses.clear();
+void NetworkClient::sendTransform() {
+    throw std::runtime_error("NetworkClient::sendTransform() not implemented");
+    // SLNet::BitStream bs;
+    // bs.Write((SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+    // for (auto& gameObject : *mGameObjects) {
+    //     bs.Write(gameObject->mPosition.x);
+    //     bs.Write(gameObject->mPosition.y);
+    //     bs.Write(gameObject->mPosition.z);
+    // }
+    // mClient->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
-std::vector<std::string>& NetworkClient::getServerAddresses() { return mServerAddresses; }
-
-void NetworkClient::setServerAddress(std::string aServerAddress) {
-    const std::regex ipPattern(
-        R"(\b((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\b)");
-    if (!std::regex_match(aServerAddress, ipPattern)) {
-        throw std::runtime_error("Invalid IP address");
-    }
-
-    mServerAddress = aServerAddress;
+void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
+    throw std::runtime_error("NetworkClient::handleTransform() not implemented");
+    // SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+    // bs.IgnoreBytes(sizeof(SLNet::MessageID));
+    // for (auto& gameObject : *mGameObjects) {
+    //     bs.Read(gameObject->mPosition.x);
+    //     bs.Read(gameObject->mPosition.y);
+    //     bs.Read(gameObject->mPosition.z);
+    // }
 }

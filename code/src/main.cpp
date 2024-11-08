@@ -5,16 +5,15 @@
 
 #include "EngineBravo.h"
 
-#include "PlayerBehaviourScript.h"
+#include "InitBehaviourScript.h"
 
 void engineTest() {
-    GameObject defaultPlayerPrefab;
-    defaultPlayerPrefab.setName("Player");
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
+
     NetworkManager& networkManager = engine.getNetworkManager();
 
-    networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
+    // networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
 
     std::string role;
     std::cout << "Do you want to be a server or a client? ";
@@ -47,7 +46,7 @@ void engineTest() {
 
     GameObject* gameObject = new GameObject;
 
-    gameObject->addComponent<PlayerBehaviourScript>();
+    gameObject->addComponent<InitBehaviourScript>();
 
     scene->addGameObject(gameObject);
 
@@ -55,9 +54,9 @@ void engineTest() {
 
     engine.initialize();
 
-    if (networkManager.getIsClient()) {
-        networkManager.getClient().discoverServers();
-    }
+    // if (networkManager.getIsClient()) {
+    //     networkManager.getClient().discoverServers();
+    // }
 
     engine.run();
 
