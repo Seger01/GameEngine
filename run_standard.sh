@@ -9,10 +9,15 @@ fi
 
 cd "$BUILD_DIR"
 
-# Check CMakeCache for ENABLE_DEBUG status
-if grep -q "ENABLE_DEBUG:BOOL=ON" CMakeCache.txt; then
-    # If DEBUG is ON, disable tests and rebuild with debug options
+# Check if CMakeCache.txt exists
+if [ ! -f "CMakeCache.txt" ]; then
     cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=OFF
+else
+    # Check CMakeCache for ENABLE_DEBUG status
+    if grep -q "ENABLE_DEBUG:BOOL=ON" CMakeCache.txt; then
+        # If DEBUG is ON, disable tests and rebuild with debug options
+        cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=OFF
+    fi
 fi
 
 # Build with multiple cores
