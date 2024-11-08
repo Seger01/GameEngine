@@ -51,6 +51,7 @@
 #define NETWORKMANAGER_H
 
 #include "GameObject.h"
+#include "Network/NetworkInformation.h"
 #include "NetworkClient.h"
 #include "NetworkHost.h"
 #include "NetworkServer.h"
@@ -61,11 +62,10 @@ class NetworkManager {
 public:
     NetworkManager();
 
-    void startServer();
-    void startClient();
-    void startHost();
+    void startNetwork();
     void shutdown();
 
+    void initialize();
     void update();
 
     NetworkServer& getServer() const;
@@ -85,10 +85,15 @@ public:
     void setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab);
     GameObject& getDefaultPlayerPrefab() const;
 
+    void setRole(NetworkRole aRole);
+
 private:
-    bool mIsServer;
-    bool mIsClient;
-    bool mIsHost;
+    void startServer();
+    void startClient();
+    void startHost();
+
+private:
+    NetworkRole mRole;
     int mTickRate;
     GameObject* mDefaultPlayerPrefab;
     bool mEnableSceneManagement;

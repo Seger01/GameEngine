@@ -27,6 +27,8 @@ void EngineBravo::initialize() {
     }
     startBehaviourScripts();
 
+    mNetworkManager.initialize();
+
     Time::initialize();
     return;
 }

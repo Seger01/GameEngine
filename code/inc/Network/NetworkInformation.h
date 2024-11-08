@@ -4,4 +4,6 @@
 #define SERVER_PORT 60001
 #define CLIENT_PORT 60002
 
+enum class NetworkRole { UNASSIGNED, CLIENT, SERVER, HOST };
+
 #endif // NETWORKINFORMATION_H

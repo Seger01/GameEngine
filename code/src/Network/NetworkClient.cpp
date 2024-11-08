@@ -39,8 +39,12 @@ void NetworkClient::receiveGameState() {
 }
 
 void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
+    if (!mClient->IsActive()) {
+        throw std::runtime_error("Client is not running");
+    }
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
+        SLNet::BitStream bs(packet->data, packet->length, false);
         switch (packet->data[0]) {
         case ID_CONNECTION_REQUEST_ACCEPTED:
             std::cout << "Connected to server.\n";
@@ -60,13 +64,18 @@ void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
             break;
         case ID_UNCONNECTED_PONG: {
             // Handle the pong response from the server
-            SLNet::BitStream bs(packet->data, packet->length, false);
             bs.IgnoreBytes(sizeof(SLNet::MessageID));
-            char serverIp[32];
-            packet->systemAddress.ToString(false, serverIp);
+            std::string serverIp;
+            serverIp = packet->systemAddress.ToString();
             std::cout << "Discovered server at: " << serverIp << std::endl;
             mServerAddresses.push_back(serverIp);
             break;
+        }
+        case ID_UNCONNECTED_PING: {
+            std::cout << "Got ping from " << packet->systemAddress.ToString() << std::endl;
+        }
+        case ID_UNCONNECTED_PING_OPEN_CONNECTIONS: {
+            std::cout << "Got open connection ping from " << packet->systemAddress.ToString() << std::endl;
         }
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";

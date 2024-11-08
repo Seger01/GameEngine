@@ -32,6 +32,9 @@ void NetworkServer::receiveGameState() {
 void NetworkServer::sendGameState() { throw std::runtime_error("NetworkServer::sendGameState() not implemented"); }
 
 void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
+    if (!mServer->IsActive()) {
+        throw std::runtime_error("Server is not running");
+    }
     SLNet::Packet* packet;
     for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {
         switch (packet->data[0]) {
@@ -50,13 +53,13 @@ void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
         case ID_CONNECTION_LOST:
             std::cout << "A client lost the connection.\n";
             break;
-        case ID_UNCONNECTED_PING: {
-            std::cout << "Received ping from " << packet->systemAddress.ToString(true) << std::endl;
-            SLNet::BitStream bs;
-            bs.Write((SLNet::MessageID)ID_UNCONNECTED_PONG);
-            mServer->Send(&bs, HIGH_PRIORITY, RELIABLE, 0, packet->systemAddress, false);
-            break;
-        }
+        // case ID_UNCONNECTED_PING: {
+        //     std::cout << "Received ping from " << packet->systemAddress.ToString(true) << std::endl;
+        //     SLNet::BitStream bs;
+        //     bs.Write((SLNet::MessageID)ID_UNCONNECTED_PONG);
+        //     mServer->Send(&bs, HIGH_PRIORITY, RELIABLE, 0, packet->systemAddress, false);
+        //     break;
+        // }
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
             break;

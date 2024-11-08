@@ -24,10 +24,10 @@ void engineTest() {
     while (!roleSet) {
         if (role == "server") {
             roleSet = true;
-            networkManager.startServer();
+            networkManager.setRole(NetworkRole::SERVER);
         } else if (role == "client") {
             roleSet = true;
-            networkManager.startClient();
+            networkManager.setRole(NetworkRole::CLIENT);
         } else {
             std::cerr << "Invalid input. Please enter 'server' or 'client'." << std::endl;
             std::cin >> role;
@@ -55,7 +55,7 @@ void engineTest() {
 
     engine.initialize();
 
-    if (role == "client") {
+    if (networkManager.getIsClient()) {
         networkManager.getClient().discoverServers();
     }
 

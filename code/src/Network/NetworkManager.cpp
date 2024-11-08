@@ -71,72 +71,59 @@
 
 #include "Network/NetworkManager.h"
 
-NetworkManager::NetworkManager()
-    : mIsClient(false), mIsServer(false), mIsHost(false), mTickRate(60), mEnableSceneManagement(false) {}
+NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
 
-void NetworkManager::startServer() {
-    if (mIsClient || mIsHost) {
-        throw std::runtime_error("Cannot start server when client or host is already running");
+void NetworkManager::startNetwork() {
+    if (mRole == NetworkRole::SERVER) {
+        startServer();
+    } else if (mRole == NetworkRole::CLIENT) {
+        startClient();
+    } else if (mRole == NetworkRole::HOST) {
+        startHost();
     }
-    mIsServer = true;
-    mServer = std::make_unique<NetworkServer>();
-}
-
-void NetworkManager::startClient() {
-    if (mIsServer || mIsHost) {
-        throw std::runtime_error("Cannot start client when server or host is already running");
-    }
-    mIsClient = true;
-    mClient = std::make_unique<NetworkClient>();
-}
-
-void NetworkManager::startHost() {
-    if (mIsServer || mIsClient) {
-        throw std::runtime_error("Cannot start host when server or client is already running");
-    }
-    mIsHost = true;
-    mHost = std::make_unique<NetworkHost>();
 }
 
 void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shutdown() not implemented"); }
 
+void NetworkManager::initialize() { startNetwork(); }
+
 void NetworkManager::update() {
-    if (mIsServer) {
+    if (mRole == NetworkRole::SERVER && mServer) {
         mServer->update(mGameObjects);
-    } else if (mIsClient) {
+    } else if (mRole == NetworkRole::CLIENT && mClient) {
         mClient->update(mGameObjects);
-    } else if (mIsHost) {
+    } else if (mRole == NetworkRole::HOST && mHost) {
         throw std::runtime_error("NetworkManager::update() isHost not implemented");
         // mHost->update();
     }
 }
 
 NetworkServer& NetworkManager::getServer() const {
-    if (!mIsServer) {
+    if (!mServer) {
         throw std::runtime_error("Server is not running");
     }
     return *mServer;
 }
 
 NetworkClient& NetworkManager::getClient() const {
-    if (!mIsClient) {
+    if (!mClient) {
         throw std::runtime_error("Client is not running");
     }
     return *mClient;
 }
 
 NetworkHost& NetworkManager::getHost() const {
-    if (!mIsHost) {
+    if (!mHost) {
         throw std::runtime_error("Host is not running");
     }
     return *mHost;
 }
 
-bool NetworkManager::getIsServer() const { return mIsServer; }
+bool NetworkManager::getIsServer() const { return mRole == NetworkRole::SERVER; }
 
-bool NetworkManager::getIsClient() const { return mIsClient; }
+bool NetworkManager::getIsClient() const { return mRole == NetworkRole::CLIENT; }
 
-bool NetworkManager::getIsHost() const { return mIsHost; }
+bool NetworkManager::getIsHost() const { return mRole == NetworkRole::HOST; }
 
 void NetworkManager::setTickRate(int aTickRate) { mTickRate = aTickRate; }
 
@@ -153,3 +140,35 @@ void NetworkManager::setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab) {
 }
 
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
+
+void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
+
+void NetworkManager::startServer() {
+    if (mClient || mHost) {
+        throw std::runtime_error("Cannot start server when client or host is already running");
+    }
+    if (mServer) {
+        throw std::runtime_error("Server is already running");
+    }
+    mServer = std::make_unique<NetworkServer>();
+}
+
+void NetworkManager::startClient() {
+    if (mServer || mHost) {
+        throw std::runtime_error("Cannot start client when server or host is already running");
+    }
+    if (mClient) {
+        throw std::runtime_error("Client is already running");
+    }
+    mClient = std::make_unique<NetworkClient>();
+}
+
+void NetworkManager::startHost() {
+    if (mServer || mClient) {
+        throw std::runtime_error("Cannot start host when server or client is already running");
+    }
+    if (mHost) {
+        throw std::runtime_error("Host is already running");
+    }
+    mHost = std::make_unique<NetworkHost>();
+}
