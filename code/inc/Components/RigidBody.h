@@ -5,6 +5,7 @@
 #include "Structs/BodyProperties.h"
 #include "Transform.h"
 #include "Vector2.h"
+#include "box2d/id.h"
 
 #include <vector>
 
@@ -45,6 +46,7 @@ public:
     BodyType getBodyType() const;
 
     int getBodyId() const;
+    void setBodyId(int aBodyId);
 
 private:
     Transform mTransform;
@@ -63,6 +65,7 @@ private:
     float mGravityScale = 0;
 
     int mBodyId;
+    b2BodyId mB2BodyId;
 
     std::vector<Vector2> mForcesBuffer;
 };

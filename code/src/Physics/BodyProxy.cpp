@@ -5,11 +5,8 @@
 #include <vector>
 
 BodyProxy::BodyProxy(GameObject& aGameObject) {
-    std::cout << aGameObject.getName() << std::endl;
 
     std::vector<RigidBody*> rigidBodies = aGameObject.getComponents<RigidBody>();
-    std::cout << "rigid bodies size: " << rigidBodies.size() << std::endl;
-    std::cout << "created body proxy" << std::endl;
 
     if (!rigidBodies.empty()) {
 
@@ -26,23 +23,23 @@ BodyProxy::BodyProxy(GameObject& aGameObject) {
         mMass = rigidBodies.at(0)->getMass();
         mGravityScale = rigidBodies.at(0)->getGravityScale();
 
+        mBoxColliders = aGameObject.getComponents<BoxCollider>();
+        processBodyType();
+
+        setvalidBody(true);
+
     } else {
-        std::cout << "invalid body" << std::endl;
         return;
     }
-
-    // mCircleColliders = aGameObject.getComponents<CircleCollider>();
-
-    processBodyType();
-    std::cout << "body type: " << static_cast<int>(mBodyType) << std::endl;
 }
+
+BodyProxy::~BodyProxy() {}
 
 void BodyProxy::processBodyType() {
     if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mFriction == 0 && mRestitution == 0 &&
         mMass == 0 && mGravityScale == 0) {
         mBodyType = BodyType::STATIC;
-    } else if (mHasGravity && mIsMoveableByForce && mCanRotate && mDensity != 0 && mFriction != 0 &&
-               mRestitution != 0 && mMass != 0 && mGravityScale != 0) {
+    } else {
         mBodyType = BodyType::DYNAMIC;
     }
 }
@@ -63,3 +60,6 @@ Vector2 BodyProxy::getPosition() const { return mPosition; }
 Vector2 BodyProxy::getSize() const { return mSize; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
+
+void BodyProxy::setvalidBody(bool aValidBody) { mValidBody = aValidBody; }
+bool BodyProxy::getvalidBody() const { return mValidBody; }

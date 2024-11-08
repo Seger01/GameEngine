@@ -234,6 +234,25 @@ void PlayerBehaviourScript::onStart() {
     emitter->setLayer(4);
     mGameObject->addComponent(emitter);
 
+    RigidBody* rigidBody = new RigidBody();
+
+    rigidBody->setCanRotate(true);
+    rigidBody->setHasGravity(true);
+    rigidBody->setIsMoveableByForce(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.3f);
+    rigidBody->setRestitution(0.2f);
+    rigidBody->setGravityScale(1.0f);
+    rigidBody->setMass(1.0f);
+
+    rigidBody->setTransform(mGameObject->getTransform());
+
+    mGameObject->addComponent(rigidBody);
+
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setTransform(mGameObject->getTransform());
+    mGameObject->addComponent(boxCollider);
+
     // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
     // emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
 }

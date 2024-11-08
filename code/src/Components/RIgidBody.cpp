@@ -44,4 +44,5 @@ void RigidBody::setBodyType(BodyType aBodyType) { mBodyType = aBodyType; }
 
 BodyType RigidBody::getBodyType() const { return mBodyType; }
 
-int RigidBody::getBodyId() const { return mBodyType; }
+int RigidBody::getBodyId() const { return mBodyId; }
+void RigidBody::setBodyId(int aBodyId) { mBodyId = aBodyId; }

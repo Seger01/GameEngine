@@ -26,7 +26,6 @@ void EngineBravo::initizalize() {
     startBehaviourScripts();
 
     Time::initialize();
-    mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0));
 
     return;
 }
@@ -51,6 +50,7 @@ void EngineBravo::run() {
         if (mSceneManager.sceneChanged()) {
 
             startBehaviourScripts();
+            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0));
         }
         input.update();
 
@@ -59,6 +59,8 @@ void EngineBravo::run() {
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
+
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         limitFrameRate(mFrameRateLimit);
     }

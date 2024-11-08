@@ -5,9 +5,25 @@
 
 PhysicsEngine::PhysicsEngine() {}
 
-void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) {}
+void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) {
+    mGameObjects = aGameObjects;
+    std::vector<RigidBody*> rigidBodies = mGameObjects.at(0)->getComponents<RigidBody>();
+}
 
-void PhysicsEngine::update() {}
+void PhysicsEngine::update() {
+
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+        if (!rigidBodies.empty()) {
+            BodyProxy bodyProxy = BodyProxy(*mGameObjects.at(i));
+            int id = rigidBodies[0]->getBodyId();
+            mWorld.checkContactEvent(id);
+
+            mWorld.updateBody(id, bodyProxy);
+        }
+    }
+    mWorld.executeWorldStep(mStep, mSubStep);
+}
 
 void PhysicsEngine::setSubStep(int aSubStep) {}
 
@@ -20,19 +36,16 @@ float PhysicsEngine::getStep() const { return mStep; }
 void PhysicsEngine::executeCollisionScripts(std::vector<int> aBodyIDs) {}
 
 void PhysicsEngine::createBodies() {
-    std::cout << mGameObjects.size() << std::endl;
     for (int i = 0; i < mGameObjects.size(); i++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
 
         BodyProxy bodyProxy = BodyProxy(*mGameObjects.at(i));
 
-        mWorld.createBody(bodyProxy);
+        if (bodyProxy.getvalidBody()) {
+            int bodyID = mWorld.createBody(bodyProxy);
+            rigidBodies[0]->setBodyId(bodyID);
+        }
     }
-
-    // for (std::vector<GameObject*>::iterator it = mGameObjects.begin(); it != mGameObjects.end(); ++it) {
-    //     BodyProxy bodyProxy = BodyProxy(**it);
-    //
-    //     mWorld.createBody(bodyProxy);
-    // }
 }
 
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld.createWorld(aGravity); }

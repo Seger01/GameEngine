@@ -4,6 +4,7 @@
 #include "EngineBravo.h"
 #include "FSConverter.h"
 #include "PlayerBehaviourScript.h"
+#include "RigidBody.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "TileMapParser.h"
@@ -84,11 +85,18 @@ void InitBehaviourScript::createLevel1() {
                         sprite->setLayer(layerIndex);
 
                         gameObject->addComponent(sprite);
+
                         // Add BoxCollider components to the GameObject
                         for (const auto& collider : tileInfo.mColliders) {
                             BoxCollider* boxCollider = new BoxCollider();
                             boxCollider->setTransformFromColliderData(collider);
                             gameObject->addComponent(boxCollider);
+                        }
+
+                        if (!tileInfo.mColliders.empty()) {
+                            RigidBody* rigidBody = new RigidBody();
+                            rigidBody->setTransform(objectTransform);
+                            gameObject->addComponent(rigidBody);
                         }
 
                         scene->addGameObject(gameObject);

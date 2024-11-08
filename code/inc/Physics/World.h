@@ -4,6 +4,7 @@
 #include "Physics/BodyProxy.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
+#include "box2d/id.h"
 #include <vector>
 class World {
 public:
@@ -24,7 +25,7 @@ public:
     void setGravity(Vector2 aGravity);
     Vector2 getGravity();
 
-    std::vector<int> checkContactEvent();
+    std::vector<int> checkContactEvent(int aBodyID);
 
 private:
     b2WorldId mWorldID;
