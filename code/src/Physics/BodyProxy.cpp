@@ -9,6 +9,7 @@ BodyProxy::BodyProxy(GameObject& aGameObject) {
     std::vector<RigidBody*> rigidBodies = aGameObject.getComponents<RigidBody>();
 
     if (!rigidBodies.empty()) {
+        mBoxColliders = aGameObject.getComponents<BoxCollider>();
 
         mPosition = aGameObject.getTransform().position;
 
@@ -23,7 +24,6 @@ BodyProxy::BodyProxy(GameObject& aGameObject) {
         mMass = rigidBodies.at(0)->getMass();
         mGravityScale = rigidBodies.at(0)->getGravityScale();
 
-        mBoxColliders = aGameObject.getComponents<BoxCollider>();
         processBodyType();
 
         setvalidBody(true);

@@ -1,4 +1,5 @@
 #include "Physics/World.h"
+#include "SDL.h"
 #include "box2d/box2d.h"
 #include "box2d/id.h"
 #include "box2d/math_functions.h"
@@ -29,17 +30,20 @@ int World::createBody(BodyProxy& aBodyProxy) {
     case BodyType::DYNAMIC:
         std::cout << "create dynamicbody" << std::endl;
         bodyDef.type = b2_dynamicBody;
+        bodyDef.linearDamping = 0.1f;
+        bodyDef.angularDamping = 0.1f;
         break;
     }
 
     bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
-    bodyDef.gravityScale = aBodyProxy.getGravityScale();
-    bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
+    bodyDef.gravityScale = 0;
+    bodyDef.fixedRotation = true;
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
+
     std::cout << "creating body at: (" << aBodyProxy.getPosition().x << ", " << aBodyProxy.getPosition().y << ")"
               << std::endl;
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
-        b2Polygon polygon = b2MakeBox(1000, 1000);
+        b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
 
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
@@ -47,7 +51,7 @@ int World::createBody(BodyProxy& aBodyProxy) {
         shapeDef.restitution = aBodyProxy.getRestitution();
 
         b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
-        b2Body_EnableSleep(bodyID, true);
+        b2Body_EnableSleep(bodyID, false);
 
         std::cout << "creating box collider at: (" << boxCollider->getTransform().position.x << ", "
                   << boxCollider->getTransform().position.y << ")" << std::endl;
@@ -63,27 +67,35 @@ void World::updateBody(int aBodyID, BodyProxy& aBodyProxy) {
               << b2Body_GetPosition(test).y << ")" << std::endl;
 }
 
-void World::applyForce(int aBodyID, Vector2 aForce) {}
+void World::applyForce(int aBodyID, Vector2 aForce) {
+    b2BodyId test = {aBodyID, 0, 1};
+    b2Vec2 force = {aForce.x, aForce.y};
+    b2Body_ApplyLinearImpulseToCenter(test, force, true);
+}
 
 void World::setPosition(int aBodyID, Vector2 aPosition) {}
 
-Vector2 World::getPosition() {}
+Vector2 World::getPosition(int aBodyID) {
+    b2BodyId test = {aBodyID, 0, 1};
+    Vector2 position = {b2Body_GetPosition(test).x, b2Body_GetPosition(test).y};
+    return position;
+}
 
 void World::setGravity(Vector2 aGravity) {}
 
 Vector2 World::getGravity() { return mGravity; }
 
-std::vector<int> World::checkContactEvent(int aBodyID) {
-    b2BodyId test2 = {1, 0, 1};
-    b2Body_ApplyLinearImpulseToCenter(test2, {5000.0f, 0.0f}, true);
+std::vector<int> World::getContactEvents() {
+    b2ContactEvents contactlist = b2World_GetContactEvents(mWorldID);
 
-    b2Body_SetAwake(test2, true);
-    b2ContactData contactData[10];
-    int test = b2Body_GetContactData(test2, contactData, 1);
-    std::cout << test << std::endl;
-    if (test != 0) {
-        while (true)
-            ;
+    for (int i = 0; i < contactlist.beginCount; i++) {
+        std::cout << "begincount is: " << contactlist.beginCount << std::endl;
+        std::cout << "contact found: " << std::endl;
+
+        std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
+
+        std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
+        SDL_Delay(1000);
     }
-    return std::vector<int>(1);
+    return std::vector<int>();
 }

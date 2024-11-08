@@ -38,78 +38,95 @@ void InitBehaviourScript::createLevel1() {
 
     sceneManager.requestSceneChange("Level-1");
 
-    FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
+    GameObject* gameObject2 = new GameObject;
+    Transform objectTransform2;
+    objectTransform2.position.x = 40;
+    objectTransform2.position.y = 40;
+    gameObject2->setTransform(objectTransform2);
 
-    TileMapParser tileMapParser(path);
-    tileMapParser.parse();
-    // tileMapParser.printLayers();
+    gameObject2->addComponent<BoxCollider>();
 
-    const TileMapData& tileMapData = tileMapParser.getTileMapData();
+    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(30);
+    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(30);
 
-    // // print mTileInfoMap
-    // for (const auto& pair : tileMapData.mTileInfoMap) {
-    //     int gID = pair.first;
-    //     const TileInfo& info = pair.second;
-    //     std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-    //               << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+    gameObject2->addComponent<RigidBody>();
+
+    gameObject2->getComponents<RigidBody>().at(0)->setIsMoveableByForce(true);
+
+    scene->addGameObject(gameObject2);
+
+    // FSConverter fsConverter;
+    // std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
+    //
+    // TileMapParser tileMapParser(path);
+    // tileMapParser.parse();
+    // // tileMapParser.printLayers();
+    //
+    // const TileMapData& tileMapData = tileMapParser.getTileMapData();
+    //
+    // // // print mTileInfoMap
+    // // for (const auto& pair : tileMapData.mTileInfoMap) {
+    // //     int gID = pair.first;
+    // //     const TileInfo& info = pair.second;
+    // //     std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
+    // //               << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
+    // // }
+    //
+    // // Assuming tileMapData is a const reference to TileMapData
+    // for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
+    //     // Access rows within the layer by index
+    //     for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
+    //         // Access each tile in the row by index
+    //         for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex) {
+    //             int tile = tileMapData.mLayers[layerIndex][rowIndex][colIndex];
+    //             if (tile != 0) {
+    //                 // Check if the tile exists in mTileInfoMap (read-only)
+    //                 auto it = tileMapData.mTileInfoMap.find(tile);
+    //                 if (it != tileMapData.mTileInfoMap.end()) {
+    //                     const TileInfo& tileInfo = it->second; // Access as const
+    //
+    //                     SpriteDef spriteDef = {tileInfo.mTilesetName,
+    //                                            Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16,
+    //                                            16}, 16, 16};
+    //
+    //                     GameObject* gameObject = new GameObject;
+    //
+    //                     Transform objectTransform;
+    //                     objectTransform.position.x = static_cast<int>(colIndex * 16);
+    //                     objectTransform.position.y = static_cast<int>(rowIndex * 16);
+    //                     gameObject->setTransform(objectTransform);
+    //
+    //                     // Add a Sprite component to the GameObject
+    //                     Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+    //
+    //                     sprite->setLayer(layerIndex);
+    //
+    //                     gameObject->addComponent(sprite);
+    //
+    //                     // Add BoxCollider components to the GameObject
+    //                     for (const auto& collider : tileInfo.mColliders) {
+    //                         BoxCollider* boxCollider = new BoxCollider();
+    //                         boxCollider->setTransformFromColliderData(collider);
+    //                         gameObject->addComponent(boxCollider);
+    //                     }
+    //
+    //                     if (!tileInfo.mColliders.empty()) {
+    //                         RigidBody* rigidBody = new RigidBody();
+    //                         rigidBody->setTransform(objectTransform);
+    //                         gameObject->addComponent(rigidBody);
+    //                     }
+    //
+    //                     scene->addGameObject(gameObject);
+    //
+    //                 } else {
+    //                     // Handle the case where tileId does not exist in the map
+    //                     std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
+    //                 }
+    //             }
+    //         }
+    //     }
     // }
-
-    // Assuming tileMapData is a const reference to TileMapData
-    for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
-        // Access rows within the layer by index
-        for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
-            // Access each tile in the row by index
-            for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex) {
-                int tile = tileMapData.mLayers[layerIndex][rowIndex][colIndex];
-                if (tile != 0) {
-                    // Check if the tile exists in mTileInfoMap (read-only)
-                    auto it = tileMapData.mTileInfoMap.find(tile);
-                    if (it != tileMapData.mTileInfoMap.end()) {
-                        const TileInfo& tileInfo = it->second; // Access as const
-
-                        SpriteDef spriteDef = {tileInfo.mTilesetName,
-                                               Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16},
-                                               16, 16};
-
-                        GameObject* gameObject = new GameObject;
-
-                        Transform objectTransform;
-                        objectTransform.position.x = static_cast<int>(colIndex * 16);
-                        objectTransform.position.y = static_cast<int>(rowIndex * 16);
-                        gameObject->setTransform(objectTransform);
-
-                        // Add a Sprite component to the GameObject
-                        Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
-
-                        sprite->setLayer(layerIndex);
-
-                        gameObject->addComponent(sprite);
-
-                        // Add BoxCollider components to the GameObject
-                        for (const auto& collider : tileInfo.mColliders) {
-                            BoxCollider* boxCollider = new BoxCollider();
-                            boxCollider->setTransformFromColliderData(collider);
-                            gameObject->addComponent(boxCollider);
-                        }
-
-                        if (!tileInfo.mColliders.empty()) {
-                            RigidBody* rigidBody = new RigidBody();
-                            rigidBody->setTransform(objectTransform);
-                            gameObject->addComponent(rigidBody);
-                        }
-
-                        scene->addGameObject(gameObject);
-
-                    } else {
-                        // Handle the case where tileId does not exist in the map
-                        std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
-                    }
-                }
-            }
-        }
-    }
-    return;
+    // return;
 }
 
 void InitBehaviourScript::onStart() {

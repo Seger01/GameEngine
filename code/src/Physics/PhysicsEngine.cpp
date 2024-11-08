@@ -5,24 +5,33 @@
 
 PhysicsEngine::PhysicsEngine() {}
 
-void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) {
-    mGameObjects = aGameObjects;
-    std::vector<RigidBody*> rigidBodies = mGameObjects.at(0)->getComponents<RigidBody>();
-}
+void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) { mGameObjects = aGameObjects; }
 
 void PhysicsEngine::update() {
-
     for (int i = 0; i < mGameObjects.size(); i++) {
+
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+
         if (!rigidBodies.empty()) {
             BodyProxy bodyProxy = BodyProxy(*mGameObjects.at(i));
             int id = rigidBodies[0]->getBodyId();
-            mWorld.checkContactEvent(id);
 
             mWorld.updateBody(id, bodyProxy);
         }
     }
     mWorld.executeWorldStep(mStep, mSubStep);
+    mWorld.getContactEvents();
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+
+        if (!rigidBodies.empty()) {
+            Vector2 position = mWorld.getPosition(rigidBodies.at(0)->getBodyId());
+            Transform transform = mGameObjects.at(i)->getTransform();
+            transform.position = position;
+            mGameObjects.at(i)->setTransform(transform);
+        }
+    }
+    mWorld.applyForce(1, Vector2(100, 100));
 }
 
 void PhysicsEngine::setSubStep(int aSubStep) {}

@@ -20,12 +20,12 @@ public:
     void applyForce(int aBodyID, Vector2 aForce);
 
     void setPosition(int BodyID, Vector2 aPosition);
-    Vector2 getPosition();
+    Vector2 getPosition(int aBodyID);
 
     void setGravity(Vector2 aGravity);
     Vector2 getGravity();
 
-    std::vector<int> checkContactEvent(int aBodyID);
+    std::vector<int> getContactEvents();
 
 private:
     b2WorldId mWorldID;

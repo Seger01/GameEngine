@@ -245,12 +245,12 @@ void PlayerBehaviourScript::onStart() {
     rigidBody->setGravityScale(1.0f);
     rigidBody->setMass(1.0f);
 
-    rigidBody->setTransform(mGameObject->getTransform());
-
     mGameObject->addComponent(rigidBody);
 
     BoxCollider* boxCollider = new BoxCollider();
-    boxCollider->setTransform(mGameObject->getTransform());
+    boxCollider->setWidth(playerIdleFrontAnimation->getFrame(0)->getWidth());
+    boxCollider->setHeight(playerIdleFrontAnimation->getFrame(0)->getHeight());
+
     mGameObject->addComponent(boxCollider);
 
     // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);

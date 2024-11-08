@@ -56,11 +56,11 @@ void EngineBravo::run() {
 
         runBehaviourScripts();
 
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
+
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
-
-        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         limitFrameRate(mFrameRateLimit);
     }
