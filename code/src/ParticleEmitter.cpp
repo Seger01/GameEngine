@@ -46,18 +46,31 @@ void ParticleEmitter::setAngle(int aMinAngle, int aMaxAngle) {
     mMinAngle = aMinAngle;
     mMaxAngle = aMaxAngle;
 
+    if (mMinAngle < 0) {
+        mMinAngle = 0;
+    }
+
+    if (mMaxAngle > 360) {
+        mMaxAngle = 360;
+    }
+
     if (mMinAngle > mMaxAngle) {
         std::swap(mMinAngle, mMaxAngle);
     }
-
-    if (mMaxAngle - mMinAngle > 360) {
-        mMaxAngle = 0;
-        mMaxAngle = mMinAngle + 360;
-    }
 }
 
+int ParticleEmitter::getMinAngle() { return mMinAngle; }
+
+int ParticleEmitter::getMaxAngle() { return mMaxAngle; }
+
 void ParticleEmitter::spawnParticle() {
-    Vector2 particlePos = mGameObject->getTransform().position + mRelativeTransform.position;
+    Vector2 particlePos;
+    if (mGameObject != nullptr) {
+        particlePos = mGameObject->getTransform().position + mRelativeTransform.position;
+    } else {
+        particlePos = mRelativeTransform.position;
+    }
+
     Vector2 particleVel = generateRandomVelocity(mVelocity, mVelocity, mMinAngle, mMaxAngle);
     float particleAccel = mAcceleration;
 
@@ -95,6 +108,12 @@ void ParticleEmitter::update() {
         } else {
             ++i; // Only increment if no element was erased
         }
+    }
+}
+
+void ParticleEmitter::burst(int aAmount) {
+    for (int i = 0; i < aAmount; i++) {
+        spawnParticle();
     }
 }
 

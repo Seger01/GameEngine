@@ -21,11 +21,16 @@ public:
 
     void update();
 
+    void burst(int aAmount);
+
     void setRelativeTransform(Transform aTransform);
     Transform& getRelativeTransform();
 
     void setParticlesPerSecond(int aParticlesPerSecond);
     void setAngle(int aMinAngle, int aMaxAngle);
+
+    int getMinAngle();
+    int getMaxAngle();
 
     std::vector<Particle>& getParticles();
 

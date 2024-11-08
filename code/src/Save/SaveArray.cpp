@@ -73,7 +73,7 @@ IntSaveField& SaveArray::getIntField(std::string aName) {
             return field;
         }
     }
-    throw("Failed to get field " + aName);
+    throw std::invalid_argument("Failed to get field " + aName);
 }
 
 FloatSaveField& SaveArray::getFloatField(std::string aName) {
@@ -82,7 +82,7 @@ FloatSaveField& SaveArray::getFloatField(std::string aName) {
             return field;
         }
     }
-    throw("Failed to get field " + aName);
+    throw std::invalid_argument("Failed to get field " + aName);
 }
 
 StringSaveField& SaveArray::getStringField(std::string aName) {
@@ -91,7 +91,7 @@ StringSaveField& SaveArray::getStringField(std::string aName) {
             return field;
         }
     }
-    throw("Failed to get field " + aName);
+    throw std::invalid_argument("Failed to get field " + aName);
 }
 
 const std::vector<IntSaveField>& SaveArray::getIntArray() const { return mIntFields; }
