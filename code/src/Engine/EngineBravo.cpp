@@ -102,7 +102,7 @@ RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
-// UIManager& EngineBravo::getUIManager() { return mUIManager; }
+UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();

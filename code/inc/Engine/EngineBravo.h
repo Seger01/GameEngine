@@ -27,6 +27,7 @@ public:
     ResourceManager& getResourceManager();
     SaveGameManager& getSaveGameManager();
     EventManager& getEventManager();
+    UIManager& getUIManager();
     // UIManager& getUIManager();
 
 private:
