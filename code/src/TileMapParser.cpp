@@ -131,63 +131,6 @@ void TileMapParser::storeTileInfo() {
     }
 }
 
-void TileMapParser::printTileInfo(int gID) const {
-    auto it = mTileMapData.mTileInfoMap.find(gID);
-    if (it != mTileMapData.mTileInfoMap.end()) {
-        const TileInfo& info = it->second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-        for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
-        }
-    } else {
-        std::cerr << "gID " << gID << " not found in tile info map" << std::endl;
-    }
-}
-
-void TileMapParser::printTileInfoMap() const {
-    for (const auto& pair : mTileMapData.mTileInfoMap) {
-        int gID = pair.first;
-        const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-        for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
-        }
-    }
-}
-
-void TileMapParser::printLayers() const {
-    for (size_t layerIndex = 0; layerIndex < mTileMapData.mLayers.size(); ++layerIndex) {
-        std::cout << "Layer " << layerIndex << " (" << mLayerNames[layerIndex] << "):\n";
-        for (const auto& row : mTileMapData.mLayers[layerIndex]) {
-            for (int tile : row) {
-                std::cout << tile << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-}
-
-int TileMapParser::getGIDFromCoordinate(int layer, int x, int y) const {
-    if (layer >= mTileMapData.mLayers.size()) {
-        throw std::out_of_range("Layer index out of range");
-    }
-    if (y >= mTileMapData.mLayers[layer].size() || x >= mTileMapData.mLayers[layer][y].size()) {
-        throw std::out_of_range("Grid coordinates out of range");
-    }
-    return mTileMapData.mLayers[layer][y][x];
-}
-
-std::pair<int, int> TileMapParser::getGridTilePosition(int layerIndex, int x, int y) const {
-    if (layerIndex >= mTileMapData.mLayers.size()) {
-        throw std::out_of_range("Layer index out of range");
-    }
-    if (y >= mTileMapData.mLayers[layerIndex].size() || x >= mTileMapData.mLayers[layerIndex][y].size()) {
-        throw std::out_of_range("Grid coordinates out of range");
-    }
-    int gID = mTileMapData.mLayers[layerIndex][y][x];
-    return getTilePosition(gID);
-}
-
 const TileMapData& TileMapParser::getTileMapData() const {
     return mTileMapData;
 }

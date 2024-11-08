@@ -39,16 +39,10 @@ struct TileMapData {
 class TileMapParser {
 public:
     TileMapParser(const std::string& aFilePath);
-    //virtual ~TileMapParser();
     void parse();
     std::pair<int, int> getTilePosition(int gID) const;
-    int getGIDFromCoordinate(int layer, int x, int y) const;
     void storeTileInfo();
     void parseObjectLayer(const nlohmann::json& layer);
-    void printTileInfo(int gID) const;
-    void printLayers() const;
-    void printTileInfoMap() const;
-    std::pair<int, int> getGridTilePosition(int layerIndex, int x, int y) const;
     const TileMapData& getTileMapData() const;
 
 private:
