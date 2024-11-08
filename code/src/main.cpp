@@ -52,10 +52,10 @@ int loadSound(const char* filename) {
 
 int init() {
     // Initialize SDL with audio support
-    // if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-    //     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-    //     return -1;
-    // }
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
 
     // Initialize SDL_mixer
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
@@ -97,8 +97,8 @@ void finalize() {
 
 void sdlMixer() {
     init();
-    std::string soundPath = FSConverter().getResourcePath("gun1.wav");
-    std::string musicPath = FSConverter().getResourcePath("music.wav");
+    std::string soundPath = FSConverter().getResourcePath("Audio/gun1.wav");
+    std::string musicPath = FSConverter().getResourcePath("Audio/music.wav");
     loadMusic(soundPath.c_str()); // Sound and music are swapped for
                                   // the demo; hearing the music
                                   // rotate is easier to distinguish
