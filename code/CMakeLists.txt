@@ -32,7 +32,6 @@ if(ENABLE_TESTS)
     #Set coverage compile and link flags
     add_compile_options(--coverage)
     add_link_options(--coverage)
-
     add_subdirectory(test)
 endif()
 
@@ -75,9 +74,6 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
 file(GLOB_RECURSE LIBRARY_SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
-
-# Add the tests directory
-add_subdirectory(test)
 
 # Add the testGame subdirectory
 add_subdirectory(testGame)
