@@ -2,6 +2,7 @@
 #include "IntSaveField.h"
 #include "SaveGame.h"
 #include "StringSaveField.h"
+#include "TileMapParser.h"
 #include <cstdio>
 #include <fstream>
 #include <gtest/gtest.h>
