@@ -26,7 +26,7 @@ add_executable(${TESTS} ${TEST_SOURCES})
 add_dependencies(${TESTS} ${PROJECT_NAME})
 
 # Link GoogleTest, GoogleMock libraries and the main library
-target_link_libraries(${TESTS} PUBLIC GTest::GTest GMock::GMock pthread ${PROJECT_NAME})
+target_link_libraries(${TESTS} PRIVATE GTest::GTest GMock::GMock pthread ${PROJECT_NAME})
 
 # Add custom target to run the tests
 add_custom_target(run_tests

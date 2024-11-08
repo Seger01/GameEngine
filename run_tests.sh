@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cd build
+mkdir code/build
+
+cd code/build
 
 # Run the tests 
 cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
