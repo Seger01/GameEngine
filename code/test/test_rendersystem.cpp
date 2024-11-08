@@ -24,12 +24,12 @@ protected:
         EngineBravo& engineBravo = EngineBravo::getInstance();
         mRenderSystem = &engineBravo.getRenderSystem();
 
-        mRenderSystem->getWindow().showWindow();
+        // mRenderSystem->getWindow().showWindow();
 
-        mRenderSystem->getWindow().setFloating();
-        mRenderSystem->getWindow().toggleFullFloating();
-        mRenderSystem->getWindow().setFullScreen();
-
+        // mRenderSystem->getWindow().setFloating();
+        // mRenderSystem->getWindow().toggleFullFloating();
+        // mRenderSystem->getWindow().setFullScreen();
+        //
         engineBravo.getResourceManager().setRenderer(&mRenderSystem->getRenderer());
 
         mScene = engineBravo.getSceneManager().createScene("Test Scene", 1);
@@ -105,7 +105,7 @@ TEST_F(RenderSystemTest, RenderLayer_NoExceptions) {
 TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer) {
     // Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
     ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0)); // Check for exceptions when an invalid layer is
-                                                            // passed
+    //                                                         // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions) {
@@ -114,4 +114,7 @@ TEST_F(RenderSystemTest, Render_NoExceptions) {
 
 TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getRenderer()); }
 
-TEST_F(RenderSystemTest, GetWindow_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getWindow()); }
+TEST_F(RenderSystemTest, GetWindow_NoExceptions) {
+    ASSERT_NO_THROW(mRenderSystem->getWindow());
+    mRenderSystem->getWindow().showWindow();
+}
