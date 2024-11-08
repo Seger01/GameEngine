@@ -29,6 +29,7 @@ public:
     NetworkManager& getNetworkManager();
     SaveGameManager& getSaveGameManager();
     EventManager& getEventManager();
+    UIManager& getUIManager();
     // UIManager& getUIManager();
 
 private:
