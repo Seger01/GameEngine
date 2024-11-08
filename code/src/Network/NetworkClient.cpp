@@ -67,9 +67,12 @@ void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
             // Handle the pong response from the server
             bs.IgnoreBytes(sizeof(SLNet::MessageID));
             std::string serverIp;
-            serverIp = packet->systemAddress.ToString();
+            serverIp = packet->systemAddress.ToString(false);
             std::cout << "Discovered server at: " << serverIp << std::endl;
             mServerAddresses.push_back(serverIp);
+
+            setServerAddress(serverIp);
+            connectToServer();
             break;
         }
         case ID_UNCONNECTED_PING: {
