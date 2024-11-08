@@ -32,7 +32,6 @@ if(ENABLE_TESTS)
     #Set coverage compile and link flags
     add_compile_options(--coverage)
     add_link_options(--coverage)
-    add_subdirectory(test)
 endif()
 
 # Set architecture-specific flags
@@ -75,9 +74,6 @@ file(GLOB_RECURSE LIBRARY_SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# Add the testGame subdirectory
-add_subdirectory(testGame)
-
 # Create a library from the library sources
 add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES})
 
@@ -86,3 +82,11 @@ set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlo
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
+
+# Add the testGame subdirectory
+add_subdirectory(testGame)
+
+if(ENABLE_TESTS)
+    # Add the testGame subdirectory
+    add_subdirectory(test)
+endif()
