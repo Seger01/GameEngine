@@ -92,9 +92,10 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     }
 }
 
-void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor) {
-    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
+                              Vector2 aScale) {
+    float scaleX = aScale.x * (mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth()));
+    float scaleY = aScale.y * (mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight()));
 
     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
     Vector2 drawPosition = aLocation - cameraOrigin;
@@ -204,7 +205,8 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
         if (dynamic_cast<Text*>(gameObject)) {
             Text* text = dynamic_cast<Text*>(gameObject);
             if (text->isActive() && text->getLayer() == aLayer) {
-                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor());
+                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor(),
+                           text->getScale());
             }
         }
     }
