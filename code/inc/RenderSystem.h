@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "Button.h"
 #include "Particle.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -24,6 +25,7 @@ private:
     void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
     void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
     void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor);
+    void renderButton(Camera& aCurrentCamera, Button* aButton);
 
     void renderDeubgInfo(Scene* aScene);
 

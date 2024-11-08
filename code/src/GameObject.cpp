@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject() : mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
+GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
 
 GameObject::~GameObject() {
     for (auto component : mComponents) {
@@ -42,9 +42,19 @@ void GameObject::setActive(bool isActive) { mIsActive = isActive; }
 
 bool GameObject::isActive() { return mIsActive; }
 
-Transform GameObject::getTransform() { return mTransform; }
+Transform GameObject::getTransform() {
+    if (mParent) {
+        return mParent->getTransform() + mTransform;
+    }
+
+    return mTransform;
+}
 
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
+
+void GameObject::setParent(GameObject* parent) { mParent = parent; }
+
+GameObject* GameObject::getParent() { return mParent; }
 
 std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag) const {
     std::vector<Component*> componentsWithTag;

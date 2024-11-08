@@ -8,6 +8,12 @@ public:
     virtual ~IBehaviourScript() {}
     virtual void onStart() = 0;
     virtual void onUpdate() = 0;
+
+    bool hasScriptStarted() { return hasStarted; }
+    void setScriptStarted(bool aState) { hasStarted = aState; }
+
+private:
+    bool hasStarted = false;
 };
 
 #endif
