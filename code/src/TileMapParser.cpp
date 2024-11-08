@@ -4,15 +4,34 @@ TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath
 
 void TileMapParser::parse() {
     std::ifstream file(mFilePath);
-    if (file.is_open()) {
-        file >> mJsonData;
-        file.close();
-    } else {
-        throw std::runtime_error("Unable to open file: " + mFilePath);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file: " + mFilePath);
     }
 
-    if (mJsonData.empty()) {
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string content = buffer.str();
+
+    if (content.empty()) {
         throw std::runtime_error("File is empty: " + mFilePath);
+    }
+
+    try {
+        mJsonData = nlohmann::json::parse(content);
+    } catch (const nlohmann::json::parse_error& e) {
+        throw std::runtime_error("File is empty or invalid JSON: " + mFilePath);
+    }
+
+    if (mJsonData.is_null()) {
+        throw std::runtime_error("File is empty: " + mFilePath);
+    }
+
+    if (!mJsonData.contains("tilesets")) {
+        throw std::runtime_error("Missing 'tilesets' in JSON: " + mFilePath);
+    }
+
+    if (!mJsonData.contains("layers")) {
+        throw std::runtime_error("Missing 'layers' in JSON: " + mFilePath);
     }
     
     // Extract tilesets
