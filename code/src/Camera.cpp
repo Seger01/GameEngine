@@ -15,3 +15,7 @@ int Camera::getWidth() { return mWidth; }
 void Camera::setHeight(int aHeight) { mHeight = aHeight; }
 
 int Camera::getHeight() { return mHeight; }
+
+Vector2 Camera::getOrigin() {
+    return getTransform().position - Vector2(static_cast<int>(getWidth() / 2.0f), static_cast<int>(getHeight() / 2.0f));
+}
