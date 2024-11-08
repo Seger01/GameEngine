@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Collider.h"
-#include "TileMapParser.h"
-
 
 class BoxCollider : public Collider
 {
@@ -19,8 +17,6 @@ public:
 
     float getRotation() const;
     void setRotation(float rotation);
-    void setTransformFromColliderData(const ColliderData& colliderData);
-
 
 private:
     float mWidth;

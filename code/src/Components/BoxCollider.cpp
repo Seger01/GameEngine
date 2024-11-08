@@ -32,12 +32,3 @@ float BoxCollider::getRotation() const {
 void BoxCollider::setRotation(float rotation) {
     mRotation = rotation;
 }
-
-void BoxCollider::setTransformFromColliderData(const ColliderData& colliderData) {
-    Transform transform;
-    transform.position.x = colliderData.x;
-    transform.position.y = colliderData.y;
-    setTransform(transform);
-    setWidth(colliderData.mWidth);
-    setHeight(colliderData.mHeight);
-}
