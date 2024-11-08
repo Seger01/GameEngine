@@ -10,7 +10,7 @@
 NetworkClient::NetworkClient()
     : mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
       mIsConnecting(false), mClientID(-1), mServerAddress("0.0.0.0") {
-    std::cout << "Client Address: " << mClient->GetLocalIP(0) << std::endl;
+    // std::cout << "Client Address: " << mClient->GetLocalIP(0) << std::endl;
     // SLNet::SocketDescriptor sd(CLIENT_PORT, mClient->GetLocalIP(0));
     SLNet::SocketDescriptor sd(CLIENT_PORT, 0);
     sd.socketFamily = AF_INET;
