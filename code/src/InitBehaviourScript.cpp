@@ -10,6 +10,7 @@
 #include "SceneManager.h"
 #include "Text.h"
 #include "TileMapParser.h"
+#include "BoxCollider.h"
 
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -26,11 +27,29 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
 
+
+    FSConverter fsConverter;
+    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
+
+    TileMapParser tileMapParser(path);
+    tileMapParser.parse();
+    const TileMapData& tileMapData = tileMapParser.getTileMapData();
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
+    scene->getActiveCamera().setWidth(16 * 30);
+    scene->getActiveCamera().setHeight(9 * 30);
+
     GameObject* gameObject = new GameObject;
 
     Transform objectTransform;
-    objectTransform.position.x = 80;
-    objectTransform.position.y = 100;
+    //objectTransform.position.x = 80;
+    //objectTransform.position.y = 100;
+    for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
+        if (spawnPoint.isPlayerSpawn) {
+            objectTransform.position.x = spawnPoint.x;
+            objectTransform.position.y = spawnPoint.y;
+            break;
+        }
+    }
     gameObject->setTransform(objectTransform);
 
     gameObject->addComponent<PlayerBehaviourScript>();
@@ -45,14 +64,10 @@ void InitBehaviourScript::createLevel1() {
 
     sceneManager.requestSceneChange("Level-1");
 
-    FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/level.json");
 
-    TileMapParser tileMapParser(path);
-    tileMapParser.parse();
     // tileMapParser.printLayers();
 
-    const TileMapData& tileMapData = tileMapParser.getTileMapData();
+
 
     // // print mTileInfoMap
     // for (const auto& pair : tileMapData.mTileInfoMap) {
@@ -92,6 +107,13 @@ void InitBehaviourScript::createLevel1() {
                         sprite->setLayer(layerIndex);
 
                         gameObject->addComponent(sprite);
+
+                        // Add BoxCollider components to the GameObject
+                        for (const auto& collider : tileInfo.mColliders) {
+                            BoxCollider* boxCollider = new BoxCollider();
+                            boxCollider->setTransformFromColliderData(collider);
+                            gameObject->addComponent(boxCollider);
+                        }
 
                         scene->addGameObject(gameObject);
 
