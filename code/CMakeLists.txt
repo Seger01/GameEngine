@@ -8,9 +8,6 @@ set(PROJECT_EXECUTABLE ${PROJECT_NAME}_exec)
 set(TESTS ${PROJECT_NAME}_tests)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set the CMAKE_MODULE_PATH
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -18,15 +15,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Add a CMake option to enable or disable debug mode
 option(ENABLE_DEBUG "Enable debug mode" OFF)
 
+# Option to enable or disable building tests
+option(ENABLE_TESTS "Enable building tests" OFF)
+
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
     message("Debug mode enabled")
     set(CMAKE_BUILD_TYPE Debug)
-    add_compile_options(-g -O0 --coverage)
-    add_link_options(--coverage)
+    add_compile_options(-g -O0)
 else()
     set(CMAKE_BUILD_TYPE Release)
     add_compile_options(-O3)  # Optimization flag for Release build
+endif()
+
+if(ENABLE_TESTS)
+    #Set coverage compile and link flags
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
+
+    add_subdirectory(test)
 endif()
 
 # Set architecture-specific flags

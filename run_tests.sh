@@ -1,9 +1,13 @@
 #!/bin/bash
 
-cd build
+mkdir code/build
 
-# Run the tests
-bin/Engine_BRAVO_tests
+cd code/build
+
+# Run the tests 
+cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+
+cmake --build . --target run_tests -- -j$(nproc)
 
 # Create an output directory for the coverage reports
 rm -rf coverage_reports
