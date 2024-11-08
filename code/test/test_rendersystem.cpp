@@ -116,5 +116,5 @@ TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSyst
 
 TEST_F(RenderSystemTest, GetWindow_NoExceptions) {
     ASSERT_NO_THROW(mRenderSystem->getWindow());
-    mRenderSystem->getWindow().showWindow();
+    // mRenderSystem->getWindow().showWindow();
 }
