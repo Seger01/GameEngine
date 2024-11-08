@@ -13,7 +13,7 @@
 #include <vector>
 class BodyProxy {
 public:
-    BodyProxy(GameObject& aGameObject);
+    BodyProxy(GameObject* aGameObject);
     ~BodyProxy();
 
     void processBodyType();

@@ -4,16 +4,16 @@
 #include "RigidBody.h"
 #include <vector>
 
-BodyProxy::BodyProxy(GameObject& aGameObject) {
+BodyProxy::BodyProxy(GameObject* aGameObject) {
 
-    std::vector<RigidBody*> rigidBodies = aGameObject.getComponents<RigidBody>();
+    std::vector<RigidBody*> rigidBodies = aGameObject->getComponents<RigidBody>();
 
     if (!rigidBodies.empty()) {
-        mBoxColliders = aGameObject.getComponents<BoxCollider>();
+        mBoxColliders = aGameObject->getComponents<BoxCollider>();
 
-        mPosition = aGameObject.getTransform().position;
+        mPosition = aGameObject->getTransform().position;
 
-        mSize = aGameObject.getTransform().scale;
+        mSize = aGameObject->getTransform().scale;
 
         mHasGravity = rigidBodies.at(0)->getHasGravity();
         mIsMoveableByForce = rigidBodies.at(0)->getIsMoveableByForce();
@@ -24,7 +24,8 @@ BodyProxy::BodyProxy(GameObject& aGameObject) {
         mMass = rigidBodies.at(0)->getMass();
         mGravityScale = rigidBodies.at(0)->getGravityScale();
 
-        processBodyType();
+        // processBodyType();
+        mBodyType = BodyType::DYNAMIC;
 
         setvalidBody(true);
 

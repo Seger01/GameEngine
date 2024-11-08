@@ -48,7 +48,6 @@ void EngineBravo::run() {
         }
 
         if (mSceneManager.sceneChanged()) {
-
             startBehaviourScripts();
             mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0));
         }
