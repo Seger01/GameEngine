@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Structs/BodyFlags.h"
 #include "Structs/BodyProperties.h"
+#include "Transform.h"
 #include "Vector2.h"
 
 #include <vector>
@@ -10,7 +11,11 @@
 class RigidBody : public Component {
 public:
     RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties);
+    RigidBody();
     ~RigidBody();
+
+    Transform getTransform() const;
+    void setTransform(const Transform& aTransform);
 
     bool getHasGravity() const;
     void setHasGravity(bool aHasGravity);
@@ -42,18 +47,20 @@ public:
     int getBodyId() const;
 
 private:
+    Transform mTransform;
+
     bool mIsUpdated;
-    bool mHasGravity;
-    bool mIsMoveableByForce;
-    bool mCanRotate;
+    bool mHasGravity = false;
+    bool mIsMoveableByForce = false;
+    bool mCanRotate = false;
     BodyType mBodyType;
 
-    float mDensity;
-    float mFriction;
-    float mRestitution;
+    float mDensity = 0;
+    float mFriction = 0;
+    float mRestitution = 0;
 
-    float mMass;
-    float mGravityScale;
+    float mMass = 0;
+    float mGravityScale = 0;
 
     int mBodyId;
 

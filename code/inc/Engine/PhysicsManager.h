@@ -3,7 +3,8 @@
 class PhysicsManager {
 public:
     PhysicsManager();
-    void startPhysicsEngine();
+    void startPhysicsEngine(std::vector<GameObject*>&, Vector2 aGravity);
+    void updatePhysicsEngine();
 
 private:
     PhysicsEngine mPhysicsEngine;

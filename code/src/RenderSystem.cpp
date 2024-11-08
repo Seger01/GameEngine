@@ -204,14 +204,14 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
         return;
     }
 
-    std::cout << "RenderSystem::renderDeubgInfo: Time::deltaTime: " << Time::deltaTime << std::endl;
+    // std::cout << "RenderSystem::renderDeubgInfo: Time::deltaTime: " << Time::deltaTime << std::endl;
     // int fps = 1.0f / Time::deltaTime;
     //
     // // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
     // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
     if (true) {
         for (auto& gameObject : aScene->getGameObjects()) {
-            std::cout << "Amount of BoxColliders: " << gameObject->getComponents<BoxCollider>().size() << std::endl;
+            // std::cout << "Amount of BoxColliders: " << gameObject->getComponents<BoxCollider>().size() << std::endl;
             if (gameObject->hasComponent<BoxCollider>()) {
                 for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
                     Camera& aCurrentCamera = aScene->getActiveCamera();

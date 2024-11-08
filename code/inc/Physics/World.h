@@ -4,16 +4,16 @@
 #include "Physics/BodyProxy.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
-#include "box2d/id.h"
 #include <vector>
 class World {
 public:
-    World(Vector2 aGravity);
+    World();
 
     void executeWorldStep(float step, int subStep);
 
     void reset();
 
+    int createWorld(Vector2 aGravity);
     int createBody(BodyProxy& aBodyProxy);
     void updateBody(int aBodyID, BodyProxy& aBodyProxy);
     void applyForce(int aBodyID, Vector2 aForce);

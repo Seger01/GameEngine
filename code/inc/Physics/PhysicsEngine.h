@@ -9,6 +9,8 @@
 class PhysicsEngine {
 
 public:
+    PhysicsEngine();
+
     void updateReferences(std::vector<GameObject*>&);
     void update();
 
@@ -16,6 +18,8 @@ public:
     float getSubStep() const;
     void setStep(float);
     float getStep() const;
+    void setgameObjects(std::vector<GameObject*>);
+    std::vector<GameObject*> getgameObjects() const;
 
     void executeCollisionScripts(std::vector<int>);
 

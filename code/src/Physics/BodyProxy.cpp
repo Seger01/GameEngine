@@ -5,10 +5,16 @@
 #include <vector>
 
 BodyProxy::BodyProxy(GameObject& aGameObject) {
+    std::cout << aGameObject.getName() << std::endl;
 
     std::vector<RigidBody*> rigidBodies = aGameObject.getComponents<RigidBody>();
-    if (rigidBodies.at(0) != nullptr) {
+    std::cout << "rigid bodies size: " << rigidBodies.size() << std::endl;
+    std::cout << "created body proxy" << std::endl;
+
+    if (!rigidBodies.empty()) {
+
         mPosition = aGameObject.getTransform().position;
+
         mSize = aGameObject.getTransform().scale;
 
         mHasGravity = rigidBodies.at(0)->getHasGravity();
@@ -25,10 +31,10 @@ BodyProxy::BodyProxy(GameObject& aGameObject) {
         return;
     }
 
-    mBoxColliders = aGameObject.getComponents<BoxCollider>();
-    mCircleColliders = aGameObject.getComponents<CircleCollider>();
+    // mCircleColliders = aGameObject.getComponents<CircleCollider>();
 
     processBodyType();
+    std::cout << "body type: " << static_cast<int>(mBodyType) << std::endl;
 }
 
 void BodyProxy::processBodyType() {
@@ -52,3 +58,8 @@ float BodyProxy::getRestitution() const { return mRestitution; }
 
 float BodyProxy::getMass() const { return mMass; }
 float BodyProxy::getGravityScale() const { return mGravityScale; }
+
+Vector2 BodyProxy::getPosition() const { return mPosition; }
+Vector2 BodyProxy::getSize() const { return mSize; }
+std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
+std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }

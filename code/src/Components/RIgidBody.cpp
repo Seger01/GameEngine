@@ -1,11 +1,20 @@
 #include "RigidBody.h"
+#include <iostream>
 
 RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties)
     : mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),
       mCanRotate(aBodyFlags.IsMoveableByForce), mDensity(aBodyProperties.Density), mFriction(aBodyProperties.Friction),
       mRestitution(aBodyProperties.Restitution) {}
 
+RigidBody::RigidBody() {}
+
 RigidBody::~RigidBody() {}
+
+Transform RigidBody::getTransform() const { return mTransform; }
+void RigidBody::setTransform(const Transform& aTransform) {
+    std::cout << "transform pos is: " << aTransform.position.x << " " << aTransform.position.y << std::endl;
+    mTransform = aTransform;
+}
 
 bool RigidBody::getHasGravity() const { return mHasGravity; }
 void RigidBody::setHasGravity(bool aHasGravity) { mHasGravity = aHasGravity; }

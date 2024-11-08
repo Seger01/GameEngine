@@ -1,6 +1,11 @@
 #include "PhysicsManager.h"
 
-void PhysicsManager::startPhysicsEngine() {
-    mPhysicsEngine.createWorld(Vector2(0, 0));
+PhysicsManager::PhysicsManager() {}
+
+void PhysicsManager::startPhysicsEngine(std::vector<GameObject*>& aGameObjects, Vector2 aGravity) {
+    mPhysicsEngine.setgameObjects(aGameObjects);
+    mPhysicsEngine.createWorld(aGravity);
     mPhysicsEngine.createBodies();
 }
+
+void PhysicsManager::updatePhysicsEngine() { mPhysicsEngine.update(); }

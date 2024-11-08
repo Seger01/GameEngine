@@ -3,6 +3,7 @@
 
 #include "AnimationManager.h"
 #include "ParticleSystem.h"
+#include "PhysicsManager.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -22,6 +23,7 @@ public:
     SceneManager& getSceneManager();
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
+    PhysicsManager& getPhysicsManager();
 
 private:
     // Private constructor and destructor
@@ -44,6 +46,7 @@ private:
     RenderSystem mRenderSystem;
     ResourceManager mResourceManager;
     ParticleSystem mParticleSystem;
+    PhysicsManager mPhysicsManager;
     // SaveGameManager saveGameManager;
     // AnimationManager animationManager;
     // UIManager uiManager;
