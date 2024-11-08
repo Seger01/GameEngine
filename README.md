@@ -4,6 +4,7 @@ Game engine project for Systems Programming C++
 - CMake 3.10 or higher
 - A C++ compiler that supports C++17
 - GoogleTest library installed on your system (only if you want to run the tests)
+- Gcov installed on your system if you want the gcov report (sudo apt-get install gcovr)
 - Freetype installed (sudo apt-get install libfreetype-dev)
 
 # How to Download and Install

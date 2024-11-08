@@ -64,47 +64,22 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
 include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
 
-# Add the tests directory
-add_subdirectory(test)
-
 # Automatically search for source files
-file(GLOB_RECURSE SOURCES
+file(GLOB_RECURSE LIBRARY_SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# Exclude main.cpp from library sources
-list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") 
+# Add the tests directory
+add_subdirectory(test)
 
-# Create a library from the main sources
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+# Add the testGame subdirectory
+add_subdirectory(testGame)
+
+# Create a library from the library sources
+add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES})
 
 # Define the libraries to link against
 set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json behaviortree_cpp)
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
-
-# Add the executable target
-add_executable(${PROJECT_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
-
-# Add the library as a dependency
-add_dependencies(${PROJECT_EXECUTABLE} ${PROJECT_NAME})
-
-# Link library to the executable
-target_link_libraries(${PROJECT_EXECUTABLE} PUBLIC ${PROJECT_NAME})
-
-# Add custom target to run the main program
-add_custom_target(run
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_EXECUTABLE}
-    DEPENDS ${PROJECT_EXECUTABLE}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running the main program"
-)
-
-# Add custom target to run Valgrind
-add_custom_target(run_valgrind
-    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_EXECUTABLE}
-    DEPENDS ${PROJECT_EXECUTABLE}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running Valgrind to check for memory leaks"
-)
