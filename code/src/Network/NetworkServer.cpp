@@ -11,8 +11,13 @@
 NetworkServer::NetworkServer()
     : mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
       mLastBroadcastCheck(std::chrono::steady_clock::now()) {
+    unsigned int numAddresses = mServer->GetNumberOfAddresses();
+    for (unsigned int i = 0; i < numAddresses; ++i) {
+        std::cout << "Local IP " << i << ": " << mServer->GetLocalIP(i) << std::endl;
+    }
     std::cout << "Server Address: " << mServer->GetLocalIP(0) << std::endl;
-    SLNet::SocketDescriptor sd(SERVER_PORT, mServer->GetLocalIP(0));
+    // SLNet::SocketDescriptor sd(SERVER_PORT, mServer->GetLocalIP(0));
+    SLNet::SocketDescriptor sd(SERVER_PORT, 0);
     sd.socketFamily = AF_INET;
     SLNet::StartupResult result = mServer->Startup(10, &sd, 1);
     mServer->SetMaximumIncomingConnections(10);
