@@ -33,6 +33,9 @@ public:
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
+    void setParent(GameObject* parent);
+    GameObject* getParent();
+
     std::vector<Component*> getComponentsWithTag(const std::string& tag) const;
 
     // Templated functions
@@ -55,6 +58,18 @@ public:
         return componentsOfType;
     }
 
+    template <typename T> std::vector<T*> getComponentsWithTag(const std::string& tag) const {
+        std::vector<T*> componentsWithTag;
+        for (const auto& component : mComponents) {
+            if (component->getTag() == tag) {
+                if (T* castedComponent = dynamic_cast<T*>(component)) {
+                    componentsWithTag.push_back(castedComponent);
+                }
+            }
+        }
+        return componentsWithTag;
+    }
+
     // Templated addComponent function
     template <typename T, typename... Args> T* addComponent(Args&&... args) {
         T* newComponent = new T(std::forward<Args>(args)...);
@@ -66,6 +81,8 @@ public:
     }
 
 protected:
+    GameObject* mParent;
+
     std::vector<Component*> mComponents;
     Transform mTransform;
 

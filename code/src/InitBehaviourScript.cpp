@@ -1,5 +1,7 @@
 #include "InitBehaviourScript.h"
 
+#include "Button.h"
+#include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
@@ -34,6 +36,12 @@ void InitBehaviourScript::createLevel1() {
     gameObject->addComponent<PlayerBehaviourScript>();
 
     scene->addGameObject(gameObject);
+
+    GameObject* canvasObject = new GameObject;
+
+    canvasObject->addComponent<CanvasBehaviourScript>();
+
+    scene->addGameObject(canvasObject);
 
     sceneManager.requestSceneChange("Level-1");
 
@@ -95,12 +103,6 @@ void InitBehaviourScript::createLevel1() {
             }
         }
     }
-
-    GameObject* textObject = new Text("Hello, World!", "undefined", Color(0, 0, 0), Vector2(10, 10), Vector2(1, 1));
-
-    textObject->addComponent<FPSCounterBehaviourScript>();
-
-    scene->addGameObject(textObject);
 
     return;
 }

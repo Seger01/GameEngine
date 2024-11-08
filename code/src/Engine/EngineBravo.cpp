@@ -30,6 +30,8 @@ void EngineBravo::initialize() {
     mNetworkManager.initialize();
 
     Time::initialize();
+
+    mUIManager.init();
     return;
 }
 
@@ -51,6 +53,8 @@ void EngineBravo::run() {
             startBehaviourScripts();
         }
         input.update();
+
+        mUIManager.update(mSceneManager.getCurrentScene());
 
         runBehaviourScripts();
 
@@ -104,7 +108,9 @@ SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
-SaveGameManager& EngineBravo::getSaveGameManager() { return saveGameManager; }
+SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+EventManager& EngineBravo::getEventManager() { return mEventManager; }
+// UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
@@ -118,6 +124,7 @@ void EngineBravo::startBehaviourScripts() {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
                 behaviourScript->onStart();
+                behaviourScript->setScriptStarted(true);
             }
         }
     }
@@ -133,6 +140,10 @@ void EngineBravo::runBehaviourScripts() {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
                 behaviourScript->onUpdate();
+                if (!behaviourScript->hasScriptStarted()) {
+                    behaviourScript->onStart();
+                    behaviourScript->setScriptStarted(true);
+                }
             }
         }
     }
