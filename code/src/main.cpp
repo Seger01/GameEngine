@@ -300,10 +300,10 @@ void physicsEngineTest() {
 }
 
 int main() {
-    // engineTest();
+    engineTest();
     // physicsTest();
     // physicsTest2();
     // physicsInEngineTest();
-    physicsEngineTest();
+    // physicsEngineTest();
     return 0;
 }

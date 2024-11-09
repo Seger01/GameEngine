@@ -38,22 +38,28 @@ void InitBehaviourScript::createLevel1() {
 
     sceneManager.requestSceneChange("Level-1");
 
-    // GameObject* gameObject2 = new GameObject;
-    // Transform objectTransform2;
-    // objectTransform2.position.x = 40;
-    // objectTransform2.position.y = 40;
-    // gameObject2->setTransform(objectTransform2);
-    //
-    // gameObject2->addComponent<BoxCollider>();
-    //
-    // gameObject2->getComponents<BoxCollider>().at(0)->setWidth(30);
-    // gameObject2->getComponents<BoxCollider>().at(0)->setHeight(30);
-    //
-    // gameObject2->addComponent<RigidBody>();
-    //
-    // gameObject2->getComponents<RigidBody>().at(0)->setIsMoveableByForce(true);
-    //
-    // scene->addGameObject(gameObject2);
+    GameObject* gameObject2 = new GameObject;
+    Transform objectTransform2;
+    objectTransform2.position.x = 40;
+    objectTransform2.position.y = 40;
+    gameObject2->setTransform(objectTransform2);
+
+    gameObject2->addComponent<BoxCollider>();
+
+    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(30);
+    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(30);
+
+    gameObject2->addComponent<RigidBody>();
+    RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+    rigidBody->setHasGravity(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.3f);
+    rigidBody->setRestitution(0.2f);
+    rigidBody->setMass(1.0f);
+    rigidBody->setGravityScale(10.0f);
+    rigidBody->setCanRotate(false);
+
+    scene->addGameObject(gameObject2);
 
     // FSConverter fsConverter;
     // std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");

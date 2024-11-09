@@ -11,7 +11,11 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
     if (!rigidBodies.empty()) {
         mBoxColliders = aGameObject->getComponents<BoxCollider>();
 
-        mPosition = aGameObject->getTransform().position;
+        // mPosition = aGameObject->getTransform().position;
+        Transform transform = aGameObject->getTransform();
+
+        mPosition = Vector2(-transform.position.x, -transform.position.y);
+        // mPosition = transform.position;
 
         mSize = aGameObject->getTransform().scale;
 

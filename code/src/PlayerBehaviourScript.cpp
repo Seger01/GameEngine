@@ -236,14 +236,14 @@ void PlayerBehaviourScript::onStart() {
 
     RigidBody* rigidBody = new RigidBody();
 
-    rigidBody->setCanRotate(true);
+    rigidBody->setCanRotate(false);
     rigidBody->setHasGravity(true);
     rigidBody->setIsMoveableByForce(true);
     rigidBody->setDensity(1.0f);
-    rigidBody->setFriction(0.3f);
-    rigidBody->setRestitution(0.2f);
-    rigidBody->setGravityScale(1.0f);
-    rigidBody->setMass(1.0f);
+    rigidBody->setFriction(0.0f);
+    rigidBody->setRestitution(0.0f);
+    rigidBody->setGravityScale(10.0f);
+    rigidBody->setMass(10.0f);
 
     mGameObject->addComponent(rigidBody);
 

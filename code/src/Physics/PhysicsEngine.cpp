@@ -31,6 +31,8 @@ void PhysicsEngine::update() {
     int velocityIterations = 6;
     int positionIterations = 2;
     mWorld.executeWorldStep(timeStep, velocityIterations);
+
+    mWorld.getContactEvents();
     // mWorld.executeWorldStep(mStep, mSubStep);
     for (int i = 0; i < mGameObjects.size(); i++) {
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
@@ -39,6 +41,8 @@ void PhysicsEngine::update() {
             Vector2 position = mWorld.getPosition(rigidBodies.at(0)->getBodyId());
             Transform transform = mGameObjects.at(i)->getTransform();
             transform.position = position;
+
+            transform = Transform(Vector2(-position.x, -position.y));
             mGameObjects.at(i)->setTransform(transform);
             // std::cout << "Position: " << position.x << " " << position.y << std::endl;
         }
