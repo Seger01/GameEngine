@@ -63,6 +63,7 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Global)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
 include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Audio)
 
 # Add the tests directory
 add_subdirectory(test)
