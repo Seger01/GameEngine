@@ -27,8 +27,8 @@ void PhysicsEngine::update() {
     //     std::cout << "Force applied" << std::endl;
     // }
     // Simulate the world for a few steps
-    float timeStep = 1.0f / 60.0f;
-    int velocityIterations = 6;
+    float timeStep = 30.0f / 60.0f;
+    int velocityIterations = 20;
     int positionIterations = 2;
     mWorld.executeWorldStep(timeStep, velocityIterations);
 
@@ -38,13 +38,28 @@ void PhysicsEngine::update() {
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
 
         if (!rigidBodies.empty()) {
-            Vector2 position = mWorld.getPosition(rigidBodies.at(0)->getBodyId());
-            Transform transform = mGameObjects.at(i)->getTransform();
-            transform.position = position;
+            if (mGameObjects.at(i)->hasComponent<BoxCollider>()) {
+                BoxCollider* boxCollider = mGameObjects.at(i)->getComponents<BoxCollider>()[0];
 
-            transform = Transform(Vector2(-position.x, -position.y));
-            mGameObjects.at(i)->setTransform(transform);
-            // std::cout << "Position: " << position.x << " " << position.y << std::endl;
+                boxCollider->setWidth(boxCollider->getWidth() * 2);
+                boxCollider->setHeight(boxCollider->getHeight() * 2);
+
+                Vector2 position = mWorld.getPosition(rigidBodies.at(0)->getBodyId());
+                Transform transform = mGameObjects.at(i)->getTransform();
+
+                transform.position = position;
+
+                transform = Transform(Vector2(-position.x, -position.y));
+
+                transform.position.x = transform.position.x - boxCollider->getWidth() / 2;
+                transform.position.y = transform.position.y - boxCollider->getHeight() / 2;
+
+                transform.position = transform.position - boxCollider->getTransform().position;
+
+                mGameObjects.at(i)->setTransform(transform);
+
+                std::cout << "Position: " << position.x << " " << position.y << std::endl;
+            }
         }
     }
 }
@@ -70,6 +85,13 @@ void PhysicsEngine::createBodies() {
         if (bodyProxy.getvalidBody()) {
             int bodyID = mWorld.createBody(bodyProxy);
             rigidBodies[0]->setBodyId(bodyID);
+        }
+
+        for (BoxCollider* boxCollider : bodyProxy.getBoxColliders()) {
+            // std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
+            // std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
+            boxCollider->setWidth(boxCollider->getWidth() * 2);
+            boxCollider->setHeight(boxCollider->getHeight() * 2);
         }
     }
 }

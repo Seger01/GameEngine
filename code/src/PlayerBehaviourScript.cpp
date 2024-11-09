@@ -256,6 +256,7 @@ void PlayerBehaviourScript::onStart() {
     // emitter->getRelativeTransform().position.y += static_cast<int>((spriteHeight * sizeMultiplier) / 2);
     // emitter->getRelativeTransform().position.x += static_cast<int>((spriteWidth * sizeMultiplier) / 2);
     mGameObject->setTag("Player");
+    mGameObject->setName("Player");
 }
 
 void PlayerBehaviourScript::handleAnimations() {

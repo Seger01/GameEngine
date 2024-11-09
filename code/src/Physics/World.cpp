@@ -135,7 +135,6 @@ std::vector<int> World::getContactEvents() {
         std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
 
         std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
-        SDL_Delay(1000);
     }
     return std::vector<int>();
 }

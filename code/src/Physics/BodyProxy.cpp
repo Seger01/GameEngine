@@ -5,6 +5,7 @@
 #include <vector>
 
 BodyProxy::BodyProxy(GameObject* aGameObject) {
+    std::cout << "BodyProxy::BodyProxy(): " << aGameObject->getName() << std::endl;
 
     std::vector<RigidBody*> rigidBodies = aGameObject->getComponents<RigidBody>();
 
@@ -14,8 +15,12 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         // mPosition = aGameObject->getTransform().position;
         Transform transform = aGameObject->getTransform();
 
+        transform.position = transform.position + mBoxColliders[0]->getTransform().position;
+
+        transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
+        transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
+
         mPosition = Vector2(-transform.position.x, -transform.position.y);
-        // mPosition = transform.position;
 
         mSize = aGameObject->getTransform().scale;
 
@@ -30,6 +35,11 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
 
         // processBodyType();
         mBodyType = BodyType::DYNAMIC;
+
+        for (BoxCollider* boxCollider : mBoxColliders) {
+            boxCollider->setWidth(boxCollider->getWidth() / 2);
+            boxCollider->setHeight(boxCollider->getHeight() / 2);
+        }
 
         setvalidBody(true);
 
