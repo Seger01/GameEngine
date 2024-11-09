@@ -69,3 +69,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-06, 9:15, 6.45, Automating test coverage reports
 2024-11-07, 10:00, 3, Added savegame tests, debugging sdl mixer runtime issues
 2024-11-08, 12:00, 4, Debugging sdl mixer issues, improving running scripts
+2024-11-09, 19:00, 1, Implementing audio
