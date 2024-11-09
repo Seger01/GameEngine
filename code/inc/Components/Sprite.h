@@ -42,8 +42,8 @@ private:
     Rect mSourceRect;
 
     std::string mSprite;
-    int mWidth = 0;
-    int mHeight = 0;
+    float mWidth = 0;
+    float mHeight = 0;
     //??? mColor;
     //??? mColor;
     bool mFlipX;

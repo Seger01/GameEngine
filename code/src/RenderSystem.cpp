@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "Animation.h"
+#include "BoxCollider.h"
+#include "Button.h"
 #include "Color.h"
 #include "ParticleEmitter.h"
 #include "SDL_timer.h"
@@ -32,9 +34,7 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
 
     // Calculate the camera's origin and position the sprite relative to it
-    Vector2 cameraOrigin =
-        aCurrentCamera.getTransform().position - Vector2(static_cast<int>(aCurrentCamera.getWidth() / 2.0f),
-                                                         static_cast<int>(aCurrentCamera.getHeight() / 2.0f));
+    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 
     Vector2 drawPosition = texturePosition - cameraOrigin;
 
@@ -72,10 +72,7 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     int WindowHeight = mWindow->getSize().y;
 
     Vector2 particlePosition = aParticle.getPosition();
-
-    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
-                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
-
+    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
     Vector2 drawPosition = particlePosition - cameraOrigin;
 
     drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
@@ -100,15 +97,27 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
 
-    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
-                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
-
+    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
     Vector2 drawPosition = aLocation - cameraOrigin;
 
     drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
     drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
+}
+
+void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
+    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
+    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+
+    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+    Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
+
+    drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
+    drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+
+    mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
+                            static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
 }
 
 int RenderSystem::getLowestLayer(Scene* aScene) {
@@ -224,8 +233,47 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
     if (Time::deltaTime == 0) {
         return;
     }
-    int fps = 1.0f / Time::deltaTime;
 
+    // int fps = 1.0f / Time::deltaTime;
+    //
+    // // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
+    // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
+    if (true) {
+        for (auto& gameObject : aScene->getGameObjects()) {
+            std::cout << "Amount of BoxColliders: " << gameObject->getComponents<BoxCollider>().size() << std::endl;
+            if (gameObject->hasComponent<BoxCollider>()) {
+                for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
+                    Camera& aCurrentCamera = aScene->getActiveCamera();
+
+                    int spriteWidth = boxCollider->getWidth();
+                    int spriteHeight = boxCollider->getHeight();
+
+                    int WindowWidth = mWindow->getSize().x;
+                    int WindowHeight = mWindow->getSize().y;
+
+                    Vector2 texturePosition =
+                        gameObject->getTransform().position + boxCollider->getTransform().position;
+
+                    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+                                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+
+                    Vector2 drawPosition = texturePosition - cameraOrigin;
+
+                    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+                    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+                    spriteWidth = std::ceil(static_cast<int>(
+                        static_cast<float>(spriteWidth) *
+                        (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+                    spriteHeight = std::ceil(static_cast<int>(
+                        static_cast<float>(spriteHeight) *
+                        (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
+
+                    mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, Color(0, 0, 255), false);
+                }
+            }
+        }
+    }
     // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
     // renderText(aScene->getActiveCamera(), "FPS: " + std::to_string(fps), Vector2(25, 0), Color(0, 0, 0));
     // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));

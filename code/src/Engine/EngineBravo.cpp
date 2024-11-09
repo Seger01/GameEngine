@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(1000), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(300), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -26,6 +26,8 @@ void EngineBravo::initizalize() {
     startBehaviourScripts();
 
     Time::initialize();
+
+    mUIManager.init();
     return;
 }
 
@@ -47,6 +49,8 @@ void EngineBravo::run() {
             startBehaviourScripts();
         }
         input.update();
+
+        mUIManager.update(mSceneManager.getCurrentScene());
 
         runBehaviourScripts();
 
@@ -98,6 +102,8 @@ RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
 AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
+EventManager& EngineBravo::getEventManager() { return mEventManager; }
+UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
@@ -109,6 +115,7 @@ void EngineBravo::startBehaviourScripts() {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
                 behaviourScript->onStart();
+                behaviourScript->setScriptStarted(true);
             }
         }
     }
@@ -124,6 +131,10 @@ void EngineBravo::runBehaviourScripts() {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
                 behaviourScript->onUpdate();
+                if (!behaviourScript->hasScriptStarted()) {
+                    behaviourScript->onStart();
+                    behaviourScript->setScriptStarted(true);
+                }
             }
         }
     }

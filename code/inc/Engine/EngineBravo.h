@@ -28,6 +28,9 @@ public:
     ResourceManager& getResourceManager();
     SaveGameManager& getSaveGameManager();
     AudioManager& getAudioManager();
+    EventManager& getEventManager();
+    UIManager& getUIManager();
+    // UIManager& getUIManager();
 
 private:
     // Private constructor and destructor
@@ -55,7 +58,12 @@ private:
     ParticleSystem mParticleSystem;
     EventManager mEventManager;
     SaveGameManager mSaveGameManager;
+<<<<<<< HEAD
     AudioManager mAudioManager;
+=======
+    UIManager mUIManager;
+
+>>>>>>> development
     // AnimationManager animationManager;
     // UIManager uiManager;
 };
