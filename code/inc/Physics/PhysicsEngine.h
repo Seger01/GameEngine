@@ -27,6 +27,8 @@ public:
 
     void createWorld(Vector2 aGravity);
 
+    World& getWorld();
+
 private:
     World mWorld;
     std::vector<GameObject*> mGameObjects;

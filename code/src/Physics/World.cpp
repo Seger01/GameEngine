@@ -19,86 +19,88 @@ void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID,
 void World::reset() {}
 
 int World::createBody(BodyProxy& aBodyProxy) {
-    // b2BodyDef bodyDef = b2DefaultBodyDef();
+    std::cout << "World::createBody()" << std::endl;
+
+    b2BodyDef bodyDef = b2DefaultBodyDef();
+
+    switch (aBodyProxy.getBodyType()) {
+    case BodyType::STATIC:
+
+        bodyDef.type = b2_staticBody;
+
+        break;
+    case BodyType::DYNAMIC:
+        std::cout << "create dynamicbody" << std::endl;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.linearDamping = 0.3f;
+        bodyDef.angularDamping = 0.3f;
+        break;
+    }
+
+    bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
+    bodyDef.gravityScale = aBodyProxy.getGravityScale();
+    bodyDef.fixedRotation = aBodyProxy.getCanRotate();
+    b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
+
+    std::cout << "BodyID index: " << bodyID.index1 << std::endl;
+    std::cout << "BodyID revision: " << bodyID.revision << std::endl;
+    std::cout << "BodyID world0: " << bodyID.world0 << std::endl;
+    std::cout << "creating body at: (" << aBodyProxy.getPosition().x << ", " << aBodyProxy.getPosition().y << ")"
+              << std::endl;
+
+    for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
+        b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
+
+        std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
+        std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
+
+        b2ShapeDef shapeDef = b2DefaultShapeDef();
+        shapeDef.density = aBodyProxy.getDensity();
+        shapeDef.friction = aBodyProxy.getFriction();
+        shapeDef.restitution = aBodyProxy.getRestitution();
+
+        b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
+        b2Body_EnableSleep(bodyID, false);
+
+        std::cout << "creating box collider at: (" << boxCollider->getTransform().position.x << ", "
+                  << boxCollider->getTransform().position.y << ")" << std::endl;
+    }
+
+    // b2BodyDef bodyDef;
+    // b2BodyId bodyId;
+    // b2Polygon dynamicBox;
+    // b2ShapeDef shapeDef;
     //
-    // switch (aBodyProxy.getBodyType()) {
-    // case BodyType::STATIC:
-    //
-    //     bodyDef.type = b2_staticBody;
-    //
-    //     break;
-    // case BodyType::DYNAMIC:
-    //     std::cout << "create dynamicbody" << std::endl;
-    //     bodyDef.type = b2_dynamicBody;
-    //     bodyDef.linearDamping = 0.0f;
-    //     bodyDef.angularDamping = 0.0f;
-    //     break;
-    // }
-    //
-    // bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
-    // bodyDef.gravityScale = 0;
+    // bodyDef = b2DefaultBodyDef();
+    // bodyDef.type = b2_dynamicBody;
+    // bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}; // Initial position above
+    //                                                                                      // ground
     // bodyDef.fixedRotation = true;
-    // b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
+    // bodyDef.linearDamping = 0.1f;
+    // bodyDef.angularDamping = 0.1f;
     //
-    // std::cout << "BodyID index: " << bodyID.index1 << std::endl;
-    // std::cout << "BodyID revision: " << bodyID.revision << std::endl;
-    // std::cout << "BodyID world0: " << bodyID.world0 << std::endl;
+    // bodyId = b2CreateBody(mWorldID, &bodyDef);
     //
-    // std::cout << "creating body at: (" << aBodyProxy.getPosition().x << ", " << aBodyProxy.getPosition().y << ")"
-    //           << std::endl;
-    // for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
-    //     b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
+    // BoxCollider* boxCollider = aBodyProxy.getBoxColliders().at(0);
     //
-    //     std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-    //     std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
+    // // Create a dynamic box shape (1 unit x 1 unit)
+    // dynamicBox = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
     //
-    //     b2ShapeDef shapeDef = b2DefaultShapeDef();
-    //     shapeDef.density = aBodyProxy.getDensity();
-    //     shapeDef.friction = aBodyProxy.getFriction();
-    //     shapeDef.restitution = aBodyProxy.getRestitution();
-    //
-    //     b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
-    //     b2Body_EnableSleep(bodyID, false);
-    //
-    //     std::cout << "creating box collider at: (" << boxCollider->getTransform().position.x << ", "
-    //               << boxCollider->getTransform().position.y << ")" << std::endl;
-    // }
-
-    b2BodyDef bodyDef;
-    b2BodyId bodyId;
-    b2Polygon dynamicBox;
-    b2ShapeDef shapeDef;
-
-    bodyDef = b2DefaultBodyDef();
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}; // Initial position above
-                                                                                         // ground
-    bodyDef.fixedRotation = true;
-    bodyDef.linearDamping = 0.1f;
-    bodyDef.angularDamping = 0.1f;
-
-    bodyId = b2CreateBody(mWorldID, &bodyDef);
-
-    BoxCollider* boxCollider = aBodyProxy.getBoxColliders().at(0);
-
-    // Create a dynamic box shape (1 unit x 1 unit)
-    dynamicBox = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
-
-    shapeDef = b2DefaultShapeDef();
-    shapeDef.density = 1.0f;
-    shapeDef.friction = 0.0f;
-    shapeDef.restitution = 0.0f;
-    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
-    b2Body_EnableSleep(bodyId, false);
-    return bodyId.index1;
+    // shapeDef = b2DefaultShapeDef();
+    // shapeDef.density = 1.0f;
+    // shapeDef.friction = 0.0f;
+    // shapeDef.restitution = 0.0f;
+    // b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
+    // b2Body_EnableSleep(bodyId, false);
+    return bodyID.index1;
 }
 
 void World::updateBody(int aBodyID, BodyProxy& aBodyProxy) {
     b2BodyId test = {aBodyID, 0, 1};
     b2Body_SetTransform(test, {aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}, b2Body_GetRotation(test));
-    std::cout << "updating body id: " << aBodyID << std::endl;
-    std::cout << "Position of ID: " << test.index1 << "is: (" << b2Body_GetPosition(test).x << ", "
-              << b2Body_GetPosition(test).y << ")" << std::endl;
+    // std::cout << "updating body id: " << aBodyID << std::endl;
+    // std::cout << "Position of ID: " << test.index1 << "is: (" << b2Body_GetPosition(test).x << ", "
+    //           << b2Body_GetPosition(test).y << ")" << std::endl;
 }
 
 void World::applyForce(int aBodyID, Vector2 aForce) {
@@ -107,7 +109,11 @@ void World::applyForce(int aBodyID, Vector2 aForce) {
     b2Body_ApplyLinearImpulseToCenter(test, force, true);
 }
 
-void World::setPosition(int aBodyID, Vector2 aPosition) {}
+void World::setPosition(int aBodyID, Vector2 aPosition) {
+    b2BodyId bodyid = {aBodyID, 0, 1};
+
+    b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, {cos(0.0f), 0.0f});
+}
 
 Vector2 World::getPosition(int aBodyID) {
     b2BodyId test = {aBodyID, 0, 1};

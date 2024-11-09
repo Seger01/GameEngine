@@ -27,6 +27,8 @@ void EngineBravo::initizalize() {
 
     Time::initialize();
 
+    mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, -9.8f));
+
     return;
 }
 
@@ -49,7 +51,6 @@ void EngineBravo::run() {
 
         if (mSceneManager.sceneChanged()) {
             startBehaviourScripts();
-            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0));
         }
         input.update();
 

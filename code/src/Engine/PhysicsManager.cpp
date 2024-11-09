@@ -11,11 +11,10 @@ void PhysicsManager::startPhysicsEngine(std::vector<GameObject*>& aGameObjects, 
     mPhysicsEngine.createBodies();
 
     mPhysicsEngine.setStep(1.0f / 60.0f);
-    mPhysicsEngine.setSubStep(20);
+    mPhysicsEngine.setSubStep(6);
 }
 
 void PhysicsManager::updatePhysicsEngine(Scene* aScene) {
-
-    mPhysicsEngine.updateReferences(aScene->getGameObjects());
+    // mPhysicsEngine.updateReferences(aScene->getGameObjects());
     mPhysicsEngine.update();
 }

@@ -56,59 +56,254 @@ void engineTest() {
     return;
 }
 
-void physicsTest() {
-    // Create a World instance with gravity
-    World physicsWorld;
-    Vector2 gravity(0.0f, -9.8f); // Set gravity to mimic Earth's gravity
-    physicsWorld.createWorld(gravity);
+void physicsInEngineTest() {
 
-    // Create a test GameObject and wrap it in BodyProxy
-    GameObject testObject;
-    testObject.setTransform(Transform(Vector2(0, 10)));
+    EngineBravo& engine = EngineBravo::getInstance();
+    SceneManager& sceneManager = engine.getSceneManager();
+
+    Scene* scene = sceneManager.createScene("initscene");
+    if (scene == nullptr)
+        exit(1);
+
+    int cameraID = scene->addCamera();
+    scene->setActiveGamera(cameraID);
+
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+    scene->getActiveCamera().setWidth(160);
+    scene->getActiveCamera().setHeight(90);
+
+    // Create a GameObject and add components
+    GameObject* object = new GameObject();
+
+    object->setName("Falling Box");
+    object->setID(1);
+
+    // Add a BoxCollider to the GameObject
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setWidth(10.0f);
+    boxCollider->setHeight(10.0f);
+    object->addComponent(boxCollider);
+
+    // Add a RigidBody component to the GameObject to make it a dynamic body
     RigidBody* rigidBody = new RigidBody();
-
-    rigidBody->setCanRotate(true);
     rigidBody->setHasGravity(true);
-    rigidBody->setIsMoveableByForce(true);
     rigidBody->setDensity(1.0f);
     rigidBody->setFriction(0.3f);
     rigidBody->setRestitution(0.2f);
-    rigidBody->setGravityScale(1.0f);
     rigidBody->setMass(1.0f);
+    rigidBody->setGravityScale(1.0f);
+    rigidBody->setCanRotate(false);
+    object->addComponent(rigidBody);
 
-    testObject.addComponent(rigidBody);
+    scene->addGameObject(object);
 
+    PhysicsEngine physicsEngine;
+    physicsEngine.createWorld(Vector2(0.0f, -9.8f));
+
+    physicsEngine.updateReferences(scene->getGameObjects());
+
+    physicsEngine.createBodies();
+
+    physicsEngine.setStep(1.0f / 60.0f);
+    physicsEngine.setSubStep(6);
+
+    for (int i = 0; i < 60; ++i) { // Run simulation for 1 second
+        physicsEngine.update();
+
+        std::cout << "Object location: " << object->getTransform().position.x << ", "
+                  << object->getTransform().position.y << std::endl;
+
+        if (i == 60) {
+            // Apply a force to the object after 1 second
+        }
+    }
+}
+
+void physicsTest() {
+
+    // Initialize World with gravity
+    World physicsWorld;
+    Vector2 gravity = {0.0f, -9.8f};
+    physicsWorld.createWorld(gravity);
+
+    // Create a GameObject and add components
+    GameObject object;
+    object.setName("Falling Box");
+    object.setID(1);
+
+    // Add a BoxCollider to the GameObject
     BoxCollider* boxCollider = new BoxCollider();
-    boxCollider->setWidth(10);
-    boxCollider->setHeight(10);
+    boxCollider->setWidth(1.0f);
+    boxCollider->setHeight(1.0f);
+    object.addComponent(boxCollider);
 
-    testObject.addComponent(boxCollider);
+    // Add a RigidBody component to the GameObject to make it a dynamic body
+    RigidBody* rigidBody = new RigidBody();
+    rigidBody->setHasGravity(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.3f);
+    rigidBody->setRestitution(0.2f);
+    rigidBody->setMass(1.0f);
+    rigidBody->setGravityScale(1.0f);
+    rigidBody->setCanRotate(false);
+    object.addComponent(rigidBody);
 
-    BodyProxy bodyProxy(&testObject);
+    // Create a BodyProxy from the GameObject
+    BodyProxy bodyProxy(&object);
 
-    // Add body to the world
+    // Add the body to the physics world
     int bodyID = physicsWorld.createBody(bodyProxy);
 
-    // Apply an initial force to move the body upward
-    physicsWorld.applyForce(bodyID, Vector2(0.0f, 100.0f));
+    // Simulate the world for a few steps
+    float timeStep = 1.0f / 60.0f;
+    int velocityIterations = 6;
+    int positionIterations = 2;
 
-    // Run the simulation for a few steps
-    for (int i = 0; i < 180; ++i) {                     // Simulate 1 second at 60 FPS
-        physicsWorld.executeWorldStep(1.0f / 60.0f, 8); // Step with a delta time of 1/60 seconds
+    for (int i = 0; i < 240; ++i) { // Run simulation for 1 second
+        physicsWorld.executeWorldStep(timeStep, velocityIterations);
 
-        // Get and print the updated position of the body
+        if (i == 60) {
+            // Apply a force to the object after 1 second
+            physicsWorld.applyForce(bodyID, Vector2(10000.0f, 0.0f));
+        }
+
+        if (i == 120) {
+            BodyProxy bodyProxy2(&object);
+            physicsWorld.updateBody(bodyID, bodyProxy2);
+        }
+
+        if (i == 180) {
+            object.setTransform(Transform(Vector2(69.0f, 420.0f)));
+
+            BodyProxy bodyProxy3(&object);
+
+            physicsWorld.updateBody(bodyID, bodyProxy3);
+        }
+
+        // Get the updated position of the object
         Vector2 position = physicsWorld.getPosition(bodyID);
-        std::cout << "Step " << i << ": Position = (" << position.x << ", " << position.y << ")" << std::endl;
 
-        // Wait to simulate real-time (optional)
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        // Output the object's position
+        std::cout << "Step " << i << ": Object Position = (" << position.x << ", " << position.y << ")\n";
     }
+}
 
-    return;
+void physicsTest2() {
+    // Initialize World with gravity
+    // World physicsWorld;
+    Vector2 gravity = {0.0f, -9.8f};
+    // physicsWorld.createWorld(gravity);
+    PhysicsEngine physicsEngine;
+    physicsEngine.createWorld(gravity);
+
+    World& physicsWorld = physicsEngine.getWorld();
+
+    // Create a GameObject and add components
+    GameObject object;
+    object.setName("Falling Box");
+    object.setID(1);
+
+    // Add a BoxCollider to the GameObject
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setWidth(1.0f);
+    boxCollider->setHeight(1.0f);
+    object.addComponent(boxCollider);
+
+    // Add a RigidBody component to the GameObject to make it a dynamic body
+    RigidBody* rigidBody = new RigidBody();
+    rigidBody->setHasGravity(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.3f);
+    rigidBody->setRestitution(0.2f);
+    rigidBody->setMass(1.0f);
+    rigidBody->setGravityScale(1.0f);
+    rigidBody->setCanRotate(false);
+    object.addComponent(rigidBody);
+
+    // // Create a BodyProxy from the GameObject
+    // BodyProxy bodyProxy(&object);
+    //
+    // // Add the body to the physics world
+    // int bodyID = physicsWorld.createBody(bodyProxy);
+    int bodyID = 1;
+    physicsEngine.setgameObjects(std::vector<GameObject*>{&object});
+    physicsEngine.createBodies();
+
+    // Simulate the world for a few steps
+    float timeStep = 1.0f / 60.0f;
+    int velocityIterations = 6;
+    int positionIterations = 2;
+
+    for (int i = 0; i < 240; ++i) { // Run simulation for 1 second
+        // physicsWorld.executeWorldStep(timeStep, velocityIterations);
+        physicsEngine.update();
+
+        if (i == 120) {
+            // BodyProxy bodyProxy2(&object);
+            // physicsWorld.updateBody(bodyID, bodyProxy2);
+            object.setTransform(Transform(Vector2(69.0f, 420.0f)));
+        }
+
+        // Get the updated position of the object
+        // Vector2 position = physicsWorld.getPosition(bodyID);
+        Vector2 position = object.getTransform().position;
+
+        // Output the object's position
+        std::cout << "Step " << i << ": Object Position = (" << position.x << ", " << position.y << ")\n";
+    }
+}
+
+void physicsEngineTest() {
+    EngineBravo& engine = EngineBravo::getInstance();
+    SceneManager& sceneManager = engine.getSceneManager();
+
+    Scene* scene = sceneManager.createScene("initscene");
+    if (scene == nullptr)
+        exit(1);
+
+    int cameraID = scene->addCamera();
+    scene->setActiveGamera(cameraID);
+
+    scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+    scene->getActiveCamera().setWidth(160);
+    scene->getActiveCamera().setHeight(90);
+
+    // Create a GameObject and add components
+    GameObject* object = new GameObject();
+
+    object->setName("Falling Box");
+    object->setID(1);
+
+    // Add a BoxCollider to the GameObject
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setWidth(10.0f);
+    boxCollider->setHeight(10.0f);
+    object->addComponent(boxCollider);
+
+    // Add a RigidBody component to the GameObject to make it a dynamic body
+    RigidBody* rigidBody = new RigidBody();
+    rigidBody->setHasGravity(true);
+    rigidBody->setDensity(10.0f);
+    rigidBody->setFriction(0.0f);
+    rigidBody->setRestitution(0.2f);
+    rigidBody->setMass(10.0f);
+    rigidBody->setGravityScale(10.0f);
+    rigidBody->setCanRotate(false);
+    object->addComponent(rigidBody);
+
+    scene->addGameObject(object);
+
+    sceneManager.requestSceneChange("initscene");
+
+    engine.initizalize();
+    engine.run();
 }
 
 int main() {
     // engineTest();
-    physicsTest();
+    // physicsTest();
+    // physicsTest2();
+    // physicsInEngineTest();
+    physicsEngineTest();
     return 0;
 }
