@@ -1,8 +1,15 @@
 #include "MixerContainer.h"
+#include <stdexcept>
 
 void MixerContainer::addSound(std::string aPath, Mix_Chunk aSound) { mSfx.insert({aPath, aSound}); }
 
-Mix_Chunk* MixerContainer::getSound(std::string aIndex) { return &mSfx.at(aIndex); }
+Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
+    try {
+        return &mSfx.at(aIndex);
+    } catch (const std::out_of_range& e) {
+        return nullptr;
+    }
+}
 
 void MixerContainer::addMusic(Mix_Music* aMusic) { mMusic = aMusic; }
 

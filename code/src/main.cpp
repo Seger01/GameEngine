@@ -142,18 +142,30 @@ void engineTest() {
 
     gameObject->addComponent<InitBehaviourScript>();
 
+    AudioSource* audioSource = new AudioSource("Audio/music.wav", true);
+    audioSource->setPlayOnWake(true);
+    audioSource->setVolume(50);
+    audioSource->setXDirection(0);
+    audioSource->setXVelocity(0);
+
+    gameObject->addComponent(audioSource);
+
     scene->addGameObject(gameObject);
 
     sceneManager.requestSceneChange("initscene");
 
     engine.initizalize();
+    engine.getAudioManager().addSound(*gameObject);
+    engine.getAudioManager().play(*audioSource);
     engine.run();
 
     return;
 }
 
 int main() {
-    // engineTest();
+    engineTest();
 
-    sdlMixer();
+    // sdlMixer();
+
+    // audioTest();
 }

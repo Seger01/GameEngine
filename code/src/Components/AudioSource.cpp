@@ -1,11 +1,13 @@
 #include "AudioSource.h"
 #include "EngineBravo.h"
+#include "FSConverter.h"
 #include <iostream>
 #include <stdexcept>
 
 AudioSource::AudioSource(std::string aPath, bool aIsMusic)
-    : mFileName{aPath}, mPlayOnAwake{false}, mLoop{false},
-      mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0}, mXVelocity{0} {}
+    : mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0}, mXVelocity{0} {
+    mFileName = FSConverter().getResourcePath(aPath);
+}
 
 void AudioSource::play(bool aLooping) {
     setLooping(aLooping);
@@ -65,3 +67,5 @@ void AudioSource::setXVelocity(int aXVelocity) {
 int AudioSource::getXVelocity() const { return mXVelocity; }
 
 std::string AudioSource::getFileName() const { return mFileName; }
+
+bool AudioSource::isMusic() const { return mIsMusic; }

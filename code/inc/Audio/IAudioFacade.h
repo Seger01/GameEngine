@@ -4,9 +4,9 @@
 
 class IAudioFacade {
 public:
-  void addSound(std::string aPath);
-  void playSound(std::string aPath, bool aLooping, unsigned aVolume);
-  void addMusic(std::string aPath);
-  void playMusic();
-  void stopMusic();
+    virtual void addSound(std::string aPath) = 0;
+    virtual void playSound(std::string aPath, bool aLooping, unsigned aVolume) = 0;
+    virtual void addMusic(std::string aPath) = 0;
+    virtual void playMusic() = 0;
+    virtual void stopMusic() = 0;
 };

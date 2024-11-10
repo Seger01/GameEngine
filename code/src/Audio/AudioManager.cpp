@@ -1,6 +1,8 @@
 #include "AudioManager.h"
+#include "AudioSource.h"
+#include "IAudioFacade.h"
 #include "MixerFacade.h"
-#include <exception>
+#include <stdexcept>
 
 AudioManager::AudioManager() { mFacade = std::make_unique<MixerFacade>(); }
 
@@ -22,15 +24,28 @@ void AudioManager::stop(const AudioSource& aSource) {
 
 void AudioManager::wake() {
     for (auto& gameObject : mGameObjects) {
-        if (gameObject.get().getComponent<AudioSource>().getPlayOnWake()) {
-            play(gameObject.get().getComponent<AudioSource>());
+        for (AudioSource* component : gameObject.get().getComponents<AudioSource>()) {
+            if (component->getPlayOnWake()) {
+                play(*component);
+            }
         }
     }
 }
 
 IAudioFacade& AudioManager::getFacade() { return *mFacade.get(); }
 
-void AudioManager::addSound(const GameObject& aGameObject) { mGameObjects.push_back(aGameObject); }
+void AudioManager::addSound(const GameObject& aGameObject) {
+    mGameObjects.push_back(aGameObject);
+    for (AudioSource* audioSource : aGameObject.getComponents<AudioSource>()) {
+        if (audioSource->isMusic()) {
+            mFacade->addMusic(audioSource->getFileName());
+            continue;
+        }
+        mFacade->addSound(audioSource->getFileName());
+    }
+
+    mFacade->addSound(aGameObject.getComponents<AudioSource>().front()->getFileName());
+}
 
 void AudioManager::removeSound(const GameObject& aGameObject) {
     auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
