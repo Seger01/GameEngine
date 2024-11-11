@@ -27,6 +27,12 @@ public:
     bool getCanRotate() const;
     void setCanRotate(bool aCanRotate);
 
+    void setLinearDamping(float aLinearDamping);
+    float getLinearDamping() const;
+
+    void setAngularDamping(float aAngularDamping);
+    float getAngularDamping() const;
+
     float getDensity() const;
     void setDensity(float aDensity);
 
@@ -48,6 +54,11 @@ public:
     int getBodyId() const;
     void setBodyId(int aBodyId);
 
+    void addForce(Vector2 aForce);
+    std::vector<Vector2> getForcesBuffer() const;
+
+    void clearForcesBuffer();
+
 private:
     Transform mTransform;
 
@@ -56,6 +67,9 @@ private:
     bool mIsMoveableByForce = false;
     bool mCanRotate = false;
     BodyType mBodyType;
+
+    float mLinearDamping = 0;
+    float mAngularDamping = 0;
 
     float mDensity = 0;
     float mFriction = 0;

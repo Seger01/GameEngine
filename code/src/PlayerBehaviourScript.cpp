@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
+#include "RigidBody.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
 
@@ -237,13 +238,15 @@ void PlayerBehaviourScript::onStart() {
     RigidBody* rigidBody = new RigidBody();
 
     rigidBody->setCanRotate(false);
-    rigidBody->setHasGravity(true);
+    rigidBody->setHasGravity(false);
     rigidBody->setIsMoveableByForce(true);
     rigidBody->setDensity(1.0f);
-    rigidBody->setFriction(0.0f);
+    rigidBody->setFriction(0.6f);
     rigidBody->setRestitution(0.0f);
-    rigidBody->setGravityScale(10.0f);
-    rigidBody->setMass(10.0f);
+    rigidBody->setGravityScale(0.0f);
+    rigidBody->setMass(5.0f);
+    rigidBody->setLinearDamping(0.5f);
+    rigidBody->setAngularDamping(0.5f);
 
     mGameObject->addComponent(rigidBody);
 
@@ -269,7 +272,7 @@ void PlayerBehaviourScript::handleAnimations() {
     //     setAnimationActive(playerIdleSideAnimation, true);
     //     setFlipX(false);
     // } else if (previousTransform.position.x > this->mGameObject->getTransform().position.x) {
-    //     deactivateAllAnimations();
+    //    deactivateAllAnimations();
     //     setAnimationActive(playerIdleSideAnimation, true);
     //     setFlipX(true);
     // } else if (previousTransform.position.y < this->mGameObject->getTransform().position.y) {
@@ -291,6 +294,7 @@ void PlayerBehaviourScript::handleMovement() {
     Input& input = Input::getInstance();
 
     Transform parentTransform = this->mGameObject->getTransform();
+    std::vector<RigidBody*> rigidBody = this->mGameObject->getComponents<RigidBody>();
 
     if (input.GetKey(Key::Key_E)) {
         deactivateAllAnimations();
@@ -307,25 +311,29 @@ void PlayerBehaviourScript::handleMovement() {
         deactivateAllAnimations();
         setAnimationActive(playerIdleBackAnimation, true);
         setFlipX(false);
-        parentTransform.position.y -= (movementSpeed * Time::deltaTime);
+        rigidBody[0]->addForce(Vector2(0, 100.0f));
+        // parentTransform.position.y -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_A)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(true);
-        parentTransform.position.x -= (movementSpeed * Time::deltaTime);
+        // parentTransform.position.x -= (movementSpeed * Time::deltaTime);
+        rigidBody[0]->addForce(Vector2(100.0f, 0));
     }
     if (input.GetKey(Key::Key_S)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleFrontAnimation, true);
         setFlipX(false);
-        parentTransform.position.y += (movementSpeed * Time::deltaTime);
+        // parentTransform.position.y += (movementSpeed * Time::deltaTime);
+        rigidBody[0]->addForce(Vector2(0, -100.0f));
     }
     if (input.GetKey(Key::Key_D)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(false);
-        parentTransform.position.x += (movementSpeed * Time::deltaTime);
+        // parentTransform.position.x += (movementSpeed * Time::deltaTime);
+        rigidBody[0]->addForce(Vector2(-100.0f, 0));
     }
     this->mGameObject->setTransform(parentTransform);
 }

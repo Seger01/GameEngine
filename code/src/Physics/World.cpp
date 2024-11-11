@@ -1,9 +1,11 @@
 #include "Physics/World.h"
 #include "SDL.h"
+#include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/id.h"
 #include "box2d/math_functions.h"
 #include "box2d/types.h"
+#include <vector>
 
 World::World() {}
 
@@ -32,14 +34,16 @@ int World::createBody(BodyProxy& aBodyProxy) {
     case BodyType::DYNAMIC:
         std::cout << "create dynamicbody" << std::endl;
         bodyDef.type = b2_dynamicBody;
-        bodyDef.linearDamping = 0.3f;
-        bodyDef.angularDamping = 0.3f;
+        bodyDef.linearDamping = 0.8f;
+        bodyDef.angularDamping = 0.8f;
         break;
     }
 
     bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
     bodyDef.gravityScale = aBodyProxy.getGravityScale();
     bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
+    bodyDef.linearDamping = aBodyProxy.getLinearDamping();
+    bodyDef.angularDamping = aBodyProxy.getAngularDamping();
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 
     std::cout << "BodyID index: " << bodyID.index1 << std::endl;
@@ -103,10 +107,13 @@ void World::updateBody(int aBodyID, BodyProxy& aBodyProxy) {
     //           << b2Body_GetPosition(test).y << ")" << std::endl;
 }
 
-void World::applyForce(int aBodyID, Vector2 aForce) {
+void World::applyForce(int aBodyID, std::vector<Vector2> aForce) {
+    std::cout << "applying force to body id: " << aBodyID << std::endl;
     b2BodyId test = {aBodyID, 0, 1};
-    b2Vec2 force = {aForce.x, aForce.y};
-    b2Body_ApplyLinearImpulseToCenter(test, force, true);
+    for (int i = 0; i < aForce.size(); i++) {
+        b2Vec2 force = {aForce[i].x, aForce[i].y};
+        b2Body_ApplyLinearImpulseToCenter(test, force, true);
+    }
 }
 
 void World::setPosition(int aBodyID, Vector2 aPosition) {

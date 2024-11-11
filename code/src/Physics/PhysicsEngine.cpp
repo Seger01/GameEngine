@@ -27,9 +27,22 @@ void PhysicsEngine::update() {
     //     std::cout << "Force applied" << std::endl;
     // }
     // Simulate the world for a few steps
-    float timeStep = 30.0f / 60.0f;
-    int velocityIterations = 20;
+    float timeStep = 20.0f / 60.0f;
+    int velocityIterations = 4;
     int positionIterations = 2;
+
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+        if (!rigidBodies.empty()) {
+            mWorld.applyForce(rigidBodies[0]->getBodyId(), rigidBodies[0]->getForcesBuffer());
+
+            for (int i = 0; i < rigidBodies.size(); i++) {
+                mWorld.applyForce(rigidBodies[i]->getBodyId(), rigidBodies[i]->getForcesBuffer());
+                rigidBodies[i]->clearForcesBuffer();
+            }
+        }
+    }
+
     mWorld.executeWorldStep(timeStep, velocityIterations);
 
     mWorld.getContactEvents();

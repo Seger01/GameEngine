@@ -25,6 +25,12 @@ void RigidBody::setIsMoveableByForce(bool aIsMoveableByForce) { mIsMoveableByFor
 bool RigidBody::getCanRotate() const { return mCanRotate; }
 void RigidBody::setCanRotate(bool aCanRotate) { mCanRotate = aCanRotate; }
 
+void RigidBody::setLinearDamping(float aLinearDamping) { mLinearDamping = aLinearDamping; }
+float RigidBody::getLinearDamping() const { return mLinearDamping; }
+
+void RigidBody::setAngularDamping(float aAngularDamping) { mAngularDamping = aAngularDamping; }
+float RigidBody::getAngularDamping() const { return mAngularDamping; }
+
 float RigidBody::getDensity() const { return mDensity; }
 void RigidBody::setDensity(float aDensity) { mDensity = aDensity; }
 
@@ -46,3 +52,8 @@ BodyType RigidBody::getBodyType() const { return mBodyType; }
 
 int RigidBody::getBodyId() const { return mBodyId; }
 void RigidBody::setBodyId(int aBodyId) { mBodyId = aBodyId; }
+
+void RigidBody::addForce(Vector2 aForce) { mForcesBuffer.push_back(aForce); }
+std::vector<Vector2> RigidBody::getForcesBuffer() const { return mForcesBuffer; }
+
+void RigidBody::clearForcesBuffer() { mForcesBuffer.clear(); }

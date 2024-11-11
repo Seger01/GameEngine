@@ -26,6 +26,9 @@ public:
     bool getCanRotate() const;
     BodyType getBodyType() const;
 
+    float getLinearDamping() const;
+    float getAngularDamping() const;
+
     float getDensity() const;
     float getFriction() const;
     float getRestitution() const;
@@ -47,6 +50,9 @@ private:
     bool mIsMoveableByForce;
     bool mCanRotate;
     BodyType mBodyType;
+
+    float mLinearDamping;
+    float mAngularDamping;
 
     float mDensity;
     float mFriction;

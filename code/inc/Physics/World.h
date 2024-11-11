@@ -17,7 +17,7 @@ public:
     int createWorld(Vector2 aGravity);
     int createBody(BodyProxy& aBodyProxy);
     void updateBody(int aBodyID, BodyProxy& aBodyProxy);
-    void applyForce(int aBodyID, Vector2 aForce);
+    void applyForce(int aBodyID, std::vector<Vector2> aForce);
 
     void setPosition(int BodyID, Vector2 aPosition);
     Vector2 getPosition(int aBodyID);

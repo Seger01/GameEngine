@@ -164,7 +164,7 @@ void physicsTest() {
 
         if (i == 60) {
             // Apply a force to the object after 1 second
-            physicsWorld.applyForce(bodyID, Vector2(10000.0f, 0.0f));
+            //  physicsWorld.applyForce(bodyID, Vector2(10000.0f, 0.0f));
         }
 
         if (i == 120) {

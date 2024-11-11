@@ -30,6 +30,8 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         mRestitution = rigidBodies.at(0)->getRestitution();
         mMass = rigidBodies.at(0)->getMass();
         mGravityScale = rigidBodies.at(0)->getGravityScale();
+        mLinearDamping = rigidBodies.at(0)->getLinearDamping();
+        mAngularDamping = rigidBodies.at(0)->getAngularDamping();
 
         // processBodyType();
         mBodyType = BodyType::DYNAMIC;
@@ -61,6 +63,9 @@ bool BodyProxy::getHasGravity() const { return mHasGravity; }
 bool BodyProxy::getIsMoveableByForce() const { return mIsMoveableByForce; }
 bool BodyProxy::getCanRotate() const { return mCanRotate; }
 BodyType BodyProxy::getBodyType() const { return mBodyType; }
+
+float BodyProxy::getLinearDamping() const { return mLinearDamping; }
+float BodyProxy::getAngularDamping() const { return mAngularDamping; }
 
 float BodyProxy::getDensity() const { return mDensity; }
 float BodyProxy::getFriction() const { return mFriction; }
