@@ -3,6 +3,8 @@
 
 #include "Components/IButtonBehaviourScript.h"
 
+#include "Text.h"
+
 class NetworkButtonScript : public IButtonBehaviourScript {
 public:
     NetworkButtonScript();
@@ -14,9 +16,19 @@ public:
 
 private:
     void setButtonsVisibility();
+};
+
+class ConnectButtonScript : public IButtonBehaviourScript {
+public:
+    ConnectButtonScript(Text* aTextObject);
+    ~ConnectButtonScript();
+
+    void onButtonPressed() override;
+
+    void onButtonReleased() override;
 
 private:
-    bool mRoleSelect;
+    Text* mTextObject{nullptr};
 };
 
 #endif // NETWORKBUTTONSCRIPT_H

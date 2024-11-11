@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-NetworkButtonScript::NetworkButtonScript() : mRoleSelect(true) {}
+NetworkButtonScript::NetworkButtonScript() {}
 
 NetworkButtonScript::~NetworkButtonScript() {}
 
@@ -74,3 +74,16 @@ void NetworkButtonScript::setButtonsVisibility() {
         }
     }
 }
+
+ConnectButtonScript::ConnectButtonScript(Text* aTextObject) : mTextObject(aTextObject) {}
+
+ConnectButtonScript::~ConnectButtonScript() {}
+
+void ConnectButtonScript::onButtonPressed() {
+    std::cout << "Connect button pressed" << std::endl;
+    NetworkClient& networkClient = EngineBravo::getInstance().getNetworkManager().getClient();
+    networkClient.setServerAddress(mTextObject->getText());
+    networkClient.connectToServer();
+}
+
+void ConnectButtonScript::onButtonReleased() {}

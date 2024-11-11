@@ -42,7 +42,7 @@ void NetworkBehaviourScript::onStart() {
     hostText->setParent(mHostButton);
 
     mSearchButton = new Button;
-    mSearchButton->setTransform(Transform(Vector2(0, 0)));
+    mSearchButton->setTransform(Transform(Vector2(0, 60)));
     mSearchButton->addComponent<NetworkButtonScript>();
     mSearchButton->setWidth(40);
     mSearchButton->setHeight(10);
@@ -86,6 +86,23 @@ void NetworkBehaviourScript::onUpdate() {
         sceneManager.requestSceneChange("tempScene");
     }
     if (networkManager.getRole() == NetworkRole::CLIENT) {
+        if (networkManager.isConnected()) {
+            Scene* scene = sceneManager.createScene("tempScene");
+            GameObject* tempObject = new GameObject;
+
+            tempObject->addComponent<InitBehaviourScript>();
+
+            scene->addGameObject(tempObject);
+
+            int cameraID = scene->addCamera();
+            scene->setActiveCamera(cameraID);
+
+            scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
+            scene->getActiveCamera().setWidth(16 * 30);
+            scene->getActiveCamera().setHeight(9 * 30);
+
+            sceneManager.requestSceneChange("tempScene");
+        }
         NetworkClient& networkClient = engine.getNetworkManager().getClient();
         std::vector<std::string> serverAddresses = networkClient.getServerAddresses();
         for (std::string serverAddress : serverAddresses) {
@@ -96,13 +113,13 @@ void NetworkBehaviourScript::onUpdate() {
 
                 Button* ipButton = new Button;
                 ipButton->setTransform(Transform(Vector2(100, mServerAddresses.size() * 20)));
-                // ipButton->addComponent<NetworkButtonScript>();
                 ipButton->setWidth(40);
                 ipButton->setHeight(10);
                 ipButton->setTag(serverAddress);
                 Text* ipText =
                     new Text(serverAddress, serverAddress, Color(15, 110, 47), Vector2(0, 0), Vector2(0.5, 0.5));
                 ipText->setParent(ipButton);
+                ipButton->addComponent<ConnectButtonScript>(ipText);
 
                 Scene* scene = sceneManager.getCurrentScene();
                 scene->addGameObject(ipButton);

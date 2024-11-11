@@ -95,9 +95,6 @@ void NetworkClient::handleIncomingPackets() {
             serverIp = packet->systemAddress.ToString(false);
             std::cout << "Discovered server at: " << serverIp << std::endl;
             mServerAddresses.push_back(serverIp);
-
-            setServerAddress(serverIp);
-            connectToServer();
             break;
         }
         case ID_UNCONNECTED_PING: {
