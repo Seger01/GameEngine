@@ -7,6 +7,7 @@
 #include "BoxCollider.h"
 #include "Button.h"
 #include "Color.h"
+#include "EngineBravo.h"
 #include "ParticleEmitter.h"
 #include "SDL_timer.h"
 #include "ScopedTimer.h"
@@ -234,13 +235,17 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
         return;
     }
 
-    // int fps = 1.0f / Time::deltaTime;
-    //
-    // // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
-    // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
-    if (true) {
+    Configuration& config = EngineBravo::getInstance().getConfiguration();
+
+    if (config.getConfig("render_fps")) {
+        int fps = 1.0f / Time::deltaTime;
+
+        // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
+        mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
+    }
+
+    if (config.getConfig("render_colliders")) {
         for (auto& gameObject : aScene->getGameObjects()) {
-            std::cout << "Amount of BoxColliders: " << gameObject->getComponents<BoxCollider>().size() << std::endl;
             if (gameObject->hasComponent<BoxCollider>()) {
                 for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
                     Camera& aCurrentCamera = aScene->getActiveCamera();
@@ -274,9 +279,6 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
             }
         }
     }
-    // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
-    // renderText(aScene->getActiveCamera(), "FPS: " + std::to_string(fps), Vector2(25, 0), Color(0, 0, 0));
-    // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }

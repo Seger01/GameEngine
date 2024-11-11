@@ -21,6 +21,9 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
+    mConfiguration.setConfig("render_colliders", false);
+    mConfiguration.setConfig("render_fps", true);
+
     if (mSceneManager.sceneChanged()) {
     }
     startBehaviourScripts();
@@ -104,6 +107,8 @@ ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
+
+Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
