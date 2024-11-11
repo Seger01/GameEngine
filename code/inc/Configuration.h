@@ -12,10 +12,6 @@ class Configuration {
 public:
     friend class EngineBravo;
 
-    /**
-     * @brief Get the singleton instance of the Configuration class.
-     * @return Reference to the singleton instance.
-     */
     // Delete copy constructor and assignment operator to prevent copies
     Configuration(const Configuration&) = delete;
     Configuration& operator=(const Configuration&) = delete;
@@ -39,6 +35,11 @@ public:
         }
         return false; // Default value if key not found
     }
+
+    /**
+     * @brief Clear all configuration settings.
+     */
+    void clear() { configs.clear(); }
 
 private:
     /**
