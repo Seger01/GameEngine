@@ -11,8 +11,6 @@ class AudioSource implements Component_Proxy{
     - mXDirection : int
     - minXDirection : const static int
     - maxXDirection : const static int
-    - mMaxVelocity : const static int
-    - mXVelocity : int
     + AudioSource(string aPath, bool aIsMusic=false)
     + play(bool aLooping) : void
     + stop() : void 
@@ -25,23 +23,15 @@ class AudioSource implements Component_Proxy{
     + getVolume() : unsigned
     + setXDirection(int aXDirection) : void
     + getXDirection() : int
-    + setXVelocity(int aXVelocity) : void
-    + getXVelocity() : int
 }
 
 interface IAudioFacade {
     + addSound(string path) : void
-    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection) : void
     + addMusic(string path) : void
     + playMusic() : void
     + stopMusic() : void
 }
-
-'This class is probably useless, because the path can be retrieved directly from the audiosource. The actual functionality it was intended for can be found in the MixerContainer::mSfx
-' class ComponentPathPair {
-'     - mComponent : const AudioSource&
-'     - mPath : const string
-' }
 
 class MixerFacade implements IAudioFacade {
     - mChannelCount : const unsigned
@@ -60,17 +50,10 @@ class MixerContainer {
     + clear() : void
 }
 
-' class AudioResourceManager {
-'     - mPaths : vector<ComponentPathPair>
-'     + getPath(const AudioSource&) : string
-' }
-
 MixerFacade *-- MixerContainer
-'AudioResourceManager *--"*" ComponentPathPair
 
 }
 
 Audio *--IAudioFacade
-'Audio *-- AudioResourceManager
 
 @enduml
