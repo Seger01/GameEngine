@@ -1,0 +1,24 @@
+Minutes 11-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Audio implementation.
+- Angel: Physics implementation.
+- Ronan: Troubleshooting vm and build environment.
+- Sean: Fixing build system issues, separate cmakelists for tests. Adding buttons to ui for testing multiplayer.
+- Seger: Implementing ui system, buttons now work. Implemented physics.
+
+What is going to be done:
+- Siem: Finishing / cleaning up audio implementation.
+- Angel: Improve physics implementation
+- Ronan: Validation app design
+- Sean: Adding buttons to UI to send a transform object over the network.
+- Seger: Helping Sean with network / ui implementation
+
+Roadblocks:
+- Siem: Using the audio manager in behaviour scripts.
+- Angel: Issues with box2d combined with the engine.
+- Ronan: -
+- Sean: -
+- Seger: -
