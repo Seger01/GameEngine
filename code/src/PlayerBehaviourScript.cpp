@@ -296,8 +296,39 @@ void PlayerBehaviourScript::handleMovement() {
     Transform parentTransform = this->mGameObject->getTransform();
     std::vector<RigidBody*> rigidBody = this->mGameObject->getComponents<RigidBody>();
 
-    if (input.GetKey(Key::Key_E)) {
-        deactivateAllAnimations();
+    if (input.GetKeyDown(Key::Key_E)) {
+        SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
+
+        // deactivateAllAnimations();
+        GameObject* gameObject2 = new GameObject;
+        Transform objectTransform2;
+        objectTransform2.position.x = 30;
+        objectTransform2.position.y = 50;
+        gameObject2->setTransform(objectTransform2);
+        gameObject2->addComponent<RigidBody>();
+        RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+        rigidBody->setCanRotate(false);
+        rigidBody->setHasGravity(false);
+        rigidBody->setIsMoveableByForce(true);
+        rigidBody->setDensity(1.0f);
+        rigidBody->setFriction(0.6f);
+        rigidBody->setRestitution(0.0f);
+        rigidBody->setGravityScale(0.0f);
+        rigidBody->setMass(1.0f);
+
+        gameObject2->addComponent(rigidBody);
+
+        Sprite* guySprite = EngineBravo::getInstance().getResourceManager().createSprite(guyFrameDef);
+        guySprite->setLayer(3);
+
+        gameObject2->addComponent(guySprite);
+
+        gameObject2->addComponent<BoxCollider>();
+
+        gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+        gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+
+        EngineBravo::getInstance().getSceneManager().getCurrentScene()->addGameObject(gameObject2);
     }
 
     if (input.GetKey(Key::Key_R)) {
@@ -311,7 +342,7 @@ void PlayerBehaviourScript::handleMovement() {
         deactivateAllAnimations();
         setAnimationActive(playerIdleBackAnimation, true);
         setFlipX(false);
-        rigidBody[0]->addForce(Vector2(0, 100.0f));
+        rigidBody[0]->addForce(Vector2(0, 200.0f));
         // parentTransform.position.y -= (movementSpeed * Time::deltaTime);
     }
     if (input.GetKey(Key::Key_A)) {
@@ -319,21 +350,21 @@ void PlayerBehaviourScript::handleMovement() {
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(true);
         // parentTransform.position.x -= (movementSpeed * Time::deltaTime);
-        rigidBody[0]->addForce(Vector2(100.0f, 0));
+        rigidBody[0]->addForce(Vector2(200.0f, 0));
     }
     if (input.GetKey(Key::Key_S)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleFrontAnimation, true);
         setFlipX(false);
         // parentTransform.position.y += (movementSpeed * Time::deltaTime);
-        rigidBody[0]->addForce(Vector2(0, -100.0f));
+        rigidBody[0]->addForce(Vector2(0, -200.0f));
     }
     if (input.GetKey(Key::Key_D)) {
         deactivateAllAnimations();
         setAnimationActive(playerIdleSideAnimation, true);
         setFlipX(false);
         // parentTransform.position.x += (movementSpeed * Time::deltaTime);
-        rigidBody[0]->addForce(Vector2(-100.0f, 0));
+        rigidBody[0]->addForce(Vector2(-200.0f, 0));
     }
     this->mGameObject->setTransform(parentTransform);
 }
@@ -381,4 +412,8 @@ void PlayerBehaviourScript::onUpdate() {
     //     emitter->setAngle(0, 360);
     //     emitter->getRelativeTransform().rotation = 0.0f;
     // }
+}
+
+void PlayerBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "Player collided with something" << std::endl;
 }

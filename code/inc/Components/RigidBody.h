@@ -57,7 +57,11 @@ public:
     void addForce(Vector2 aForce);
     std::vector<Vector2> getForcesBuffer() const;
 
+    void addTorque(float aTorque);
+    std::vector<float> getTorqueBuffer() const;
+
     void clearForcesBuffer();
+    void clearTorqueBuffer();
 
 private:
     Transform mTransform;
@@ -78,8 +82,9 @@ private:
     float mMass = 0;
     float mGravityScale = 0;
 
-    int mBodyId;
+    int mBodyId = -1;
     b2BodyId mB2BodyId;
 
     std::vector<Vector2> mForcesBuffer;
+    std::vector<float> mTorqueBuffer;
 };

@@ -3,6 +3,7 @@
 #include "BoxCollider.h"
 #include "EngineBravo.h"
 #include "FSConverter.h"
+#include "GameObject.h"
 #include "PlayerBehaviourScript.h"
 #include "RigidBody.h"
 #include "Scene.h"
@@ -173,3 +174,5 @@ void InitBehaviourScript::onStart() {
 }
 
 void InitBehaviourScript::onUpdate() {}
+
+void InitBehaviourScript::onCollide(GameObject* aGameObject) {}

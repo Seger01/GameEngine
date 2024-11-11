@@ -5,6 +5,7 @@
 #include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/id.h"
+#include <utility>
 #include <vector>
 class World {
 public:
@@ -12,12 +13,13 @@ public:
 
     void executeWorldStep(float step, int subStep);
 
-    void reset();
+    void resetWorld();
 
     int createWorld(Vector2 aGravity);
     int createBody(BodyProxy& aBodyProxy);
     void updateBody(int aBodyID, BodyProxy& aBodyProxy);
-    void applyForce(int aBodyID, std::vector<Vector2> aForce);
+    void applyLinearForce(int aBodyID, std::vector<Vector2> aForce);
+    void applyTorque(int aBodyID, std::vector<float> aTorque);
 
     void setPosition(int BodyID, Vector2 aPosition);
     Vector2 getPosition(int aBodyID);
@@ -25,7 +27,7 @@ public:
     void setGravity(Vector2 aGravity);
     Vector2 getGravity();
 
-    std::vector<int> getContactEvents();
+    std::vector<std::pair<int, int>> getContactEvents();
 
 private:
     b2WorldId mWorldID;

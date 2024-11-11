@@ -39,9 +39,6 @@ public:
     std::vector<BoxCollider*> getBoxColliders() const;
     std::vector<CircleCollider*> getCircleColliders() const;
 
-    void setvalidBody(bool aValidBody);
-    bool getvalidBody() const;
-
 private:
     Vector2 mPosition;
     Vector2 mSize;
@@ -63,8 +60,6 @@ private:
 
     std::vector<BoxCollider*> mBoxColliders;
     std::vector<CircleCollider*> mCircleColliders;
-
-    bool mValidBody = false;
 };
 
 #endif // BODYPROXY_H

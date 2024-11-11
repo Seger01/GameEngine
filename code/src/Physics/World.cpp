@@ -5,6 +5,7 @@
 #include "box2d/id.h"
 #include "box2d/math_functions.h"
 #include "box2d/types.h"
+#include <utility>
 #include <vector>
 
 World::World() {}
@@ -18,7 +19,7 @@ int World::createWorld(Vector2 aGravity) {
 
 void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID, aStep, aSubStep); }
 
-void World::reset() {}
+void World::resetWorld() { b2DestroyWorld(mWorldID); }
 
 int World::createBody(BodyProxy& aBodyProxy) {
     std::cout << "World::createBody()" << std::endl;
@@ -102,13 +103,9 @@ int World::createBody(BodyProxy& aBodyProxy) {
 void World::updateBody(int aBodyID, BodyProxy& aBodyProxy) {
     b2BodyId test = {aBodyID, 0, 1};
     b2Body_SetTransform(test, {aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}, b2Body_GetRotation(test));
-    // std::cout << "updating body id: " << aBodyID << std::endl;
-    // std::cout << "Position of ID: " << test.index1 << "is: (" << b2Body_GetPosition(test).x << ", "
-    //           << b2Body_GetPosition(test).y << ")" << std::endl;
 }
 
-void World::applyForce(int aBodyID, std::vector<Vector2> aForce) {
-    std::cout << "applying force to body id: " << aBodyID << std::endl;
+void World::applyLinearForce(int aBodyID, std::vector<Vector2> aForce) {
     b2BodyId test = {aBodyID, 0, 1};
     for (int i = 0; i < aForce.size(); i++) {
         b2Vec2 force = {aForce[i].x, aForce[i].y};
@@ -116,6 +113,12 @@ void World::applyForce(int aBodyID, std::vector<Vector2> aForce) {
     }
 }
 
+void World::applyTorque(int aBodyID, std::vector<float> aTorque) {
+    b2BodyId test = {aBodyID, 0, 1};
+    for (int torqueBufferIndex = 0; torqueBufferIndex < aTorque.size(); torqueBufferIndex++) {
+        b2Body_ApplyTorque(test, aTorque[torqueBufferIndex], true);
+    }
+}
 void World::setPosition(int aBodyID, Vector2 aPosition) {
     b2BodyId bodyid = {aBodyID, 0, 1};
 
@@ -132,14 +135,17 @@ void World::setGravity(Vector2 aGravity) {}
 
 Vector2 World::getGravity() { return mGravity; }
 
-std::vector<int> World::getContactEvents() {
+std::vector<std::pair<int, int>> World::getContactEvents() {
+    std::vector<std::pair<int, int>> collisionList;
     b2ContactEvents contactlist = b2World_GetContactEvents(mWorldID);
 
     for (int i = 0; i < contactlist.beginCount; i++) {
-        std::cout << "begincount is: " << contactlist.beginCount << std::endl;
-        std::cout << "contact found: " << std::endl;
-        std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
-        std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
+        collisionList.push_back(
+            {contactlist.beginEvents[i].shapeIdA.index1, contactlist.beginEvents[i].shapeIdB.index1});
+        // std::cout << "begincount is: " << contactlist.beginCount << std::endl;
+        // std::cout << "contact found: " << std::endl;
+        // std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
+        // std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
     }
-    return std::vector<int>();
+    return collisionList;
 }

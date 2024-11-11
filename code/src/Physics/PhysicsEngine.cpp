@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Input.h"
 #include "Physics/BodyProxy.h"
+#include "PlayerBehaviourScript.h"
 #include <vector>
 
 PhysicsEngine::PhysicsEngine() {}
@@ -9,7 +10,7 @@ PhysicsEngine::PhysicsEngine() {}
 void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) { mGameObjects = aGameObjects; }
 
 void PhysicsEngine::update() {
-    // Input& input = Input::getInstance();
+    createBodies();
 
     for (int i = 0; i < mGameObjects.size(); i++) {
 
@@ -22,11 +23,6 @@ void PhysicsEngine::update() {
             mWorld.updateBody(id, bodyProxy);
         }
     }
-    // if (input.GetKeyDown(Key::Key_Space)) {
-    //     mWorld.applyForce(1, Vector2(10000, 10000));
-    //     std::cout << "Force applied" << std::endl;
-    // }
-    // Simulate the world for a few steps
     float timeStep = 20.0f / 60.0f;
     int velocityIterations = 4;
     int positionIterations = 2;
@@ -34,10 +30,9 @@ void PhysicsEngine::update() {
     for (int i = 0; i < mGameObjects.size(); i++) {
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
         if (!rigidBodies.empty()) {
-            mWorld.applyForce(rigidBodies[0]->getBodyId(), rigidBodies[0]->getForcesBuffer());
 
             for (int i = 0; i < rigidBodies.size(); i++) {
-                mWorld.applyForce(rigidBodies[i]->getBodyId(), rigidBodies[i]->getForcesBuffer());
+                mWorld.applyLinearForce(rigidBodies[i]->getBodyId(), rigidBodies[i]->getForcesBuffer());
                 rigidBodies[i]->clearForcesBuffer();
             }
         }
@@ -45,7 +40,7 @@ void PhysicsEngine::update() {
 
     mWorld.executeWorldStep(timeStep, velocityIterations);
 
-    mWorld.getContactEvents();
+    executeCollisionScripts(mWorld.getContactEvents());
     // mWorld.executeWorldStep(mStep, mSubStep);
     for (int i = 0; i < mGameObjects.size(); i++) {
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
@@ -83,25 +78,38 @@ void PhysicsEngine::setStep(float aStep) {}
 
 float PhysicsEngine::getStep() const { return mStep; }
 
-void PhysicsEngine::executeCollisionScripts(std::vector<int> aBodyIDs) {}
+void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBodyIDs) {
+    for (int i = 0; i < aBodyIDs.size(); i++) {
+        GameObject* gameObject = getGameObjectByID(aBodyIDs.at(i).first);
+        if (gameObject != nullptr) {
+
+            if (gameObject->hasComponent<PlayerBehaviourScript>()) {
+                std::vector<PlayerBehaviourScript*> playerBehaviourScript =
+                    gameObject->getComponents<PlayerBehaviourScript>();
+                playerBehaviourScript.at(0)->onCollide();
+            }
+        }
+    }
+}
 
 void PhysicsEngine::createBodies() {
-    std::cout << "Number of game objects: " << mGameObjects.size() << std::endl;
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+    for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
 
-        BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>();
 
-        if (bodyProxy.getvalidBody()) {
-            int bodyID = mWorld.createBody(bodyProxy);
-            rigidBodies[0]->setBodyId(bodyID);
-        }
+        if (!rigidBodies.empty()) {
+            if (rigidBodies[0]->getBodyId() == -1) {
 
-        for (BoxCollider* boxCollider : bodyProxy.getBoxColliders()) {
-            // std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-            // std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
-            boxCollider->setWidth(boxCollider->getWidth() * 2);
-            boxCollider->setHeight(boxCollider->getHeight() * 2);
+                BodyProxy bodyProxy = BodyProxy(mGameObjects.at(gameObjectIndex));
+
+                int bodyID = mWorld.createBody(bodyProxy);
+                rigidBodies[0]->setBodyId(bodyID);
+
+                for (BoxCollider* boxCollider : bodyProxy.getBoxColliders()) {
+                    boxCollider->setWidth(boxCollider->getWidth() * 2);
+                    boxCollider->setHeight(boxCollider->getHeight() * 2);
+                }
+            }
         }
     }
 }
@@ -111,3 +119,25 @@ void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld.createWorld(aGravity)
 World& PhysicsEngine::getWorld() { return mWorld; }
 
 void PhysicsEngine::setgameObjects(std::vector<GameObject*> aGameObjects) { mGameObjects = aGameObjects; }
+
+void PhysicsEngine::reset() {
+    mWorld.resetWorld();
+    for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>();
+        for (int rigidBodyIndex = 0; rigidBodyIndex < rigidBodies.size(); rigidBodyIndex++) {
+            rigidBodies.at(rigidBodyIndex)->setBodyId(-1);
+        }
+    }
+}
+
+GameObject* PhysicsEngine::getGameObjectByID(int aID) {
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+        if (!rigidBodies.empty()) {
+            if (rigidBodies[0]->getBodyId() == aID) {
+                return mGameObjects.at(i);
+            }
+        }
+    }
+    return nullptr;
+}

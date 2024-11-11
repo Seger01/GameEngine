@@ -56,4 +56,8 @@ void RigidBody::setBodyId(int aBodyId) { mBodyId = aBodyId; }
 void RigidBody::addForce(Vector2 aForce) { mForcesBuffer.push_back(aForce); }
 std::vector<Vector2> RigidBody::getForcesBuffer() const { return mForcesBuffer; }
 
+void RigidBody::addTorque(float aTorque) { mTorqueBuffer.push_back(aTorque); }
+std::vector<float> RigidBody::getTorqueBuffer() const { return mTorqueBuffer; }
+
 void RigidBody::clearForcesBuffer() { mForcesBuffer.clear(); }
+void RigidBody::clearTorqueBuffer() { mTorqueBuffer.clear(); }

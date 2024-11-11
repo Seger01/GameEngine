@@ -21,13 +21,17 @@ public:
     void setgameObjects(std::vector<GameObject*>);
     std::vector<GameObject*> getgameObjects() const;
 
-    void executeCollisionScripts(std::vector<int>);
+    void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
     void createBodies();
 
     void createWorld(Vector2 aGravity);
 
     World& getWorld();
+
+    void reset();
+
+    GameObject* getGameObjectByID(int aID);
 
 private:
     World mWorld;

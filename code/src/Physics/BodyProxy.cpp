@@ -7,44 +7,37 @@
 BodyProxy::BodyProxy(GameObject* aGameObject) {
     std::vector<RigidBody*> rigidBodies = aGameObject->getComponents<RigidBody>();
 
-    if (!rigidBodies.empty()) {
-        mBoxColliders = aGameObject->getComponents<BoxCollider>();
+    mBoxColliders = aGameObject->getComponents<BoxCollider>();
 
-        // mPosition = aGameObject->getTransform().position;
-        Transform transform = aGameObject->getTransform();
+    // mPosition = aGameObject->getTransform().position;
+    Transform transform = aGameObject->getTransform();
 
-        transform.position = transform.position + mBoxColliders[0]->getTransform().position;
+    transform.position = transform.position + mBoxColliders[0]->getTransform().position;
 
-        transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
-        transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
+    transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
+    transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
 
-        mPosition = Vector2(-transform.position.x, -transform.position.y);
+    mPosition = Vector2(-transform.position.x, -transform.position.y);
 
-        mSize = aGameObject->getTransform().scale;
+    mSize = aGameObject->getTransform().scale;
 
-        mHasGravity = rigidBodies.at(0)->getHasGravity();
-        mIsMoveableByForce = rigidBodies.at(0)->getIsMoveableByForce();
-        mCanRotate = rigidBodies.at(0)->getCanRotate();
-        mDensity = rigidBodies.at(0)->getDensity();
-        mFriction = rigidBodies.at(0)->getFriction();
-        mRestitution = rigidBodies.at(0)->getRestitution();
-        mMass = rigidBodies.at(0)->getMass();
-        mGravityScale = rigidBodies.at(0)->getGravityScale();
-        mLinearDamping = rigidBodies.at(0)->getLinearDamping();
-        mAngularDamping = rigidBodies.at(0)->getAngularDamping();
+    mHasGravity = rigidBodies.at(0)->getHasGravity();
+    mIsMoveableByForce = rigidBodies.at(0)->getIsMoveableByForce();
+    mCanRotate = rigidBodies.at(0)->getCanRotate();
+    mDensity = rigidBodies.at(0)->getDensity();
+    mFriction = rigidBodies.at(0)->getFriction();
+    mRestitution = rigidBodies.at(0)->getRestitution();
+    mMass = rigidBodies.at(0)->getMass();
+    mGravityScale = rigidBodies.at(0)->getGravityScale();
+    mLinearDamping = rigidBodies.at(0)->getLinearDamping();
+    mAngularDamping = rigidBodies.at(0)->getAngularDamping();
 
-        // processBodyType();
-        mBodyType = BodyType::DYNAMIC;
+    // processBodyType();
+    mBodyType = BodyType::DYNAMIC;
 
-        for (BoxCollider* boxCollider : mBoxColliders) {
-            boxCollider->setWidth(boxCollider->getWidth() / 2);
-            boxCollider->setHeight(boxCollider->getHeight() / 2);
-        }
-
-        setvalidBody(true);
-
-    } else {
-        return;
+    for (BoxCollider* boxCollider : mBoxColliders) {
+        boxCollider->setWidth(boxCollider->getWidth() / 2);
+        boxCollider->setHeight(boxCollider->getHeight() / 2);
     }
 }
 
@@ -78,6 +71,3 @@ Vector2 BodyProxy::getPosition() const { return mPosition; }
 Vector2 BodyProxy::getSize() const { return mSize; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
-
-void BodyProxy::setvalidBody(bool aValidBody) { mValidBody = aValidBody; }
-bool BodyProxy::getvalidBody() const { return mValidBody; }
