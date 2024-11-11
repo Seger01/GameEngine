@@ -151,12 +151,12 @@ void engineTest() {
     gameObject->addComponent(audioSource);
 
     scene->addGameObject(gameObject);
+    engine.getAudioManager().addSound(*gameObject);
 
     sceneManager.requestSceneChange("initscene");
 
     engine.initizalize();
-    engine.getAudioManager().addSound(*gameObject);
-    engine.getAudioManager().play(*audioSource);
+    engine.getAudioManager().wake();
     engine.run();
 
     return;
