@@ -142,12 +142,20 @@ void engineTest() {
 
     gameObject->addComponent<InitBehaviourScript>();
 
-    AudioSource* audioSource = new AudioSource("Audio/music.wav", false);
-    audioSource->setPlayOnWake(true);
-    audioSource->setVolume(50);
-    audioSource->setXDirection(100);
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(50);
+    music->setXDirection(0);
+    gameObject->addComponent(music);
 
-    gameObject->addComponent(audioSource);
+    // Add sound effect
+    AudioSource* sound = new AudioSource("Audio/gun1.wav");
+    sound->setPlayOnWake(false);
+    sound->setVolume(50);
+    sound->setXDirection(50);
+    sound->setTag("gun");
+    gameObject->addComponent(sound);
 
     scene->addGameObject(gameObject);
     engine.getAudioManager().addSound(*gameObject);
