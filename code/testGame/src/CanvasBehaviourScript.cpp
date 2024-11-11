@@ -21,9 +21,6 @@ void CanvasBehaviourScript::onStart() {
 
     Text* buttonText = new Text("Button1", "werkt niet", Color(15, 110, 47), Vector2(0, 0), Vector2(0.5, 0.5));
     buttonText->setParent(buttonObject);
-    // Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
-    // sprite->setLayer(4);
-    // buttonObject->addComponent(sprite);
     buttonObject->setWidth(40);
     buttonObject->setHeight(10);
     buttonObject->setParent(mGameObject);

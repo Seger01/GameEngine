@@ -41,6 +41,8 @@ void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
     handleIncomingPackets();
 }
 
+bool NetworkServer::isConnected() const { return mServer->IsActive(); }
+
 void NetworkServer::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {

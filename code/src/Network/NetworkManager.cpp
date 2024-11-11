@@ -119,11 +119,22 @@ NetworkHost& NetworkManager::getHost() const {
     return *mHost;
 }
 
-bool NetworkManager::getIsServer() const { return mRole == NetworkRole::SERVER; }
+bool NetworkManager::isServer() const { return mRole == NetworkRole::SERVER; }
 
-bool NetworkManager::getIsClient() const { return mRole == NetworkRole::CLIENT; }
+bool NetworkManager::isClient() const { return mRole == NetworkRole::CLIENT; }
 
-bool NetworkManager::getIsHost() const { return mRole == NetworkRole::HOST; }
+bool NetworkManager::isHost() const { return mRole == NetworkRole::HOST; }
+
+bool NetworkManager::isConnected() const {
+    if (mRole == NetworkRole::SERVER) {
+        return mServer->isConnected();
+    } else if (mRole == NetworkRole::CLIENT) {
+        return mClient->isConnected();
+    } else if (mRole == NetworkRole::HOST) {
+        throw std::runtime_error("NetworkManager::isConnected() isHost not implemented");
+    }
+    return false;
+}
 
 void NetworkManager::setTickRate(int aTickRate) { mTickRate = aTickRate; }
 
@@ -142,6 +153,8 @@ void NetworkManager::setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab) {
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
+
+NetworkRole NetworkManager::getRole() const { return mRole; }
 
 void NetworkManager::startServer() {
     if (mClient || mHost) {

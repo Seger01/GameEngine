@@ -17,6 +17,8 @@ public:
     void sendGameState();
     void update(std::vector<GameObject*>& aGameObjects);
 
+    bool isConnected() const;
+
 private:
     void handleIncomingPackets();
     void sendTransform();

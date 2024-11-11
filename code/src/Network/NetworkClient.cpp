@@ -64,6 +64,8 @@ void NetworkClient::setServerAddress(std::string aServerAddress) {
     mServerAddress = aServerAddress;
 }
 
+bool NetworkClient::isConnected() const { return mIsConnected; }
+
 void NetworkClient::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {

@@ -17,6 +17,7 @@ public:
     void discoverServers();
     std::vector<std::string>& getServerAddresses();
     void setServerAddress(std::string aServerAddress);
+    bool isConnected() const;
 
 private:
     void handleIncomingPackets();

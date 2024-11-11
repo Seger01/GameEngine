@@ -72,9 +72,10 @@ public:
     NetworkClient& getClient() const;
     NetworkHost& getHost() const;
 
-    bool getIsServer() const;
-    bool getIsClient() const;
-    bool getIsHost() const;
+    bool isServer() const;
+    bool isClient() const;
+    bool isHost() const;
+    bool isConnected() const;
 
     void setTickRate(int aTickRate);
     int getTickRate() const;
@@ -86,6 +87,7 @@ public:
     GameObject& getDefaultPlayerPrefab() const;
 
     void setRole(NetworkRole aRole);
+    NetworkRole getRole() const;
 
 private:
     void startServer();
