@@ -59,7 +59,7 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 }
 
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
-    Sprite* currentFrame = aAnimation->getFrameAtTime(SDL_GetTicks());
+    Sprite* currentFrame = aAnimation->getCurrentFrame();
     // Sprite* currentFrame = aAnimation->getFrame(0);
 
     renderSprite(aCurrentCamera, aGameObject, currentFrame);

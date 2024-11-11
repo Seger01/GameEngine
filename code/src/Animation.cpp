@@ -1,6 +1,7 @@
 #include "Animation.h"
 
 #include "GameObject.h"
+#include "Time.h"
 
 Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping) {
     mAnimationFrames = aAnimationFrames;
@@ -37,8 +38,9 @@ Sprite* Animation::getFrame(int aFrameIndex) {
     return sprite;
 }
 
-Sprite* Animation::getFrameAtTime(long aTime) {
-    int frameIndex = (aTime % (mTimeBetweenFrames * mAnimationFrames.size())) / mTimeBetweenFrames;
+Sprite* Animation::getCurrentFrame() {
+    int frameIndex =
+        (static_cast<int>(Time::ticks * 1000) % (mTimeBetweenFrames * mAnimationFrames.size())) / mTimeBetweenFrames;
 
     return getFrame(frameIndex);
 }
