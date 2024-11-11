@@ -67,7 +67,7 @@ void NetworkButtonScript::setButtonsVisibility() {
         Button* button = dynamic_cast<Button*>(gameObject);
         Text* text = dynamic_cast<Text*>(gameObject);
         if (button) {
-            button->setActive(!button->interactable());
+            button->setInteractable(!button->interactable());
         }
         if (text) {
             text->setActive(!text->isActive());
