@@ -1,12 +1,18 @@
 #pragma once
 
-#include "Point.h"
+#include "Transform.h"
+#include "Component.h"
 
-class Collider
+class Collider : public Component
 {
-    public:
-        Collider();
-        ~Collider();
-    private:
-        Point mPosition;
+public:
+    Collider();
+    virtual ~Collider();
+
+    // Getter and setter methods for transform
+    Transform getTransform() const;
+    void setTransform(const Transform& transform);
+
+private:
+    Transform mTransform;
 };
