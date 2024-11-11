@@ -4,7 +4,6 @@
 PhysicsManager::PhysicsManager() {}
 
 void PhysicsManager::startPhysicsEngine(std::vector<GameObject*>& aGameObjects, Vector2 aGravity) {
-    std::cout << "PhysicsManager::startPhysicsEngine()" << std::endl;
 
     mPhysicsEngine.setgameObjects(aGameObjects);
     mPhysicsEngine.createWorld(aGravity);

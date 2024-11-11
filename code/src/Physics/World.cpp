@@ -131,9 +131,7 @@ std::vector<int> World::getContactEvents() {
     for (int i = 0; i < contactlist.beginCount; i++) {
         std::cout << "begincount is: " << contactlist.beginCount << std::endl;
         std::cout << "contact found: " << std::endl;
-
         std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
-
         std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
     }
     return std::vector<int>();

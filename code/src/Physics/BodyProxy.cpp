@@ -5,8 +5,6 @@
 #include <vector>
 
 BodyProxy::BodyProxy(GameObject* aGameObject) {
-    std::cout << "BodyProxy::BodyProxy(): " << aGameObject->getName() << std::endl;
-
     std::vector<RigidBody*> rigidBodies = aGameObject->getComponents<RigidBody>();
 
     if (!rigidBodies.empty()) {

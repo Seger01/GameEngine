@@ -57,8 +57,6 @@ void PhysicsEngine::update() {
                 transform.position = transform.position - boxCollider->getTransform().position;
 
                 mGameObjects.at(i)->setTransform(transform);
-
-                std::cout << "Position: " << position.x << " " << position.y << std::endl;
             }
         }
     }
@@ -75,7 +73,6 @@ float PhysicsEngine::getStep() const { return mStep; }
 void PhysicsEngine::executeCollisionScripts(std::vector<int> aBodyIDs) {}
 
 void PhysicsEngine::createBodies() {
-    std::cout << "PhysicsEngine::createBodies()" << std::endl;
     std::cout << "Number of game objects: " << mGameObjects.size() << std::endl;
     for (int i = 0; i < mGameObjects.size(); i++) {
         std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
