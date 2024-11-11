@@ -10,6 +10,8 @@
 #include "TileMapParser.h"
 #include "Transform.h"
 
+SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
+
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
@@ -40,14 +42,18 @@ void InitBehaviourScript::createLevel1() {
 
     GameObject* gameObject2 = new GameObject;
     Transform objectTransform2;
-    objectTransform2.position.x = 40;
-    objectTransform2.position.y = 40;
+    objectTransform2.position.x = 50;
+    objectTransform2.position.y = 80;
     gameObject2->setTransform(objectTransform2);
+
+    Sprite* guySprite = engine.getResourceManager().createSprite(guyFrameDef);
+    guySprite->setLayer(3);
+    gameObject2->addComponent(guySprite);
 
     gameObject2->addComponent<BoxCollider>();
 
-    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(30);
-    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(30);
+    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
 
     gameObject2->addComponent<RigidBody>();
     RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);

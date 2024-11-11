@@ -39,7 +39,7 @@ int World::createBody(BodyProxy& aBodyProxy) {
 
     bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
     bodyDef.gravityScale = aBodyProxy.getGravityScale();
-    bodyDef.fixedRotation = aBodyProxy.getCanRotate();
+    bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 
     std::cout << "BodyID index: " << bodyID.index1 << std::endl;

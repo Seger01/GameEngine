@@ -52,12 +52,6 @@ set(BUILD_TESTS OFF CACHE BOOL "Disable building tests" FORCE)
 set(BUILD_SAMPLES OFF CACHE BOOL "Disable building samples" FORCE) # Enable these if you need samples in poc's
 set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples" FORCE) # Enable these if you need examples in poc's
 
-# Set options for TmxLite
-set(TMXLITE_STATIC_LIB OFF CACHE BOOL "Should tmxlite be built as a static or shared lib?" FORCE)
-set(PROJECT_STATIC_RUNTIME OFF CACHE BOOL "Use statically linked standard/runtime libraries?" FORCE)
-set(USE_RTTI OFF CACHE BOOL "Use run time type information?" FORCE)
-set(USE_EXTLIBS OFF CACHE BOOL "Use external zlib, zstd and pugixml libraries instead of the included source?" FORCE)
-set(USE_ZSTD OFF CACHE BOOL "Enable zstd compression? (Already set to true if USE_EXTLIBS is true)" FORCE)
 
 # Set options for SlikeNet
 set(RAKNET_ENABLE_SAMPLES OFF CACHE BOOL "Generate RakNet sample projects if true." FORCE)
@@ -139,7 +133,6 @@ add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_mixer)
 add_subdirectory(external/SDL_image)
 add_subdirectory(external/SDL_ttf)
-add_subdirectory(external/tmxlite/tmxlite)
 add_subdirectory(external/box2d)
 add_subdirectory(external/nlohmann_json)
 
@@ -169,7 +162,7 @@ add_library(${LIBRARY} STATIC ${SOURCES})
 #add_library(${LIBRARY} SHARED ${SOURCES})
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf tmxlite box2d nlohmann_json::nlohmann_json)
+set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json)
 
 # Link libraries to library
 target_link_libraries(${LIBRARY} ${LINK_LIBRARIES})
