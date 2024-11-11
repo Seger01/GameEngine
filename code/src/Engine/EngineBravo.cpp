@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(300), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(1000), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -45,12 +45,13 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
-        if (mSceneManager.sceneChanged()) {
-            startBehaviourScripts();
-        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
+
+        mSceneManager.sceneChanged();
+
+        startBehaviourScripts();
 
         runBehaviourScripts();
 
@@ -113,6 +114,9 @@ void EngineBravo::startBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                if (behaviourScript->hasScriptStarted()) {
+                    continue;
+                }
                 behaviourScript->onStart();
                 behaviourScript->setScriptStarted(true);
             }
@@ -129,11 +133,11 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-                behaviourScript->onUpdate();
                 if (!behaviourScript->hasScriptStarted()) {
                     behaviourScript->onStart();
                     behaviourScript->setScriptStarted(true);
                 }
+                behaviourScript->onUpdate();
             }
         }
     }

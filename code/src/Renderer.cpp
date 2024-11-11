@@ -16,6 +16,11 @@ Renderer::Renderer(Window& window) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
     }
+
+    if (SDL_RenderSetVSync(mRenderer, 1) != 0) {
+        std::cerr << "Warning: V-Sync is not supported or failed to enable!" << std::endl;
+    }
+
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
         SDL_Log("Unable to initialize SDL_ttf: %s", TTF_GetError());
