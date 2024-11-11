@@ -6,6 +6,7 @@
 #include "EngineBravo.h"
 #include "GameObject.h"
 #include "Input.h"
+#include "InputStructs.h"
 #include "ParticleEmitter.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
@@ -189,10 +190,6 @@ void PlayerBehaviourScript::handleMovement() {
 
     Transform parentTransform = this->mGameObject->getTransform();
 
-    if (input.GetKeyDown(Key::Key_P)) {
-        emitter->setActive(!emitter->isActive());
-    }
-
     if (input.GetKey(Key::Key_E)) {
         deactivateAllAnimations();
     }
@@ -240,6 +237,8 @@ void PlayerBehaviourScript::hanldeCameraMovement() {
 }
 
 void PlayerBehaviourScript::onUpdate() {
+    Input& input = Input::getInstance();
+
     handleMovement();
     handleAnimations();
 
@@ -271,10 +270,24 @@ void PlayerBehaviourScript::onUpdate() {
 
     // emitter->setActive(false);
 
+    if (input.GetKeyDown(Key::Key_C)) {
+        Configuration& config = EngineBravo::getInstance().getConfiguration();
+        config.setConfig("render_colliders", !config.getConfig("render_colliders"));
+    }
+
+    if (input.GetKeyDown(Key::Key_F)) {
+        Configuration& config = EngineBravo::getInstance().getConfiguration();
+        config.setConfig("render_fps", !config.getConfig("render_fps"));
+    }
+
     if (emitter != nullptr) {
         static bool emitterMode = false;
 
-        if (Input::getInstance().GetKeyDown(Key::Key_Space)) {
+        if (input.GetKeyDown(Key::Key_P)) {
+            emitter->setActive(!emitter->isActive());
+        }
+
+        if (input.GetKeyDown(Key::Key_Space)) {
             emitterMode = !emitterMode;
         }
 
