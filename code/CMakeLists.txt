@@ -8,9 +8,6 @@ set(PROJECT_EXECUTABLE ${PROJECT_NAME}_exec)
 set(TESTS ${PROJECT_NAME}_tests)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set the CMAKE_MODULE_PATH
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -18,15 +15,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Add a CMake option to enable or disable debug mode
 option(ENABLE_DEBUG "Enable debug mode" OFF)
 
+# Option to enable or disable building tests
+option(ENABLE_TESTS "Enable building tests" OFF)
+
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
     message("Debug mode enabled")
     set(CMAKE_BUILD_TYPE Debug)
-    add_compile_options(-g -O0 --coverage)
-    add_link_options(--coverage)
+    add_compile_options(-g -O0)
 else()
     set(CMAKE_BUILD_TYPE Release)
     add_compile_options(-O3)  # Optimization flag for Release build
+endif()
+
+if(ENABLE_TESTS)
+    #Set coverage compile and link flags
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
 endif()
 
 # Set architecture-specific flags
@@ -65,19 +70,13 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Audio)
 
-# Add the tests directory
-add_subdirectory(test)
-
 # Automatically search for source files
-file(GLOB_RECURSE SOURCES
+file(GLOB_RECURSE LIBRARY_SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# Exclude main.cpp from library sources
-list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") 
-
-# Create a library from the main sources
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+# Create a library from the library sources
+add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES})
 
 # Define the libraries to link against
 set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json behaviortree_cpp)
@@ -85,27 +84,10 @@ set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlo
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
 
-# Add the executable target
-add_executable(${PROJECT_EXECUTABLE} ${PROJECT_SOURCE_DIR}/src/main.cpp)
+# Add the testGame subdirectory
+add_subdirectory(testGame)
 
-# Add the library as a dependency
-add_dependencies(${PROJECT_EXECUTABLE} ${PROJECT_NAME})
-
-# Link library to the executable
-target_link_libraries(${PROJECT_EXECUTABLE} PUBLIC ${PROJECT_NAME})
-
-# Add custom target to run the main program
-add_custom_target(run
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_EXECUTABLE}
-    DEPENDS ${PROJECT_EXECUTABLE}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running the main program"
-)
-
-# Add custom target to run Valgrind
-add_custom_target(run_valgrind
-    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_EXECUTABLE}
-    DEPENDS ${PROJECT_EXECUTABLE}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running Valgrind to check for memory leaks"
-)
+if(ENABLE_TESTS)
+    # Add the testGame subdirectory
+    add_subdirectory(test)
+endif()
