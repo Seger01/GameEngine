@@ -18,6 +18,7 @@ NetworkClient::NetworkClient()
     if (result != SLNet::RAKNET_STARTED) {
         throw std::runtime_error("Failed to start client");
     }
+    std::cout << "Client started\n";
 }
 
 void NetworkClient::connectToServer() {

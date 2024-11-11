@@ -5,9 +5,9 @@
 
 #include "Button.h"
 #include "Engine/EngineBravo.h"
+#include "Network/NetworkClient.h"
 #include "Network/NetworkManager.h"
 #include "Text.h"
-#include "Network/NetworkClient.h"
 
 void NetworkBehaviourScript::onStart() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -64,7 +64,6 @@ void NetworkBehaviourScript::onStart() {
 }
 
 void NetworkBehaviourScript::onUpdate() {
-    std::cout << "NetworkBehaviourScript::onUpdate()" << std::endl;
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     NetworkManager& networkManager = engine.getNetworkManager();
@@ -83,12 +82,32 @@ void NetworkBehaviourScript::onUpdate() {
         scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
         scene->getActiveCamera().setWidth(16 * 30);
         scene->getActiveCamera().setHeight(9 * 30);
-        .
 
-            sceneManager.requestSceneChange("tempScene");
+        sceneManager.requestSceneChange("tempScene");
     }
     if (networkManager.getRole() == NetworkRole::CLIENT) {
-        NetworkClient* networkClient = engine.getNetworkManager().getNetworkClient();
-        networkClient->
+        NetworkClient& networkClient = engine.getNetworkManager().getClient();
+        std::vector<std::string> serverAddresses = networkClient.getServerAddresses();
+        for (std::string serverAddress : serverAddresses) {
+            auto it = std::find(mServerAddresses.begin(), mServerAddresses.end(), serverAddress);
+            if (it == mServerAddresses.end()) {
+                // Server address not found
+                mServerAddresses.push_back(serverAddress);
+
+                Button* ipButton = new Button;
+                ipButton->setTransform(Transform(Vector2(100, mServerAddresses.size() * 20)));
+                // ipButton->addComponent<NetworkButtonScript>();
+                ipButton->setWidth(40);
+                ipButton->setHeight(10);
+                ipButton->setTag(serverAddress);
+                Text* ipText =
+                    new Text(serverAddress, serverAddress, Color(15, 110, 47), Vector2(0, 0), Vector2(0.5, 0.5));
+                ipText->setParent(ipButton);
+
+                Scene* scene = sceneManager.getCurrentScene();
+                scene->addGameObject(ipButton);
+                scene->addGameObject(ipText);
+            }
+        }
     }
 }

@@ -22,7 +22,6 @@ private:
     Button* mHostButton{nullptr};
     Button* mSearchButton{nullptr};
 
-    std::vector<Button*> mIPButtons;
     std::list<std::string> mServerAddresses;
 };
 #endif // NETWORKBEHAVIOURSCRIPT_H

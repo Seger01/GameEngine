@@ -22,7 +22,7 @@ void NetworkButtonScript::onButtonPressed() {
                 std::cout << "Network is already connected" << std::endl;
             } else {
                 networkManager.setRole(NetworkRole::SERVER);
-                NetworkManager.startNetwork();
+                networkManager.startNetwork();
             }
             setButtonsVisibility();
 
@@ -32,7 +32,7 @@ void NetworkButtonScript::onButtonPressed() {
                 std::cout << "Network is already connected" << std::endl;
             } else {
                 networkManager.setRole(NetworkRole::CLIENT);
-                NetworkManager.startNetwork();
+                networkManager.startNetwork();
             }
             setButtonsVisibility();
         } else if (button->getTag() == "Host") {
@@ -45,12 +45,8 @@ void NetworkButtonScript::onButtonPressed() {
             setButtonsVisibility();
         } else if (button->getTag() == "Search") {
             std::cout << "Search selected" << std::endl;
-            NetworkClient* networkClient = engine.getNetworkManager().getNetworkClient();
-            if (networkClient) {
-                networkClient->discoverServers();
-            } else {
-                std::cout << "NetworkClient is nullptr" << std::endl;
-            }
+            NetworkClient& networkClient = engine.getNetworkManager().getClient();
+            networkClient.discoverServers();
         } else {
             std::cout << "Unknown tag" << button->getTag() << std::endl;
         }
