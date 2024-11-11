@@ -20,8 +20,6 @@ public:
     unsigned getVolume() const;
     void setXDirection(int aXDirection);
     int getXDirection() const;
-    void setXVelocity(int aXVelocity);
-    int getXVelocity() const;
     std::string getFileName() const;
 
 private:
@@ -34,8 +32,6 @@ private:
     const static int mMaxVolume{100};
     const static int minXDirection{-100};
     const static int maxXDirection{100};
-    const static int mMaxVelocity{10};
     int mVolume;
     int mXCoord;
-    int mXVelocity;
 };

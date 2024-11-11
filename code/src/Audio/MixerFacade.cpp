@@ -28,7 +28,7 @@ void MixerFacade::addSound(std::string aPath) {
     mMixerContainer.addSound(aPath, *sound);
 }
 
-void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume) {
+void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume, int aDirection) {
     Mix_Chunk* sound = mMixerContainer.getSound(aPath);
     if (sound == nullptr) {
         throw std::runtime_error("Sound not found: " + aPath);
@@ -36,6 +36,7 @@ void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume) 
 
     int channel = findAvailableChannel();
     Mix_Volume(channel, aVolume);
+    Mix_SetPosition(channel, aDirection > 0 ? 90 : 270, aDirection);
     Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
 }
 

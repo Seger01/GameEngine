@@ -10,7 +10,8 @@ void AudioManager::play(const AudioSource& aSource) {
     if (aSource.isMusic()) {
         getFacade().playMusic();
     } else {
-        getFacade().playSound(aSource.getFileName(), aSource.getLooping(), aSource.getVolume());
+        getFacade().playSound(aSource.getFileName(), aSource.getLooping(), aSource.getVolume(),
+                              aSource.getXDirection());
     }
 }
 

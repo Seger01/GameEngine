@@ -10,7 +10,7 @@ public:
 
 private:
     void addSound(std::string aPath) override;
-    void playSound(std::string aPath, bool aLooping, unsigned aVolume) override;
+    void playSound(std::string aPath, bool aLooping, unsigned aVolume, int aDirection) override;
     void addMusic(std::string aPath) override;
     void playMusic() override;
     void stopMusic() override;

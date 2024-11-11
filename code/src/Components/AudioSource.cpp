@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 AudioSource::AudioSource(std::string aPath, bool aIsMusic)
-    : mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0}, mXVelocity{0} {
+    : mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0} {
     mFileName = FSConverter().getResourcePath(aPath);
 }
 
@@ -53,18 +53,6 @@ void AudioSource::setXDirection(int aXCoord) {
 }
 
 int AudioSource::getXDirection() const { return mXCoord; }
-
-void AudioSource::setXVelocity(int aXVelocity) {
-    if (aXVelocity > std::abs(mMaxVelocity)) {
-        std::cerr << "X velocity must be between " << -mMaxVelocity << " and " << mMaxVelocity
-                  << ". Setting to 0 instead\n";
-        mXVelocity = 0;
-    } else {
-        mXVelocity = aXVelocity;
-    }
-}
-
-int AudioSource::getXVelocity() const { return mXVelocity; }
 
 std::string AudioSource::getFileName() const { return mFileName; }
 

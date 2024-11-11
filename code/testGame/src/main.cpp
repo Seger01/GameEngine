@@ -142,11 +142,10 @@ void engineTest() {
 
     gameObject->addComponent<InitBehaviourScript>();
 
-    AudioSource* audioSource = new AudioSource("Audio/music.wav", true);
+    AudioSource* audioSource = new AudioSource("Audio/music.wav", false);
     audioSource->setPlayOnWake(true);
     audioSource->setVolume(50);
-    audioSource->setXDirection(0);
-    audioSource->setXVelocity(0);
+    audioSource->setXDirection(100);
 
     gameObject->addComponent(audioSource);
 
