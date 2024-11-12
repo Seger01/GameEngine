@@ -12,7 +12,7 @@ void AudioBehaviourScript::onUpdate() {
 
     if (sceneManager.getCurrentScene()->getName() == "Level-1") {
         Input& input = Input::getInstance();
-        if (input.GetKey(Key::Key_P)) {
+        if (input.GetKeyDown(Key::Key_P)) {
             AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
             audioManager.play(*(mGameObject->getComponentsWithTag<AudioSource>("gun")[0]));
         }
