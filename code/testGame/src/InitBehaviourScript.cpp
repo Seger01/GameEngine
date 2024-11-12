@@ -72,7 +72,6 @@ void InitBehaviourScript::createLevel1() {
 
     int textWidth = 0;
     int textHeight = 0;
-
     if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight, text->getScale(),
                                               scene)) {
         std::cout << "Failed to get text size for FPS counter.\n";
@@ -82,8 +81,8 @@ void InitBehaviourScript::createLevel1() {
 
     Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
     textBackground->setLayer(3);
-    textBackground->setWidth(200);
-    textBackground->setHeight(32);
+    textBackground->setWidth(10);
+    textBackground->setHeight(10);
 
     text->addComponent(textBackground);
 

@@ -44,13 +44,8 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     drawPosition.y = std::round(drawPosition.y * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight()));
 
     // Adjust the width and height slightly to cover gaps
-    spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1; // +1 to
-                                                                                                               // cover
-                                                                                                               // gaps
-    spriteHeight =
-        std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1; // +1 to
-                                                                                                        // cover
-                                                                                                        // gaps
+    spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1;
+    spriteHeight = std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1;
 
     // Render the sprite with adjusted size
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
@@ -94,9 +89,10 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     }
 }
 
-void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor) {
-    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
+                              Vector2 aScale) {
+    float scaleX = aScale.x * (mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth()));
+    float scaleY = aScale.y * (mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight()));
 
     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
     Vector2 drawPosition = aLocation - cameraOrigin;
@@ -106,7 +102,6 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
-
 // void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
 //     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
 //     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
@@ -132,13 +127,13 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
     int windowWidth = mWindow->getSize().x;
     int windowHeight = mWindow->getSize().y;
 
-    // Adjust the width and height slightly to cover gaps
-    aWidth = std::round(aWidth / (static_cast<float>(windowWidth) / currentCamera.getWidth()));     // +1 to
-                                                                                                    // cover
-                                                                                                    // gaps
-    aHeight = std::round(aHeight * (static_cast<float>(windowHeight) / currentCamera.getHeight())); // +1 to
-                                                                                                    // cover
-                                                                                                    // gaps
+    // float scaleX = (static_cast<float>(currentCamera.getWidth()) / mWindow->getSize().x);
+    // float scaleY = (static_cast<float>(currentCamera.getHeight()) / mWindow->getSize().y);
+    float scaleX = (aScale.x / mWindow->getSize().x) * static_cast<float>(currentCamera.getWidth());
+    float scaleY = (aScale.y / mWindow->getSize().y) * static_cast<float>(currentCamera.getHeight());
+
+    aWidth = aWidth * scaleX;
+    aHeight = aHeight * scaleY;
 
     return true;
 }
@@ -228,7 +223,8 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
         if (dynamic_cast<Text*>(gameObject)) {
             Text* text = dynamic_cast<Text*>(gameObject);
             if (text->isActive() && text->getLayer() == aLayer) {
-                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor());
+                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor(),
+                           text->getScale());
             }
         }
     }

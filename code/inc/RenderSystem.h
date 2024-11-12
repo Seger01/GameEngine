@@ -27,7 +27,7 @@ private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);
     void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
     void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
-    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor);
+    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale);
 
     // void renderButton(Camera& aCurrentCamera, Button* aButton);
 
