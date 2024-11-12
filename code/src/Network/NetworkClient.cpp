@@ -130,7 +130,6 @@ void NetworkClient::handleIncomingPackets() {
             std::cout << "Got open connection ping from " << packet->systemAddress.ToString() << std::endl;
         }
         case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
-            std::cout << "Received transform packet\n";
             handleTransform(packet);
             break;
         case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:

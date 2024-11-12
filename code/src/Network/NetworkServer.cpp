@@ -75,7 +75,6 @@ void NetworkServer::handleIncomingPackets() {
             std::cout << "A client lost the connection.\n";
             break;
         case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
-            std::cout << "Received transform packet.\n";
             handleTransform(packet);
             break;
         case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:

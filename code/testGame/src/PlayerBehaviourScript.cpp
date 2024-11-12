@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Input.h"
 #include "InputStructs.h"
+#include "Network/NetworkObject.h"
 #include "ParticleEmitter.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
@@ -158,6 +159,13 @@ void PlayerBehaviourScript::onStart() {
 }
 
 void PlayerBehaviourScript::handleAnimations() {
+    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+    if (!networkObject) {
+        return;
+    }
+    if (!networkObject->isOwner()) {
+        return;
+    }
     static Transform previousTransform = this->mGameObject->getTransform();
 
     // deactivateAllAnimations();
@@ -185,6 +193,14 @@ void PlayerBehaviourScript::handleAnimations() {
 
 void PlayerBehaviourScript::handleMovement() {
     static const float movementSpeed = 50.0f;
+
+    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+    if (!networkObject) {
+        return;
+    }
+    if (!networkObject->isOwner()) {
+        return;
+    }
 
     Input& input = Input::getInstance();
 
@@ -229,6 +245,13 @@ void PlayerBehaviourScript::handleMovement() {
 }
 
 void PlayerBehaviourScript::hanldeCameraMovement() {
+    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+    if (!networkObject) {
+        return;
+    }
+    if (!networkObject->isOwner()) {
+        return;
+    }
     Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
 
     Transform playerTransform = this->mGameObject->getTransform();
