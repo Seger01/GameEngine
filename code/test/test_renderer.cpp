@@ -68,6 +68,8 @@ TEST_F(RendererTest, RenderSquare) {
         Color color{255, 0, 0, 255}; // Red color
         mRenderer->renderSquare(Vector2(200, 200), 50, 50, color, true);
 
+        mRenderer->renderSquare(Vector2(200, 200), 50, 50, 45.0f, color, true);
+
         mRenderer->renderSquare(Vector2(-200000, 20000), -50, 50, color, false);
         mRenderer->renderSquare(Vector2(-200000, 20000), -50, 50, color, true);
     }()));

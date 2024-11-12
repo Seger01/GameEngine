@@ -15,7 +15,7 @@ public:
     void setTransform(Transform aNewTransform);
 
     Sprite* getFrame(int aFrameIndex);
-    Sprite* getFrameAtTime(long aTime);
+    Sprite* getCurrentFrame();
 
     int getTimeBetweenFrames();
     void setTimeBetweenFrames(int aTimeBetweenFrames);
