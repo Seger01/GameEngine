@@ -4,8 +4,10 @@
 #include <memory>
 
 #include "Animation.h"
+#include "BoxCollider.h"
 #include "Button.h"
 #include "Color.h"
+#include "EngineBravo.h"
 #include "ParticleEmitter.h"
 #include "SDL_timer.h"
 #include "ScopedTimer.h"
@@ -57,7 +59,7 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 }
 
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
-    Sprite* currentFrame = aAnimation->getFrameAtTime(SDL_GetTicks());
+    Sprite* currentFrame = aAnimation->getCurrentFrame();
     // Sprite* currentFrame = aAnimation->getFrame(0);
 
     renderSprite(aCurrentCamera, aGameObject, currentFrame);
@@ -234,11 +236,51 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
     if (Time::deltaTime == 0) {
         return;
     }
-    int fps = 1.0f / Time::deltaTime;
 
-    // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
-    // renderText(aScene->getActiveCamera(), "FPS: " + std::to_string(fps), Vector2(25, 0), Color(0, 0, 0));
-    // mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0));
+    Configuration& config = EngineBravo::getInstance().getConfiguration();
+
+    if (config.getConfig("render_fps")) {
+        int fps = 1.0f / Time::deltaTime;
+
+        // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
+        mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
+    }
+
+    if (config.getConfig("render_colliders")) {
+        for (auto& gameObject : aScene->getGameObjects()) {
+            if (gameObject->hasComponent<BoxCollider>()) {
+                for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
+                    Camera& aCurrentCamera = aScene->getActiveCamera();
+
+                    int spriteWidth = boxCollider->getWidth();
+                    int spriteHeight = boxCollider->getHeight();
+
+                    int WindowWidth = mWindow->getSize().x;
+                    int WindowHeight = mWindow->getSize().y;
+
+                    Vector2 texturePosition =
+                        gameObject->getTransform().position + boxCollider->getTransform().position;
+
+                    Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+                                           Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+
+                    Vector2 drawPosition = texturePosition - cameraOrigin;
+
+                    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+                    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+                    spriteWidth = std::ceil(static_cast<int>(
+                        static_cast<float>(spriteWidth) *
+                        (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+                    spriteHeight = std::ceil(static_cast<int>(
+                        static_cast<float>(spriteHeight) *
+                        (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
+
+                    mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, Color(0, 0, 255), false);
+                }
+            }
+        }
+    }
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }

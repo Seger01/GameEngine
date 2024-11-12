@@ -24,11 +24,6 @@ protected:
         EngineBravo& engineBravo = EngineBravo::getInstance();
         mRenderSystem = &engineBravo.getRenderSystem();
 
-        // mRenderSystem->getWindow().showWindow();
-
-        // mRenderSystem->getWindow().setFloating();
-        // mRenderSystem->getWindow().toggleFullFloating();
-        // mRenderSystem->getWindow().setFullScreen();
         //
         engineBravo.getResourceManager().setRenderer(&mRenderSystem->getRenderer());
 
@@ -116,5 +111,10 @@ TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSyst
 
 TEST_F(RenderSystemTest, GetWindow_NoExceptions) {
     ASSERT_NO_THROW(mRenderSystem->getWindow());
-    // mRenderSystem->getWindow().showWindow();
+    mRenderSystem->getWindow().showWindow();
+
+    mRenderSystem->getWindow().showWindow();
+
+    mRenderSystem->getWindow().setFloating();
+    // mRenderSystem->getWindow().toggleFullFloating();
 }

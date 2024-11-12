@@ -23,6 +23,9 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
+    mConfiguration.setConfig("render_colliders", false);
+    mConfiguration.setConfig("render_fps", true);
+
     if (mSceneManager.sceneChanged()) {
     }
     startBehaviourScripts();
@@ -49,12 +52,13 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
-        if (mSceneManager.sceneChanged()) {
-            startBehaviourScripts();
-        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
+
+        mSceneManager.sceneChanged();
+
+        startBehaviourScripts();
 
         runBehaviourScripts();
 
@@ -113,6 +117,8 @@ UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
+Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
+
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
     if (currentScene == nullptr) {
@@ -122,6 +128,9 @@ void EngineBravo::startBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                if (behaviourScript->hasScriptStarted()) {
+                    continue;
+                }
                 behaviourScript->onStart();
                 behaviourScript->setScriptStarted(true);
             }
@@ -138,11 +147,11 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-                behaviourScript->onUpdate();
                 if (!behaviourScript->hasScriptStarted()) {
                     behaviourScript->onStart();
                     behaviourScript->setScriptStarted(true);
                 }
+                behaviourScript->onUpdate();
             }
         }
     }

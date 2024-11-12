@@ -27,9 +27,8 @@ void CanvasBehaviourScript::onStart() {
     buttonObject->setHeight(10);
     buttonObject->setParent(mGameObject);
 
-    GameObject* textObject = new Text("Hello, World!", "undefined", Color(15, 110, 47), Vector2(10, 10), Vector2(1, 1));
-    textObject->addComponent<FPSCounterBehaviourScript>();
-    textObject->setParent(mGameObject);
+    // GameObject* textObject = new Text("Hello, World!", "undefined", Color(15, 110, 47), Vector2(10, 10), Vector2(1,
+    // 1)); textObject->addComponent<FPSCounterBehaviourScript>(); textObject->setParent(mGameObject);
 
     GameObject* playerStats = new GameObject;
     playerStats->addComponent<PlayerStatsBehaviourScript>();
@@ -37,7 +36,7 @@ void CanvasBehaviourScript::onStart() {
     playerStats->setParent(mGameObject);
 
     scene->addGameObject(playerStats);
-    scene->addGameObject(textObject);
+    // scene->addGameObject(textObject);
     scene->addGameObject(buttonObject);
     scene->addGameObject(buttonText);
 
