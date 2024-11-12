@@ -14,7 +14,7 @@
 
 class NetworkServer {
 public:
-    NetworkServer();
+    NetworkServer(int aTickRate);
     void receiveGameState();
     void sendGameState();
     void update(std::vector<GameObject*>& aGameObjects);
@@ -30,12 +30,15 @@ private:
     void handleTransform(SLNet::Packet* aPacket);
     void spawnNewPlayer(SLNet::Packet* aPacket);
     void onClientDisconnected(SLNet::RakNetGUID aClientID);
+    void sendToAllClients(SLNet::BitStream& aBitStream);
+    void sendPackets();
 
 private:
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;
-    std::chrono::time_point<std::chrono::steady_clock> mLastBroadcastCheck;
+    std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
 
     std::vector<GameObject*>* mGameObjects;
+    int mTickRate;
 };
 
 #endif // NETWORKSERVER_H

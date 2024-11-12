@@ -9,7 +9,7 @@
 
 class NetworkClient {
 public:
-    NetworkClient();
+    NetworkClient(int aTickRate);
     ~NetworkClient();
     void connectToServer();
     void sendGameState();
@@ -37,6 +37,8 @@ private:
     std::string mServerAddress;
 
     std::vector<GameObject*>* mGameObjects;
+    int mTickRate;
+    std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
 };
 
 #endif // NETWORKCLIENT_H

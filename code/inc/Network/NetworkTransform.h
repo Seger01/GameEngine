@@ -1,7 +1,9 @@
 #ifndef NETWORKTRANSFORM_H
 #define NETWORKTRANSFORM_H
 
-class NetworkTransform {
+#include "Components/Component.h"
+
+class NetworkTransform : public Component {
 public:
     NetworkTransform();
     NetworkTransform(bool aSendPositionX, bool aSendPositionY, bool aSendRotation, bool aSendScaleX, bool aSendScaleY);

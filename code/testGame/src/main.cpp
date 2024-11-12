@@ -5,6 +5,7 @@
 
 #include "EngineBravo.h"
 
+#include "Network/NetworkTransform.h"
 #include "NetworkBehaviourScript.h"
 #include "PlayerBehaviourScript.h"
 
@@ -21,6 +22,8 @@ void engineTest() {
     objectTransform.position.y = 100;
     defaultPlayerPrefab->setTransform(objectTransform);
     defaultPlayerPrefab->addComponent<PlayerBehaviourScript>();
+    defaultPlayerPrefab->setTag("Player");
+    defaultPlayerPrefab->addComponent<NetworkTransform>(true, true, false, false, false);
     networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
 
     Scene* scene = sceneManager.createScene("networkScene");
