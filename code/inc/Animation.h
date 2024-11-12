@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "Sprite.h"
@@ -36,14 +37,11 @@ public:
 
 private:
     Transform mTransform;
-
     bool mFlipX;
     bool mFlipY;
-
-    std::vector<Sprite*> mAnimationFrames;
+    std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
     int mTimeBetweenFrames;
     bool mIsLooping;
-
     int mLayer = 0;
 };
 

@@ -1,28 +1,27 @@
 #include "GameObject.h"
 
+#include <memory>
+
+#include "Component.h"
+
 GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
 
 GameObject::~GameObject() {
-    for (auto component : mComponents) {
-        delete component;
-    }
-    mComponents.clear();
+    mComponents.clear(); // unique_ptr automatically handles deletion
 }
 
 void GameObject::addComponent(Component* aComponent) {
     if (aComponent) {
-        mComponents.push_back(aComponent);
         aComponent->setGameObjectParent(this);
+        mComponents.push_back(std::unique_ptr<Component>(aComponent));
     }
 }
 
 void GameObject::removeComponent(Component* component) {
-    if (component) {
-        auto it = std::find(mComponents.begin(), mComponents.end(), component);
-        if (it != mComponents.end()) {
-            delete *it; // Free memory if the component was dynamically allocated
-            mComponents.erase(it);
-        }
+    auto it = std::remove_if(mComponents.begin(), mComponents.end(),
+                             [component](const std::unique_ptr<Component>& comp) { return comp.get() == component; });
+    if (it != mComponents.end()) {
+        mComponents.erase(it, mComponents.end()); // unique_ptr automatically deletes the component
     }
 }
 
@@ -46,7 +45,6 @@ Transform GameObject::getTransform() {
     if (mParent) {
         return mParent->getTransform() + mTransform;
     }
-
     return mTransform;
 }
 
@@ -60,7 +58,7 @@ std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag)
     std::vector<Component*> componentsWithTag;
     for (const auto& component : mComponents) {
         if (component->getTag() == tag) {
-            componentsWithTag.push_back(component);
+            componentsWithTag.push_back(component.get());
         }
     }
     return componentsWithTag;

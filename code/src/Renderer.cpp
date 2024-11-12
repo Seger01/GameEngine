@@ -17,9 +17,9 @@ Renderer::Renderer(Window& window) {
         return;
     }
 
-    if (SDL_RenderSetVSync(mRenderer, 1) != 0) {
-        std::cerr << "Warning: V-Sync is not supported or failed to enable!" << std::endl;
-    }
+    // if (SDL_RenderSetVSync(mRenderer, 1) != 0) {
+    //     std::cerr << "Warning: V-Sync is not supported or failed to enable!" << std::endl;
+    // }
 
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
@@ -42,7 +42,15 @@ Renderer::Renderer(Window& window) {
     mFont = font;
 }
 
-Renderer::~Renderer() { SDL_DestroyRenderer(this->mRenderer); }
+Renderer::~Renderer() {
+    SDL_DestroyRenderer(this->mRenderer);
+
+    // Close the font
+    TTF_CloseFont(mFont);
+
+    // Quit SDL_ttf
+    TTF_Quit();
+}
 
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
                              bool aFlipX, bool aFlipY, float aRotation) {
@@ -186,6 +194,16 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
 }
+
+bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) {
+    if (TTF_SizeText(mFont, text.c_str(), &width, &height) == 0) {
+        return true;
+    } else {
+        std::cerr << "Failed to calculate text size: " << TTF_GetError() << std::endl;
+        return false;
+    }
+}
+
 void Renderer::clear(Color aColor) {
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
     SDL_RenderClear(mRenderer);

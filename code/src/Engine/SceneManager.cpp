@@ -17,14 +17,6 @@ bool SceneManager::sceneChanged() {
     return false;
 }
 
-int SceneManager::addScene(const Scene& scene) {
-    mScenes.push_back(std::make_unique<Scene>(scene));
-    if (mCurrentSceneIndex == -1) {
-        mCurrentSceneIndex = 0;
-    }
-    return mScenes.size() - 1;
-}
-
 void SceneManager::requestSceneChange(const std::string& sceneName) { mNewSceneName = sceneName; }
 
 void SceneManager::requestSceneChange(int sceneID) { mNewSceneID = sceneID; }

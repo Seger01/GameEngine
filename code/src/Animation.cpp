@@ -1,28 +1,22 @@
 #include "Animation.h"
-
 #include "GameObject.h"
 #include "Time.h"
 
-Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping) {
-    mAnimationFrames = aAnimationFrames;
-    mTimeBetweenFrames = aTimeBetweenFrames;
-    mIsLooping = aIsLooping;
-
-    mFlipX = false;
-    mFlipY = false;
+Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping)
+    : mTimeBetweenFrames(aTimeBetweenFrames), mIsLooping(aIsLooping), mFlipX(false), mFlipY(false) {
+    // Transfer each raw pointer to a unique_ptr and store in mAnimationFrames
+    for (Sprite* sprite : aAnimationFrames) {
+        mAnimationFrames.push_back(std::unique_ptr<Sprite>(sprite));
+    }
 }
 
-Animation::~Animation() {}
+Animation::~Animation() = default;
 
 Transform Animation::getTransform() {
     Transform parentTransform = this->mGameObject->getTransform();
-
-    Transform returnTransform = parentTransform;
-
-    returnTransform = returnTransform + mTransform;
-
-    return returnTransform;
+    return parentTransform + mTransform;
 }
+
 void Animation::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
 
 Sprite* Animation::getFrame(int aFrameIndex) {
@@ -30,8 +24,7 @@ Sprite* Animation::getFrame(int aFrameIndex) {
         return nullptr;
     }
 
-    Sprite* sprite = mAnimationFrames[aFrameIndex];
-
+    Sprite* sprite = mAnimationFrames[aFrameIndex].get();
     sprite->setFlipX(mFlipX);
     sprite->setFlipY(mFlipY);
 
@@ -41,7 +34,6 @@ Sprite* Animation::getFrame(int aFrameIndex) {
 Sprite* Animation::getCurrentFrame() {
     int frameIndex =
         (static_cast<int>(Time::ticks * 1000) % (mTimeBetweenFrames * mAnimationFrames.size())) / mTimeBetweenFrames;
-
     return getFrame(frameIndex);
 }
 

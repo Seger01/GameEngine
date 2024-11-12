@@ -1,30 +1,27 @@
 #include "Scene.h"
-
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
 
-#include "Text.h"
-#include "UIObject.h"
-
 Scene::Scene(std::string aSceneName, int aSceneID)
-    : mSceneName(aSceneName), mSceneID(aSceneID), mActiveCameraIndex(0) {}
+    : mSceneName(std::move(aSceneName)), mSceneID(aSceneID), mActiveCameraIndex(0) {}
 
-Scene::~Scene() {
-    // Clean up GameObject pointers
-    for (GameObject* obj : mGameObjects) {
-        delete obj;
+Scene::~Scene() = default;
+
+std::vector<GameObject*>& Scene::getGameObjects() {
+    static std::vector<GameObject*> gameObjectRefs;
+    gameObjectRefs.clear();
+    for (const auto& gameObject : mGameObjects) {
+        gameObjectRefs.push_back(gameObject.get());
     }
-    mGameObjects.clear();
+    return gameObjectRefs;
 }
-
-std::vector<GameObject*>& Scene::getGameObjects() { return mGameObjects; }
 
 std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag) {
     std::vector<GameObject*> objectsWithTag;
-    for (GameObject* obj : mGameObjects) {
+    for (const auto& obj : mGameObjects) {
         if (obj->getTag() == tag) {
-            objectsWithTag.push_back(obj);
+            objectsWithTag.push_back(obj.get());
         }
     }
     return objectsWithTag;
@@ -32,31 +29,32 @@ std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag) {
 
 void Scene::addGameObject(GameObject* object) {
     if (object) {
-        mGameObjects.push_back(object);
+        mGameObjects.push_back(std::unique_ptr<GameObject>(object));
     }
 }
 
 void Scene::removeGameObject(int id) {
-    for (auto it = mGameObjects.begin(); it != mGameObjects.end(); ++it) {
-        if ((*it)->getID() == id) {
-            delete *it;
-            mGameObjects.erase(it);
-            return;
-        }
+    auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
+                           [id](const std::unique_ptr<GameObject>& obj) { return obj->getID() == id; });
+    if (it != mGameObjects.end()) {
+        it->reset();            // Delete the object
+        mGameObjects.erase(it); // Remove the entry
+    } else {
+        throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
     }
-    throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
 }
 
 void Scene::removeGameObject(GameObject* object) {
-    auto it = std::find(mGameObjects.begin(), mGameObjects.end(), object);
+    auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
+                           [object](const std::unique_ptr<GameObject>& obj) { return obj.get() == object; });
     if (it != mGameObjects.end()) {
-        delete *it;
-        mGameObjects.erase(it);
+        it->reset();            // Delete the object
+        mGameObjects.erase(it); // Remove the entry
     }
 }
 
 GameObject& Scene::getGameObject(int id) {
-    for (GameObject* obj : mGameObjects) {
+    for (const auto& obj : mGameObjects) {
         if (obj->getID() == id) {
             return *obj;
         }
@@ -68,13 +66,13 @@ std::string Scene::getName() { return mSceneName; }
 int Scene::getID() { return mSceneID; }
 
 int Scene::addCamera() {
-    Camera newCamera;
-    mCameras.push_back(newCamera);
-    return mCameras.size() - 1; // Return the index of the newly added camera
+    mCameras.push_back(std::make_unique<Camera>());
+    return static_cast<int>(mCameras.size() - 1); // Return the index of the newly added camera
 }
 
 void Scene::removeCamera(int id) {
-    if (id >= 0 && id < mCameras.size()) {
+    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
+        mCameras[id].reset(); // Delete the camera
         mCameras.erase(mCameras.begin() + id);
         // Adjust active camera if necessary
         if (mActiveCameraIndex == id) {
@@ -88,14 +86,14 @@ void Scene::removeCamera(int id) {
 }
 
 Camera& Scene::getCamera(int id) {
-    if (id >= 0 && id < mCameras.size()) {
-        return mCameras[id];
+    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
+        return *mCameras[id];
     }
     throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
 }
 
 void Scene::setActiveCamera(int id) {
-    if (id >= 0 && id < mCameras.size()) {
+    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
         mActiveCameraIndex = id;
     } else {
         throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
@@ -103,8 +101,8 @@ void Scene::setActiveCamera(int id) {
 }
 
 Camera& Scene::getActiveCamera() {
-    if (mActiveCameraIndex >= 0 && mActiveCameraIndex < mCameras.size()) {
-        return mCameras[mActiveCameraIndex];
+    if (mActiveCameraIndex >= 0 && mActiveCameraIndex < static_cast<int>(mCameras.size())) {
+        return *mCameras[mActiveCameraIndex];
     }
     throw std::runtime_error("No active camera set.");
 }

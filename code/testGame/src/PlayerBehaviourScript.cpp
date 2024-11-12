@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Animation.h"
+#include "Configuration.h"
 #include "EngineBravo.h"
 #include "GameObject.h"
 #include "Input.h"
@@ -92,7 +93,7 @@ void PlayerBehaviourScript::initEmitter() {
     emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, endSize,
                                   rotation, rotationSpeed, rotationAcceleration, colors);
 
-    emitter->setParticlesPerSecond(300);
+    emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
     emitter->setLayer(4);
     mGameObject->addComponent(emitter);
@@ -244,40 +245,14 @@ void PlayerBehaviourScript::onUpdate() {
 
     hanldeCameraMovement();
 
-    // Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
-    //
-    // static bool direction = true;
-    //
-    // if (direction) {
-    //     Transform pos = currentCam.getTransform();
-    //
-    //     pos.position.x += 0.01f * Time::deltaTime;
-    //
-    //     currentCam.setTransform(pos);
-    // } else {
-    //     Transform pos = currentCam.getTransform();
-    //
-    //     pos.position.x -= 0.01f * Time::deltaTime;
-    //
-    //     currentCam.setTransform(pos);
-    // }
-    //
-    // if (currentCam.getTransform().position.x > 100) {
-    //     direction = false;
-    // } else if (currentCam.getTransform().position.x < 40) {
-    //     direction = true;
-    // }
-
-    // emitter->setActive(false);
-
     if (input.GetKeyDown(Key::Key_C)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig("render_colliders", !config.getConfig("render_colliders"));
+        config.setConfig(SHOW_COLLIDERS, !config.getConfig(SHOW_COLLIDERS));
     }
 
     if (input.GetKeyDown(Key::Key_F)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig("render_fps", !config.getConfig("render_fps"));
+        config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
     }
 
     if (emitter != nullptr) {

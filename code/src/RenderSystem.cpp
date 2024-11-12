@@ -107,18 +107,40 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
 
-void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
-    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+// void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
+//     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
+//     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+//
+//     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+//     Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
+//
+//     drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
+//     drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+//
+//     mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
+//                             static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
+// }
 
-    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-    Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
+bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
+                               Vector2 aScale, Scene* aScene) {
+    if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight)) {
+        return false;
+    }
 
-    drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
-    drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+    Camera& currentCamera = aScene->getActiveCamera();
 
-    mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
-                            static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
+    int windowWidth = mWindow->getSize().x;
+    int windowHeight = mWindow->getSize().y;
+
+    // Adjust the width and height slightly to cover gaps
+    aWidth = std::round(aWidth / (static_cast<float>(windowWidth) / currentCamera.getWidth()));     // +1 to
+                                                                                                    // cover
+                                                                                                    // gaps
+    aHeight = std::round(aHeight * (static_cast<float>(windowHeight) / currentCamera.getHeight())); // +1 to
+                                                                                                    // cover
+                                                                                                    // gaps
+
+    return true;
 }
 
 int RenderSystem::getLowestLayer(Scene* aScene) {
@@ -237,14 +259,14 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
 
     Configuration& config = EngineBravo::getInstance().getConfiguration();
 
-    if (config.getConfig("render_fps")) {
+    if (config.getConfig(SHOW_FPS)) {
         int fps = 1.0f / Time::deltaTime;
 
         // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
         mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
     }
 
-    if (config.getConfig("render_colliders")) {
+    if (config.getConfig(SHOW_COLLIDERS)) {
         for (auto& gameObject : aScene->getGameObjects()) {
             if (gameObject->hasComponent<BoxCollider>()) {
                 for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
