@@ -27,13 +27,25 @@ struct TileInfo {
 struct SpawnPoint {
     float x;
     float y;
-    bool isPlayerSpawn;
+    bool isPlayerSpawn = false;
+    bool isEnemySpawn = false;
+    std::string roomID = "";
+};
+
+struct RoomTrigger {
+    float x;
+    float y;
+    float mWidth;
+    float mHeight;
+    std::string roomID;
 };
 
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
+    std::vector<std::string> mLayerNames;
     std::unordered_map<int, TileInfo> mTileInfoMap;
     std::vector<SpawnPoint> mSpawnPoints;
+    std::vector<RoomTrigger> mRoomTriggers;
 };
 
 class TileMapParser {
@@ -49,7 +61,6 @@ private:
     std::string mFilePath;
     nlohmann::json mJsonData;
     std::vector<nlohmann::json> mTilesets;
-    std::vector<std::string> mLayerNames;
     TileMapData mTileMapData;
 };
 

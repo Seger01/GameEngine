@@ -4,6 +4,7 @@
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
+#include "RoomBehaviourScript.h"
 #include "FSConverter.h"
 #include "PlayerBehaviourScript.h"
 #include "Scene.h"
@@ -37,6 +38,37 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
+
+    for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
+        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID
+                  << " at (" << roomTrigger.x << ", " << roomTrigger.y
+                  << ") with dimensions (" << roomTrigger.mWidth << ", " << roomTrigger.mHeight << ")" << std::endl;
+
+        // Collect enemy spawns for this room
+        std::vector<SpawnPoint> enemySpawns;
+        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
+            if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
+                enemySpawns.push_back(spawnPoint);
+            }
+        }  
+
+        std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
+        const Point doorOpenPosition = {336, 96};
+        const Point doorClosedPosition = {272, 96};
+        SpriteDef closedDoorSpriteDef = {doorSpriteSheetPath, Rect{doorClosedPosition.x, doorClosedPosition.y, 64, 64}, 64, 64};
+        SpriteDef openDoorSpriteDef = {doorSpriteSheetPath, Rect{doorOpenPosition.x, doorOpenPosition.y, 64, 64}, 64, 64};
+        GameObject* roomObject = new GameObject;
+        roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns, closedDoorSpriteDef, openDoorSpriteDef));
+        BoxCollider* boxCollider = new BoxCollider();
+        Transform transform;
+        transform.position.x = roomTrigger.x;
+        transform.position.y = roomTrigger.y;
+        boxCollider->setTransform(transform);
+        boxCollider->setWidth(roomTrigger.mWidth);
+        boxCollider->setHeight(roomTrigger.mHeight);
+        roomObject->addComponent(boxCollider);
+        scene->addGameObject(roomObject);
+    }
 
     GameObject* gameObject = new GameObject;
 
@@ -79,6 +111,7 @@ void InitBehaviourScript::createLevel1() {
 
     // Assuming tileMapData is a const reference to TileMapData
     for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
+        bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
         // Access rows within the layer by index
         for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
             // Access each tile in the row by index
@@ -117,6 +150,10 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setTransform(transform);
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
+                            if(isDoorsLayer) {
+                                gameObject->setTag("Door");
+                                boxCollider->setActive(false);
+                            }
                             gameObject->addComponent(boxCollider);
                         }
 

@@ -53,7 +53,7 @@ void TileMapParser::parse() {
                 }
             }
             mTileMapData.mLayers.push_back(grid);
-            mLayerNames.push_back(layer["name"]);
+            mTileMapData.mLayerNames.push_back(layer["name"]);
         }
         else if (layer["type"] == "objectgroup") {
             parseObjectLayer(layer);
@@ -66,17 +66,36 @@ void TileMapParser::parse() {
 
 void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
     for (const auto& object : layer["objects"]) {
-        SpawnPoint spawnPoint;
-        spawnPoint.x = object["x"];
-        spawnPoint.y = object["y"];
         if (object.contains("properties")) {
             for (const auto& property : object["properties"]) {
-                if (property["name"] == "isPlayerSpawn" && property["type"] == "bool") {
-                    spawnPoint.isPlayerSpawn = property["value"];
+                if (property["name"] == "isPlayerSpawn" && property["type"] == "bool" && property["value"] == true) {
+                    SpawnPoint spawnPoint;
+                    spawnPoint.x = object["x"];
+                    spawnPoint.y = object["y"];
+                    spawnPoint.isPlayerSpawn = true;
+                    mTileMapData.mSpawnPoints.push_back(spawnPoint);
+                } else if (property["name"] == "isEnemySpawn" && property["type"] == "bool" && property["value"] == true) {
+                    SpawnPoint spawnPoint;
+                    spawnPoint.x = object["x"];
+                    spawnPoint.y = object["y"];
+                    spawnPoint.isEnemySpawn = true;
+                    if (object.contains("roomID")) {
+                        spawnPoint.roomID = object["roomID"];
+                    }
+                    mTileMapData.mSpawnPoints.push_back(spawnPoint);
+                } else if (property["name"] == "roomID" && property["type"] == "string") {
+                    RoomTrigger roomTrigger;
+                    roomTrigger.x = object["x"];
+                    roomTrigger.y = object["y"];
+                    roomTrigger.mWidth = object["width"];
+                    roomTrigger.mHeight = object["height"];
+                    roomTrigger.roomID = property["value"];
+                    if (object["type"] == "room_entry") {
+                        mTileMapData.mRoomTriggers.push_back(roomTrigger);
+                    }
                 }
             }
         }
-        mTileMapData.mSpawnPoints.push_back(spawnPoint);
     }
 }
 
