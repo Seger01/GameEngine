@@ -1,5 +1,7 @@
 #include "InitBehaviourScript.h"
 
+#include "AudioBehaviourScript.h"
+#include "BoxCollider.h"
 #include "Button.h"
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
@@ -10,7 +12,6 @@
 #include "SceneManager.h"
 #include "Text.h"
 #include "TileMapParser.h"
-#include "BoxCollider.h"
 
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -27,7 +28,6 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
 
-
     FSConverter fsConverter;
     std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
@@ -41,8 +41,8 @@ void InitBehaviourScript::createLevel1() {
     GameObject* gameObject = new GameObject;
 
     Transform objectTransform;
-    //objectTransform.position.x = 80;
-    //objectTransform.position.y = 100;
+    // objectTransform.position.x = 80;
+    // objectTransform.position.y = 100;
     for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
         if (spawnPoint.isPlayerSpawn) {
             objectTransform.position.x = spawnPoint.x;
@@ -53,6 +53,15 @@ void InitBehaviourScript::createLevel1() {
     gameObject->setTransform(objectTransform);
 
     gameObject->addComponent<PlayerBehaviourScript>();
+    // Add sound effect
+    AudioSource* sound = new AudioSource("Audio/gun1.wav");
+    sound->setPlayOnWake(false);
+    sound->setVolume(50);
+    sound->setXDirection(50);
+    sound->setTag("gun");
+    gameObject->addComponent(sound);
+    gameObject->addComponent<AudioBehaviourScript>();
+    engine.getAudioManager().addSound(*gameObject);
 
     scene->addGameObject(gameObject);
 
@@ -64,10 +73,7 @@ void InitBehaviourScript::createLevel1() {
 
     sceneManager.requestSceneChange("Level-1");
 
-
     // tileMapParser.printLayers();
-
-
 
     // // print mTileInfoMap
     // for (const auto& pair : tileMapData.mTileInfoMap) {

@@ -228,10 +228,6 @@ void PlayerBehaviourScript::handleMovement() {
         setFlipX(false);
         parentTransform.position.x += (movementSpeed * Time::deltaTime);
     }
-    if (input.GetKey(Key::Key_T)) {
-        AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
-        audioManager.play(*(mGameObject->getComponentsWithTag<AudioSource>("gun")[0]));
-    }
     this->mGameObject->setTransform(parentTransform);
 }
 
