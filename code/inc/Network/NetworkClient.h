@@ -10,6 +10,7 @@
 class NetworkClient {
 public:
     NetworkClient();
+    ~NetworkClient();
     void connectToServer();
     void sendGameState();
     void receiveGameState();
@@ -20,14 +21,17 @@ public:
     bool isConnected() const;
 
 private:
+    void sendPackets();
+    void requestPlayerInstantiation();
     void handleIncomingPackets();
     void sendTransform();
     void handleTransform(SLNet::Packet* aPacket);
+    void handlePlayerInstantiation(SLNet::Packet* aPacket);
+    void handlePlayerID(SLNet::Packet* aPacket);
 
 private:
     bool mIsConnected;
     bool mIsConnecting;
-    int mClientID;
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient;
     std::vector<std::string> mServerAddresses;
     std::string mServerAddress;

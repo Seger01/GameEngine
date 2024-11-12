@@ -70,6 +70,7 @@
 // }
 
 #include "Network/NetworkManager.h"
+#include "Network/NetworkObject.h"
 
 NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
 
@@ -146,15 +147,38 @@ void NetworkManager::setEnableSceneManagement(bool aEnableSceneManagement) {
 
 bool NetworkManager::getEnableSceneManagement() const { return mEnableSceneManagement; }
 
-void NetworkManager::setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab) {
-    mDefaultPlayerPrefab = &aDefaultPlayerPrefab;
+void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab) {
+    if (!aDefaultPlayerPrefab->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = new NetworkObject();
+        aDefaultPlayerPrefab->addComponent(networkObject);
+    }
+    mDefaultPlayerPrefab.reset(aDefaultPlayerPrefab);
 }
 
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
+GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID) {
+    if (!mDefaultPlayerPrefab) {
+        throw std::runtime_error("Player prefab not set.");
+    }
+
+    auto player = std::make_unique<GameObject>(*mDefaultPlayerPrefab); // Clone prefab
+    player->setTag("Player");
+    auto networkObjects = player->getComponents<NetworkObject>();
+    if (networkObjects.size() == 0) {
+        throw std::runtime_error("Player prefab does not have a NetworkObject component");
+    }
+    networkObjects[0]->setClientID(playerID); // Assign unique ID to player
+    mGameObjects.push_back(player.get());
+    mTempUpdatedList = true;
+    return player.release();
+}
+
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
 
 NetworkRole NetworkManager::getRole() const { return mRole; }
+
+std::vector<GameObject*>& NetworkManager::getGameObjects() { return mGameObjects; }
 
 void NetworkManager::startServer() {
     if (mClient || mHost) {

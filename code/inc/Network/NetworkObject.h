@@ -3,15 +3,20 @@
 
 #include "Components/Component.h"
 
+#include <slikenet/types.h>
+
 class NetworkObject : public Component {
 public:
-    void spawn();
-    void despawn();
-    int getNetworkID();
+    NetworkObject();
+    void setClientID(SLNet::RakNetGUID aClientID);
+    SLNet::RakNetGUID getClientID() const;
+
+    void setOwner(bool aIsOwner);
+    bool isOwner() const;
 
 private:
     bool mIsOwner;
-    int mNetworkID;
+    SLNet::RakNetGUID mClientID;
 };
 
 #endif // NETWORKOBJECT_H

@@ -83,11 +83,16 @@ public:
     void setEnableSceneManagement(bool aEnableSceneManagement);
     bool getEnableSceneManagement() const;
 
-    void setDefaultPlayerPrefab(GameObject& aDefaultPlayerPrefab);
+    void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
     GameObject& getDefaultPlayerPrefab() const;
+    GameObject* instantiatePlayer(SLNet::RakNetGUID playerID);
 
     void setRole(NetworkRole aRole);
     NetworkRole getRole() const;
+
+    std::vector<GameObject*>& getGameObjects();
+
+    bool tempGetUpdatedList() const { return mTempUpdatedList; };
 
 private:
     void startServer();
@@ -97,13 +102,15 @@ private:
 private:
     NetworkRole mRole;
     int mTickRate;
-    GameObject* mDefaultPlayerPrefab;
+    std::unique_ptr<GameObject> mDefaultPlayerPrefab;
     bool mEnableSceneManagement;
     std::vector<GameObject*> mGameObjects;
 
     std::unique_ptr<NetworkServer> mServer;
     std::unique_ptr<NetworkClient> mClient;
     std::unique_ptr<NetworkHost> mHost;
+
+    bool mTempUpdatedList{false};
 };
 
 #endif // NETWORKMANAGER_H

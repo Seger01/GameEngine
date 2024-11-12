@@ -7,6 +7,8 @@
 #include "PlayerStatsBehaviourScript.h"
 #include "Text.h"
 
+#include "Network/NetworkObject.h"
+
 SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{0, 287, 64, 16}, 64, 16};
 
 void CanvasBehaviourScript::onStart() {
@@ -50,4 +52,18 @@ void CanvasBehaviourScript::onUpdate() {
     newTransform.position = camera.getOrigin();
 
     mGameObject->setTransform(newTransform);
+
+    Scene* scene = EngineBravo::getInstance().getSceneManager().getCurrentScene();
+    if (EngineBravo::getInstance().getNetworkManager().tempGetUpdatedList()) {
+        std::vector<GameObject*>& gameObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
+        std::vector<GameObject*> sceneNetworkObjects = scene->getGameObjects();
+        for (auto gameObject : gameObjects) {
+            if (gameObject->hasComponent<NetworkObject>()) {
+                auto it = std::find(sceneNetworkObjects.begin(), sceneNetworkObjects.end(), gameObject);
+                if (it == sceneNetworkObjects.end()) {
+                    scene->addGameObject(gameObject);
+                }
+            }
+        }
+    }
 }

@@ -10,6 +10,7 @@ enum class NetworkRole { UNASSIGNED, CLIENT, SERVER, HOST };
 
 enum NetworkMessage {
     ID_TRANSFORM_PACKET = ID_USER_PACKET_ENUM + 1,
+    ID_PLAYER_INIT = ID_TRANSFORM_PACKET + 1,
 };
 
 #endif // NETWORKINFORMATION_H

@@ -1,17 +1,12 @@
 #include "NetworkObject.h"
 #include <stdexcept>
 
-void NetworkObject::spawn()
-{
-    throw std::runtime_error("NetworkObject::spawn() not implemented");
-}
+NetworkObject::NetworkObject() : mIsOwner(false) { this->setTag("NetworkObject"); }
 
-void NetworkObject::despawn()
-{
-    throw std::runtime_error("NetworkObject::despawn() not implemented");
-}
+void NetworkObject::setClientID(SLNet::RakNetGUID aClientID) { mClientID = aClientID; }
 
-int NetworkObject::getNetworkID()
-{
-    throw std::runtime_error("NetworkObject::getNetworkID() not implemented");
-}
+SLNet::RakNetGUID NetworkObject::getClientID() const { return mClientID; }
+
+void NetworkObject::setOwner(bool aIsOwner) { mIsOwner = aIsOwner; }
+
+bool NetworkObject::isOwner() const { return mIsOwner; }

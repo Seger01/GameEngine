@@ -6,6 +6,7 @@
 #include "EngineBravo.h"
 
 #include "NetworkBehaviourScript.h"
+#include "PlayerBehaviourScript.h"
 
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -13,7 +14,14 @@ void engineTest() {
 
     NetworkManager& networkManager = engine.getNetworkManager();
 
-    // networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
+    GameObject* defaultPlayerPrefab = new GameObject;
+
+    Transform objectTransform;
+    objectTransform.position.x = 80;
+    objectTransform.position.y = 100;
+    defaultPlayerPrefab->setTransform(objectTransform);
+    defaultPlayerPrefab->addComponent<PlayerBehaviourScript>();
+    networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
 
     Scene* scene = sceneManager.createScene("networkScene");
     if (scene == nullptr)

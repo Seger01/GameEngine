@@ -1,5 +1,9 @@
 #include "NetworkClient.h"
 #include "Network/NetworkInformation.h"
+#include "Network/NetworkObject.h"
+
+#include "Engine/EngineBravo.h"
+
 #include <iostream>
 #include <regex>
 #include <slikenet/BitStream.h>
@@ -9,7 +13,7 @@
 
 NetworkClient::NetworkClient()
     : mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
-      mIsConnecting(false), mClientID(-1), mServerAddress("0.0.0.0"), mGameObjects(nullptr) {
+      mIsConnecting(false), mServerAddress("0.0.0.0"), mGameObjects(nullptr) {
     // std::cout << "Client Address: " << mClient->GetLocalIP(0) << std::endl;
     // SLNet::SocketDescriptor sd(CLIENT_PORT, mClient->GetLocalIP(0));
     SLNet::SocketDescriptor sd(CLIENT_PORT, 0);
@@ -19,6 +23,13 @@ NetworkClient::NetworkClient()
         throw std::runtime_error("Failed to start client");
     }
     std::cout << "Client started\n";
+}
+
+NetworkClient::~NetworkClient() {
+    if (mClient->IsActive()) {
+        mClient->CloseConnection(mClient->GetMyGUID(), true);
+        mClient->Shutdown(100);
+    }
 }
 
 void NetworkClient::connectToServer() {
@@ -67,6 +78,14 @@ void NetworkClient::setServerAddress(std::string aServerAddress) {
 
 bool NetworkClient::isConnected() const { return mIsConnected; }
 
+void NetworkClient::sendPackets() { sendTransform(); }
+
+void NetworkClient::requestPlayerInstantiation() {
+    SLNet::BitStream bs;
+    bs.Write((SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+    mClient->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+}
+
 void NetworkClient::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
@@ -76,24 +95,22 @@ void NetworkClient::handleIncomingPackets() {
             std::cout << "Connected to server.\n";
             mIsConnected = true;
             mIsConnecting = false;
+            requestPlayerInstantiation();
             break;
         case ID_CONNECTION_ATTEMPT_FAILED:
             std::cout << "Connection attempt failed. Retrying...\n";
             mIsConnecting = false;
             mIsConnected = false;
             break;
-        case ID_NO_FREE_INCOMING_CONNECTIONS:
-        case ID_DISCONNECTION_NOTIFICATION:
         case ID_CONNECTION_LOST:
             std::cout << "Connection lost or disconnected.\n";
             mIsConnected = false;
             break;
         case ID_UNCONNECTED_PONG: {
-            // Handle the pong response from the server
+            std::cout << "Got pong from " << packet->systemAddress.ToString() << std::endl;
             bs.IgnoreBytes(sizeof(SLNet::MessageID));
             std::string serverIp;
             serverIp = packet->systemAddress.ToString(false);
-            std::cout << "Discovered server at: " << serverIp << std::endl;
             mServerAddresses.push_back(serverIp);
             break;
         }
@@ -103,8 +120,13 @@ void NetworkClient::handleIncomingPackets() {
         case ID_UNCONNECTED_PING_OPEN_CONNECTIONS: {
             std::cout << "Got open connection ping from " << packet->systemAddress.ToString() << std::endl;
         }
-        case NetworkMessage::ID_TRANSFORM_PACKET:
+        case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
+            std::cout << "Received transform packet\n";
             handleTransform(packet);
+            break;
+        case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
+            std::cout << "Received player init packet\n";
+            handlePlayerInstantiation(packet);
             break;
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
@@ -114,15 +136,7 @@ void NetworkClient::handleIncomingPackets() {
 }
 
 void NetworkClient::sendTransform() {
-    throw std::runtime_error("NetworkClient::sendTransform() not implemented");
-    // SLNet::BitStream bs;
-    // bs.Write((SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
-    // for (auto& gameObject : *mGameObjects) {
-    //     bs.Write(gameObject->mPosition.x);
-    //     bs.Write(gameObject->mPosition.y);
-    //     bs.Write(gameObject->mPosition.z);
-    // }
-    // mClient->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    // std::vector<NetworkObject*> networkObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
 }
 
 void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
@@ -134,4 +148,26 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     //     bs.Read(gameObject->mPosition.y);
     //     bs.Read(gameObject->mPosition.z);
     // }
+}
+
+void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
+    SLNet::RakNetGUID playerID;
+    SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+    bs.IgnoreBytes(sizeof(SLNet::MessageID));
+    bs.Read(playerID);
+
+    GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
+                                                                                                     // client-side
+                                                                                                     // player
+    std::vector<NetworkObject*> networkObjects = player->getComponents<NetworkObject>();
+    if (networkObjects.size() == 0) {
+        throw std::runtime_error("Player does not have a NetworkObject component");
+    }
+    std::cout << "Player ID:" << playerID.ToString() << std::endl;
+    std::cout << "Client ID:" << mClient->GetMyGUID().ToString() << std::endl;
+    if (playerID == mClient->GetMyGUID()) {
+        networkObjects[0]->setOwner(true); // This client owns the player object
+    } else {
+        networkObjects[0]->setOwner(false); // This client does not own the player object
+    }
 }

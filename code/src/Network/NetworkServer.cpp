@@ -1,6 +1,8 @@
 #include "NetworkServer.h"
 #include "Network/NetworkInformation.h"
 
+#include "Engine/EngineBravo.h"
+
 #include <iostream>
 #include <slikenet/BitStream.h>
 #include <slikenet/MessageIdentifiers.h>
@@ -23,10 +25,6 @@ NetworkServer::NetworkServer()
     }
 }
 
-void NetworkServer::handleClientConnection() {
-    throw std::runtime_error("NetworkServer::handleClientConnection() not implemented");
-}
-
 void NetworkServer::receiveGameState() {
     throw std::runtime_error("NetworkServer::receiveGameState() not implemented");
 }
@@ -43,6 +41,21 @@ void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
 
 bool NetworkServer::isConnected() const { return mServer->IsActive(); }
 
+void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
+    std::cout << "Sending player instantiation message to all clients.\n";
+    SLNet::BitStream bs;
+    bs.Write((SLNet::MessageID)ID_PLAYER_INIT);
+    bs.Write(playerID);
+
+    // Send instantiation message to all clients
+    DataStructures::List<SLNet::SystemAddress> addresses;
+    DataStructures::List<SLNet::RakNetGUID> guids;
+    mServer->GetSystemList(addresses, guids);
+    for (int i = 0; i < addresses.Size(); i++) {
+        mServer->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, addresses[i], false);
+    }
+}
+
 void NetworkServer::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {
@@ -58,12 +71,18 @@ void NetworkServer::handleIncomingPackets() {
             break;
         case ID_DISCONNECTION_NOTIFICATION:
             std::cout << "A client has disconnected.\n";
+            onClientDisconnected(packet->guid);
             break;
         case ID_CONNECTION_LOST:
             std::cout << "A client lost the connection.\n";
             break;
-        case NetworkMessage::ID_TRANSFORM_PACKET:
+        case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
+            std::cout << "Received transform packet.\n";
             handleTransform(packet);
+            break;
+        case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
+            std::cout << "Received player instantiation message.\n";
+            spawnNewPlayer(packet);
             break;
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
@@ -93,4 +112,16 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
     //     bs.Read(gameObject->mPosition.y);
     //     bs.Read(gameObject->mPosition.z);
     // }
+}
+
+void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
+    SLNet::RakNetGUID clientID = aPacket->guid;
+    // Instantiate player on the server for this client
+    EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
+                                                                                // instantiation
+    sendPlayerInstantiation(clientID);
+}
+
+void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {
+    std::cout << "TODO destroy player object for client " << clientID.ToString() << std::endl;
 }

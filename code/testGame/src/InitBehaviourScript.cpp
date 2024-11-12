@@ -5,7 +5,7 @@
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
-#include "PlayerBehaviourScript.h"
+#include "Network/NetworkObject.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Text.h"
@@ -16,8 +16,14 @@ void InitBehaviourScript::createLevel1() {
     SceneManager& sceneManager = engine.getSceneManager();
 
     Scene* scene = sceneManager.createScene("Level-1");
-    if (scene == nullptr)
+    if (scene == nullptr) {
         exit(1);
+    }
+
+    std::vector<GameObject*> networkGameObjects = engine.getNetworkManager().getGameObjects();
+    for (auto gameObject : networkGameObjects) {
+        scene->addGameObject(gameObject);
+    }
 
     int cameraID = scene->addCamera();
     scene->setActiveCamera(cameraID);
@@ -25,17 +31,6 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
-
-    GameObject* gameObject = new GameObject;
-
-    Transform objectTransform;
-    objectTransform.position.x = 80;
-    objectTransform.position.y = 100;
-    gameObject->setTransform(objectTransform);
-
-    gameObject->addComponent<PlayerBehaviourScript>();
-
-    scene->addGameObject(gameObject);
 
     GameObject* canvasObject = new GameObject;
 
