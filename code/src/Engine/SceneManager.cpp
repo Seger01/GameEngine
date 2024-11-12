@@ -1,4 +1,5 @@
 #include "Engine/SceneManager.h"
+#include "EngineBravo.h"
 
 SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1) {}
 
@@ -99,6 +100,7 @@ void SceneManager::loadScene(const std::string& sceneName) {
         if (mScenes[i]->getName() == sceneName) {
             std::cout << "Loading scene: " << sceneName << std::endl;
             mCurrentSceneIndex = i;
+            EngineBravo::getInstance().getAudioManager().wake();
             break;
         }
     }

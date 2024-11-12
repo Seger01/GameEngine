@@ -142,19 +142,11 @@ void engineTest() {
 
     gameObject->addComponent<InitBehaviourScript>();
 
-    // Add music
-    AudioSource* music = new AudioSource("Audio/music.wav", true);
-    music->setPlayOnWake(true);
-    music->setVolume(50);
-    music->setXDirection(0);
-    gameObject->addComponent(music);
-
     scene->addGameObject(gameObject);
 
     sceneManager.requestSceneChange("initscene");
 
     engine.initizalize();
-    engine.getAudioManager().wake();
     engine.run();
 
     return;

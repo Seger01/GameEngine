@@ -53,6 +53,7 @@ void InitBehaviourScript::createLevel1() {
     gameObject->setTransform(objectTransform);
 
     gameObject->addComponent<PlayerBehaviourScript>();
+
     // Add sound effect
     AudioSource* sound = new AudioSource("Audio/gun1.wav");
     sound->setPlayOnWake(false);
@@ -61,6 +62,14 @@ void InitBehaviourScript::createLevel1() {
     sound->setTag("gun");
     gameObject->addComponent(sound);
     gameObject->addComponent<AudioBehaviourScript>();
+
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(50);
+    music->setXDirection(0);
+    gameObject->addComponent(music);
+
     engine.getAudioManager().addSound(*gameObject);
 
     scene->addGameObject(gameObject);
