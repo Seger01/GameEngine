@@ -64,7 +64,7 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(canvasObject);
 
     GameObject* textObject =
-        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, 0), Vector2(1, 1));
+        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, -30), Vector2(1, 1));
     Text* text = dynamic_cast<Text*>(textObject);
     text->setLayer(4);
 
