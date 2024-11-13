@@ -57,3 +57,5 @@ int AudioSource::getXDirection() const { return mXCoord; }
 std::string AudioSource::getFileName() const { return mFileName; }
 
 bool AudioSource::isMusic() const { return mIsMusic; }
+
+std::unique_ptr<Component> AudioSource::clone() const { return std::make_unique<AudioSource>(*this); }

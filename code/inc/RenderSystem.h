@@ -20,12 +20,16 @@ public:
     Renderer& getRenderer();
     Window& getWindow();
 
+    bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale,
+                     Scene* aScene);
+
 private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);
     void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
     void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
-    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor);
-    void renderButton(Camera& aCurrentCamera, Button* aButton);
+    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale);
+
+    // void renderButton(Camera& aCurrentCamera, Button* aButton);
 
     void renderDeubgInfo(Scene* aScene);
 

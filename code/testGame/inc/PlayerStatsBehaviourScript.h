@@ -8,6 +8,8 @@ class PlayerStatsBehaviourScript : public IBehaviourScript {
 public:
     PlayerStatsBehaviourScript();
 
+    std::unique_ptr<Component> clone() const override { return std::make_unique<PlayerStatsBehaviourScript>(*this); }
+
     void onStart() override;
     void onUpdate() override;
 

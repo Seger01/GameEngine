@@ -28,6 +28,8 @@ public:
 
     void renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY);
 
+    bool calculateTextSize(const std::string& font, const std::string& text, int& width, int& height);
+
     SDL_Renderer*& getSDLRenderer();
 
 private:

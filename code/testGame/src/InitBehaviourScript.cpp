@@ -13,6 +13,8 @@
 #include "Text.h"
 #include "TileMapParser.h"
 
+SpriteDef textBackgroundDef = {"UI/ui_images.png", Rect{0, 96, 48, 32}, 48, 32};
+
 void InitBehaviourScript::createLevel1() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
@@ -79,6 +81,31 @@ void InitBehaviourScript::createLevel1() {
     canvasObject->addComponent<CanvasBehaviourScript>();
 
     scene->addGameObject(canvasObject);
+
+    GameObject* textObject =
+        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, 0), Vector2(1, 1));
+    Text* text = dynamic_cast<Text*>(textObject);
+    text->setLayer(4);
+
+    text->addComponent<FPSCounterBehaviourScript>();
+
+    int textWidth = 0;
+    int textHeight = 0;
+    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight, text->getScale(),
+                                              scene)) {
+        std::cout << "Failed to get text size for FPS counter.\n";
+    }
+
+    std::cout << "Text width: " << textWidth << ", Text height: " << textHeight << std::endl;
+
+    Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
+    textBackground->setLayer(3);
+    textBackground->setWidth(10);
+    textBackground->setHeight(10);
+
+    text->addComponent(textBackground);
+
+    scene->addGameObject(text);
 
     sceneManager.requestSceneChange("Level-1");
 

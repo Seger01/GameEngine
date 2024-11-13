@@ -21,6 +21,7 @@ public:
     void setXDirection(int aXDirection);
     int getXDirection() const;
     std::string getFileName() const;
+    std::unique_ptr<Component> clone() const override;
 
 private:
     std::string mFileName;

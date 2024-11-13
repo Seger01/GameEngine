@@ -8,6 +8,8 @@ public:
     BoxCollider();
     virtual ~BoxCollider();
 
+    std::unique_ptr<Component> clone() const override;
+
     // Getter and setter methods for width, height, and rotation
     float getWidth() const;
     void setWidth(float width);
