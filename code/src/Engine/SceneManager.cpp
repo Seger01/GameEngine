@@ -87,12 +87,27 @@ void SceneManager::removeScene(const std::string& sceneName) {
 }
 
 void SceneManager::loadScene(const std::string& sceneName) {
+    Scene* currentScene = getCurrentScene();
+    if (currentScene) {
+        currentScene->releasePersistentGameObjects();
+    }
+
+    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+
+    currentScene->clearPersistentGameObjects();
+
     for (int i = 0; i < mScenes.size(); ++i) {
         if (mScenes[i]->getName() == sceneName) {
             std::cout << "Loading scene: " << sceneName << std::endl;
             mCurrentSceneIndex = i;
             break;
         }
+    }
+
+    currentScene = getCurrentScene();
+
+    for (auto& object : persistentGameObjects) {
+        currentScene->addPersistentGameObject(object);
     }
 }
 

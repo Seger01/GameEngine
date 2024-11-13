@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
+
 #include "Scene.h"
 #include <iostream>
 #include <memory>
@@ -38,3 +40,5 @@ private:
     std::string mNewSceneName;
     int mNewSceneID;
 };
+
+#endif // SCENEMANAGER_H

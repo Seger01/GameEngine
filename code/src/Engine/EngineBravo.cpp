@@ -54,7 +54,6 @@ void EngineBravo::run() {
 
         mSceneManager.sceneChanged();
 
-        // std::cout << "Start frame" << std::endl;
         startBehaviourScripts();
 
         runBehaviourScripts();
@@ -128,6 +127,16 @@ void EngineBravo::startBehaviourScripts() {
             }
         }
     }
+
+    for (auto& gameObject : mSceneManager.getPersistentGameObjects()) {
+        for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+            if (behaviourScript->hasScriptStarted()) {
+                continue;
+            }
+            behaviourScript->onStart();
+            behaviourScript->setScriptStarted(true);
+        }
+    }
 }
 
 void EngineBravo::runBehaviourScripts() {
@@ -139,12 +148,14 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-                if (!behaviourScript->hasScriptStarted()) {
-                    behaviourScript->onStart();
-                    behaviourScript->setScriptStarted(true);
-                }
                 behaviourScript->onUpdate();
             }
+        }
+    }
+
+    for (auto& gameObject : mSceneManager.getPersistentGameObjects()) {
+        for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+            behaviourScript->onUpdate();
         }
     }
 }

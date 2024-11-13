@@ -28,11 +28,20 @@ public:
     std::vector<GameObject*>& getGameObjects();
     std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
 
+    void addPersistentGameObject(GameObject* object);
+    void removePersistentGameObject(GameObject* object);
+    std::vector<GameObject*>& getPersistentGameObjects();
+    void clearPersistentGameObjects();
+
+    void releasePersistentGameObjects();
+
 private:
     Scene(std::string aSceneName, int aSceneID);
 
 private:
     std::vector<std::unique_ptr<GameObject>> mGameObjects;
+    std::vector<GameObject*> mPersistentGameObjects;
+
     std::vector<std::unique_ptr<Camera>> mCameras;
     int mActiveCameraIndex;
     std::string mSceneName;
