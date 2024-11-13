@@ -1,6 +1,8 @@
 #include "MixerContainer.h"
 #include <stdexcept>
 
+MixerContainer::~MixerContainer() { clear(); }
+
 void MixerContainer::addSound(std::string aPath, Mix_Chunk aSound) { mSfx.insert({aPath, aSound}); }
 
 Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
@@ -16,6 +18,12 @@ void MixerContainer::addMusic(Mix_Music* aMusic) { mMusic = aMusic; }
 Mix_Music* MixerContainer::getMusic() { return mMusic; }
 
 void MixerContainer::clear() {
+    for (auto& sound : mSfx) {
+        Mix_FreeChunk(&sound.second);
+        // sound.second = nullptr;
+    }
+    Mix_FreeMusic(mMusic);
+
     mSfx.clear();
     mMusic = nullptr;
 }
