@@ -49,7 +49,7 @@ void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
     std::cout << "Sending player instantiation message to all clients.\n";
     SLNet::BitStream bs;
     makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
-    bs.Write(playerID);
+    setBitStreamGUID(bs, playerID);
 
     sendToAllClients(bs);
 }
@@ -102,12 +102,16 @@ void NetworkServer::sendTransform() {
         NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
         SLNet::BitStream bs;
         makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+        NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
+        setBitStreamGUID(bs, networkObject->getClientID());
 
         if (networkTransform->getSendPositionX()) {
             bs.Write(transform.position.x);
+            std::cout << "Server Sending position x: " << transform.position.x << std::endl;
         }
         if (networkTransform->getSendPositionY()) {
             bs.Write(transform.position.y);
+            std::cout << "Server Sending position y: " << transform.position.y << std::endl;
         }
         if (networkTransform->getSendRotation()) {
             bs.Write(transform.rotation);
@@ -140,9 +144,11 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             if (networkTransform->getSendPositionX()) {
                 bs.Read(transform.position.x);
+                std::cout << "Server Receiving position x: " << transform.position.x << std::endl;
             }
             if (networkTransform->getSendPositionY()) {
                 bs.Read(transform.position.y);
+                std::cout << "Server Receiving position y: " << transform.position.y << std::endl;
             }
             if (networkTransform->getSendRotation()) {
                 bs.Read(transform.rotation);
@@ -175,7 +181,7 @@ void NetworkServer::sendToAllClients(SLNet::BitStream& aBitStream) {
     DataStructures::List<SLNet::RakNetGUID> guids;
     mServer->GetSystemList(addresses, guids);
     for (int i = 0; i < addresses.Size(); i++) {
-        mServer->Send(&aBitStream, PacketPriority::MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, addresses[i], false);
+        mServer->Send(&aBitStream, PacketPriority::MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, guids[i], false);
     }
 }
 
@@ -186,7 +192,7 @@ void NetworkServer::sendPackets() {
         return;
     }
     sendTransform();
-    mLastSendPacketsTime = std::chrono::steady_clock::now();
+    mLastSendPacketsTime = now;
 }
 
 void NetworkServer::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
@@ -198,10 +204,28 @@ void NetworkServer::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID
     auto timestamp = duration.count();
 
     aBitStream.Write(timestamp);
+
+    SLNet::RakNetGUID placeholderGUID = SLNet::UNASSIGNED_RAKNET_GUID;
+    aBitStream.Write(placeholderGUID);
 }
 
 void NetworkServer::getBitStreamData(SLNet::BitStream& aBitStream) {
     SLNet::MessageID messageID;
     aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
     aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
+}
+
+void NetworkServer::getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp) {
+    SLNet::MessageID messageID;
+    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
+    aBitStream.Read(aTimeStamp);
+}
+
+void NetworkServer::setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID) {
+    // Find the position of the GUID and time in the bitstream
+    size_t Position = sizeof(SLNet::MessageID) + sizeof(std::chrono::milliseconds::rep);
+    SLNet::BitSize_t aWriteOffset = aBitStream.GetWriteOffset();
+    aBitStream.SetWriteOffset(Position * 8); // Convert to bits
+    aBitStream.Write(aGUID);
+    aBitStream.SetWriteOffset(aWriteOffset); // Reset write offset
 }

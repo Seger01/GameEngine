@@ -30,6 +30,10 @@ private:
     void sendToServer(SLNet::BitStream& aBitStream);
     void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
     void getBitStreamData(SLNet::BitStream& aBitStream);
+    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp);
+    void getBitStreamData(SLNet::BitStream& aBitStream, SLNet::RakNetGUID& aGUID);
+    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp,
+                          SLNet::RakNetGUID& aGUID);
 
 private:
     bool mIsConnected;
