@@ -28,6 +28,7 @@ class AudioSource implements Component_Proxy{
 interface IAudioFacade {
     + addSound(string path) : virtual void
     + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection) : virtual void
+    + playSound(string aPath, int aLooping, unsigned aVolume, int aListenerX, int aSoundX, float aScale) : virtual void
     + addMusic(string path) : virtual void
     + playMusic(int aVolume) : virtual void
     + stopMusic() : virtual void
@@ -39,6 +40,7 @@ class MixerFacade implements IAudioFacade {
     - mLastUsedChannel : unsigned
     - findAvailableChannel() : int
     - distanceToAngle(int aDirection) : int
+    - calcDirection(int aListenerX, int aSoundX, float aScale) : int
 }
 
 class MixerContainer {
