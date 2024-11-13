@@ -9,6 +9,7 @@ public:
     virtual ~MixerContainer();
     void addSound(std::string aPath, Mix_Chunk aSound);
     Mix_Chunk* getSound(std::string aIndex);
+    const Mix_Chunk* getSound(std::string aIndex) const;
     void addMusic(Mix_Music* aMusic);
     Mix_Music* getMusic();
     void clear();

@@ -16,6 +16,15 @@ void AudioBehaviourScript::onUpdate() {
             AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
             audioManager.play(*(mGameObject->getComponentsWithTag<AudioSource>("gun")[0]));
         }
+
+        AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
+        AudioSource* step = mGameObject->getComponentsWithTag<AudioSource>("step")[0];
+        if ((input.GetKey(Key::Key_W) || input.GetKey(Key::Key_A) || input.GetKey(Key::Key_S) ||
+             input.GetKey(Key::Key_D)) &&
+            !audioManager.getFacade().isPlaying(step->getFileName())) {
+
+            audioManager.play(*(step));
+        }
     }
 }
 

@@ -75,3 +75,14 @@ int MixerFacade::findAvailableChannel() {
     mLastUsedChannel = nextChannel;
     return nextChannel;
 }
+
+bool MixerFacade::isPlaying(const std::string& aPath) const {
+    const Mix_Chunk* chunk = mMixerContainer.getSound(aPath);
+    int numChannels = Mix_AllocateChannels(-1); // Get the number of allocated channels
+    for (int i = 0; i < numChannels; ++i) {
+        if (Mix_Playing(i) && Mix_GetChunk(i) == chunk) {
+            return true; // The chunk is playing on this channel
+        }
+    }
+    return false; // The chunk is not playing on any channel
+}

@@ -14,6 +14,7 @@ private:
     void addMusic(std::string aPath) override;
     void playMusic(int aVolume) override;
     void stopMusic() override;
+    bool isPlaying(const std::string& aPath) const override;
     int findAvailableChannel();
 
 private:

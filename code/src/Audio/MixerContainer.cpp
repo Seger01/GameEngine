@@ -13,6 +13,14 @@ Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
     }
 }
 
+const Mix_Chunk* MixerContainer::getSound(std::string aIndex) const {
+    try {
+        return &mSfx.at(aIndex);
+    } catch (const std::out_of_range& e) {
+        return nullptr;
+    }
+}
+
 void MixerContainer::addMusic(Mix_Music* aMusic) { mMusic = aMusic; }
 
 Mix_Music* MixerContainer::getMusic() { return mMusic; }
