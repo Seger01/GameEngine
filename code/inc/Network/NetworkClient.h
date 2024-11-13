@@ -27,7 +27,8 @@ private:
     void sendTransform();
     void handleTransform(SLNet::Packet* aPacket);
     void handlePlayerInstantiation(SLNet::Packet* aPacket);
-    void handlePlayerID(SLNet::Packet* aPacket);
+    void sendToServer(SLNet::BitStream& aBitStream);
+    void getBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
 
 private:
     bool mIsConnected;
@@ -35,6 +36,7 @@ private:
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient;
     std::vector<std::string> mServerAddresses;
     std::string mServerAddress;
+    SLNet::RakNetGUID mServerGUID;
 
     std::vector<GameObject*>* mGameObjects;
     int mTickRate;

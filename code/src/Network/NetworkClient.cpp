@@ -91,8 +91,9 @@ void NetworkClient::sendPackets() {
 
 void NetworkClient::requestPlayerInstantiation() {
     SLNet::BitStream bs;
-    bs.Write((SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
-    mClient->Send(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+    getBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+
+    sendToServer(bs);
 }
 
 void NetworkClient::handleIncomingPackets() {
@@ -104,6 +105,7 @@ void NetworkClient::handleIncomingPackets() {
             std::cout << "Connected to server.\n";
             mIsConnected = true;
             mIsConnecting = false;
+            mServerGUID = packet->guid;
             requestPlayerInstantiation();
             break;
         case ID_CONNECTION_ATTEMPT_FAILED:
@@ -154,7 +156,7 @@ void NetworkClient::sendTransform() {
             Transform transform = gameObject->getTransform();
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             SLNet::BitStream bs;
-            bs.Write((SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+            getBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
             if (networkTransform->getSendPositionX()) {
                 bs.Write(transform.position.x);
             }
@@ -170,7 +172,7 @@ void NetworkClient::sendTransform() {
             if (networkTransform->getSendScaleY()) {
                 bs.Write(transform.scale.y);
             }
-            mClient->Send(&bs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, SLNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+            sendToServer(bs);
         }
     }
 }
@@ -231,4 +233,19 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     } else {
         networkObjects[0]->setOwner(false); // This client does not own the player object
     }
+}
+
+void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {
+    mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
+}
+
+void NetworkClient::getBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
+    aBitStream.Reset();
+    aBitStream.Write(aMessageID);
+
+    auto now = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
+    auto timestamp = duration.count();
+
+    aBitStream.Write(timestamp);
 }
