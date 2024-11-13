@@ -1,21 +1,34 @@
 #include "FSConverter.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <filesystem>
+#include <unistd.h>
+
+std::string FSConverter::mCachedResourceDir;
 
 FSConverter::FSConverter(std::string ResourceDir) {
-    resourceDir = ResourceDir;
-    if (resourceDir.empty()) {
-        resourceDir = findResourcesFolder();
-    }
-
-    if (resourceDir.empty()) {
-        std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
-        throw std::runtime_error("Resources folder not found.");
+    if (!mCachedResourceDir.empty()) {
+        mResourceDir = mCachedResourceDir;
     } else {
+        mResourceDir = ResourceDir;
+        if (mResourceDir.empty()) {
+            mResourceDir = findResourcesFolder();
+        }
+
+        if (mResourceDir.empty()) {
+            std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
+            throw std::runtime_error("Resources folder not found.");
+        } else {
+            std::cout << "Resources folder found at: " << mResourceDir << std::endl;
+            mCachedResourceDir = mResourceDir;
+        }
     }
 }
 
 std::string FSConverter::findResourcesFolder() {
     std::filesystem::path execPath = executablePath();
+    std::cout << "Executable path: " << execPath << std::endl;
 
     // Try to find the Resources folder in a few places relative to the executable
     std::filesystem::path potentialPaths[] = {
@@ -31,11 +44,13 @@ std::string FSConverter::findResourcesFolder() {
         }
     }
 
+    std::cerr << "Resources folder not found in any of the checked paths." << std::endl;
     return ""; // Resources folder not found
 }
 
+
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
-    std::filesystem::path fullPath = std::filesystem::path(resourceDir) / resourceName;
+    std::filesystem::path fullPath = std::filesystem::path(mResourceDir) / resourceName;
 
     if (aCheckExists && !std::filesystem::exists(fullPath)) {
         std::cerr << "Error: Resource " << resourceName << " does not exist at " << fullPath.string() << std::endl;
