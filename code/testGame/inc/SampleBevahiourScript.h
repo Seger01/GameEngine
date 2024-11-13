@@ -15,4 +15,6 @@ public:
         // std::cout << "SampleBehaviourScript updating!" << std::endl;
     }
     void onCollide(GameObject* aGameObject) {}
+
+    std::unique_ptr<Component> clone() const override { return std::make_unique<SampleBehaviourScript>(*this); }
 };

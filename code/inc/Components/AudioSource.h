@@ -7,8 +7,11 @@ class AudioSource : public Component
     public:
         AudioSource();
         ~AudioSource();
-        //void play(??? aLooping);
+
+        std::unique_ptr<Component> clone() const override;
+
         void stop();
+
     private:
         std::string mAudioClip;
         bool mPlayOnAwake;

@@ -11,6 +11,8 @@ public:
     virtual void onUpdate() = 0;
     virtual void onCollide(GameObject* aGameObject) = 0;
 
+    virtual std::unique_ptr<Component> clone() const override = 0;
+
     bool hasScriptStarted() { return hasStarted; }
     void setScriptStarted(bool aState) { hasStarted = aState; }
 
