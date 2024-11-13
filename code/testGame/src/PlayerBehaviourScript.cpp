@@ -100,7 +100,7 @@ void PlayerBehaviourScript::initEmitter() {
 }
 
 void PlayerBehaviourScript::onStart() {
-    std::cout << "on start called" << std::endl;
+    // std::cout << "on start called" << std::endl;
     Animation* playerIdleFrontAnimation = nullptr;
     Animation* playerIdleSideAnimation = nullptr;
     Animation* playerIdleBackAnimation = nullptr;
@@ -253,6 +253,32 @@ void PlayerBehaviourScript::onUpdate() {
     if (input.GetKeyDown(Key::Key_F)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
         config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
+    }
+
+    if (input.GetKeyDown(Key::Key_V)) {
+        std::cout << "spawning new player" << std::endl;
+        EngineBravo& engine = EngineBravo::getInstance();
+        Scene* scene = engine.getSceneManager().getCurrentScene();
+
+        GameObject* newPlayer = new GameObject(*mGameObject);
+
+        Transform newPlayerTransform = newPlayer->getTransform();
+        newPlayerTransform.position.x += 10;
+        newPlayer->setTransform(newPlayerTransform);
+
+        std::cout << "New player Tag: " << newPlayer->getTag() << std::endl;
+        std::cout << "New player ID: " << newPlayer->getID() << std::endl;
+        std::cout << "New player Name: " << newPlayer->getName() << std::endl;
+        std::cout << "New player Active: " << newPlayer->isActive() << std::endl;
+        std::cout << "New player Transform: " << newPlayer->getTransform().position.x << std::endl;
+        std::cout << "New player Parent: " << newPlayer->getParent() << std::endl;
+
+        for (auto& component : newPlayer->getComponents<Animation>()) {
+            std::cout << "New player Animation Tag: " << component->getTag() << std::endl;
+            std::cout << "New player Animation Active: " << component->isActive() << std::endl;
+        }
+
+        scene->addGameObject(newPlayer);
     }
 
     if (emitter != nullptr) {

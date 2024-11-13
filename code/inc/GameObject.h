@@ -16,6 +16,12 @@ public:
     GameObject();
     virtual ~GameObject();
 
+    // Rule of Five
+    GameObject(const GameObject& other);                // Copy constructor
+    GameObject& operator=(const GameObject& other);     // Copy assignment operator
+    GameObject(GameObject&& other) noexcept;            // Move constructor
+    GameObject& operator=(GameObject&& other) noexcept; // Move assignment operator
+
     void addComponent(Component* aComponent);
     void removeComponent(Component* component);
 

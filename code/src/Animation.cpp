@@ -12,6 +12,77 @@ Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFram
 
 Animation::~Animation() = default;
 
+// Copy constructor
+Animation::Animation(const Animation& other)
+    : Component(other), mTransform(other.mTransform), mFlipX(other.mFlipX), mFlipY(other.mFlipY),
+      mTimeBetweenFrames(other.mTimeBetweenFrames), mIsLooping(other.mIsLooping), mLayer(other.mLayer) {
+    // Deep copy of mAnimationFrames
+    for (const auto& frame : other.mAnimationFrames) {
+        if (frame) {
+            mAnimationFrames.push_back(std::make_unique<Sprite>(*frame));
+        }
+    }
+}
+
+// Copy assignment operator
+Animation& Animation::operator=(const Animation& other) {
+    if (this == &other)
+        return *this;
+
+    Component::operator=(other);
+    mTransform = other.mTransform;
+    mFlipX = other.mFlipX;
+    mFlipY = other.mFlipY;
+    mTimeBetweenFrames = other.mTimeBetweenFrames;
+    mIsLooping = other.mIsLooping;
+    mLayer = other.mLayer;
+
+    // Deep copy of mAnimationFrames
+    mAnimationFrames.clear();
+    for (const auto& frame : other.mAnimationFrames) {
+        if (frame) {
+            mAnimationFrames.push_back(std::make_unique<Sprite>(*frame));
+        }
+    }
+
+    return *this;
+}
+
+// Move constructor
+Animation::Animation(Animation&& other) noexcept
+    : Component(std::move(other)), mTransform(std::move(other.mTransform)), mFlipX(other.mFlipX), mFlipY(other.mFlipY),
+      mAnimationFrames(std::move(other.mAnimationFrames)), // Transfer ownership of unique pointers
+      mTimeBetweenFrames(other.mTimeBetweenFrames), mIsLooping(other.mIsLooping), mLayer(other.mLayer) {
+    other.mFlipX = false;
+    other.mFlipY = false;
+    other.mTimeBetweenFrames = 0;
+    other.mIsLooping = false;
+    other.mLayer = 0;
+}
+
+// Move assignment operator
+Animation& Animation::operator=(Animation&& other) noexcept {
+    if (this == &other)
+        return *this;
+
+    Component::operator=(std::move(other));
+    mTransform = std::move(other.mTransform);
+    mFlipX = other.mFlipX;
+    mFlipY = other.mFlipY;
+    mAnimationFrames = std::move(other.mAnimationFrames); // Transfer ownership of unique pointers
+    mTimeBetweenFrames = other.mTimeBetweenFrames;
+    mIsLooping = other.mIsLooping;
+    mLayer = other.mLayer;
+
+    other.mFlipX = false;
+    other.mFlipY = false;
+    other.mTimeBetweenFrames = 0;
+    other.mIsLooping = false;
+    other.mLayer = 0;
+
+    return *this;
+}
+
 Transform Animation::getTransform() {
     Transform parentTransform = this->mGameObject->getTransform();
     return parentTransform + mTransform;

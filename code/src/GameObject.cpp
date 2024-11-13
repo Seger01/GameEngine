@@ -1,5 +1,6 @@
 #include "GameObject.h"
 
+#include <iostream>
 #include <memory>
 
 #include "Component.h"
@@ -10,6 +11,74 @@ GameObject::~GameObject() {
     mComponents.clear(); // unique_ptr automatically handles deletion
 }
 
+// Copy constructor
+GameObject::GameObject(const GameObject& other)
+    : mParent(other.mParent), mTransform(other.mTransform), mID(other.mID), mName(other.mName), mTag(other.mTag),
+      mIsActive(other.mIsActive) {
+
+    std::cout << "GameObject copy constructor called" << std::endl;
+    // Deep copy each component using its copy constructor
+    for (const auto& component : other.mComponents) {
+        if (component) {
+            std::cout << "Copying component with Tag: " << component->getTag() << std::endl;
+            mComponents.push_back(std::make_unique<Component>(*component)); // Using copy constructor
+            mComponents.back()->setGameObjectParent(this);
+            std::cout << "Copied component with Tag: " << mComponents.back()->getTag() << std::endl;
+        }
+    }
+}
+
+// Copy assignment operator
+GameObject& GameObject::operator=(const GameObject& other) {
+    if (this == &other)
+        return *this;
+
+    mParent = other.mParent;
+    mTransform = other.mTransform;
+    mID = other.mID;
+    mName = other.mName;
+    mTag = other.mTag;
+    mIsActive = other.mIsActive;
+
+    // Clear and deep copy each component using its copy constructor
+    mComponents.clear();
+    for (const auto& component : other.mComponents) {
+        if (component) {
+            mComponents.push_back(std::make_unique<Component>(*component)); // Using copy constructor
+        }
+    }
+
+    return *this;
+}
+
+// Move constructor
+GameObject::GameObject(GameObject&& other) noexcept
+    : mParent(other.mParent), mComponents(std::move(other.mComponents)), mTransform(std::move(other.mTransform)),
+      mID(other.mID), mName(std::move(other.mName)), mTag(std::move(other.mTag)), mIsActive(other.mIsActive) {
+    other.mParent = nullptr;
+    other.mID = 0;
+    other.mIsActive = false;
+}
+
+// Move assignment operator
+GameObject& GameObject::operator=(GameObject&& other) noexcept {
+    if (this == &other)
+        return *this;
+
+    mParent = other.mParent;
+    mComponents = std::move(other.mComponents);
+    mTransform = std::move(other.mTransform);
+    mID = other.mID;
+    mName = std::move(other.mName);
+    mTag = std::move(other.mTag);
+    mIsActive = other.mIsActive;
+
+    other.mParent = nullptr;
+    other.mID = 0;
+    other.mIsActive = false;
+
+    return *this;
+}
 void GameObject::addComponent(Component* aComponent) {
     if (aComponent) {
         aComponent->setGameObjectParent(this);

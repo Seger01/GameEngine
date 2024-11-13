@@ -12,6 +12,12 @@ public:
     Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect());
     ~Sprite();
 
+    // Rule of Five
+    Sprite(const Sprite& other);                // Copy constructor
+    Sprite& operator=(const Sprite& other);     // Copy assignment operator
+    Sprite(Sprite&& other) noexcept;            // Move constructor
+    Sprite& operator=(Sprite&& other) noexcept; // Move assignment operator
+
     Texture* getTexture();
 
     Transform getRelativePosition();

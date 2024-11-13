@@ -12,6 +12,12 @@ public:
     Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false);
     ~Animation();
 
+    // Rule of Five
+    Animation(const Animation& other);                // Copy constructor
+    Animation& operator=(const Animation& other);     // Copy assignment operator
+    Animation(Animation&& other) noexcept;            // Move constructor
+    Animation& operator=(Animation&& other) noexcept; // Move assignment operator
+
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
