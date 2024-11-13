@@ -12,6 +12,8 @@ public:
     NetworkBehaviourScript() {}
     ~NetworkBehaviourScript() {}
 
+    std::unique_ptr<Component> clone() const override { return std::make_unique<NetworkBehaviourScript>(*this); }
+
     void onStart() override;
 
     void onUpdate() override;

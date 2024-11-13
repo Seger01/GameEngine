@@ -8,6 +8,9 @@
 class NetworkObject : public Component {
 public:
     NetworkObject();
+
+    std::unique_ptr<Component> clone() const override;
+
     void setClientID(SLNet::RakNetGUID aClientID);
     SLNet::RakNetGUID getClientID() const;
 

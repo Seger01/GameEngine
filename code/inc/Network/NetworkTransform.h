@@ -8,6 +8,8 @@ public:
     NetworkTransform();
     NetworkTransform(bool aSendPositionX, bool aSendPositionY, bool aSendRotation, bool aSendScaleX, bool aSendScaleY);
 
+    std::unique_ptr<Component> clone() const override;
+
     void setSendPositionX(bool aSendPositionX);
     void setSendPositionY(bool aSendPositionY);
     void setSendRotation(bool aSendRotation);

@@ -3,6 +3,8 @@
 
 NetworkObject::NetworkObject() : mIsOwner(false) { this->setTag("NetworkObject"); }
 
+std::unique_ptr<Component> NetworkObject::clone() const { return std::make_unique<NetworkObject>(*this); }
+
 void NetworkObject::setClientID(SLNet::RakNetGUID aClientID) { mClientID = aClientID; }
 
 SLNet::RakNetGUID NetworkObject::getClientID() const { return mClientID; }

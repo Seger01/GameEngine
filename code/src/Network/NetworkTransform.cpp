@@ -9,6 +9,8 @@ NetworkTransform::NetworkTransform(bool aSendPositionX, bool aSendPositionY, boo
     : mSendPositionX(aSendPositionX), mSendPositionY(aSendPositionY), mSendRotation(aSendRotation),
       mSendScaleX(aSendScaleX), mSendScaleY(aSendScaleY) {}
 
+std::unique_ptr<Component> NetworkTransform::clone() const { return std::make_unique<NetworkTransform>(*this); }
+
 void NetworkTransform::setSendPositionX(bool aSendPositionX) { mSendPositionX = aSendPositionX; }
 
 void NetworkTransform::setSendPositionY(bool aSendPositionY) { mSendPositionY = aSendPositionY; }

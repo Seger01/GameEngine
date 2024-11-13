@@ -48,7 +48,7 @@ bool NetworkServer::isConnected() const { return mServer->IsActive(); }
 void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
     std::cout << "Sending player instantiation message to all clients.\n";
     SLNet::BitStream bs;
-    bs.Write((SLNet::MessageID)ID_PLAYER_INIT);
+    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
     bs.Write(playerID);
 
     sendToAllClients(bs);
@@ -101,7 +101,7 @@ void NetworkServer::sendTransform() {
         Transform transform = gameObject->getTransform();
         NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
         SLNet::BitStream bs;
-        bs.Write((SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+        makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
 
         if (networkTransform->getSendPositionX()) {
             bs.Write(transform.position.x);
@@ -128,7 +128,7 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
         throw std::runtime_error("Game objects not set");
     }
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    bs.IgnoreBytes(sizeof(SLNet::MessageID));
+    getBitStreamData(bs);
 
     for (auto gameObject : *mGameObjects) {
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
@@ -187,4 +187,21 @@ void NetworkServer::sendPackets() {
     }
     sendTransform();
     mLastSendPacketsTime = std::chrono::steady_clock::now();
+}
+
+void NetworkServer::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
+    aBitStream.Reset();
+    aBitStream.Write(aMessageID);
+
+    auto now = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
+    auto timestamp = duration.count();
+
+    aBitStream.Write(timestamp);
+}
+
+void NetworkServer::getBitStreamData(SLNet::BitStream& aBitStream) {
+    SLNet::MessageID messageID;
+    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
+    aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
 }

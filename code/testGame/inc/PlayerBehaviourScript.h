@@ -9,6 +9,8 @@ public:
     void onStart() override;
     void onUpdate() override;
 
+    std::unique_ptr<Component> clone() const override { return std::make_unique<PlayerBehaviourScript>(*this); }
+
 private:
     void setFlipX(bool aState);
     void setFlipY(bool aState);

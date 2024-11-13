@@ -28,7 +28,8 @@ private:
     void handleTransform(SLNet::Packet* aPacket);
     void handlePlayerInstantiation(SLNet::Packet* aPacket);
     void sendToServer(SLNet::BitStream& aBitStream);
-    void getBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
+    void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
+    void getBitStreamData(SLNet::BitStream& aBitStream);
 
 private:
     bool mIsConnected;

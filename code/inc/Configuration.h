@@ -4,6 +4,10 @@
 #include <string>
 #include <unordered_map>
 
+/* All defined configuration keys: */
+#define SHOW_FPS "show_fps"
+#define SHOW_COLLIDERS "show_colliders"
+
 /**
  * @class Configuration
  * @brief Singleton class to manage configuration settings.

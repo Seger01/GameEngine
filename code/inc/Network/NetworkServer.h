@@ -32,6 +32,8 @@ private:
     void onClientDisconnected(SLNet::RakNetGUID aClientID);
     void sendToAllClients(SLNet::BitStream& aBitStream);
     void sendPackets();
+    void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
+    void getBitStreamData(SLNet::BitStream& aBitStream);
 
 private:
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;

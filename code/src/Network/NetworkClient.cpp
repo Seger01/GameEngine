@@ -91,7 +91,7 @@ void NetworkClient::sendPackets() {
 
 void NetworkClient::requestPlayerInstantiation() {
     SLNet::BitStream bs;
-    getBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
 
     sendToServer(bs);
 }
@@ -119,7 +119,7 @@ void NetworkClient::handleIncomingPackets() {
             break;
         case ID_UNCONNECTED_PONG: {
             std::cout << "Got pong from " << packet->systemAddress.ToString() << std::endl;
-            bs.IgnoreBytes(sizeof(SLNet::MessageID));
+            getBitStreamData(bs);
             std::string serverIp;
             serverIp = packet->systemAddress.ToString(false);
             mServerAddresses.push_back(serverIp);
@@ -156,7 +156,7 @@ void NetworkClient::sendTransform() {
             Transform transform = gameObject->getTransform();
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             SLNet::BitStream bs;
-            getBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+            makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
             if (networkTransform->getSendPositionX()) {
                 bs.Write(transform.position.x);
             }
@@ -180,7 +180,7 @@ void NetworkClient::sendTransform() {
 void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     std::vector<GameObject*> networkObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    bs.IgnoreBytes(sizeof(SLNet::MessageID));
+    getBitStreamData(bs);
 
     for (auto gameObject : networkObjects) {
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
@@ -216,7 +216,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    bs.IgnoreBytes(sizeof(SLNet::MessageID));
+    getBitStreamData(bs);
     bs.Read(playerID);
 
     GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
@@ -239,7 +239,7 @@ void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {
     mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
 }
 
-void NetworkClient::getBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
+void NetworkClient::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
     aBitStream.Reset();
     aBitStream.Write(aMessageID);
 
@@ -248,4 +248,10 @@ void NetworkClient::getBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID 
     auto timestamp = duration.count();
 
     aBitStream.Write(timestamp);
+}
+
+void NetworkClient::getBitStreamData(SLNet::BitStream& aBitStream) {
+    SLNet::MessageID messageID;
+    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
+    aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
 }

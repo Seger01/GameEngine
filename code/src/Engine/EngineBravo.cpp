@@ -58,6 +58,7 @@ void EngineBravo::run() {
 
         mSceneManager.sceneChanged();
 
+        // std::cout << "Start frame" << std::endl;
         startBehaviourScripts();
 
         runBehaviourScripts();
