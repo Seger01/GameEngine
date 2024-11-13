@@ -6,6 +6,8 @@
 #include "Sprite.h"
 #include "BoxCollider.h"
 #include "FSConverter.h"
+#include "EnemyBehaviourScript.h"
+
 void RoomBehaviourScript::onStart() {
         std::cout << "getting spritesheet for doors" << std::endl;
         FSConverter fsConverter;
@@ -33,14 +35,16 @@ void RoomBehaviourScript::spawnEnemies() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     for (const auto& spawnPoint : mEnemySpawns) {
-        GameObject* enemy = new GameObject;
-        Transform transform;
-        transform.position.x = spawnPoint.x;
-        transform.position.y = spawnPoint.y;
-        enemy->setTransform(transform);
-        // enemy->addComponent(new EnemyBehaviourScript());
-        std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
-        sceneManager.getCurrentScene()->addGameObject(enemy);
+        if (spawnPoint.roomID == mRoomID && mEnemySpawns.size() > 0) {
+            GameObject* enemy = new GameObject;
+            Transform transform;
+            transform.position.x = spawnPoint.x;
+            transform.position.y = spawnPoint.y;
+            enemy->setTransform(transform);
+            enemy->addComponent(new EnemyBehaviourScript());
+            std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
+            sceneManager.getCurrentScene()->addGameObject(enemy);
+        }
     }
 }
 
@@ -84,12 +88,17 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
                 sprite->setSource(sourceRect);
             }
         }
+        std::vector<BoxCollider*> colliders = doorPart->getComponents<BoxCollider>();
+        if (!colliders.empty()) {
+            colliders.at(0)->setActive(!mDoorsOpen);
+        }
     }
 }
 
 void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
     std::cout << "RoomBehaviourScript collided with " << aGameObject->getName() << std::endl;
     if (mDoorsOpen) {
+        spawnEnemies();
         closeDoors();
         
     }
