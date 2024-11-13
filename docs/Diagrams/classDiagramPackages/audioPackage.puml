@@ -43,6 +43,7 @@ class MixerContainer {
     // string is the path
     - mSfx : unordered_map<string, Mix_Chunk>
     - mMusic : Mix_Music*
+    + ~MixerContainer()
     + addSound(string aPath, Mix_Chunk aSound) : void
     + getSound(string aIndex) : Mix_Chunk*
     + addMusic(Mix_Music *aMusic) : void
