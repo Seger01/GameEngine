@@ -12,7 +12,7 @@ private:
     void addSound(std::string aPath) override;
     void playSound(std::string aPath, bool aLooping, unsigned aVolume, int aDirection) override;
     void addMusic(std::string aPath) override;
-    void playMusic() override;
+    void playMusic(int aVolume) override;
     void stopMusic() override;
     int findAvailableChannel();
 

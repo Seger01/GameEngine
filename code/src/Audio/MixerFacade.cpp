@@ -48,12 +48,13 @@ void MixerFacade::addMusic(std::string aPaht) {
     mMixerContainer.addMusic(music);
 }
 
-void MixerFacade::playMusic() {
+void MixerFacade::playMusic(int aVolume) {
     Mix_Music* music = mMixerContainer.getMusic();
     if (music == nullptr) {
         throw std::runtime_error("Music not found.");
     }
 
+    Mix_VolumeMusic(aVolume);
     if (Mix_PlayingMusic() == 0) {
         Mix_PlayMusic(music, -1);
     }

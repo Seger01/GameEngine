@@ -8,7 +8,7 @@ AudioManager::AudioManager() { mFacade = std::make_unique<MixerFacade>(); }
 
 void AudioManager::play(const AudioSource& aSource) {
     if (aSource.isMusic()) {
-        getFacade().playMusic();
+        getFacade().playMusic(aSource.getVolume());
     } else {
         getFacade().playSound(aSource.getFileName(), aSource.getLooping(), aSource.getVolume(),
                               aSource.getXDirection());
