@@ -48,6 +48,10 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
+        if (mSceneManager.sceneChanged()) {
+            startBehaviourScripts();
+            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0.0f));
+        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
@@ -57,6 +61,8 @@ void EngineBravo::run() {
         startBehaviourScripts();
 
         runBehaviourScripts();
+
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
@@ -147,3 +153,5 @@ void EngineBravo::runBehaviourScripts() {
         }
     }
 }
+
+PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }

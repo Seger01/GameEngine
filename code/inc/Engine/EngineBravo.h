@@ -5,6 +5,7 @@
 #include "Configuration.h"
 #include "EventManager.h"
 #include "ParticleSystem.h"
+#include "PhysicsManager.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -32,6 +33,7 @@ public:
 
     Configuration& getConfiguration();
     // UIManager& getUIManager();
+    PhysicsManager& getPhysicsManager();
 
 private:
     // Private constructor and destructor
@@ -63,6 +65,8 @@ private:
 
     Configuration mConfiguration;
 
+    PhysicsManager mPhysicsManager;
+    // SaveGameManager saveGameManager;
     // AnimationManager animationManager;
     // UIManager uiManager;
 };
