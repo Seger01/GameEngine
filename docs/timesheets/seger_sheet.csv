@@ -52,3 +52,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-09, 14:00, 5   , Designed tests simpel tests for each part of the physics system and now a very rudimentary physics system is in place
 2024-11-11, 10:00, 5   , worked on project and physics and ui and helped Sean.
 2024-11-12, 14:00, 3   , worked on improving memory management and started on getting the text size functionality going
+2024-11-13, 09:30, 7   , worked on rendering system getting text size helping sean and working on the ui system and persistance of GameObjects.worked on improving memory management and started on getting the text size functionality going
