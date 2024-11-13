@@ -1,0 +1,23 @@
+Minutes 16-10-24
+
+Note: Sean was not present at the standup due to public transport issues.
+
+What was discussed:
+Question for Bob: Certain systems ('managers') update only the gameobjects that contain components that are relevant to them (e.g. physics manager and a gameobject with rigidbody). Most of these managers are updated periodically, once every game loop.
+At first the idea was that the scene is the owner of all the game objects. The managers would iterate through the game objects, check if the object contains components relevant to them, and then execute their task.
+The new idea is that the managers all contain references to the game objects with components which are relevant to them. However, this would raise an issue with who is responsible for updating all the references.
+One of the ideas is that the scene is responsible for updating all these lists. However, if a component must be added to a game object after it was created, this would mean that the functionality for having to add a component would all have to go through the scene, which is undesirable.
+
+What has been done:
+- Siem: Debugging savegame template system, work on audio design.
+- Angel: Box2D top down PoC. Now has functional top down movement. Forces now 'wear out'. Looked at difference between Box2D and SDL rendering, SDL cannot render circles.
+- Ronan: Created filesystem converter.
+- Sean:
+- Seger: Input: reading controller data.
+
+What is going to be done:
+- Siem: Update savegame implementation, update audio design.
+- Angel: SDL vs. Box2D rendering / origin differences.
+- Ronan: Design for UI / text. Create first source files / their required structure.
+- Sean: Multiplayer: researching Unity implementation.
+- Seger: Help Angel with SDL vs. Box2D origin differences. Work on implementing controller input

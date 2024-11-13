@@ -1,0 +1,144 @@
+\section{Levels}
+\subsection{Levels in videogames}
+A level in a videogame is a space available to a player during
+the completion of an objective. Levels are designed to present a challenge,
+objective, or puzzle that players must overcome to advance.
+There are a few aspects that make up a level in a videogame:
+\begin{itemize}
+    \item Progression
+    \item Design/Environment
+    \item Objectives
+    \item Difficulty
+    \item Possible story advancement
+\end{itemize}
+
+\subsection{Level transitions}
+Level transitions allow a player from level to another.
+Level transitions can be one or two way.
+A two way level transition can be used so a player can travel back and forth between connected levels.
+One way level transitions prevent players from the traveling back to previous levels.
+There a few common ways to manage the transition between levels:
+\begin {itemize}
+\item \textbf{Hard cut transition} \\
+The game instantly switches from one level to another without any visuals.
+An example that uses this type of transition is Pac-Man.
+\item \textbf{Loading screen} \\
+The game shows a loading screen with some type of progress bar to move to a new level.
+This way is common in games that use large, resource-heavy levels.
+\item \textbf{Teleportation} \\
+Some type of portal or teleporter which transfers a player from level to level.
+\item \textbf{Seamless transition} \\
+A seamless transition gives a player the impression that they stay in the same location while switching between levels.
+This is done by having two levels have an area in common, like a door or a hallway.
+This type of transition is commonly used in rogue-like games, where the player progresses through some type of dungeon.
+\end{itemize}
+
+\subsection{Scenes}
+In game development, scenes are different parts of a game, each showing a different state or setting.
+A scene usually changes when the background or environment changes.
+For example, the main menu, a map screen, and the gameplay itself are all separate scenes.
+\\
+Scenes are different from levels.
+A level is a playable area where the player interacts, but a scene can also include non-playable parts like menus or pause screens.
+Essentially, a scene represents a different state of the game, whether it’s gameplay or a menu.
+Scenes are the basic building blocks used to organize and structure a game.
+
+
+\subsection{Storing levels}
+There are a few common ways to store levels in game engines:
+\subsubsection {Scene files}
+Existing game engines like Unity or Unreal engine use built-in systems to store levels in specific formats.
+For example, Unity stores levels as .unity files and Unreal engine uses .umap files.
+\\\\
+\textbf{Advantages:}
+\begin{itemize}
+    \item Levels are easy to manage.
+    \item Levels are visually editable within the existing game engines.
+\end{itemize}
+
+\noindent\textbf{Disadvantages:}
+\begin{itemize}
+    \item Levels are not portable across different engines.
+    \item Levels cannot be edited outside the specific game engine itself.
+\end{itemize}
+
+\subsubsection{Text-based files}
+Levels can be stored in text-based formats like JSON or XML.
+The text describes the layout, assets and properties of a level.
+\\\\
+\textbf{Advantages:}
+\begin{itemize}
+    \item Level files are readable for humans.
+    \item Levels can be edited outside of game engines.
+\end{itemize}
+
+\noindent\textbf{Disadvantages:}
+\begin{itemize}
+    \item Complex levels can become hard to manage.
+    \item Parsing a level can be slow.
+\end{itemize}
+
+\subsubsection{Tilemaps}
+2D games can use tilemaps to store levels. This way a level is made up of small, resuable tiles.
+The tilemaps are stored as arrays where each value corresponds to a specific tile on a grid.
+\\\\
+\textbf{Advantages:}
+\begin{itemize}
+    \item Levels are stored efficiently for grid-based games.
+    \item Levels are easy to modify.
+\end{itemize}
+
+\noindent\textbf{Disadvantages:}
+\begin{itemize}
+    \item This way of storing levels is limited to grid-based games.
+    \item Tilemaps cannot be used for 3D levels.
+\end{itemize}
+
+\subsubsection{Binary files}
+Level data can be stored in a binary format, which is more compact and efficient than text-based formats.
+\\\\
+\textbf{Advantages:}
+\begin{itemize}
+    \item Levels are stored in small files sizes.
+\end{itemize}
+\noindent\textbf{Disadvantages:}
+\begin{itemize}
+    \item Files are not readable for humans.
+    \item Levels can be harder to debug or manually edit.
+\end{itemize}
+
+\subsubsection{Procedural generation}
+Levels can be generated using a small set of numbers (Seeds) instead of storing a complete level.
+This is done using algorithms to dynamically generate levels while the game is active.
+\\\\
+\textbf{Advantages:}
+\begin{itemize}
+    \item Generating levels this way requires minimal storage space.
+    \item There are infinite variations of levels possible.
+\end{itemize}
+\noindent\textbf{Disadvantages:}
+\begin{itemize}
+    \item Editing specific level designs can be hard.
+    \item Algorithms to generate the levels might be complex to create.
+\end{itemize}
+
+\subsection{2D third party level editors}
+\subsubsection {Tiled}
+Tiled is one of the most popular 2D level editors.
+It is an open-source project with a large community.
+The primary feature of Tiled is create and edit tile maps, but it also support free image placement
+and level annotation. Tiled also support different object layers.
+Levels created with Tiled can be exported in many different formats, including JSON and XML. The primary export format used by Tiled is a .tmx file, which uses XML.
+Created levels that are stored in a .tmx format can be parsed in c++ using existing libraries, like tinytmx. (See POC\_Tiled2D)
+
+\subsubsection {Ogmo}
+Ogmo editor is an open-source 2D level editor.
+It is focussed on fast and efficient level design.
+Ogmo is primarily designed for grid-based maps.
+Levels created with Ogmo are exported in a JSON format.
+
+\subsubsection {LDtk}
+LDtk is a newer open-source 2D level editor that uses tilemaps.
+It is focussed primarily on ease of use.
+LDtk's features include customizable layers, entities and enums.
+Levels created with LDtk are exported in a JSON format.
