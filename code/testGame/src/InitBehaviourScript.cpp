@@ -66,7 +66,7 @@ void InitBehaviourScript::createLevel1() {
     GameObject* textObject =
         new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, -30), Vector2(1, 1));
     Text* text = dynamic_cast<Text*>(textObject);
-    text->setLayer(4);
+    text->setLayer(5);
 
     text->addComponent<FPSCounterBehaviourScript>();
 
