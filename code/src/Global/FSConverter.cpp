@@ -1,21 +1,34 @@
 #include "FSConverter.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <filesystem>
+#include <unistd.h>
 
 FSConverter::FSConverter(std::string ResourceDir) {
-    resourceDir = ResourceDir;
-    if (resourceDir.empty()) {
-        resourceDir = findResourcesFolder();
-    }
+    static std::string cachedResourceDir;
 
-    if (resourceDir.empty()) {
-        std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
-        throw std::runtime_error("Resources folder not found.");
+    if (!cachedResourceDir.empty()) {
+        resourceDir = cachedResourceDir;
     } else {
+        resourceDir = ResourceDir;
+        if (resourceDir.empty()) {
+            resourceDir = findResourcesFolder();
+        }
+
+        if (resourceDir.empty()) {
+            std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
+            throw std::runtime_error("Resources folder not found.");
+        } else {
+            std::cout << "Resources folder found at: " << resourceDir << std::endl;
+            cachedResourceDir = resourceDir;
+        }
     }
 }
 
 std::string FSConverter::findResourcesFolder() {
     std::filesystem::path execPath = executablePath();
+    std::cout << "Executable path: " << execPath << std::endl;
 
     // Try to find the Resources folder in a few places relative to the executable
     std::filesystem::path potentialPaths[] = {
@@ -26,12 +39,33 @@ std::string FSConverter::findResourcesFolder() {
     };
 
     for (const auto& path : potentialPaths) {
-        if (std::filesystem::exists(path)) {
+        std::cout << "Checking path: " << path << std::endl;
+        if (isFilesystemAccessible(path)) {
+            std::cout << "Resources folder found at: " << path << std::endl;
             return path.string();
         }
     }
 
+    std::cerr << "Resources folder not found in any of the checked paths." << std::endl;
     return ""; // Resources folder not found
+}
+
+bool FSConverter::isFilesystemAccessible(const std::filesystem::path& path) {
+    const int maxRetries = 10;
+    const int retryDelayMs = 100; // 100 milliseconds
+
+    for (int attempt = 1; attempt <= maxRetries; ++attempt) {
+        try {
+            if (std::filesystem::exists(path)) {
+                return true;
+            }
+        } catch (const std::filesystem::filesystem_error& e) {
+            std::cerr << "Filesystem error on attempt " << attempt << ": " << e.what() << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(retryDelayMs));
+        }
+    }
+
+    return false;
 }
 
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
