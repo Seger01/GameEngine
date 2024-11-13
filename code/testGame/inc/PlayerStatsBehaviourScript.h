@@ -10,6 +10,7 @@ public:
 
     void onStart() override;
     void onUpdate() override;
+    void onCollide(GameObject* aGameObject) override;
 
 private:
     float mHealth;

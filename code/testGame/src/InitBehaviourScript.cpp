@@ -62,6 +62,7 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(gameObject2);
 
     FSConverter fsConverter;
+    std::cout << "getting map path" << std::endl;
     std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
     TileMapParser tileMapParser(path);
@@ -83,7 +84,7 @@ void InitBehaviourScript::createLevel1() {
                 enemySpawns.push_back(spawnPoint);
             }
         }  
-
+        std::cout << "getting spritesheet for doors" << std::endl;
         std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
         const Point doorOpenPosition = {336, 96};
         const Point doorClosedPosition = {272, 96};

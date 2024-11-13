@@ -3,7 +3,7 @@
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "Physics/BodyProxy.h"
-#include "PlayerBehaviourScript.h"
+//#include "PlayerBehaviourScript.h"
 #include <vector>
 
 PhysicsEngine::PhysicsEngine() {}

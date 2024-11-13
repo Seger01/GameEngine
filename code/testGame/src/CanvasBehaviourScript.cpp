@@ -50,3 +50,7 @@ void CanvasBehaviourScript::onUpdate() {
 
     mGameObject->setTransform(newTransform);
 }
+
+void CanvasBehaviourScript::onCollide(GameObject* aGameObject) {
+    // std::cout << "CanvasBehaviourScript collided with " << aGameObject->getName() << std::endl;
+}

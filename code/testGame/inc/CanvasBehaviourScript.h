@@ -7,6 +7,7 @@ class CanvasBehaviourScript : public IBehaviourScript {
 public:
     void onStart() override;
     void onUpdate() override;
+    void onCollide(GameObject* aGameObject) override;
 };
 
 #endif // CANVASBEHAVIOURSCRIPT_H

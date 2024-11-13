@@ -83,3 +83,7 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
         }
     }
 }
+
+void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "RoomBehaviourScript collided with " << aGameObject->getName() << std::endl;
+}

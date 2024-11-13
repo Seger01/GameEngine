@@ -14,4 +14,5 @@ public:
         // Update code here
         // std::cout << "SampleBehaviourScript updating!" << std::endl;
     }
+    void onCollide(GameObject* aGameObject) {}
 };

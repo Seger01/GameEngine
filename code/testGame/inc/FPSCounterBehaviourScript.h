@@ -7,6 +7,7 @@ class FPSCounterBehaviourScript : public IBehaviourScript {
 public:
     void onStart() override;
     void onUpdate() override;
+    void onCollide(GameObject* aGameObject) override;
 
 private:
 };

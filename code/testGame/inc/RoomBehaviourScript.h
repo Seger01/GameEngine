@@ -13,6 +13,7 @@ public:
         : mRoomID(roomID), mEnemySpawns(enemySpawns), mClosedDoorSpriteDef(closedDoorSpriteDef), mOpenDoorSpriteDef(openDoorSpriteDef) {}
     void onStart() override;
     void onUpdate() override;
+    void onCollide(GameObject* aGameObject) override;
 
     void onTriggerEnter(GameObject* aPlayer);
 private:

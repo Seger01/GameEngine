@@ -21,7 +21,7 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-    mConfiguration.setConfig("render_colliders", false);
+    mConfiguration.setConfig("render_colliders", true);
     mConfiguration.setConfig("render_fps", true);
 
     if (mSceneManager.sceneChanged()) {

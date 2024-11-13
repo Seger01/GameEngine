@@ -300,3 +300,7 @@ void PlayerBehaviourScript::onUpdate() {
         }
     }
 }
+
+void PlayerBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "Player collided with " << aGameObject->getName() << std::endl;
+}

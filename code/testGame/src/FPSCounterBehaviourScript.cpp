@@ -15,3 +15,7 @@ void FPSCounterBehaviourScript::onUpdate() {
         text->setText("FPS: " + std::to_string(static_cast<int>(1 / Time::deltaTime)));
     }
 }
+
+void FPSCounterBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "FPSCounterBehaviourScript collided with " << aGameObject->getName() << std::endl;
+}
