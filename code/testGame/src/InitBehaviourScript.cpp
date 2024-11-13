@@ -84,14 +84,9 @@ void InitBehaviourScript::createLevel1() {
                 enemySpawns.push_back(spawnPoint);
             }
         }  
-        std::cout << "getting spritesheet for doors" << std::endl;
-        std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
-        const Point doorOpenPosition = {336, 96};
-        const Point doorClosedPosition = {272, 96};
-        SpriteDef closedDoorSpriteDef = {doorSpriteSheetPath, Rect{doorClosedPosition.x, doorClosedPosition.y, 64, 64}, 64, 64};
-        SpriteDef openDoorSpriteDef = {doorSpriteSheetPath, Rect{doorOpenPosition.x, doorOpenPosition.y, 64, 64}, 64, 64};
+
         GameObject* roomObject = new GameObject;
-        roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns, closedDoorSpriteDef, openDoorSpriteDef));
+        roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
         BoxCollider* boxCollider = new BoxCollider();
         Transform transform;
         transform.position.x = roomTrigger.x;
@@ -100,6 +95,10 @@ void InitBehaviourScript::createLevel1() {
         boxCollider->setWidth(roomTrigger.mWidth);
         boxCollider->setHeight(roomTrigger.mHeight);
         roomObject->addComponent(boxCollider);
+        RigidBody* rigidBody = new RigidBody();
+        rigidBody->setTransform(transform);
+        roomObject->addComponent(rigidBody);
+        roomObject->setName("Roomtrigger");
         scene->addGameObject(roomObject);
     }
 
@@ -184,7 +183,7 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
                             if(isDoorsLayer) {
-                                gameObject->setTag("Door");
+
                                 boxCollider->setActive(false);
                             }
                             gameObject->addComponent(boxCollider);
@@ -195,6 +194,9 @@ void InitBehaviourScript::createLevel1() {
                             rigidBody->setTransform(objectTransform);
                             gameObject->addComponent(rigidBody);
                             gameObject->setName("Tile");
+                        }
+                        if (isDoorsLayer) {
+                            gameObject->setTag("Door");
                         }
                         scene->addGameObject(gameObject);
 

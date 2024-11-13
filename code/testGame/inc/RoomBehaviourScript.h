@@ -9,8 +9,8 @@
 
 class RoomBehaviourScript : public IBehaviourScript {
 public:
-    RoomBehaviourScript(const std::string& roomID, const std::vector<SpawnPoint>& enemySpawns, const SpriteDef& closedDoorSpriteDef, const SpriteDef& openDoorSpriteDef)
-        : mRoomID(roomID), mEnemySpawns(enemySpawns), mClosedDoorSpriteDef(closedDoorSpriteDef), mOpenDoorSpriteDef(openDoorSpriteDef) {}
+    RoomBehaviourScript(const std::string& roomID, const std::vector<SpawnPoint>& enemySpawns)
+        : mRoomID(roomID), mEnemySpawns(enemySpawns) {}
     void onStart() override;
     void onUpdate() override;
     void onCollide(GameObject* aGameObject) override;
