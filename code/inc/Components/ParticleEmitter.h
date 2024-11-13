@@ -19,6 +19,8 @@ public:
 
     ~ParticleEmitter();
 
+    std::unique_ptr<Component> clone() const override;
+
     void update();
 
     void burst(int aAmount);

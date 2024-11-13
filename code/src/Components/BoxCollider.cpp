@@ -9,6 +9,8 @@ BoxCollider::~BoxCollider() {
     // Destructor implementation
 }
 
+std::unique_ptr<Component> BoxCollider::clone() const { return std::make_unique<BoxCollider>(*this); }
+
 float BoxCollider::getWidth() const {
     return mWidth;
 }

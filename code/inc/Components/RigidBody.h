@@ -7,6 +7,9 @@ class RigidBody : public Component
     public:
         RigidBody();
         ~RigidBody();
+
+        std::unique_ptr<Component> clone() const override;
+
         void setMass(float mass);
         float getMass();
         void setBodyType(BodyType bodyType);

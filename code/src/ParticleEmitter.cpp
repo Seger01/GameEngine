@@ -20,6 +20,8 @@ ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float a
 
 ParticleEmitter::~ParticleEmitter() { mParticles.resize(0); }
 
+std::unique_ptr<Component> ParticleEmitter::clone() const { return std::make_unique<ParticleEmitter>(*this); }
+
 Vector2 ParticleEmitter::generateRandomVelocity(float minSpeed, float maxSpeed, int minAngle, int maxAngle) {
     // Generate a random angle between minAngle and maxAngle
     float angle = (minAngle + (static_cast<float>(rand()) / RAND_MAX * (maxAngle - minAngle))) * (M_PI / 180.0f);

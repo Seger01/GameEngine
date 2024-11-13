@@ -21,7 +21,7 @@ GameObject::GameObject(const GameObject& other)
     for (const auto& component : other.mComponents) {
         if (component) {
             std::cout << "Copying component with Tag: " << component->getTag() << std::endl;
-            mComponents.push_back(std::make_unique<Component>(*component)); // Using copy constructor
+            mComponents.push_back(std::move(component->clone())); // Using copy constructor
             mComponents.back()->setGameObjectParent(this);
             std::cout << "Copied component with Tag: " << mComponents.back()->getTag() << std::endl;
         }
@@ -44,7 +44,7 @@ GameObject& GameObject::operator=(const GameObject& other) {
     mComponents.clear();
     for (const auto& component : other.mComponents) {
         if (component) {
-            mComponents.push_back(std::make_unique<Component>(*component)); // Using copy constructor
+            mComponents.push_back(std::move(component->clone())); // Using copy constructor
         }
     }
 

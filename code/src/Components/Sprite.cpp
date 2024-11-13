@@ -64,6 +64,9 @@ Sprite& Sprite::operator=(Sprite&& other) noexcept {
 Sprite::~Sprite() {
     // Cleanup resources if necessary
 }
+
+std::unique_ptr<Component> Sprite::clone() const { return std::make_unique<Sprite>(*this); }
+
 Texture* Sprite::getTexture() { return mTexture; }
 
 Transform Sprite::getRelativePosition() { return mTransform; }

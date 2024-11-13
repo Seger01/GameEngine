@@ -19,9 +19,7 @@ public:
     Sprite& operator=(Sprite&& other) noexcept; // Move assignment operator
 
     // Override the clone method
-    std::unique_ptr<Component> clone() const override {
-        return std::make_unique<Sprite>(*this); // Uses the copy constructor of Sprite
-    }
+    std::unique_ptr<Component> clone() const override;
 
     Texture* getTexture();
 
