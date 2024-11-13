@@ -65,6 +65,7 @@ void InitBehaviourScript::createLevel1() {
     rigidBody->setMass(1.0f);
     rigidBody->setGravityScale(10.0f);
     rigidBody->setCanRotate(false);
+    gameObject2->setName("Guy");
 
     scene->addGameObject(gameObject2);
 
@@ -127,8 +128,8 @@ void InitBehaviourScript::createLevel1() {
                             RigidBody* rigidBody = new RigidBody();
                             rigidBody->setTransform(objectTransform);
                             gameObject->addComponent(rigidBody);
+                            gameObject->setName("Tile");
                         }
-
                         scene->addGameObject(gameObject);
 
                     } else {

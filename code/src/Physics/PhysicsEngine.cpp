@@ -1,5 +1,6 @@
 #include "Physics/PhysicsEngine.h"
 #include "GameObject.h"
+#include "IBehaviourScript.h"
 #include "Input.h"
 #include "Physics/BodyProxy.h"
 #include "PlayerBehaviourScript.h"
@@ -82,11 +83,12 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
     for (int i = 0; i < aBodyIDs.size(); i++) {
         GameObject* gameObject = getGameObjectByID(aBodyIDs.at(i).first);
         if (gameObject != nullptr) {
-
-            if (gameObject->hasComponent<PlayerBehaviourScript>()) {
-                std::vector<PlayerBehaviourScript*> playerBehaviourScript =
-                    gameObject->getComponents<PlayerBehaviourScript>();
-                playerBehaviourScript.at(0)->onCollide();
+            if (gameObject->hasComponent<IBehaviourScript>()) {
+                std::vector<IBehaviourScript*> behaviourScript = gameObject->getComponents<IBehaviourScript>();
+                GameObject* otherGameObject = getGameObjectByID(aBodyIDs.at(i).second);
+                if (otherGameObject != nullptr) {
+                    behaviourScript.at(0)->onCollide(otherGameObject);
+                }
             }
         }
     }
