@@ -59,3 +59,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-09, 19:00, 5, debugging OS performance issues
 2024-11-11, 10:00, 5, worked on design for validation app.
 2024-11-12, 12:00, 5.25, updated tilemapparser to parse triggerareas and worked on implementing room behaviour
+2024-11-13, 9:15, 7.5, worked on room behaviour and implementing physics for room and also updated fsconverter
