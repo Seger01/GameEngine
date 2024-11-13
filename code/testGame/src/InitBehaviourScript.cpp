@@ -64,7 +64,7 @@ void InitBehaviourScript::createLevel1() {
     sound->setTag("gun");
     gameObject->addComponent(sound);
 
-    AudioSource* step = new AudioSource("Audio/Steps_tiles-002.ogg");
+    AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
     step->setPlayOnWake(false);
     step->setVolume(50);
     step->setXDirection(0);

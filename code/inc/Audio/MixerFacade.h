@@ -15,6 +15,7 @@ private:
     void playMusic(int aVolume) override;
     void stopMusic() override;
     bool isPlaying(const std::string& aPath) const override;
+    int distanceToAngle(int aDirection) const;
     int findAvailableChannel();
 
 private:

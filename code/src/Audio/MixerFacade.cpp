@@ -36,7 +36,8 @@ void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume, 
 
     int channel = findAvailableChannel();
     Mix_Volume(channel, aVolume);
-    Mix_SetPosition(channel, aDirection > 0 ? 90 : 270, aDirection);
+
+    Mix_SetPosition(channel, distanceToAngle(aDirection), aDirection);
     Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
 }
 
@@ -61,6 +62,16 @@ void MixerFacade::playMusic(int aVolume) {
 }
 
 void MixerFacade::stopMusic() { Mix_HaltMusic(); }
+
+int MixerFacade::distanceToAngle(int aDirection) const {
+    if (aDirection < 0) {
+        return 90;
+    }
+    if (aDirection > 0) {
+        return 270;
+    }
+    return 0;
+}
 
 int MixerFacade::findAvailableChannel() {
     for (int i = 0; i < mChannelCount; i++) {
