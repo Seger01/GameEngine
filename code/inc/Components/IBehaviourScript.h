@@ -12,6 +12,11 @@ public:
     bool hasScriptStarted() { return hasStarted; }
     void setScriptStarted(bool aState) { hasStarted = aState; }
 
+    // Virtual factory method
+    virtual std::unique_ptr<Component> clone() const override {
+        return std::make_unique<IBehaviourScript>(*this); // Uses the copy constructor of IBehaviourScript
+    }
+
 private:
     bool hasStarted = false;
 };

@@ -17,6 +17,9 @@ public:
     Component(Component&& other) noexcept;            // Move constructor
     Component& operator=(Component&& other) noexcept; // Move assignment operator
 
+    // Virtual factory method
+    virtual std::unique_ptr<Component> clone() const = 0;
+
     void setGameObjectParent(GameObject* aParentObject) { mGameObject = aParentObject; }
 
     bool isActive() { return mActive; }

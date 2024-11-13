@@ -18,6 +18,11 @@ public:
     Animation(Animation&& other) noexcept;            // Move constructor
     Animation& operator=(Animation&& other) noexcept; // Move assignment operator
 
+    // Override the clone method
+    std::unique_ptr<Component> clone() const override {
+        return std::make_unique<Animation>(*this); // Uses the copy constructor of Sprite
+    }
+
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
