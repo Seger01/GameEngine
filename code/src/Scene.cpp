@@ -107,3 +107,43 @@ Camera& Scene::getActiveCamera() {
     }
     throw std::runtime_error("No active camera set.");
 }
+
+void Scene::addPersistentGameObject(GameObject* object) {
+    if (object) {
+        mGameObjects.push_back(std::unique_ptr<GameObject>(object));
+        mPersistentGameObjects.push_back(object);
+    }
+}
+
+// function removes the object from the persistant gameObjects vector and from the mGameObjects vector
+void Scene::removePersistentGameObject(GameObject* object) {
+    for (int i = 0; i < mPersistentGameObjects.size(); i++) {
+        if (mPersistentGameObjects[i] == object) {
+            mPersistentGameObjects.erase(mPersistentGameObjects.begin() + i);
+            break;
+        }
+    }
+
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        if (mGameObjects[i].get() == object) {
+            mGameObjects.erase(mGameObjects.begin() + i);
+            break;
+        }
+    }
+}
+
+std::vector<GameObject*>& Scene::getPersistentGameObjects() { return mPersistentGameObjects; }
+
+void Scene::clearPersistentGameObjects() { mPersistentGameObjects.clear(); }
+
+void Scene::releasePersistentGameObjects() {
+    for (auto& obj : mPersistentGameObjects) {
+        for (int i = 0; i < mGameObjects.size(); i++) {
+            if (mGameObjects[i].get() == obj) {
+                GameObject* warningWeg = mGameObjects[i].release();
+                mGameObjects.erase(mGameObjects.begin() + i);
+                break;
+            }
+        }
+    }
+}

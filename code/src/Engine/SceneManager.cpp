@@ -21,12 +21,6 @@ void SceneManager::requestSceneChange(const std::string& sceneName) { mNewSceneN
 
 void SceneManager::requestSceneChange(int sceneID) { mNewSceneID = sceneID; }
 
-void SceneManager::loadScene(int index) {
-    if (index >= 0 && index < mScenes.size()) {
-        mCurrentSceneIndex = index;
-    }
-}
-
 int SceneManager::getNewSceneID() {
     bool idFound = false;
 
@@ -86,13 +80,49 @@ void SceneManager::removeScene(const std::string& sceneName) {
     }
 }
 
+void SceneManager::loadScene(int index) {
+    Scene* currentScene = getCurrentScene();
+    if (currentScene) {
+        currentScene->releasePersistentGameObjects();
+    }
+
+    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+
+    currentScene->clearPersistentGameObjects();
+
+    if (index >= 0 && index < mScenes.size()) {
+        mCurrentSceneIndex = index;
+    }
+
+    currentScene = getCurrentScene();
+
+    for (auto& object : persistentGameObjects) {
+        currentScene->addPersistentGameObject(object);
+    }
+}
+
 void SceneManager::loadScene(const std::string& sceneName) {
+    Scene* currentScene = getCurrentScene();
+    if (currentScene) {
+        currentScene->releasePersistentGameObjects();
+    }
+
+    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+
+    currentScene->clearPersistentGameObjects();
+
     for (int i = 0; i < mScenes.size(); ++i) {
         if (mScenes[i]->getName() == sceneName) {
             std::cout << "Loading scene: " << sceneName << std::endl;
             mCurrentSceneIndex = i;
             break;
         }
+    }
+
+    currentScene = getCurrentScene();
+
+    for (auto& object : persistentGameObjects) {
+        currentScene->addPersistentGameObject(object);
     }
 }
 

@@ -54,7 +54,6 @@ void EngineBravo::run() {
 
         mSceneManager.sceneChanged();
 
-        // std::cout << "Start frame" << std::endl;
         startBehaviourScripts();
 
         runBehaviourScripts();
@@ -139,10 +138,6 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-                if (!behaviourScript->hasScriptStarted()) {
-                    behaviourScript->onStart();
-                    behaviourScript->setScriptStarted(true);
-                }
                 behaviourScript->onUpdate();
             }
         }
