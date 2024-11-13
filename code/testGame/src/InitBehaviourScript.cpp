@@ -59,14 +59,14 @@ void InitBehaviourScript::createLevel1() {
     // Add sound effects
     AudioSource* sound = new AudioSource("Audio/gun1.wav");
     sound->setPlayOnWake(false);
-    sound->setVolume(50);
-    sound->setXDirection(50);
+    sound->setVolume(90);
+    sound->setXDirection(0);
     sound->setTag("gun");
     gameObject->addComponent(sound);
 
     AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
     step->setPlayOnWake(false);
-    step->setVolume(50);
+    step->setVolume(30);
     step->setXDirection(0);
     step->setTag("step");
     gameObject->addComponent(step);
@@ -75,7 +75,7 @@ void InitBehaviourScript::createLevel1() {
     // Add music
     AudioSource* music = new AudioSource("Audio/music.wav", true);
     music->setPlayOnWake(true);
-    music->setVolume(1);
+    music->setVolume(10);
     music->setXDirection(0);
     gameObject->addComponent(music);
 
