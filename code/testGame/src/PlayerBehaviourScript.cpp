@@ -140,6 +140,12 @@ void PlayerBehaviourScript::onStart() {
             EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
     }
 
+    if (playerIdleFrontAnimation == nullptr || playerIdleSideAnimation == nullptr ||
+        playerIdleBackAnimation == nullptr) {
+        std::cout << "Error loading animations" << std::endl;
+        return;
+    }
+
     mGameObject->addComponent(playerIdleFrontAnimation);
     mGameObject->addComponent(playerIdleSideAnimation);
     mGameObject->addComponent(playerIdleBackAnimation);

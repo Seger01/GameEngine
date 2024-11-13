@@ -153,6 +153,13 @@ int RenderSystem::getLowestLayer(Scene* aScene) {
 int RenderSystem::getHighestLayer(Scene* aScene) {
     int highestLayer = 0;
     for (auto& gameObject : aScene->getGameObjects()) {
+        if (gameObject->getTag() == "Player") {
+            std::cout << "Player found" << std::endl;
+            std::cout << "amount of animations: " << gameObject->getComponents<Animation>().size() << std::endl;
+            for (auto& component : gameObject->getComponents<Animation>()) {
+                std::cout << "Component found" << std::endl;
+            }
+        }
         if (gameObject->hasComponent<Sprite>()) {
             for (auto sprite : gameObject->getComponents<Sprite>()) {
                 if (sprite->getLayer() > highestLayer) {
