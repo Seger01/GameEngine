@@ -93,7 +93,7 @@ void PlayerBehaviourScript::initEmitter() {
     emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, endSize,
                                   rotation, rotationSpeed, rotationAcceleration, colors);
 
-    emitter->setParticlesPerSecond(100);
+    emitter->setParticlesPerSecond(10000);
     emitter->setAngle(0, 45);
     emitter->setLayer(4);
     mGameObject->addComponent(emitter);

@@ -94,7 +94,6 @@ void ParticleEmitter::spawnParticle() {
 
 void ParticleEmitter::update() {
     if (mActive) {
-
         if (mEmitterMode == EmitterMode::Continuous) {
             static float amountOfParticlesToSpawn;
             amountOfParticlesToSpawn += mParticlesPerSecond * Time::deltaTime;
@@ -106,12 +105,21 @@ void ParticleEmitter::update() {
         }
     }
 
-    for (int i = 0; i < mParticles.size();) { // Note: no increment here
+    // for (int i = 0; i < mParticles.size();) { // Note: no increment here
+    //     mParticles[i].update();
+    //     if (mParticles[i].getLifeTime() <= 0) {
+    //         mParticles.erase(mParticles.begin() + i); // Erase the element at index i
+    //     } else {
+    //         ++i; // Only increment if no element was erased
+    //     }
+    // }
+    for (int i = 0; i < mParticles.size();) {
         mParticles[i].update();
         if (mParticles[i].getLifeTime() <= 0) {
-            mParticles.erase(mParticles.begin() + i); // Erase the element at index i
+            std::swap(mParticles[i], mParticles.back());
+            mParticles.pop_back(); // Removes the last element efficiently
         } else {
-            ++i; // Only increment if no element was erased
+            ++i;
         }
     }
 }
