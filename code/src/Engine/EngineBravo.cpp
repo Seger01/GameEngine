@@ -127,16 +127,6 @@ void EngineBravo::startBehaviourScripts() {
             }
         }
     }
-
-    for (auto& gameObject : mSceneManager.getPersistentGameObjects()) {
-        for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-            if (behaviourScript->hasScriptStarted()) {
-                continue;
-            }
-            behaviourScript->onStart();
-            behaviourScript->setScriptStarted(true);
-        }
-    }
 }
 
 void EngineBravo::runBehaviourScripts() {
@@ -150,12 +140,6 @@ void EngineBravo::runBehaviourScripts() {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
                 behaviourScript->onUpdate();
             }
-        }
-    }
-
-    for (auto& gameObject : mSceneManager.getPersistentGameObjects()) {
-        for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-            behaviourScript->onUpdate();
         }
     }
 }

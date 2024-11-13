@@ -15,6 +15,7 @@
 #include "Sprite.h"
 #include "SpriteAtlas.h"
 #include "SpriteDef.h"
+#include "TestBehaviourScript.h"
 #include "Texture.h"
 #include "TileMapParser.h"
 #include "Transform.h"
@@ -40,6 +41,12 @@ void engineTest() {
     gameObject->addComponent<InitBehaviourScript>();
 
     scene->addGameObject(gameObject);
+
+    // GameObject* testObject = new GameObject;
+    //
+    // testObject->addComponent<TestBehaviourScript>();
+    //
+    // scene->addPersistentGameObject(testObject);
 
     sceneManager.requestSceneChange("initscene");
 
