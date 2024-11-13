@@ -208,3 +208,5 @@ void InitBehaviourScript::onStart() {
 }
 
 void InitBehaviourScript::onUpdate() {}
+
+std::unique_ptr<Component> InitBehaviourScript::clone() const { return std::make_unique<InitBehaviourScript>(*this); }

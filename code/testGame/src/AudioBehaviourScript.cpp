@@ -18,3 +18,5 @@ void AudioBehaviourScript::onUpdate() {
         }
     }
 }
+
+std::unique_ptr<Component> AudioBehaviourScript::clone() const { return std::make_unique<AudioBehaviourScript>(*this); }
