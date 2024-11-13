@@ -5,23 +5,23 @@
 #include <filesystem>
 #include <unistd.h>
 
-FSConverter::FSConverter(std::string ResourceDir) {
-    static std::string cachedResourceDir;
+std::string FSConverter::mCachedResourceDir;
 
-    if (!cachedResourceDir.empty()) {
-        resourceDir = cachedResourceDir;
+FSConverter::FSConverter(std::string ResourceDir) {
+    if (!mCachedResourceDir.empty()) {
+        mResourceDir = mCachedResourceDir;
     } else {
-        resourceDir = ResourceDir;
-        if (resourceDir.empty()) {
-            resourceDir = findResourcesFolder();
+        mResourceDir = ResourceDir;
+        if (mResourceDir.empty()) {
+            mResourceDir = findResourcesFolder();
         }
 
-        if (resourceDir.empty()) {
+        if (mResourceDir.empty()) {
             std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
             throw std::runtime_error("Resources folder not found.");
         } else {
-            std::cout << "Resources folder found at: " << resourceDir << std::endl;
-            cachedResourceDir = resourceDir;
+            std::cout << "Resources folder found at: " << mResourceDir << std::endl;
+            mCachedResourceDir = mResourceDir;
         }
     }
 }
@@ -50,7 +50,7 @@ std::string FSConverter::findResourcesFolder() {
 
 
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
-    std::filesystem::path fullPath = std::filesystem::path(resourceDir) / resourceName;
+    std::filesystem::path fullPath = std::filesystem::path(mResourceDir) / resourceName;
 
     if (aCheckExists && !std::filesystem::exists(fullPath)) {
         std::cerr << "Error: Resource " << resourceName << " does not exist at " << fullPath.string() << std::endl;
