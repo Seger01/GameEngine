@@ -15,6 +15,8 @@ public:
 
     void onButtonPressed() override { buttonPressed = true; }
     void onButtonReleased() override {}
+
+    std::unique_ptr<Component> clone() const override { return std::make_unique<MockButtonBehaviourScript>(*this); }
 };
 
 class UIManagerTest : public ::testing::Test {
