@@ -44,13 +44,8 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     drawPosition.y = std::round(drawPosition.y * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight()));
 
     // Adjust the width and height slightly to cover gaps
-    spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1; // +1 to
-                                                                                                               // cover
-                                                                                                               // gaps
-    spriteHeight =
-        std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1; // +1 to
-                                                                                                        // cover
-                                                                                                        // gaps
+    spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1;
+    spriteHeight = std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1;
 
     // Render the sprite with adjusted size
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
@@ -94,9 +89,10 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle) {
     }
 }
 
-void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor) {
-    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
+                              Vector2 aScale) {
+    float scaleX = aScale.x * (mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth()));
+    float scaleY = aScale.y * (mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight()));
 
     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
     Vector2 drawPosition = aLocation - cameraOrigin;
@@ -106,19 +102,40 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
+// void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
+//     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
+//     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+//
+//     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+//     Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
+//
+//     drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
+//     drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+//
+//     mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
+//                             static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
+// }
 
-void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
-    float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-    float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
+bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
+                               Vector2 aScale, Scene* aScene) {
+    if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight)) {
+        return false;
+    }
 
-    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-    Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
+    Camera& currentCamera = aScene->getActiveCamera();
 
-    drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
-    drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+    int windowWidth = mWindow->getSize().x;
+    int windowHeight = mWindow->getSize().y;
 
-    mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
-                            static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
+    // float scaleX = (static_cast<float>(currentCamera.getWidth()) / mWindow->getSize().x);
+    // float scaleY = (static_cast<float>(currentCamera.getHeight()) / mWindow->getSize().y);
+    float scaleX = (aScale.x / mWindow->getSize().x) * static_cast<float>(currentCamera.getWidth());
+    float scaleY = (aScale.y / mWindow->getSize().y) * static_cast<float>(currentCamera.getHeight());
+
+    aWidth = aWidth * scaleX;
+    aHeight = aHeight * scaleY;
+
+    return true;
 }
 
 int RenderSystem::getLowestLayer(Scene* aScene) {
@@ -206,7 +223,8 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
         if (dynamic_cast<Text*>(gameObject)) {
             Text* text = dynamic_cast<Text*>(gameObject);
             if (text->isActive() && text->getLayer() == aLayer) {
-                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor());
+                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor(),
+                           text->getScale());
             }
         }
     }
@@ -237,14 +255,14 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
 
     Configuration& config = EngineBravo::getInstance().getConfiguration();
 
-    if (config.getConfig("render_fps")) {
+    if (config.getConfig(SHOW_FPS)) {
         int fps = 1.0f / Time::deltaTime;
 
         // Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
         mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
     }
 
-    if (config.getConfig("render_colliders")) {
+    if (config.getConfig(SHOW_COLLIDERS)) {
         for (auto& gameObject : aScene->getGameObjects()) {
             if (gameObject->hasComponent<BoxCollider>()) {
                 for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {

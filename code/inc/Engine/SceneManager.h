@@ -11,7 +11,6 @@ public:
 
     bool sceneChanged();
 
-    int addScene(const Scene& scene);
     // int addSceneLevel(const Map& map);
     void requestSceneChange(const std::string& sceneName);
     void requestSceneChange(int sceneID);

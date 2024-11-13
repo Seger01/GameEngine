@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Animation.h"
+#include "Configuration.h"
 #include "EngineBravo.h"
 #include "GameObject.h"
 #include "Input.h"
@@ -92,14 +93,14 @@ void PlayerBehaviourScript::initEmitter() {
     emitter = new ParticleEmitter(emitterMode, speed, acceleration, minLifeTimeMs, maxLifeTimeMs, startSize, endSize,
                                   rotation, rotationSpeed, rotationAcceleration, colors);
 
-    emitter->setParticlesPerSecond(300);
+    emitter->setParticlesPerSecond(100);
     emitter->setAngle(0, 45);
     emitter->setLayer(4);
     mGameObject->addComponent(emitter);
 }
 
 void PlayerBehaviourScript::onStart() {
-    std::cout << "on start called" << std::endl;
+    // std::cout << "on start called" << std::endl;
     Animation* playerIdleFrontAnimation = nullptr;
     Animation* playerIdleSideAnimation = nullptr;
     Animation* playerIdleBackAnimation = nullptr;
@@ -244,40 +245,40 @@ void PlayerBehaviourScript::onUpdate() {
 
     hanldeCameraMovement();
 
-    // Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
-    //
-    // static bool direction = true;
-    //
-    // if (direction) {
-    //     Transform pos = currentCam.getTransform();
-    //
-    //     pos.position.x += 0.01f * Time::deltaTime;
-    //
-    //     currentCam.setTransform(pos);
-    // } else {
-    //     Transform pos = currentCam.getTransform();
-    //
-    //     pos.position.x -= 0.01f * Time::deltaTime;
-    //
-    //     currentCam.setTransform(pos);
-    // }
-    //
-    // if (currentCam.getTransform().position.x > 100) {
-    //     direction = false;
-    // } else if (currentCam.getTransform().position.x < 40) {
-    //     direction = true;
-    // }
-
-    // emitter->setActive(false);
-
     if (input.GetKeyDown(Key::Key_C)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig("render_colliders", !config.getConfig("render_colliders"));
+        config.setConfig(SHOW_COLLIDERS, !config.getConfig(SHOW_COLLIDERS));
     }
 
     if (input.GetKeyDown(Key::Key_F)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig("render_fps", !config.getConfig("render_fps"));
+        config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
+    }
+
+    if (input.GetKeyDown(Key::Key_V)) {
+        std::cout << "spawning new player" << std::endl;
+        EngineBravo& engine = EngineBravo::getInstance();
+        Scene* scene = engine.getSceneManager().getCurrentScene();
+
+        GameObject* newPlayer = new GameObject(*mGameObject);
+
+        Transform newPlayerTransform = newPlayer->getTransform();
+        newPlayerTransform.position.x += 10;
+        newPlayer->setTransform(newPlayerTransform);
+
+        std::cout << "New player Tag: " << newPlayer->getTag() << std::endl;
+        std::cout << "New player ID: " << newPlayer->getID() << std::endl;
+        std::cout << "New player Name: " << newPlayer->getName() << std::endl;
+        std::cout << "New player Active: " << newPlayer->isActive() << std::endl;
+        std::cout << "New player Transform: " << newPlayer->getTransform().position.x << std::endl;
+        std::cout << "New player Parent: " << newPlayer->getParent() << std::endl;
+
+        for (auto& component : newPlayer->getComponents<Animation>()) {
+            std::cout << "New player Animation Tag: " << component->getTag() << std::endl;
+            std::cout << "New player Animation Active: " << component->isActive() << std::endl;
+        }
+
+        scene->addGameObject(newPlayer);
     }
 
     if (emitter != nullptr) {

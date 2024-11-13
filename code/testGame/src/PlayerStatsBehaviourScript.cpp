@@ -5,7 +5,7 @@
 
 SpriteDef playerStatBackgroundDef = {"UI/ui_images.png", Rect{95, 35, 66, 26}, 99, 39};
 SpriteDef playerStatHealthBarBackgroundDef = {"UI/ui_images.png", Rect{134, 19, 54, 9}, 81, 15};
-SpriteDef playerStatHealthBarDef = {"UI/ui_images.png", Rect{72, 22, 49, 3}, 73.5, 5};
+SpriteDef playerStatHealthBarDef = {"UI/ui_images.png", Rect{72, 22, 49, 3}, 74, 5};
 
 PlayerStatsBehaviourScript::PlayerStatsBehaviourScript() : mHealth(100), mMaxHealth(100), mHealthBarWidth(0) {}
 
