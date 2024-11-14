@@ -1,5 +1,7 @@
 #include "PlayerPrefab.h"
 
+#include "AudioBehaviourScript.h"
+
 const int spriteWidth = 16;  // Width of each sprite
 const int spriteHeight = 25; // Height of each sprite
 
@@ -152,4 +154,31 @@ void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
     boxCollider->setHeight(firstFramePlayerIdleFront.height);
 
     gameObject->addComponent(boxCollider);
+}
+
+void PlayerPrefabFactory::addSound(GameObject* gameObject) {
+    // Add sound effects
+    AudioSource* sound = new AudioSource("Audio/gun1.wav");
+    sound->setPlayOnWake(false);
+    sound->setVolume(90);
+    sound->setXDirection(0);
+    sound->setTag("gun");
+    gameObject->addComponent(sound);
+
+    AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
+    step->setPlayOnWake(false);
+    step->setVolume(30);
+    step->setXDirection(0);
+    step->setTag("step");
+    gameObject->addComponent(step);
+    gameObject->addComponent<AudioBehaviourScript>();
+
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(10);
+    music->setXDirection(0);
+    gameObject->addComponent(music);
+
+    EngineBravo::getInstance().getAudioManager().addSound(*gameObject);
 }

@@ -118,6 +118,7 @@ RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
 

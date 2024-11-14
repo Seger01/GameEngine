@@ -3,6 +3,7 @@
 
 #include "AnimationManager.h"
 #include "Network/NetworkManager.h"
+#include "AudioManager.h"
 #include "Configuration.h"
 #include "EventManager.h"
 #include "ParticleSystem.h"
@@ -30,6 +31,7 @@ public:
     ResourceManager& getResourceManager();
     NetworkManager& getNetworkManager();
     SaveGameManager& getSaveGameManager();
+    AudioManager& getAudioManager();
     EventManager& getEventManager();
     UIManager& getUIManager();
 
@@ -64,6 +66,7 @@ private:
     NetworkManager mNetworkManager;
     EventManager mEventManager;
     SaveGameManager mSaveGameManager;
+    AudioManager mAudioManager;
     UIManager mUIManager;
 
     Configuration mConfiguration;

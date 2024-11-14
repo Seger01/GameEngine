@@ -25,6 +25,7 @@ private:
     static void addParticleEmitter(GameObject* gameObject);
     static void addRigidBody(GameObject* gameObject);
     static void addCollider(GameObject* gameObject);
+    static void addSound(GameObject* gameObject);
 };
 
 #endif // PLAYERPREFAB_H
