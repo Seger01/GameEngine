@@ -2,8 +2,7 @@
 
 #include "Collider.h"
 
-class BoxCollider : public Collider
-{
+class BoxCollider : public Collider {
 public:
     BoxCollider();
     virtual ~BoxCollider();
@@ -20,7 +19,11 @@ public:
     float getRotation() const;
     void setRotation(float rotation);
 
+    bool isTrigger() const;
+    void setTrigger(bool isTrigger);
+
 private:
+    bool mIsTrigger = false;
     float mWidth;
     float mHeight;
     float mRotation;

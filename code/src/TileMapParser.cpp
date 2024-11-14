@@ -156,8 +156,6 @@ void TileMapParser::storeTileInfo() {
                                         object.at("height").get<float>()
                                     };
                                     tileInfo.mColliders.push_back(collider);
-                                    // Debug print to verify collider parsing
-                                    std::cout << "Added collider to gID " << gID << ": x=" << collider.x << ", y=" << collider.y << ", width=" << collider.mWidth << ", height=" << collider.mHeight << std::endl;
                                 } catch (const nlohmann::json::type_error& e) {
                                     std::cerr << "Error parsing collider for gID " << gID << ": " << e.what() << std::endl;
                                 }
