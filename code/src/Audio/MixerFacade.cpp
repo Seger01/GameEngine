@@ -16,6 +16,9 @@ MixerFacade::MixerFacade() {
     }
 }
 
+/**
+ * @brief Load a sound effect into the mixer container. If the sound is already loaded, do nothing.
+ */
 void MixerFacade::loadSound(const std::string& aPath) {
     // Check if the sound is already loaded
     if (audioIsLoaded(aPath)) {
@@ -30,6 +33,9 @@ void MixerFacade::loadSound(const std::string& aPath) {
     mMixerContainer.addSound(aPath, *sound);
 }
 
+/**
+ * @brief Load a music file into the mixer container. If the music is already loaded, it is overwritten
+ */
 void MixerFacade::loadMusic(const std::string& aPath) {
     Mix_Music* music = Mix_LoadMUS(aPath.c_str());
     if (music == NULL) {
