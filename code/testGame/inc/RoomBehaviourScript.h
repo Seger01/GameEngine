@@ -11,16 +11,18 @@ class RoomBehaviourScript : public IBehaviourScript {
 public:
     RoomBehaviourScript(const std::string& roomID, const std::vector<SpawnPoint>& enemySpawns)
         : mRoomID(roomID), mEnemySpawns(enemySpawns) {}
+
     void onStart() override;
     void onUpdate() override;
     void onCollide(GameObject* aGameObject) override;
     std::unique_ptr<Component> clone() const override { return std::make_unique<RoomBehaviourScript>(*this); }
-    void onTriggerEnter(GameObject* aPlayer);
+
 private:
     void spawnEnemies();
     void updateDoors(const SpriteDef& spriteDef);
     void openDoors();
     void closeDoors();
+
 private:
     std::string mRoomID;
     std::vector<SpawnPoint> mEnemySpawns;
