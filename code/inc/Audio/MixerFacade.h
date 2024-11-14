@@ -9,12 +9,18 @@ public:
     MixerFacade();
 
 private:
-    void addSound(std::string aPath) override;
+    void loadSound(const std::string& aPath) override;
+    void loadMusic(const std::string& aPath) override;
+    void unloadAll() override;
+    bool audioIsLoaded(const std::string& aPath) const override;
+    bool musicIsLoaded() const override;
+
     void playSound(std::string aPath, bool aLooping, unsigned aVolume, int aDirection) override;
-    void addMusic(std::string aPath) override;
     void playMusic(int aVolume) override;
     void stopMusic() override;
+
     bool isPlaying(const std::string& aPath) const override;
+
     int distanceToAngle(int aDirection) const;
     int findAvailableChannel();
 

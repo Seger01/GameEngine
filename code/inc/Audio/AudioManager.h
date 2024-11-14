@@ -1,6 +1,5 @@
 #pragma once
 
-#include "AudioResourceManager.h"
 #include "AudioSource.h"
 #include "GameObject.h"
 #include "IAudioFacade.h"
@@ -11,17 +10,19 @@
 class AudioManager {
 public:
     AudioManager();
-    void play(const AudioSource&);
-    void stop(const AudioSource&);
+
+public:
+    void play(const AudioSource& aAudio);
+    void stop(const AudioSource& aAudio);
     void wake();
+
+public:
     IAudioFacade& getFacade();
 
 public:
-    void addSound(const GameObject& aGameObjecte);
-    void removeSound(const GameObject& aGameObject);
+    void loadSound(const AudioSource& aAudio);
+    void clearSounds();
 
 private:
-    std::vector<std::reference_wrapper<const GameObject>> mGameObjects;
-    AudioResourceManager mResources;
     std::unique_ptr<IAudioFacade> mFacade;
 };
