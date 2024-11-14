@@ -5,6 +5,7 @@ Points to address during the presentation next friday:
 - Starting implementation: since previous week (week 0), implementing many parts 
   of the engine in parallel, merging to dev whenever possible.
 - Memory leaks: how do other groups do this, in combination with leaking libraries?
+- One of the rules we discussed: minimum of 80% test coverage before merging to dev
 - Asking other groups how they handle persisten game objects (game objects which should persist across scenes)
 - Demo: showing off the demo game, mentioning its various features.
 - After presentations are finished, try to get a brief conversation with Bob, to update him on the project's status.
