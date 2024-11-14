@@ -29,6 +29,9 @@ GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     addNetworkTransform(defaultPlayerPrefab);
     addAnimations(defaultPlayerPrefab);
     addParticleEmitter(defaultPlayerPrefab);
+    addRigidBody(defaultPlayerPrefab);
+    addCollider(defaultPlayerPrefab);
+    AudioSource(defaultPlayerPrefab);
 
     return defaultPlayerPrefab;
 }
