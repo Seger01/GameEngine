@@ -31,7 +31,7 @@ GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     addParticleEmitter(defaultPlayerPrefab);
     addRigidBody(defaultPlayerPrefab);
     addCollider(defaultPlayerPrefab);
-    AudioSource(defaultPlayerPrefab);
+    addSound(defaultPlayerPrefab);
 
     return defaultPlayerPrefab;
 }
