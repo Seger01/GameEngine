@@ -23,7 +23,7 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-    mConfiguration.setConfig("render_colliders", false);
+    mConfiguration.setConfig("render_colliders", true);
     mConfiguration.setConfig("render_fps", true);
 
     if (mSceneManager.sceneChanged()) {
@@ -52,6 +52,10 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
+        if (mSceneManager.sceneChanged()) {
+            startBehaviourScripts();
+            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0.0f));
+        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
@@ -61,6 +65,8 @@ void EngineBravo::run() {
         startBehaviourScripts();
 
         runBehaviourScripts();
+
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
@@ -152,3 +158,5 @@ void EngineBravo::runBehaviourScripts() {
         }
     }
 }
+
+PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }

@@ -74,3 +74,7 @@ void PlayerStatsBehaviourScript::onUpdate() {
         mHealth = mMaxHealth;
     }
 }
+
+void PlayerStatsBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "PlayerStatsBehaviourScript collided with " << aGameObject->getName() << std::endl;
+}

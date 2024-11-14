@@ -36,3 +36,7 @@ void FPSCounterBehaviourScript::onUpdate() {
         sprite->setRelativePosition(spritePos);
     }
 }
+
+void FPSCounterBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "FPSCounterBehaviourScript collided with " << aGameObject->getName() << std::endl;
+}
