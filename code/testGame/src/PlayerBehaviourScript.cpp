@@ -159,9 +159,6 @@ void PlayerBehaviourScript::hanldeCameraMovement() {
 void PlayerBehaviourScript::onUpdate() {
     Input& input = Input::getInstance();
 
-    std::cout << "Current player position: " << mGameObject->getTransform().position.x << ", "
-              << mGameObject->getTransform().position.y << std::endl;
-
     handleMovement();
     handleAnimations();
 
