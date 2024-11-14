@@ -14,8 +14,6 @@ void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID,
 void World::resetWorld() { b2DestroyWorld(mWorldID); }
 
 int World::createBody(BodyProxy& aBodyProxy) {
-    std::cout << "World::createBody()" << std::endl;
-
     b2BodyDef bodyDef = b2DefaultBodyDef();
 
     switch (aBodyProxy.getBodyType()) {
@@ -25,7 +23,6 @@ int World::createBody(BodyProxy& aBodyProxy) {
 
         break;
     case BodyType::DYNAMIC:
-        std::cout << "create dynamicbody" << std::endl;
         bodyDef.type = b2_dynamicBody;
         bodyDef.linearDamping = 0.8f;
         bodyDef.angularDamping = 0.8f;
@@ -39,17 +36,8 @@ int World::createBody(BodyProxy& aBodyProxy) {
     bodyDef.angularDamping = aBodyProxy.getAngularDamping();
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 
-    std::cout << "BodyID index: " << bodyID.index1 << std::endl;
-    std::cout << "BodyID revision: " << bodyID.revision << std::endl;
-    std::cout << "BodyID world0: " << bodyID.world0 << std::endl;
-    std::cout << "creating body at: (" << aBodyProxy.getPosition().x << ", " << aBodyProxy.getPosition().y << ")"
-              << std::endl;
-
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
         b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
-
-        std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-        std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
 
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
