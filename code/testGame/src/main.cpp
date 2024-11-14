@@ -20,6 +20,11 @@
 #include "TileMapParser.h"
 #include "Transform.h"
 #include "Window.h"
+#include <SDL2/SDL.h>
+#include <SDL_mixer.h>
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 void engineTest() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -58,5 +63,8 @@ void engineTest() {
 
 int main() {
     engineTest();
-    return 0;
+
+    // sdlMixer();
+
+    // audioTest();
 }

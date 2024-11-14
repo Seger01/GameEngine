@@ -1,15 +1,16 @@
 #include "InitBehaviourScript.h"
 
+#include "AudioBehaviourScript.h"
 #include "BoxCollider.h"
 #include "Button.h"
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
-#include "RoomBehaviourScript.h"
 #include "FSConverter.h"
 #include "GameObject.h"
 #include "PlayerBehaviourScript.h"
 #include "RigidBody.h"
+#include "RoomBehaviourScript.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Text.h"
@@ -33,7 +34,6 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
-
 
     GameObject* gameObject2 = new GameObject;
     Transform objectTransform2;
@@ -75,8 +75,7 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID
-                  << " at (" << roomTrigger.x << ", " << roomTrigger.y
+        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID << " at (" << roomTrigger.x << ", " << roomTrigger.y
                   << ") with dimensions (" << roomTrigger.mWidth << ", " << roomTrigger.mHeight << ")" << std::endl;
 
         // Collect enemy spawns for this room
@@ -85,7 +84,7 @@ void InitBehaviourScript::createLevel1() {
             if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
                 enemySpawns.push_back(spawnPoint);
             }
-        }  
+        }
 
         GameObject* roomObject = new GameObject;
         roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
@@ -119,6 +118,31 @@ void InitBehaviourScript::createLevel1() {
     gameObject->setTransform(objectTransform);
 
     gameObject->addComponent<PlayerBehaviourScript>();
+
+    // Add sound effects
+    AudioSource* sound = new AudioSource("Audio/gun1.wav");
+    sound->setPlayOnWake(false);
+    sound->setVolume(90);
+    sound->setXDirection(0);
+    sound->setTag("gun");
+    gameObject->addComponent(sound);
+
+    AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
+    step->setPlayOnWake(false);
+    step->setVolume(30);
+    step->setXDirection(0);
+    step->setTag("step");
+    gameObject->addComponent(step);
+    gameObject->addComponent<AudioBehaviourScript>();
+
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(10);
+    music->setXDirection(0);
+    gameObject->addComponent(music);
+
+    engine.getAudioManager().addSound(*gameObject);
 
     scene->addGameObject(gameObject);
 
@@ -206,7 +230,7 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setTransform(transform);
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
-                            if(isDoorsLayer) {
+                            if (isDoorsLayer) {
 
                                 boxCollider->setActive(false);
                             }
@@ -270,3 +294,5 @@ void InitBehaviourScript::onStart() {
 void InitBehaviourScript::onUpdate() {}
 
 void InitBehaviourScript::onCollide(GameObject* aGameObject) {}
+
+std::unique_ptr<Component> InitBehaviourScript::clone() const { return std::make_unique<InitBehaviourScript>(*this); }

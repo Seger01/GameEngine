@@ -2,6 +2,7 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
+#include "AudioManager.h"
 #include "Configuration.h"
 #include "EventManager.h"
 #include "ParticleSystem.h"
@@ -28,6 +29,7 @@ public:
     RenderSystem& getRenderSystem();
     ResourceManager& getResourceManager();
     SaveGameManager& getSaveGameManager();
+    AudioManager& getAudioManager();
     EventManager& getEventManager();
     UIManager& getUIManager();
 
@@ -61,6 +63,7 @@ private:
     ParticleSystem mParticleSystem;
     EventManager mEventManager;
     SaveGameManager mSaveGameManager;
+    AudioManager mAudioManager;
     UIManager mUIManager;
 
     Configuration mConfiguration;

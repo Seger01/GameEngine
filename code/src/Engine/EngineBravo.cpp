@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(5000), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -111,6 +111,7 @@ SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
