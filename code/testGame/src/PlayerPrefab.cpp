@@ -128,3 +128,28 @@ void PlayerPrefabFactory::addParticleEmitter(GameObject* gameObject) {
     emitter->setLayer(4);
     gameObject->addComponent(emitter);
 }
+
+void PlayerPrefabFactory::addRigidBody(GameObject* gameObject) {
+    RigidBody* rigidBody = new RigidBody();
+
+    rigidBody->setCanRotate(false);
+    rigidBody->setHasGravity(false);
+    rigidBody->setIsMoveableByForce(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.6f);
+    rigidBody->setRestitution(0.0f);
+    rigidBody->setGravityScale(0.0f);
+    rigidBody->setMass(5.0f);
+    rigidBody->setLinearDamping(0.5f);
+    rigidBody->setAngularDamping(0.5f);
+
+    gameObject->addComponent(rigidBody);
+}
+
+void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setWidth(firstFramePlayerIdleFront.width);
+    boxCollider->setHeight(firstFramePlayerIdleFront.height);
+
+    gameObject->addComponent(boxCollider);
+}
