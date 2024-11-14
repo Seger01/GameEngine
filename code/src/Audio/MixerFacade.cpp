@@ -16,17 +16,33 @@ MixerFacade::MixerFacade() {
     }
 }
 
-void MixerFacade::addSound(std::string aPath) {
-    if (mMixerContainer.getSound(aPath) != nullptr) {
+void MixerFacade::loadSound(const std::string& aPath) {
+    // Check if the sound is already loaded
+    if (audioIsLoaded(aPath)) {
         std::cout << "Sound already loaded: " << aPath << std::endl;
         return;
     }
+    // Load the sound
     Mix_Chunk* sound = Mix_LoadWAV(aPath.c_str());
     if (sound == NULL) {
         throw std::runtime_error("Failed to load sound. SDL_Mixer error: " + std::string(Mix_GetError()));
     }
     mMixerContainer.addSound(aPath, *sound);
 }
+
+void MixerFacade::loadMusic(const std::string& aPath) {
+    Mix_Music* music = Mix_LoadMUS(aPath.c_str());
+    if (music == NULL) {
+        throw std::runtime_error("Failed to load music. SDL_Mixer error: " + std::string(Mix_GetError()));
+    }
+    mMixerContainer.addMusic(music);
+}
+
+void MixerFacade::unloadAll() { mMixerContainer.clear(); }
+
+bool MixerFacade::audioIsLoaded(const std::string& aPath) const { return mMixerContainer.getSound(aPath) != nullptr; }
+
+bool MixerFacade::musicIsLoaded() const { return mMixerContainer.getMusic() != nullptr; }
 
 void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume, int aDirection) {
     Mix_Chunk* sound = mMixerContainer.getSound(aPath);
@@ -39,14 +55,6 @@ void MixerFacade::playSound(std::string aPath, bool aLooping, unsigned aVolume, 
 
     Mix_SetPosition(channel, distanceToAngle(aDirection), aDirection);
     Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
-}
-
-void MixerFacade::addMusic(std::string aPaht) {
-    Mix_Music* music = Mix_LoadMUS(aPaht.c_str());
-    if (music == NULL) {
-        throw std::runtime_error("Failed to load music. SDL_Mixer error: " + std::string(Mix_GetError()));
-    }
-    mMixerContainer.addMusic(music);
 }
 
 void MixerFacade::playMusic(int aVolume) {
@@ -62,6 +70,17 @@ void MixerFacade::playMusic(int aVolume) {
 }
 
 void MixerFacade::stopMusic() { Mix_HaltMusic(); }
+
+bool MixerFacade::isPlaying(const std::string& aPath) const {
+    const Mix_Chunk* chunk = mMixerContainer.getSound(aPath);
+    int numChannels = Mix_AllocateChannels(-1); // Get the number of allocated channels
+    for (int i = 0; i < numChannels; ++i) {
+        if (Mix_Playing(i) && Mix_GetChunk(i) == chunk) {
+            return true; // The chunk is playing on this channel
+        }
+    }
+    return false; // The chunk is not playing on any channel
+}
 
 int MixerFacade::distanceToAngle(int aDirection) const {
     if (aDirection < 0) {
@@ -85,15 +104,4 @@ int MixerFacade::findAvailableChannel() {
     nextChannel = nextChannel % mChannelCount;
     mLastUsedChannel = nextChannel;
     return nextChannel;
-}
-
-bool MixerFacade::isPlaying(const std::string& aPath) const {
-    const Mix_Chunk* chunk = mMixerContainer.getSound(aPath);
-    int numChannels = Mix_AllocateChannels(-1); // Get the number of allocated channels
-    for (int i = 0; i < numChannels; ++i) {
-        if (Mix_Playing(i) && Mix_GetChunk(i) == chunk) {
-            return true; // The chunk is playing on this channel
-        }
-    }
-    return false; // The chunk is not playing on any channel
 }

@@ -19,7 +19,7 @@ AudioManager::AudioManager() { mFacade = std::make_unique<MixerFacade>(); }
 void AudioManager::play(const AudioSource& aSource) {
     if (aSource.isMusic()) {
         // If the music is not loaded, load it
-        if (!getFacade().musicIsLoaded(aSource.getFileName())) {
+        if (!getFacade().musicIsLoaded()) {
             getFacade().loadMusic(aSource.getFileName());
         }
         getFacade().playMusic(aSource.getVolume());
