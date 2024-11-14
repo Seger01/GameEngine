@@ -102,6 +102,7 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
+
 // void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
 //     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
 //     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
@@ -122,18 +123,8 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
         return false;
     }
 
-    Camera& currentCamera = aScene->getActiveCamera();
-
-    int windowWidth = mWindow->getSize().x;
-    int windowHeight = mWindow->getSize().y;
-
-    // float scaleX = (static_cast<float>(currentCamera.getWidth()) / mWindow->getSize().x);
-    // float scaleY = (static_cast<float>(currentCamera.getHeight()) / mWindow->getSize().y);
-    float scaleX = (aScale.x / mWindow->getSize().x) * static_cast<float>(currentCamera.getWidth());
-    float scaleY = (aScale.y / mWindow->getSize().y) * static_cast<float>(currentCamera.getHeight());
-
-    aWidth = aWidth * scaleX;
-    aHeight = aHeight * scaleY;
+    aWidth = aWidth * aScale.x;
+    aHeight = aHeight * aScale.y;
 
     return true;
 }

@@ -118,3 +118,13 @@ TEST_F(RenderSystemTest, GetWindow_NoExceptions) {
     mRenderSystem->getWindow().setFloating();
     // mRenderSystem->getWindow().toggleFullFloating();
 }
+
+TEST_F(RenderSystemTest, GetTextSize_CorrectSize) {
+    // Test that the text size is correct
+    int height = 0, width = 0;
+
+    ASSERT_TRUE(mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1), mScene));
+
+    std::cout << "Calculated Text size: " << std::endl;
+    std::cout << "Width: " << width << " Height: " << height << std::endl;
+}

@@ -29,9 +29,10 @@ Renderer::Renderer(Window& window) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/SupremeSpike.otf").c_str(), 22); // Specify the
-                                                                                                       // font path and
-                                                                                                       // size
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/joystixmonospace.otf").c_str(), 22); // Specify
+                                                                                                           // the font
+                                                                                                           // path and
+                                                                                                           // size
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         TTF_Quit();
@@ -65,9 +66,9 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     dstRect.h = aHeight;
 
     // SDL_Rect sourceRect(aSourceRect);
-    SDL_Rect* sourceRect = nullptr;
+    std::unique_ptr<SDL_Rect> sourceRect(nullptr);
     if (aSourceRect.w != 0) {
-        sourceRect = new SDL_Rect(aSourceRect);
+        sourceRect = std::make_unique<SDL_Rect>(aSourceRect);
     }
 
     // Set the flipping mode based on input flags
@@ -81,13 +82,13 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     }
 
     // Render the texture with flipping and rotation
-    SDL_RenderCopyEx(mRenderer,  // The renderer associated with the texture
-                     sdlTexture, // The texture to render
-                     sourceRect, // The source rectangle (nullptr means the entire texture)
-                     &dstRect,   // The destination rectangle
-                     aRotation,  // The angle of rotation (in degrees)
-                     nullptr,    // The point around which to rotate (nullptr means center)
-                     flip        // The flipping mode
+    SDL_RenderCopyEx(mRenderer,        // The renderer associated with the texture
+                     sdlTexture,       // The texture to render
+                     sourceRect.get(), // The source rectangle (nullptr means the entire texture)
+                     &dstRect,         // The destination rectangle
+                     aRotation,        // The angle of rotation (in degrees)
+                     nullptr,          // The point around which to rotate (nullptr means center)
+                     flip              // The flipping mode
     );
 }
 

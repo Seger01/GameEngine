@@ -5,23 +5,23 @@
 #include <filesystem>
 #include <unistd.h>
 
-FSConverter::FSConverter(std::string ResourceDir) {
-    static std::string cachedResourceDir;
+std::string FSConverter::mCachedResourceDir;
 
-    if (!cachedResourceDir.empty()) {
-        resourceDir = cachedResourceDir;
+FSConverter::FSConverter(std::string ResourceDir) {
+    if (!mCachedResourceDir.empty()) {
+        mResourceDir = mCachedResourceDir;
     } else {
-        resourceDir = ResourceDir;
-        if (resourceDir.empty()) {
-            resourceDir = findResourcesFolder();
+        mResourceDir = ResourceDir;
+        if (mResourceDir.empty()) {
+            mResourceDir = findResourcesFolder();
         }
 
-        if (resourceDir.empty()) {
+        if (mResourceDir.empty()) {
             std::cerr << "Error: Could not locate /Resources folder!" << std::endl;
             throw std::runtime_error("Resources folder not found.");
         } else {
-            std::cout << "Resources folder found at: " << resourceDir << std::endl;
-            cachedResourceDir = resourceDir;
+            std::cout << "Resources folder found at: " << mResourceDir << std::endl;
+            mCachedResourceDir = mResourceDir;
         }
     }
 }
@@ -50,26 +50,8 @@ std::string FSConverter::findResourcesFolder() {
     return ""; // Resources folder not found
 }
 
-bool FSConverter::isFilesystemAccessible(const std::filesystem::path& path) {
-    const int maxRetries = 10;
-    const int retryDelayMs = 100; // 100 milliseconds
-
-    for (int attempt = 1; attempt <= maxRetries; ++attempt) {
-        try {
-            if (std::filesystem::exists(path)) {
-                return true;
-            }
-        } catch (const std::filesystem::filesystem_error& e) {
-            std::cerr << "Filesystem error on attempt " << attempt << ": " << e.what() << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(retryDelayMs));
-        }
-    }
-
-    return false;
-}
-
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
-    std::filesystem::path fullPath = std::filesystem::path(resourceDir) / resourceName;
+    std::filesystem::path fullPath = std::filesystem::path(mResourceDir) / resourceName;
 
     if (aCheckExists && !std::filesystem::exists(fullPath)) {
         std::cerr << "Error: Resource " << resourceName << " does not exist at " << fullPath.string() << std::endl;

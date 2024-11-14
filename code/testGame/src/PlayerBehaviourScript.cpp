@@ -167,7 +167,7 @@ void PlayerBehaviourScript::onStart() {
 
     for (auto animation : mGameObject->getComponents<Animation>()) {
         animation->setActive(false);
-        animation->setLayer(1);
+        animation->setLayer(4);
     }
 
     playerIdleFrontAnimation->setActive(true);
