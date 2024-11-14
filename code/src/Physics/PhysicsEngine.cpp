@@ -8,9 +8,15 @@ void PhysicsEngine::update() {
     createBodies();
     updateFlags();
 
-    float timeStep = 20.0f / 60.0f;
-    int velocityIterations = 4;
-    int positionIterations = 2;
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
+
+            RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
+
+            BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
+            mWorld.updateBody(rigidBody->getBodyId(), bodyProxy);
+        }
+    }
 
     for (int i = 0; i < mGameObjects.size(); i++) {
         if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
@@ -22,6 +28,9 @@ void PhysicsEngine::update() {
         }
     }
 
+    float timeStep = 20.0f / 60.0f;
+    int velocityIterations = 4;
+    int positionIterations = 2;
     mWorld.executeWorldStep(timeStep, velocityIterations);
 
     executeCollisionScripts(mWorld.getContactEvents());
