@@ -15,5 +15,6 @@ public:
 private:
     std::string findResourcesFolder();
     std::string executablePath();
-    std::string resourceDir;
+    std::string mResourceDir;
+    static std::string mCachedResourceDir;
 };

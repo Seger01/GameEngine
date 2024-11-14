@@ -1,6 +1,9 @@
 #include "Network/NetworkManager.h"
 #include "Network/NetworkObject.h"
 
+#include "Engine/EngineBravo.h"
+#include "Engine/SceneManager.h"
+
 NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
 
 void NetworkManager::startNetwork() {
@@ -91,15 +94,15 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID) {
         throw std::runtime_error("Player prefab not set.");
     }
 
-    auto player = std::make_unique<GameObject>(*mDefaultPlayerPrefab); // Clone prefab
+    GameObject* player = new GameObject(*mDefaultPlayerPrefab); // Clone prefab
     auto networkObjects = player->getComponents<NetworkObject>();
     if (networkObjects.size() == 0) {
         throw std::runtime_error("Player prefab does not have a NetworkObject component");
     }
     networkObjects[0]->setClientID(playerID); // Assign unique ID to player
-    mGameObjects.push_back(player.get());
-    mTempUpdatedList = true;
-    return player.release();
+    networkObjects[0]->setPlayer(true);       // Mark as player
+    EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
+    return player;
 }
 
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }

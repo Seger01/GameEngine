@@ -51,18 +51,4 @@ void CanvasBehaviourScript::onUpdate() {
     newTransform.position = camera.getOrigin();
 
     mGameObject->setTransform(newTransform);
-
-    Scene* scene = EngineBravo::getInstance().getSceneManager().getCurrentScene();
-    if (EngineBravo::getInstance().getNetworkManager().tempGetUpdatedList()) {
-        std::vector<GameObject*>& gameObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
-        std::vector<GameObject*> sceneNetworkObjects = scene->getGameObjects();
-        for (auto gameObject : gameObjects) {
-            if (gameObject->hasComponent<NetworkObject>()) {
-                auto it = std::find(sceneNetworkObjects.begin(), sceneNetworkObjects.end(), gameObject);
-                if (it == sceneNetworkObjects.end()) {
-                    scene->addGameObject(gameObject);
-                }
-            }
-        }
-    }
 }

@@ -20,13 +20,19 @@ void FPSCounterBehaviourScript::onUpdate() {
         int textWidth = 0;
         int textHeight = 0;
         if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
-                                                  text->getScale(), engine.getSceneManager().getCurrentScene())) {
+                                                  text->getScale())) {
             std::cout << "Failed to get text size for FPS counter.\n";
         }
 
         Sprite* sprite = text->getComponents<Sprite>()[0];
 
-        sprite->setWidth(textWidth);
-        sprite->setHeight(textHeight);
+        sprite->setWidth(textWidth + 50);
+        sprite->setHeight(textHeight + 10);
+
+        Transform spritePos = sprite->getRelativePosition();
+        spritePos.position.x = -25;
+        spritePos.position.y = -5;
+
+        sprite->setRelativePosition(spritePos);
     }
 }

@@ -5,6 +5,8 @@
 
 #include <slikenet/types.h>
 
+class NetworkManager;
+
 class NetworkObject : public Component {
 public:
     NetworkObject();
@@ -17,9 +19,15 @@ public:
     void setOwner(bool aIsOwner);
     bool isOwner() const;
 
+    bool isPlayer() const;
+
 private:
     bool mIsOwner;
     SLNet::RakNetGUID mClientID;
+
+    friend class NetworkManager;
+    bool mIsPlayer;
+    void setPlayer(bool aIsPlayer);
 };
 
 #endif // NETWORKOBJECT_H

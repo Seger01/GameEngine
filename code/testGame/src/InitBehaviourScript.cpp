@@ -52,16 +52,16 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(canvasObject);
 
     GameObject* textObject =
-        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, 0), Vector2(1, 1));
+        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, -30), Vector2(1, 1));
     Text* text = dynamic_cast<Text*>(textObject);
-    text->setLayer(4);
+    text->setLayer(5);
 
     text->addComponent<FPSCounterBehaviourScript>();
 
     int textWidth = 0;
     int textHeight = 0;
-    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight, text->getScale(),
-                                              scene)) {
+    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
+                                              text->getScale())) {
         std::cout << "Failed to get text size for FPS counter.\n";
     }
 

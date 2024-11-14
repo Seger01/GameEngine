@@ -167,6 +167,16 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
 void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID clientID = aPacket->guid;
     // Instantiate player on the server for this client
+    std::vector<GameObject*> persistantObjects =
+        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
+    for (auto object : persistantObjects) {
+        if (object->hasComponent<NetworkObject>()) {
+            NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
+            if (networkObject->isPlayer() && !(networkObject->getClientID() == clientID)) {
+                sendPlayerInstantiation(networkObject->getClientID());
+            }
+        }
+    }
     EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
                                                                                 // instantiation
     sendPlayerInstantiation(clientID);
