@@ -105,23 +105,23 @@ void ParticleEmitter::update() {
         }
     }
 
-    // for (int i = 0; i < mParticles.size();) { // Note: no increment here
-    //     mParticles[i].update();
-    //     if (mParticles[i].getLifeTime() <= 0) {
-    //         mParticles.erase(mParticles.begin() + i); // Erase the element at index i
-    //     } else {
-    //         ++i; // Only increment if no element was erased
-    //     }
-    // }
-    for (int i = 0; i < mParticles.size();) {
+    for (int i = 0; i < mParticles.size();) { // Note: no increment here
         mParticles[i].update();
         if (mParticles[i].getLifeTime() <= 0) {
-            std::swap(mParticles[i], mParticles.back());
-            mParticles.pop_back(); // Removes the last element efficiently
+            mParticles.erase(mParticles.begin() + i); // Erase the element at index i
         } else {
-            ++i;
+            ++i; // Only increment if no element was erased
         }
     }
+    // for (int i = 0; i < mParticles.size();) {
+    //     mParticles[i].update();
+    //     if (mParticles[i].getLifeTime() <= 0) {
+    //         std::swap(mParticles[i], mParticles.back());
+    //         mParticles.pop_back(); // Removes the last element efficiently
+    //     } else {
+    //         ++i;
+    //     }
+    // }
 }
 
 void ParticleEmitter::burst(int aAmount) {

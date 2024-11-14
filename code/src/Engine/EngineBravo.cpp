@@ -9,7 +9,7 @@
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(2000), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(5000), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
