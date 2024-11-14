@@ -102,7 +102,7 @@ int World::createBody(BodyProxy& aBodyProxy) {
 
 void World::updateBody(int aBodyID, BodyProxy& aBodyProxy) {
     b2BodyId test = {aBodyID, 0, 1};
-    b2Body_SetTransform(test, {aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}, b2Body_GetRotation(test));
+    // b2Body_SetTransform(test, {aBodyProxy.getPosition().x, aBodyProxy.getPosition().y}, b2Body_GetRotation(test));
 }
 
 void World::applyLinearForce(int aBodyID, std::vector<Vector2> aForce) {
@@ -142,10 +142,10 @@ std::vector<std::pair<int, int>> World::getContactEvents() {
     for (int i = 0; i < contactlist.beginCount; i++) {
         collisionList.push_back(
             {contactlist.beginEvents[i].shapeIdA.index1, contactlist.beginEvents[i].shapeIdB.index1});
-         std::cout << "begincount is: " << contactlist.beginCount << std::endl;
+        std::cout << "begincount is: " << contactlist.beginCount << std::endl;
         std::cout << "contact found: " << std::endl;
-         std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
-         std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
+        std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
+        std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
     }
     return collisionList;
 }

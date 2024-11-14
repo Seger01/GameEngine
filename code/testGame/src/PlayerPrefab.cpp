@@ -1,6 +1,8 @@
 #include "PlayerPrefab.h"
 
 #include "AudioBehaviourScript.h"
+#include "AudioSource.h"
+#include "GameObject.h"
 
 const int spriteWidth = 16;  // Width of each sprite
 const int spriteHeight = 25; // Height of each sprite
@@ -31,7 +33,7 @@ GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     addParticleEmitter(defaultPlayerPrefab);
     addRigidBody(defaultPlayerPrefab);
     addCollider(defaultPlayerPrefab);
-    AudioSource(defaultPlayerPrefab);
+    addSound(defaultPlayerPrefab);
 
     return defaultPlayerPrefab;
 }
