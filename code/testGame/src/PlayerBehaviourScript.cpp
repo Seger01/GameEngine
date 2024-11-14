@@ -200,8 +200,10 @@ void PlayerBehaviourScript::onUpdate() {
         scene->addGameObject(newPlayer);
     }
 
-    if (emitter != nullptr) {
+    if (mGameObject->hasComponent<ParticleEmitter>()) {
         static bool emitterMode = false;
+
+        ParticleEmitter* emitter = mGameObject->getComponents<ParticleEmitter>()[0];
 
         if (input.GetKeyDown(Key::Key_P)) {
             emitter->setActive(!emitter->isActive());
