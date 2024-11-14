@@ -171,7 +171,7 @@ std::vector<std::pair<int, int>> World::getSensorEvents() {
     for (int i = 0; i < sensorEvents.beginCount; i++) {
         std::cout << "sensor found: " << std::endl;
         sensorList.push_back(
-            {sensorEvents.beginEvents[i].visitorShapeId.index1, sensorEvents.beginEvents[i].sensorShapeId.index1});
+            {sensorEvents.beginEvents[i].sensorShapeId.index1, sensorEvents.beginEvents[i].visitorShapeId.index1});
     }
     return sensorList;
 }

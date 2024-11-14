@@ -9,7 +9,7 @@ void StartupBehaviourScript::onUpdate() {
     auto currentTime = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - mStartTime).count();
 
-    if (duration > 5000) {
+    if (duration > 2000) {
         EngineBravo& engine = EngineBravo::getInstance();
         SceneManager& sceneManager = engine.getSceneManager();
         Scene* scene = sceneManager.createScene("networkScene");

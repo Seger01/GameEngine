@@ -1,5 +1,7 @@
 #include "Component.h"
 
+Component::Component(std::string aTag) : mTag(aTag) {}
+
 // Copy constructor
 Component::Component(const Component& other)
     : mGameObject(other.mGameObject), mTag(other.mTag), mActive(other.mActive) {}

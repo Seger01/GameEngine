@@ -91,7 +91,6 @@ void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
     if (mDoorsOpen) {
         spawnEnemies();
         closeDoors();
-        
     }
     else {
         openDoors();

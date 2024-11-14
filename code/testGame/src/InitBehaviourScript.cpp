@@ -91,6 +91,7 @@ void InitBehaviourScript::createLevel1() {
         boxCollider->setTransform(transform);
         boxCollider->setWidth(roomTrigger.mWidth);
         boxCollider->setHeight(roomTrigger.mHeight);
+        boxCollider->setTrigger(true);
         roomObject->addComponent(boxCollider);
         RigidBody* rigidBody = new RigidBody();
         rigidBody->setTransform(transform);

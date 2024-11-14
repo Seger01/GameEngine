@@ -23,6 +23,7 @@ SpriteDef firstFramePlayerIdleFront = {
 
 GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     GameObject* defaultPlayerPrefab = new GameObject;
+    defaultPlayerPrefab->setName("Player");
 
     setTransform(defaultPlayerPrefab);
     addPlayerBehaviourScript(defaultPlayerPrefab);

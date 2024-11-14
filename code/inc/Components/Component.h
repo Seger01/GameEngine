@@ -8,8 +8,9 @@ class GameObject;
 
 class Component {
 public:
-    Component() {}
-    virtual ~Component() {}
+    Component() = default;
+    Component(std::string aTag);
+    virtual ~Component() = default;
 
     // Rule of Five
     Component(const Component& other);                // Copy constructor

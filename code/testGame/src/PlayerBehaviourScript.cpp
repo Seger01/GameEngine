@@ -118,25 +118,25 @@ void PlayerBehaviourScript::handleMovement() {
         deactivateAllAnimations();
         setAnimationActive("playerIdleBack", true);
         setFlipX(false);
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 100));
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 200));
     }
     if (input.GetKey(Key::Key_A)) {
         deactivateAllAnimations();
         setAnimationActive("playerIdleSide", true);
         setFlipX(true);
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(100, 0));
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(200, 0));
     }
     if (input.GetKey(Key::Key_S)) {
         deactivateAllAnimations();
         setAnimationActive("playerIdleFront", true);
         setFlipX(false);
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, -100));
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, -200));
     }
     if (input.GetKey(Key::Key_D)) {
         deactivateAllAnimations();
         setAnimationActive("playerIdleSide", true);
         setFlipX(false);
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(-100, 0));
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(-200, 0));
     }
     this->mGameObject->setTransform(parentTransform);
 }
@@ -172,32 +172,6 @@ void PlayerBehaviourScript::onUpdate() {
     if (input.GetKeyDown(Key::Key_F)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
         config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
-    }
-
-    if (input.GetKeyDown(Key::Key_V)) {
-        std::cout << "spawning new player" << std::endl;
-        EngineBravo& engine = EngineBravo::getInstance();
-        Scene* scene = engine.getSceneManager().getCurrentScene();
-
-        GameObject* newPlayer = new GameObject(*mGameObject);
-
-        Transform newPlayerTransform = newPlayer->getTransform();
-        newPlayerTransform.position.x += 10;
-        newPlayer->setTransform(newPlayerTransform);
-
-        std::cout << "New player Tag: " << newPlayer->getTag() << std::endl;
-        std::cout << "New player ID: " << newPlayer->getID() << std::endl;
-        std::cout << "New player Name: " << newPlayer->getName() << std::endl;
-        std::cout << "New player Active: " << newPlayer->isActive() << std::endl;
-        std::cout << "New player Transform: " << newPlayer->getTransform().position.x << std::endl;
-        std::cout << "New player Parent: " << newPlayer->getParent() << std::endl;
-
-        for (auto& component : newPlayer->getComponents<Animation>()) {
-            std::cout << "New player Animation Tag: " << component->getTag() << std::endl;
-            std::cout << "New player Animation Active: " << component->isActive() << std::endl;
-        }
-
-        scene->addGameObject(newPlayer);
     }
 
     if (mGameObject->hasComponent<ParticleEmitter>()) {

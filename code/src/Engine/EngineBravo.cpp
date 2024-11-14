@@ -53,10 +53,6 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
-        startBehaviourScripts();
-
-        if (mSceneManager.sceneChanged()) {
-        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
