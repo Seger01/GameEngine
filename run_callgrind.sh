@@ -20,5 +20,18 @@ else
     fi
 fi
 
-# Build with multiple cores
-cmake --build . -- -j$(nproc)
+# Build with multiple cores and wait for it to complete
+cmake --build . -- -j$(nproc) && \
+
+rm -rf callgrind_out.txt callgrind_annotate.txt
+
+cd -
+
+
+# Run callgrind only after build is done
+valgrind --tool=callgrind --simulate-cache=yes --callgrind-out-file=callgrind_run_out.txt ./code/build/bin/Engine_BRAVO_exec
+
+# Open callgrind output
+callgrind_annotate --auto=yes callgrind_run_out.txt >> callgrind_annotate.txt
+
+mv callgrind_run_out.txt callgrind_annotate.txt code/build/
