@@ -162,6 +162,7 @@ void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
 }
 
 void PlayerPrefabFactory::addSound(GameObject* gameObject) {
+    AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
     // Add sound effects
     AudioSource* sound = new AudioSource("Audio/gun1.wav");
     sound->setPlayOnWake(false);
@@ -169,6 +170,7 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject) {
     sound->setXDirection(0);
     sound->setTag("gun");
     gameObject->addComponent(sound);
+    audioManager.loadSound(*sound);
 
     AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
     step->setPlayOnWake(false);
@@ -177,6 +179,7 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject) {
     step->setTag("step");
     gameObject->addComponent(step);
     gameObject->addComponent<AudioBehaviourScript>();
+    audioManager.loadSound(*step);
 
     // Add music
     AudioSource* music = new AudioSource("Audio/music.wav", true);
@@ -184,6 +187,5 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject) {
     music->setVolume(10);
     music->setXDirection(0);
     gameObject->addComponent(music);
-
-    EngineBravo::getInstance().getAudioManager().addSound(*gameObject);
+    audioManager.loadSound(*music);
 }
