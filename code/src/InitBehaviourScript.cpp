@@ -66,6 +66,8 @@ void InitBehaviourScript::createLevel1() {
     rigidBody->setGravityScale(10.0f);
     rigidBody->setCanRotate(false);
     gameObject2->setName("Guy");
+    gameObject2->setTag("Guy");
+    gameObject2->setID(1);
 
     scene->addGameObject(gameObject2);
 

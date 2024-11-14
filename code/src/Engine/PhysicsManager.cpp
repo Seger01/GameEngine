@@ -15,5 +15,6 @@ void PhysicsManager::startPhysicsEngine(std::vector<GameObject*>& aGameObjects, 
 
 void PhysicsManager::updatePhysicsEngine(Scene* aScene) {
     mPhysicsEngine.updateReferences(aScene->getGameObjects());
+
     mPhysicsEngine.update();
 }

@@ -297,38 +297,58 @@ void PlayerBehaviourScript::handleMovement() {
     std::vector<RigidBody*> rigidBody = this->mGameObject->getComponents<RigidBody>();
 
     if (input.GetKeyDown(Key::Key_E)) {
-        SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
+        // SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
+        //
+        // // deactivateAllAnimations();
+        // GameObject* gameObject2 = new GameObject;
+        // Transform objectTransform2;
+        // objectTransform2.position.x = 30;
+        // objectTransform2.position.y = 50;
+        // gameObject2->setTransform(objectTransform2);
+        // gameObject2->addComponent<RigidBody>();
+        // RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+        // rigidBody->setCanRotate(false);
+        // rigidBody->setHasGravity(false);
+        // rigidBody->setIsMoveableByForce(true);
+        // rigidBody->setDensity(1.0f);
+        // rigidBody->setFriction(0.6f);
+        // rigidBody->setRestitution(0.0f);
+        // rigidBody->setGravityScale(0.0f);
+        // rigidBody->setMass(1.0f);
+        //
+        // gameObject2->addComponent(rigidBody);
+        //
+        // Sprite* guySprite = EngineBravo::getInstance().getResourceManager().createSprite(guyFrameDef);
+        // guySprite->setLayer(3);
+        //
+        // gameObject2->addComponent(guySprite);
+        //
+        // gameObject2->addComponent<BoxCollider>();
+        //
+        // gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+        // gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+        // gameObject2->getComponents<BoxCollider>().at(0)->setTrigger(true);
+        //
+        // EngineBravo::getInstance().getSceneManager().getCurrentScene()->addGameObject(gameObject2);
 
-        // deactivateAllAnimations();
-        GameObject* gameObject2 = new GameObject;
-        Transform objectTransform2;
-        objectTransform2.position.x = 30;
-        objectTransform2.position.y = 50;
-        gameObject2->setTransform(objectTransform2);
-        gameObject2->addComponent<RigidBody>();
-        RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
-        rigidBody->setCanRotate(false);
-        rigidBody->setHasGravity(false);
-        rigidBody->setIsMoveableByForce(true);
-        rigidBody->setDensity(1.0f);
-        rigidBody->setFriction(0.6f);
-        rigidBody->setRestitution(0.0f);
-        rigidBody->setGravityScale(0.0f);
-        rigidBody->setMass(1.0f);
+        // bool trig = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObject(1).isActive();
+        // EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObject(1).setActive(!trig);
 
-        gameObject2->addComponent(rigidBody);
+        bool trig = EngineBravo::getInstance()
+                        .getSceneManager()
+                        .getCurrentScene()
+                        ->getGameObject(1)
+                        .getComponents<BoxCollider>()
+                        .at(0)
+                        ->isTrigger();
 
-        Sprite* guySprite = EngineBravo::getInstance().getResourceManager().createSprite(guyFrameDef);
-        guySprite->setLayer(3);
-
-        gameObject2->addComponent(guySprite);
-
-        gameObject2->addComponent<BoxCollider>();
-
-        gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
-        gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
-
-        EngineBravo::getInstance().getSceneManager().getCurrentScene()->addGameObject(gameObject2);
+        EngineBravo::getInstance()
+            .getSceneManager()
+            .getCurrentScene()
+            ->getGameObject(1)
+            .getComponents<BoxCollider>()
+            .at(0)
+            ->setTrigger(!trig);
     }
 
     if (input.GetKey(Key::Key_R)) {

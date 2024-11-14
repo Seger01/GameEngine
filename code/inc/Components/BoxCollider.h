@@ -3,9 +3,7 @@
 #include "Collider.h"
 #include "TileMapParser.h"
 
-
-class BoxCollider : public Collider
-{
+class BoxCollider : public Collider {
 public:
     BoxCollider();
     virtual ~BoxCollider();
@@ -21,8 +19,11 @@ public:
     void setRotation(float rotation);
     void setTransformFromColliderData(const ColliderData& colliderData);
 
+    bool isTrigger() const;
+    void setTrigger(bool isTrigger);
 
 private:
+    bool mIsTrigger = false;
     float mWidth;
     float mHeight;
     float mRotation;
