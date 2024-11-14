@@ -1,6 +1,11 @@
 Minutes 14-11-24
 
 What was discussed:
+Points to address during the presentation next friday:
+- Starting implementation: since previous week (week 0), implementing many parts 
+  of the engine in parallel, merging to dev whenever possible.
+- Memory leaks: how do other groups do this, in combination with leaking libraries?
+- Demo: showing off the demo game, mentioning its various features.
 
 What has been done:
 - Siem: Improving spatial audio.
