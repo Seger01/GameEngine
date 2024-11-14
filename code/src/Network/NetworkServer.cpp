@@ -17,8 +17,6 @@
 NetworkServer::NetworkServer(int aTickRate = 60)
     : mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
       mLastSendPacketsTime(std::chrono::steady_clock::now()), mGameObjects(nullptr), mTickRate(aTickRate) {
-    // std::cout << "Server Address: " << mServer->GetLocalIP(0) << std::endl;
-    // SLNet::SocketDescriptor sd(SERVER_PORT, mServer->GetLocalIP(0));
     SLNet::SocketDescriptor sd(SERVER_PORT, 0);
     sd.socketFamily = AF_INET;
     SLNet::StartupResult result = mServer->Startup(10, &sd, 1);
@@ -107,11 +105,9 @@ void NetworkServer::sendTransform() {
 
         if (networkTransform->getSendPositionX()) {
             bs.Write(transform.position.x);
-            std::cout << "Server Sending position x: " << transform.position.x << std::endl;
         }
         if (networkTransform->getSendPositionY()) {
             bs.Write(transform.position.y);
-            std::cout << "Server Sending position y: " << transform.position.y << std::endl;
         }
         if (networkTransform->getSendRotation()) {
             bs.Write(transform.rotation);
@@ -135,6 +131,9 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
     getBitStreamData(bs);
 
     for (auto gameObject : *mGameObjects) {
+        if (!gameObject->hasComponent<NetworkObject>()) {
+            continue;
+        }
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
         if (networkObject->getClientID() != aPacket->guid) {
             continue;
@@ -144,11 +143,9 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             if (networkTransform->getSendPositionX()) {
                 bs.Read(transform.position.x);
-                std::cout << "Server Receiving position x: " << transform.position.x << std::endl;
             }
             if (networkTransform->getSendPositionY()) {
                 bs.Read(transform.position.y);
-                std::cout << "Server Receiving position y: " << transform.position.y << std::endl;
             }
             if (networkTransform->getSendRotation()) {
                 bs.Read(transform.rotation);

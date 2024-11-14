@@ -53,7 +53,7 @@ private:
     int mTickRate;
     std::unique_ptr<GameObject> mDefaultPlayerPrefab;
     bool mEnableSceneManagement;
-    std::vector<GameObject*> mGameObjects;
+    std::vector<GameObject*>* mGameObjects;
 
     std::unique_ptr<NetworkServer> mServer;
     std::unique_ptr<NetworkClient> mClient;

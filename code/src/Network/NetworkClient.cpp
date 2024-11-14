@@ -147,8 +147,14 @@ void NetworkClient::handleIncomingPackets() {
 }
 
 void NetworkClient::sendTransform() {
-    std::vector<GameObject*> networkObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
-    for (auto gameObject : networkObjects) {
+    std::vector<GameObject*>* networkObjects = &EngineBravo::getInstance().getNetworkManager().getGameObjects();
+    if (!networkObjects) {
+        throw std::runtime_error("Game objects not set");
+    }
+    for (auto gameObject : *networkObjects) {
+        if (!gameObject->hasComponent<NetworkObject>()) {
+            continue;
+        }
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
         if (!networkObject->isOwner()) {
             continue;
@@ -160,11 +166,9 @@ void NetworkClient::sendTransform() {
             makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
             if (networkTransform->getSendPositionX()) {
                 bs.Write(transform.position.x);
-                std::cout << "Client Sending position x: " << transform.position.x << std::endl;
             }
             if (networkTransform->getSendPositionY()) {
                 bs.Write(transform.position.y);
-                std::cout << "Client Sending position y: " << transform.position.y << std::endl;
             }
             if (networkTransform->getSendRotation()) {
                 bs.Write(transform.rotation);
@@ -189,6 +193,9 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     getBitStreamData(bs, clientGuid);
 
     for (auto gameObject : networkObjects) {
+        if (!gameObject->hasComponent<NetworkObject>()) {
+            continue;
+        }
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
         if (networkObject->isOwner()) {
             continue;
@@ -201,11 +208,9 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             if (networkTransform->getSendPositionX()) {
                 bs.Read(transform.position.x);
-                std::cout << "Client Receiving position x: " << transform.position.x << std::endl;
             }
             if (networkTransform->getSendPositionY()) {
                 bs.Read(transform.position.y);
-                std::cout << "Client Receiving position y: " << transform.position.y << std::endl;
             }
             if (networkTransform->getSendRotation()) {
                 bs.Read(transform.rotation);
@@ -233,8 +238,6 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     if (networkObjects.size() == 0) {
         throw std::runtime_error("Player does not have a NetworkObject component");
     }
-    std::cout << "Player ID:" << playerID.ToString() << std::endl;
-    std::cout << "Client ID:" << mClient->GetMyGUID().ToString() << std::endl;
     if (playerID == mClient->GetMyGUID()) {
         networkObjects[0]->setOwner(true); // This client owns the player object
     } else {

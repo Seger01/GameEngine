@@ -4,7 +4,8 @@
 #include "Engine/EngineBravo.h"
 #include "Engine/SceneManager.h"
 
-NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
+NetworkManager::NetworkManager()
+    : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false), mGameObjects(nullptr) {}
 
 void NetworkManager::startNetwork() {
     if (mRole == NetworkRole::SERVER) {
@@ -21,10 +22,14 @@ void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shut
 void NetworkManager::initialize() { startNetwork(); }
 
 void NetworkManager::update() {
+    mGameObjects = &EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
+    if (mGameObjects == nullptr) {
+        throw std::runtime_error("Game objects is nullptr");
+    }
     if (mRole == NetworkRole::SERVER && mServer) {
-        mServer->update(mGameObjects);
+        mServer->update(*mGameObjects);
     } else if (mRole == NetworkRole::CLIENT && mClient) {
-        mClient->update(mGameObjects);
+        mClient->update(*mGameObjects);
     } else if (mRole == NetworkRole::HOST && mHost) {
         throw std::runtime_error("NetworkManager::update() isHost not implemented");
         // mHost->update();
@@ -109,7 +114,7 @@ void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
 
 NetworkRole NetworkManager::getRole() const { return mRole; }
 
-std::vector<GameObject*>& NetworkManager::getGameObjects() { return mGameObjects; }
+std::vector<GameObject*>& NetworkManager::getGameObjects() { return *mGameObjects; }
 
 void NetworkManager::startServer() {
     if (mClient || mHost) {
