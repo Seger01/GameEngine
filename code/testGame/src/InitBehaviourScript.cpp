@@ -142,8 +142,6 @@ void InitBehaviourScript::createLevel1() {
     music->setXDirection(0);
     gameObject->addComponent(music);
 
-    engine.getAudioManager().addSound(*gameObject);
-
     scene->addGameObject(gameObject);
 
     GameObject* canvasObject = new GameObject;
