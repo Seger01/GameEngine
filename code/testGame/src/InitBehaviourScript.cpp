@@ -1,6 +1,5 @@
 #include "InitBehaviourScript.h"
 
-#include "AudioBehaviourScript.h"
 #include "BoxCollider.h"
 #include "Button.h"
 #include "CanvasBehaviourScript.h"
@@ -8,7 +7,6 @@
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
 #include "GameObject.h"
-#include "PlayerBehaviourScript.h"
 #include "RigidBody.h"
 #include "RoomBehaviourScript.h"
 #include "Scene.h"
@@ -25,8 +23,9 @@ void InitBehaviourScript::createLevel1() {
     SceneManager& sceneManager = engine.getSceneManager();
 
     Scene* scene = sceneManager.createScene("Level-1");
-    if (scene == nullptr)
+    if (scene == nullptr) {
         exit(1);
+    }
 
     int cameraID = scene->addCamera();
     scene->setActiveCamera(cameraID);
@@ -103,49 +102,6 @@ void InitBehaviourScript::createLevel1() {
         scene->addGameObject(roomObject);
     }
 
-    GameObject* gameObject = new GameObject;
-
-    Transform objectTransform;
-    // objectTransform.position.x = 80;
-    // objectTransform.position.y = 100;
-    for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
-        if (spawnPoint.isPlayerSpawn) {
-            objectTransform.position.x = spawnPoint.x;
-            objectTransform.position.y = spawnPoint.y;
-            break;
-        }
-    }
-    gameObject->setTransform(objectTransform);
-
-    gameObject->addComponent<PlayerBehaviourScript>();
-
-    // Add sound effects
-    AudioSource* sound = new AudioSource("Audio/gun1.wav");
-    sound->setPlayOnWake(false);
-    sound->setVolume(90);
-    sound->setXDirection(0);
-    sound->setTag("gun");
-    gameObject->addComponent(sound);
-
-    AudioSource* step = new AudioSource("Audio/Steps_tiles-002.wav");
-    step->setPlayOnWake(false);
-    step->setVolume(30);
-    step->setXDirection(0);
-    step->setTag("step");
-    gameObject->addComponent(step);
-    gameObject->addComponent<AudioBehaviourScript>();
-
-    // Add music
-    AudioSource* music = new AudioSource("Audio/music.wav", true);
-    music->setPlayOnWake(true);
-    music->setVolume(10);
-    music->setXDirection(0);
-    gameObject->addComponent(music);
-
-    engine.getAudioManager().addSound(*gameObject);
-
-    scene->addGameObject(gameObject);
-
     GameObject* canvasObject = new GameObject;
 
     canvasObject->addComponent<CanvasBehaviourScript>();
@@ -161,8 +117,8 @@ void InitBehaviourScript::createLevel1() {
 
     int textWidth = 0;
     int textHeight = 0;
-    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight, text->getScale(),
-                                              scene)) {
+    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
+                                              text->getScale())) {
         std::cout << "Failed to get text size for FPS counter.\n";
     }
 

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <thread>
 
+#include "slikenet/sleep.h"
+
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
@@ -18,7 +20,7 @@ EngineBravo& EngineBravo::getInstance() {
     return instance;
 }
 
-void EngineBravo::initizalize() {
+void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
     mConfiguration.setConfig("render_colliders", true);
@@ -27,6 +29,8 @@ void EngineBravo::initizalize() {
     if (mSceneManager.sceneChanged()) {
     }
     startBehaviourScripts();
+
+    mNetworkManager.initialize();
 
     Time::initialize();
 
@@ -68,6 +72,7 @@ void EngineBravo::run() {
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
+        mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
     }
 }
@@ -108,12 +113,16 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
 AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
+
+NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
 Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 

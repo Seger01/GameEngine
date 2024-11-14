@@ -118,7 +118,7 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 // }
 
 bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
-                               Vector2 aScale, Scene* aScene) {
+                               Vector2 aScale) {
     if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight)) {
         return false;
     }
