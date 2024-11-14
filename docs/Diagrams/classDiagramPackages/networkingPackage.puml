@@ -1,0 +1,128 @@
+@startuml NetworkingPackageClassDiagram
+
+package Networking{
+class NetworkObject implements Component_Proxy{
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
+    - mIsOwner: bool
+    - mNetworkID: int
+}
+
+interface INetworkBehaviour implements IBehavourScript_Proxy{
+    + {abstract} void serverRpc()
+    + {abstract} void clientRpc()
+    + {abstract} void OnNetworkSpawn()
+    
+}
+
+' Template class for network variables
+class NetworkVariable{
+    + networkVariable(WritePermission)
+    + T Value
+    
+}
+
+class IBehavourScript_Proxy{}
+
+' Maybe not needed
+class NetworkTransform implements Transform_Proxy{
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class Transform_Proxy{}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendGameState()
+    + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ReceiveGameState()
+    + SendGameState()
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+    + UnloadScene()
+}
+
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
+}
+
+class Component_Proxy{
+}
+
+' NetworkManager <-- AuthorityManager
+
+NetworkObject *-- "*" INetworkBehaviour
+NetworkObject -- NetworkTransform
+
+INetworkBehaviour <-- NetworkVariable
+INetworkBehaviour <-- INetworkSerializable
+
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
+
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+
+
+NetworkHost <-- NetworkServer
+NetworkHost <-- NetworkClient
+
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
+
+}
+
+Networking *-- NetworkObject
+Networking *-- "0..1"NetworkClient
+Networking *-- "0..1"NetworkServer
+Networking *-- "0..1"NetworkHost
+Networking *-- NetworkSceneManager
+Networking *-- "1" NetworkObject
+
+@enduml

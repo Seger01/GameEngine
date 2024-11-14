@@ -1,0 +1,101 @@
+\documentclass{article}
+
+\title{Validation app design}
+\author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
+\date{\today} % Use \today for today's date or write a specific date, e.g., "October 31, 2023"
+
+\begin{document}
+
+\maketitle % Generates the title
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+\begin{itemize}
+    \item Validation app is a game.
+    \item The game is a 2D bullet hell, inspired by Enter the Gungeon.
+    \item The game is a rogue-lite. This means that when the player dies, some progress carries over into next runs.
+    \item The game supports keyboard + mouse input and controller input.
+\end{itemize}
+
+\section{Core gameplay loop}
+The game consists of three levels.
+Each level contains five regular rooms, one shop room and a boss room.
+
+\subsection{Player}
+The player always starts a run with a standard amount of health and a starting weapon.
+The player has an inventory which can contain multiple weapons.
+
+\subsection{Regular rooms}
+Regular rooms contain only regular enemies.
+The enemies are spawned semi-random: a random amount between set values, and at a random location in the room.
+The type(s) of enemies spawned is predefined for each room.
+Regular rooms contain pitfalls.
+
+\subsection{Shop rooms}
+Shop rooms contain a shopkeeper, which sells three randomly selected items to the player.
+Each item has a standard fixed price.
+
+\subsection{Boss rooms}
+Boss rooms contain only a single boss enemy, and no other objects. 
+When the boss is defeated. A magical door to the next level appears.
+The boss then also drops 2 * the current level in EC. This is double if the level was executed without taking damage.
+Boss rooms contain pitfalls.
+
+\section{Gameplay mechanics}
+- All bullets have infinite range (within the room).
+
+\subsection{Player}
+\begin{itemize}
+    \item The player can move in eight directions.
+    \item The player can dodge, which allows it to jump over pitfalls.
+    \item The player can shoot bullets.
+    \item The player can interact with certain game objects.
+\end{itemize}
+
+\subsection{Enemies}
+Getting hit by an enemy decreases the player health by 0.5 hearts.
+Enemies can randomly drop either health or BS when killed.
+When the player bumps into an enemy, the player loses 0.5 hearts, and the player and enemy are briefly pushed apart.
+
+\subsection{Currency}
+Player upgrades can be unlocked using the EC currency (eternal credits). If you have enough EC you can unlock a new upgrade.
+Upgrades cost a fixed amount, but differ between upgrades.
+Items can be bought during a run using BS (Bullet Shells).
+
+\subsection{Player items}
+Items are bought during runs. The following types of items are available:
+\begin{itemize}
+    \item Health: increase health by 2 hearts. 15 EC to unlock.
+    \item Damage: increase damage by 5 points. 30 EC to unlock.
+    \item Speed: increase speed by 0.5 points. 15 EC to unlock.
+    \item Fire rate: increase fire rate by 0.1 points. 15 EC to unlock.
+    \item Bullet speed: increase bullet speed by 0.5 points. 15 EC to unlock.
+    \item Buy weapon (shotgun): buy the shotgun weapon. 60 EC to unlock.
+    \item Buy weapon (machine gun): buy the machine gun weapon. 60 EC to unlock.
+    \item Bob's BPH (banana power hour): unlocks godmode for this run. Cannot be permanently unlocked.
+\end{itemize}
+
+Player upgrades mean unlocking new items, which can then be bought during a run.
+
+\subsection{Environment}
+\begin{itemize}
+    \item Walls: the player cannot walk through walls. The edge of the level always consists of walls. Walls can be freely used within a room.
+    \item Pitfalls: the player can fall into pitfalls. This decreases the player health by 1 heart. The player can always dodge over the pitfalls.
+\end{itemize}
+
+\section{Audiovisual design}
+\begin{itemize}
+    \item Sprites are inspired by Enter the Gungeon.
+    \item The game has background music in the regular rooms and shop rooms. There is a separate song for boss rooms.
+\end{itemize}
+
+\section{Multiplayer}
+The game can be played with two players. It contains the same mechanics as single player, except a second player is added.
+Unlocks are shared between players, but each has their own inventory.
+If a player moves to the next level or room, the other player is forced to follow.
+If one player dies, it becomes a ghost: it can move around but not interact in any way.
+
+\end{document}

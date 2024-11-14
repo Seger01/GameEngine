@@ -1,0 +1,142 @@
+@startuml
+
+class NetworkManager {
+    
+    
+    + void startServer()
+    + void startClient()
+    + void startHost()
+    + void shutdown()
+
+
+    - mIsServer : bool
+    - mIsClient : bool
+    - mIsHost : bool
+    - mTickRate : int
+    - mDefaultPlayerPrefab : GameObject&
+    - mEnableSceneManagement : bool
+}
+
+class NetworkObject {
+    + spawn() : void
+    + despawn() : void
+    + getNetworkID(): int
+
+    - mIsOwner: bool
+    - mNetworkID: int
+}
+
+class NetworkBehaviour {
+    +void serverRpc()
+    +void clientRpc()
+    + {abstract} void OnNetworkSpawn()
+    
+}
+
+' Template class for network variables
+class NetworkVariable{
+    + networkVariable(WritePermission)
+    + T Value
+    
+}
+
+class MonoBehavior{}
+
+' Maybe not needed
+class NetworkTransform {
+    + UpdateTransform()
+    + SyncPosition()
+    + Interpolate()
+}
+
+class Transform{}
+
+class NetworkClient {
+    + ConnectToServer()
+    + SendGameState()
+    + ReceiveGameState()
+
+    - mIsConnected: bool
+    - mClientID: int
+}
+
+class NetworkServer {
+    + HandleClientConnection()
+    + ReceiveGameState()
+    + SendGameState()
+
+    - mConnectedClients : List<NetworkClient>
+}
+
+class NetworkHost {
+    + ActAsClient()
+    + ActAsServer()
+}
+
+' class NetworkMessage {
+'     + Serialize()
+'     + Deserialize()
+'     + SendMessage()
+'     - mMessageType: string
+' }
+
+class NetworkSceneManager {
+    + LoadScene()
+    + SyncScene()
+    + UnloadScene()
+}
+
+' class NetworkInputManager {
+'     + CaptureInput()
+'     + SendInput()
+'     + ApplyInputPrediction()
+' }
+
+' class NetworkReplicationManager {
+'     + ReplicateObjectState()
+'     + SyncWithClients()
+'     + ApplyInterpolation()
+' }
+
+' class AuthorityManager {
+'     + AssignAuthority()
+'     + RequestControl()
+'     - mObjectAuthority: string
+' }
+
+class INetworkSerializable {
+    + {abstract} NetworkSerialize()
+    ' + Deserialize()
+}
+
+NetworkManager *-- "0..1"NetworkClient
+NetworkManager *-- "0..1"NetworkServer
+NetworkManager *-- "0..1"NetworkHost
+NetworkManager *-- "0..1"NetworkSceneManager
+NetworkManager *-- "0..*" NetworkObject
+' NetworkManager <-- AuthorityManager
+
+NetworkObject *-- "*" NetworkBehaviour
+NetworkObject -- NetworkTransform
+
+NetworkBehaviour --|> MonoBehavior
+NetworkBehaviour <-- NetworkVariable
+NetworkBehaviour <-- INetworkSerializable
+
+NetworkTransform --|> Transform
+
+' NetworkClient --> NetworkInputManager
+' NetworkClient --> NetworkMessage
+' NetworkClient --> NetworkReplicationManager
+
+' NetworkServer --> NetworkMessage
+' NetworkServer --> NetworkReplicationManager
+
+
+NetworkHost *-- "0..1"NetworkServer
+NetworkHost *-- "0..1"NetworkClient
+
+' AuthorityManager <-- NetworkObject
+NetworkSceneManager *-- "*" NetworkObject
+
+@enduml

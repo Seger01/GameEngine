@@ -1,0 +1,114 @@
+@startuml enginePackageClassDiagram
+package Engine {
+    class EngineBravo {
+        + initialize() : void
+        + run() : void
+        + getSceneManager() : SceneManager&
+        + runBehaviourScripts() : void
+        + getAudioManager() : AudioManager&
+        - mSaveGameManager : SaveGameManager 
+        - mSceneManager : SceneManager
+        - mTextureManager : TextureManager
+        - mUIManager : UIManager
+        - mRenderer : Renderer
+    }
+
+    class TextureManager {
+        - TextureManager()
+        + loadTextures() : void
+        + loadAudio() : void
+        + loadTileset(const string &aPath) : Texture*
+    }
+
+    class SceneManager {
+        + addScene(const Scene& scene) : int
+        + addSceneLevel(TileMap& map) : int
+        + loadScene(int index) : void
+        + loadScene(const std::string& sceneName) : void
+        + getCurrentScene() : Scene*
+        + createScene(std::string aSceneName, int aSceneID = -1) : Scene*
+        - SceneManager()
+        - sceneNameExists(string aSceneName) : bool
+        - sceneIDExists(int aSceneID) : bool
+        - getNewSceneID() : int
+        - mScenes : vector<unique_ptr<Scene>>
+        - mCurrentSceneIndex : int
+    }
+
+    class SaveGameManager {
+        - SaveGameManager()
+        + createSaveGame(const string &aId, const string &aPath) : SaveGame&
+        + getSaveGame(const string &aId) : SaveGame&
+        + deleteSaveGame(const string &aId, bool aDeleteFile) : void
+        - mSaveGames : unordered_map<string, SaveGame> 
+    }
+
+    class UIManager {
+        - mClickableButtons : vector<UIObject&>
+        + ClickableButtonPressed() : bool
+        + checkIsClickableButton() : bool
+        + addClickableButton((UIObject& aButton)) : void
+        + removeClickableButton(std::string ID) : void
+        - UIManager()
+    }
+
+    class NetworkManager {
+        + void startServer()
+        + void startClient()
+        + void startHost()
+        + void shutdown()
+        - mIsServer : bool
+        - mIsClient : bool
+        - mIsHost : bool
+        - mConnectedClients : List<NetworkClient>
+        - mTickRate : int
+        - mDefaultPlayerPrefab : GameObject&
+        - mEnableSceneManagement : bool
+    }
+
+    class PhysicsManager {
+        + PhysicsManager()
+        + startPhysicsEngine() : void
+    }
+
+    class RenderSystem {
+        + RenderSystem()
+        + render(Scene* aScene) : void 
+        + getRenderer() : Renderer& 
+        + getWindow() : Window& 
+        - renderSprite(GameObject* aGameObject, Sprite* aSprite) : void 
+        - renderAnimation(GameObject* aGameObject, Animation* aAnimation) : void 
+        - mRenderer : std::unique_ptr<Renderer> 
+        - mWindow : std::unique_ptr<Window> 
+        - WindowWidth : int 
+        - WindowHeight : int 
+        - mBackgroundColor : Color 
+    }
+
+    class AudioManager {
+        - mGameObjects : vector<reference_wrapper<GameObject>>
+        + AudioManager()
+        + play(const AudioSource&) : void
+        + stop(const AudioSource&) : void
+        + wake() : void
+        + getFacade() : IAudioFacade&
+        + addSound(const GameObject&) : void
+        + removeSound(const GameObject&) : void
+    }
+
+    class ParticleSystem {
+        + ParticleSystem()
+        + update(Scene* aScene) : void
+    }
+
+    EngineBravo *-- "1" SceneManager
+    EngineBravo *-- "1" SaveGameManager
+    EngineBravo *-- "1" UIManager
+    EngineBravo *-- "1" TextureManager
+    EngineBravo *-- "0..1" NetworkManager 
+    EngineBravo *-- "1" PhysicsManager
+    EngineBravo *-- "1" RenderSystem
+    EngineBravo *-- "1" AudioManager
+    EngineBravo *-- "1" ParticleSystem
+}
+@enduml

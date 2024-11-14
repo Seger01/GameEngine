@@ -1,0 +1,71 @@
+@startuml
+class NetworkManager {
+  +bool IsServer
+  +bool IsClient
+  +bool IsHost
+  +List<NetworkClient> ConnectedClients
+
+  +void StartServer()
+  +void StartClient()
+  +void StartHost()
+  +void Shutdown()
+}
+
+class NetworkObject {
+  +int NetworkId
+  +bool IsOwner
+
+  +void Spawn()
+  +void Despawn()
+}
+
+class NetworkBehaviour {
+  +void ServerRpc()
+  +void ClientRpc()
+}
+
+class NetworkTransform {
+  +bool SyncPosition
+  +bool SyncRotation
+  +bool SyncScale
+}
+
+class NetworkVariable {
+  +T Value
+  +Event OnValueChanged
+}
+
+class NetworkClient {
+  +int ClientId
+  +bool IsConnected
+}
+
+class NetworkSceneManager {
+  +void LoadScene()
+  +void UnloadScene()
+}
+
+enum NetworkDelivery {
+  Unreliable
+  Reliable
+}
+
+enum NetworkConnectionState {
+  Connected
+  Connecting
+  Disconnected
+}
+
+struct NetworkVariableSettings {
+  +ReadPermission
+  +WritePermission
+}
+
+NetworkManager "1" *-- "n" NetworkClient
+NetworkManager "1" *-- "n" NetworkObject
+NetworkObject "1" *-- "n" NetworkBehaviour
+NetworkObject "1" *-- "1" NetworkTransform
+NetworkObject "1" *-- "n" NetworkVariable
+NetworkObject "1" *-- "n" NetworkSceneManager
+
+@enduml

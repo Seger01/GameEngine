@@ -34,7 +34,35 @@
 # latex files
 *.pdf
 *.synctex.gz
+*.aux
+*.toc
+*.log
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.run.xml
 
-build/
+#ignore build folder
+code/build/
+code/.cache
+.cache
 
 .vscode/
+
+output.csv
+
+code/external/tmxlite-master/**
+output.csv
+# ignore clagd cache
+code/.cache
+
+# ignore puml images
+Diagrams/*.png
+Diagrams/*.svg
+docs/Diagrams/*.png
+docs/Diagrams/*.svg
+
+#ignore output folder
+out/

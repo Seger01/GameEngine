@@ -1,0 +1,38 @@
+\section{Render System}
+\label{sec:rendersystem}
+The render system is responsible for rendering the game.
+The render system is called by the game loop, and it renders the current scene.
+The render system goes through all the GameObjects in the scene, and it renders the Animation, ParticleEmitter, and Sprite components.
+The render system also renders the UIObjects in the scene.
+
+\subsection{Sprite}
+The Sprite component is used to add a still image to a GameObject.
+
+The Sprite Component has the following properties:
+\begin{itemize}
+    \item \texttt{texture} - The texture of the sprite.
+    \item \texttt{width} - The width of the sprite.
+    \item \texttt{height} - The height of the sprite.
+    \item \texttt{flipx} - Whether the sprite is flipped horizontally.
+    \item \texttt{flipy} - Whether the sprite is flipped vertically.
+    \item \texttt{sprite source} - The source rectangle that defines which part of the texture is rendered(can be set to 0 to render all).
+    \item \texttt{transform.x} - The x position of the texture relative to the GameObject it is attached to.
+    \item \texttt{transform.y} - The y position of the texture relative to the GameObject it is attached to.
+    \item \texttt{transform.rotation} - The rotation of the texture relative to the GameObject it is attached to.
+\end{itemize}
+
+\subsection{Animation}
+The Animation component is used to add an animated image to a GameObject.
+The Animation Component has the following properties:
+\begin{itemize}
+    \item \texttt{sprites} - The sprites that make up the animation.
+    \item \texttt{transform.x} - The x position of the animation relative to the GameObject it is attached to.
+    \item \texttt{transform.y} - The y position of the animation relative to the GameObject it is attached to.
+    \item \texttt{transform.rotation} - The rotation of the animtion relative to the GameObject it is attached to.
+    \item \texttt{flipX} - Whether the animation is flipped horizontally.
+    \item \texttt{flipY} - Whether the animation is flipped vertically.
+    \item \texttt{frameCount} - The amount of frames in the animation.
+    \item \texttt{frameTime} - The time between each frame.
+    \item \texttt{currentFrame} - The current frame of the animation.
+    \item \texttt{loop} - Whether the animation should loop.
+\end{itemize}

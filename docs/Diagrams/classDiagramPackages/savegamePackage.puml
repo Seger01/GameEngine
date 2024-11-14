@@ -1,0 +1,111 @@
+@startuml savePackageClassDiagram
+
+package Save{
+class SaveGame {
+-mFileName : string
+    + SaveGame(const string &aFileName)
+    + store() : void
+    + remove() : void
+
+    + setIntField(string aName, int aValue) : void
+    + setFloatField(string aName, float aValue) : void
+    + setStringField(string aName, float aValue) : void
+
+    + hasIntField(string aName) : bool
+    + hasFloatField(string aName) : bool
+    + hasStringField(string aName) : bool
+
+    + getIntField(string aName) : const IntSaveField&
+    + getFloatField(string aName) : const FloatSaveField&
+    + getStringField(string aName) : const StringSaveField&
+
+    + addArray(string aName) : void
+    + setArray(string aName, SaveArray aValue) : void
+    + getArray(string aName) const : SaveArray
+
+    - addAny(const string &aName, string aValue) : void
+    - createFile() : void
+}
+
+class SaveArray {
+    - mName : string
+    + SaveArray(const string &aName)
+
+    + getName() : string
+
+    - addAny(const string &aName, string aValue) : void
+
+    + getIntField(string aName) : IntSaveField&
+    + getFloatField(string aName) : FloatSaveField&
+    + getStringField(string aName) : StringSaveField&
+
+    + getIntArray() : const vector&
+    + getFloatArray() : const vector&
+    + getStringArray() : const vector&
+
+    + getSizeIntArray() : unsigned
+    + getSizeFloatArray() : unsigned
+    + getSizeStringArray() : unsigned
+}
+
+
+
+class SaveGameUtil {
+  + isInteger(string aValue) : static bool
+  + isFloat(string aValue) : static bool
+}
+
+together {
+class IntSaveField {
+  - mName : string
+  - mValue : int
+
+  + IntSaveField(string aName)
+
+  + getName() : string
+
+  + setValue(int) : void
+  + getValue() : int
+}
+
+class FloatSaveField {
+  - mName : string
+  - mValue : float
+
+  + FloatSaveField(string aName)
+
+  + getName() : string
+
+  + setValue(float) : void
+  + getValue() : float
+}
+
+class StringSaveField {
+  - mName : string
+  - mValue : string
+
+  + StringSaveField(string aName)
+
+  + getName() : string
+
+  + setValue(string) : void
+  + getValue() : string
+}
+}
+
+SaveGame *-- "*" SaveArray
+
+SaveGame <-left- SaveGameUtil
+SaveGame -[hidden]> SaveArray
+SaveGame *--"*" IntSaveField
+SaveGame *--"*" FloatSaveField
+SaveGame *--"*" StringSaveField
+
+SaveArray <-up- SaveGameUtil
+SaveArray *--"*" IntSaveField
+SaveArray *--"*" FloatSaveField
+SaveArray *--"*" StringSaveField
+}
+
+Save *-- "*" SaveGame
+@enduml
