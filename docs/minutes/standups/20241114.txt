@@ -1,0 +1,16 @@
+Minutes 14-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Improving spatial audio.
+- Angel: Calling collission function in behaviour script. Properly implementing collider flags. Using component is active flag for component in box2d.
+- Ronan: Improving room behaviour. Using physics trigger to switch between scenes. Small fs converter improvements.
+- Sean: merge development into multiplayer (merge conflicts). Various small multiplayer improvements.
+- Seger: Implementing persistent game objects, helping Sean with multiplayer, fixed multiplayer.
+
+What is going to be done:
+Everyone: preparing demo for next friday.
+
+Roadblocks:
+-
