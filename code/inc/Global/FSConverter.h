@@ -14,7 +14,6 @@ public:
 
 private:
     std::string findResourcesFolder();
-    bool isFilesystemAccessible(const std::filesystem::path& path);
     std::string executablePath();
     std::string mResourceDir;
     static std::string mCachedResourceDir;

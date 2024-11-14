@@ -9,7 +9,7 @@ public:
     virtual ~IBehaviourScript() {}
     virtual void onStart() = 0;
     virtual void onUpdate() = 0;
-    virtual void onCollide(GameObject* aGameObject) = 0;
+    virtual void onCollide(GameObject* aGameObject) {}
 
     virtual std::unique_ptr<Component> clone() const override = 0;
 
