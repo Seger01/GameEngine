@@ -13,8 +13,7 @@ void AudioBehaviourScript::onUpdate() {
     if (sceneManager.getCurrentScene()->getName() == "Level-1") {
         Input& input = Input::getInstance();
         if (input.GetKeyDown(Key::Key_P)) {
-            AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
-            audioManager.play(*(mGameObject->getComponentsWithTag<AudioSource>("gun")[0]));
+            mGameObject->getComponentsWithTag<AudioSource>("gun")[0]->play();
         }
 
         AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
@@ -23,7 +22,7 @@ void AudioBehaviourScript::onUpdate() {
              input.GetKey(Key::Key_D)) &&
             !audioManager.getFacade().isPlaying(step->getFileName())) {
 
-            audioManager.play(*(step));
+            step->play();
         }
     }
 }
