@@ -39,7 +39,9 @@ std::string FSConverter::findResourcesFolder() {
     };
 
     for (const auto& path : potentialPaths) {
-        if (std::filesystem::exists(path)) {
+        std::cout << "Checking path: " << path << std::endl;
+        if (isFilesystemAccessible(path)) {
+            std::cout << "Resources folder found at: " << path << std::endl;
             return path.string();
         }
     }
@@ -47,7 +49,6 @@ std::string FSConverter::findResourcesFolder() {
     std::cerr << "Resources folder not found in any of the checked paths." << std::endl;
     return ""; // Resources folder not found
 }
-
 
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) {
     std::filesystem::path fullPath = std::filesystem::path(mResourceDir) / resourceName;
