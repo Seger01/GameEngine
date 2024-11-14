@@ -26,7 +26,7 @@ void AudioManager::play(const AudioSource& aSource) {
     } else {
         // If the sound is not loaded, load it
         if (!getFacade().audioIsLoaded(aSource.getFileName())) {
-            getFacade().loadMusic(aSource.getFileName());
+            getFacade().loadSound(aSource.getFileName());
         }
         getFacade().playSound(aSource.getFileName(), aSource.getLooping(), aSource.getVolume(),
                               aSource.getXDirection());

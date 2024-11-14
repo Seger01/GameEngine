@@ -1,6 +1,8 @@
 #include "MixerContainer.h"
 #include <stdexcept>
 
+MixerContainer::MixerContainer() : mMusic(nullptr) {}
+
 MixerContainer::~MixerContainer() { clear(); }
 
 /**
@@ -14,7 +16,7 @@ Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
     try {
         return &mSfx.at(aIndex);
     } catch (const std::out_of_range& e) {
-        throw std::out_of_range("Sound not found: " + aIndex);
+        return nullptr;
     }
 }
 
@@ -22,7 +24,7 @@ const Mix_Chunk* MixerContainer::getSound(std::string aIndex) const {
     try {
         return &mSfx.at(aIndex);
     } catch (const std::out_of_range& e) {
-        throw std::out_of_range("Sound not found: " + aIndex);
+        return nullptr;
     }
 }
 

@@ -6,6 +6,7 @@
 
 class MixerContainer {
 public:
+    MixerContainer();
     virtual ~MixerContainer();
     void addSound(std::string aPath, Mix_Chunk aSound);
     Mix_Chunk* getSound(std::string aIndex);
