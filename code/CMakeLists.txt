@@ -4,17 +4,19 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and version
 project(Engine_BRAVO VERSION 0.1)
 
-set(LIBRARY ${PROJECT_NAME}_lib)
+set(PROJECT_EXECUTABLE ${PROJECT_NAME}_exec)
 set(TESTS ${PROJECT_NAME}_tests)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add a CMake option to enable or disable debug mode
-option(ENABLE_DEBUG "Enable debug mode" ON)
+option(ENABLE_DEBUG "Enable debug mode" OFF)
+
+# Option to enable or disable building tests
+option(ENABLE_TESTS "Enable building tests" OFF)
 
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
@@ -24,6 +26,12 @@ if(ENABLE_DEBUG)
 else()
     set(CMAKE_BUILD_TYPE Release)
     add_compile_options(-O3)  # Optimization flag for Release build
+endif()
+
+if(ENABLE_TESTS)
+    #Set coverage compile and link flags
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
 endif()
 
 # Set architecture-specific flags
@@ -38,9 +46,6 @@ elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a")
 endif()
 
-# Ensure position-independent code
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 # Specify output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib_external)
@@ -52,89 +57,8 @@ set(BUILD_TESTS OFF CACHE BOOL "Disable building tests" FORCE)
 set(BUILD_SAMPLES OFF CACHE BOOL "Disable building samples" FORCE) # Enable these if you need samples in poc's
 set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples" FORCE) # Enable these if you need examples in poc's
 
-
-# Set options for SlikeNet
-set(RAKNET_ENABLE_SAMPLES OFF CACHE BOOL "Generate RakNet sample projects if true." FORCE)
-set(RAKNET_ENABLE_DLL OFF CACHE BOOL "Generate the DLL project if true." FORCE)
-set(RAKNET_ENABLE_STATIC ON CACHE BOOL "Generate the static library project if true." FORCE)
-set(RAKNET_GENERATE_INCLUDE_ONLY_DIR OFF CACHE BOOL "Setup a include/RakNet/ directory in which all the headers are copied." FORCE)
-
-# set options for SDL_mixer
-set(SDL2MIXER_INSTALL OFF CACHE BOOL "Enable SDL2mixer install target" FORCE)
-set(SDL2MIXER_DEPS_SHARED OFF CACHE BOOL "Default value for loading dependencies dynamically" FORCE)
-set(SDL2MIXER_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE) # Set to ON if you enable almost any other option in this list
-set(SDL2MIXER_SAMPLES OFF CACHE BOOL "Build the SDL2_mixer sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_mixer
-set(SDL2MIXER_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_mixer sample program(s)" FORCE)
-set(SDL2MIXER_CMD OFF CACHE BOOL "Support an external music player" FORCE)
-set(SDL2MIXER_FLAC OFF CACHE BOOL "Enable FLAC music" FORCE)
-set(SDL2MIXER_FLAC_LIBFLAC OFF CACHE BOOL "Enable FLAC music using libFLAC" FORCE)
-set(SDL2MIXER_FLAC_LIBFLAC_SHARED OFF CACHE BOOL "Dynamically load LIBFLAC" FORCE)
-set(SDL2MIXER_FLAC_DRFLAC OFF CACHE BOOL "Enable FLAC music using drflac" FORCE)
-set(SDL2MIXER_GME OFF CACHE BOOL "Support loading GME music via game-music-emu" FORCE)
-set(SDL2MIXER_GME_SHARED OFF CACHE BOOL "Dynamically load libgme" FORCE)
-set(SDL2MIXER_MOD OFF CACHE BOOL "Support loading MOD music" FORCE)
-set(SDL2MIXER_MOD_MODPLUG OFF CACHE BOOL "Support loading MOD music via modplug" FORCE)
-set(SDL2MIXER_MOD_MODPLUG_SHARED OFF CACHE BOOL "Dynamically load modplug" FORCE)
-set(SDL2MIXER_MOD_XMP OFF CACHE BOOL "Support loading MOD music via libxmp" FORCE)
-set(SDL2MIXER_MOD_XMP_LITE OFF CACHE BOOL "Use libxmp-lite instead of libxmp" FORCE)
-set(SDL2MIXER_MOD_XMP_SHARED OFF CACHE BOOL "Dynamically load libxmp(-lite)" FORCE)
-set(SDL2MIXER_MP3 OFF CACHE BOOL "Enable MP3 music" FORCE)
-set(SDL2MIXER_MP3_MINIMP3 OFF CACHE BOOL "Support loading MP3 music via minimp3" FORCE)
-set(SDL2MIXER_MP3_MPG123 OFF CACHE BOOL "Support loading MP3 music via MPG123" FORCE)
-set(SDL2MIXER_MP3_MPG123_SHARED OFF CACHE BOOL "Dynamically load mpg123" FORCE)
-set(SDL2MIXER_MIDI OFF CACHE BOOL "Enable MIDI music" FORCE)
-set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "Support FluidSynth MIDI output" FORCE)
-set(SDL2MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "Dynamically load libfluidsynth" FORCE)
-
-# Set options for SDL_image
-set(SDL2IMAGE_INSTALL ON CACHE BOOL "Enable SDL2_image install target" FORCE)
-set(SDL2IMAGE_DEPS_SHARED OFF CACHE BOOL "Load dependencies dynamically" FORCE)
-set(SDL2IMAGE_VENDORED ON CACHE BOOL "Use vendored third-party libraries" FORCE)
-set(SDL2IMAGE_SAMPLES OFF CACHE BOOL "Build the SDL2_image sample program(s)" FORCE) # Enable these if you need samples in poc for SDL_image
-set(SDL2IMAGE_SAMPLES_INSTALL OFF CACHE BOOL "Install the SDL2_image sample program(s)" FORCE)
-set(SDL2IMAGE_TESTS OFF CACHE BOOL "Build unit tests?" FORCE)
-set(SDL2IMAGE_TESTS_INSTALL OFF CACHE BOOL "Install unit tests?" FORCE)
-set(SDL2IMAGE_BACKEND_STB ON CACHE BOOL "Use stb_image for loading JPEG and PNG files" FORCE)
-set(SDL2IMAGE_BACKEND_WIC OFF CACHE BOOL "Add WIC backend (Windows Imaging Component)" FORCE)
-set(SDL2IMAGE_BACKEND_IMAGEIO OFF CACHE BOOL "Use native Mac OS X frameworks for loading images" FORCE)
-set(SDL2IMAGE_AVIF OFF CACHE BOOL "Support loading AVIF images" FORCE)
-set(SDL2IMAGE_BMP OFF CACHE BOOL "Support loading BMP images" FORCE)
-set(SDL2IMAGE_GIF OFF CACHE BOOL "Support loading GIF images" FORCE)
-set(SDL2IMAGE_JPG OFF CACHE BOOL "Support loading JPEG images" FORCE)
-set(SDL2IMAGE_JXL OFF CACHE BOOL "Support loading JXL images" FORCE)
-set(SDL2IMAGE_LBM OFF CACHE BOOL "Support loading LBM images" FORCE)
-set(SDL2IMAGE_PCX OFF CACHE BOOL "Support loading PCX images" FORCE)
-set(SDL2IMAGE_PNG ON CACHE BOOL "Support loading PNG images" FORCE)
-set(SDL2IMAGE_PNM OFF CACHE BOOL "Support loading PNM images" FORCE)
-set(SDL2IMAGE_QOI OFF CACHE BOOL "Support loading QOI images" FORCE)
-set(SDL2IMAGE_SVG OFF CACHE BOOL "Support loading SVG images" FORCE)
-set(SDL2IMAGE_TGA OFF CACHE BOOL "Support loading TGA images" FORCE)
-set(SDL2IMAGE_TIF OFF CACHE BOOL "Support loading TIFF images" FORCE)
-set(SDL2IMAGE_WEBP OFF CACHE BOOL "Support loading WEBP images" FORCE)
-set(SDL2IMAGE_XCF OFF CACHE BOOL "Support loading XCF images" FORCE)
-set(SDL2IMAGE_XPM OFF CACHE BOOL "Support loading XPM images" FORCE)
-set(SDL2IMAGE_XV OFF CACHE BOOL "Support loading XV images" FORCE)
-set(SDL2IMAGE_JPG_SAVE OFF CACHE BOOL "Add JPEG save support" FORCE)
-set(SDL2IMAGE_PNG_SAVE OFF CACHE BOOL "Add PNG save support" FORCE)
-
-# Set options for Box2D
-set(BOX2D_SANITIZE OFF CACHE BOOL "Enable sanitizers for some builds" FORCE)
-set(BOX2D_AVX2 OFF CACHE BOOL "Enable AVX2 (faster)" FORCE)
-set(BOX2D_SAMPLES OFF CACHE BOOL "Build the Box2D samples" FORCE) # Enable these if you need samples in poc for Box2D
-set(BOX2D_BENCHMARKS OFF CACHE BOOL "Build the Box2D benchmarks" FORCE)
-set(BOX2D_DOCS OFF CACHE BOOL "Build the Box2D documentation" FORCE)
-set(BOX2D_PROFILE OFF CACHE BOOL "Enable profiling with Tracy" FORCE)
-set(BOX2D_VALIDATE OFF CACHE BOOL "Enable heavy validation" FORCE)
-set(BOX2D_UNIT_TESTS OFF CACHE BOOL "Build the Box2D unit tests" FORCE)
-
 # Add the external libraries
-add_subdirectory(external/SLikeNet)
-add_subdirectory(external/SDL)
-add_subdirectory(external/SDL_mixer)
-add_subdirectory(external/SDL_image)
-add_subdirectory(external/SDL_ttf)
-add_subdirectory(external/box2d)
-add_subdirectory(external/nlohmann_json)
+add_subdirectory(external)
 
 # Include the header files
 include_directories(${PROJECT_SOURCE_DIR}/inc)
@@ -144,47 +68,30 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Global)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
 include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Network)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Audio)
 
-# Add the tests directory
-add_subdirectory(test)
+include_directories(${PROJECT_SOURCE_DIR}/external/SLikeNet/Source)
+
 
 # Automatically search for source files
-file(GLOB_RECURSE SOURCES
+file(GLOB_RECURSE LIBRARY_SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
-# Exclude main.cpp from library sources
-list(FILTER SOURCES EXCLUDE REGEX ".*main\\.cpp$") 
-
-# Create a library from the main sources
-# only one of the two lines below should be uncommented
-add_library(${LIBRARY} STATIC ${SOURCES})
-#add_library(${LIBRARY} SHARED ${SOURCES})
+# Create a library from the library sources
+add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES})
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json)
+set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json behaviortree_cpp)
 
 # Link libraries to library
-target_link_libraries(${LIBRARY} ${LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
 
-# Add the executable target
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp)
+# Add the testGame subdirectory
+add_subdirectory(testGame)
 
-# Link library to the executable
-target_link_libraries(${PROJECT_NAME} ${LIBRARY})
-
-# Add custom target to run the main program
-add_custom_target(run
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
-    DEPENDS ${PROJECT_NAME}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running the main program"
-)
-
-# Add custom target to run Valgrind
-add_custom_target(run_valgrind
-    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE}
-    DEPENDS ${EXECUTABLE}
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    COMMENT "Running Valgrind to check for memory leaks"
-)
+if(ENABLE_TESTS)
+    # Add the testGame subdirectory
+    add_subdirectory(test)
+endif()

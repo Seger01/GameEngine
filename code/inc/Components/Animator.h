@@ -6,7 +6,9 @@ class Animator : public Component
     public:
         Animator();
         ~Animator();
-        //void play(??? aLooping);
+
+        std::unique_ptr<Component> clone() const override;
+
         void stop();
     private:
         //??? mFps;

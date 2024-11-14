@@ -4,12 +4,14 @@
 #include <chrono>
 #include <thread>
 
+#include "slikenet/sleep.h"
+
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(60) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -18,40 +20,50 @@ EngineBravo& EngineBravo::getInstance() {
     return instance;
 }
 
-void EngineBravo::initizalize() {
+void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
+
+    mConfiguration.setConfig("render_colliders", true);
+    mConfiguration.setConfig("render_fps", true);
 
     if (mSceneManager.sceneChanged()) {
     }
     startBehaviourScripts();
 
+    mNetworkManager.initialize();
+
     Time::initialize();
 
+    mUIManager.init();
     return;
 }
 
 void EngineBravo::run() {
     Input& input = Input::getInstance();
 
-    bool quit = false;
-    SDL_Event e;
+    mRunning = true;
+
+    mEventManager.subscribe([this](const Event& aEvent) { handleEvent(aEvent); }, EventType::Quit);
 
     mRenderSystem.getWindow().showWindow();
 
-    while (!quit) {
+    while (mRunning) {
         Time::update();
-        // Event handling
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
+
+        mEventManager.handleEvents();
+
+        startBehaviourScripts();
 
         if (mSceneManager.sceneChanged()) {
-            startBehaviourScripts();
             mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0.0f));
         }
         input.update();
+
+        mUIManager.update(mSceneManager.getCurrentScene());
+
+        mSceneManager.sceneChanged();
+
+        startBehaviourScripts();
 
         runBehaviourScripts();
 
@@ -61,7 +73,20 @@ void EngineBravo::run() {
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
+        mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
+    }
+}
+
+void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRate; }
+
+void EngineBravo::handleEvent(const Event& aEvent) {
+    switch (aEvent.type) {
+    case EventType::Quit:
+        mRunning = false;
+        break;
+    default:
+        break;
     }
 }
 
@@ -89,8 +114,18 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
+SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
+EventManager& EngineBravo::getEventManager() { return mEventManager; }
+UIManager& EngineBravo::getUIManager() { return mUIManager; }
+
+NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
+
+Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
@@ -101,7 +136,11 @@ void EngineBravo::startBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                if (behaviourScript->hasScriptStarted()) {
+                    continue;
+                }
                 behaviourScript->onStart();
+                behaviourScript->setScriptStarted(true);
             }
         }
     }

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Collider.h"
-#include "TileMapParser.h"
 
 class BoxCollider : public Collider {
 public:
     BoxCollider();
     virtual ~BoxCollider();
+
+    std::unique_ptr<Component> clone() const override;
 
     // Getter and setter methods for width, height, and rotation
     float getWidth() const;
@@ -17,7 +18,6 @@ public:
 
     float getRotation() const;
     void setRotation(float rotation);
-    void setTransformFromColliderData(const ColliderData& colliderData);
 
     bool isTrigger() const;
     void setTrigger(bool isTrigger);

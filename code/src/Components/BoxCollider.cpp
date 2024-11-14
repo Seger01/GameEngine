@@ -8,6 +8,8 @@ BoxCollider::~BoxCollider() {
     // Destructor implementation
 }
 
+std::unique_ptr<Component> BoxCollider::clone() const { return std::make_unique<BoxCollider>(*this); }
+
 float BoxCollider::getWidth() const { return mWidth; }
 
 void BoxCollider::setWidth(float width) { mWidth = width; }
@@ -19,15 +21,6 @@ void BoxCollider::setHeight(float height) { mHeight = height; }
 float BoxCollider::getRotation() const { return mRotation; }
 
 void BoxCollider::setRotation(float rotation) { mRotation = rotation; }
-
-void BoxCollider::setTransformFromColliderData(const ColliderData& colliderData) {
-    Transform transform;
-    transform.position.x = colliderData.x;
-    transform.position.y = colliderData.y;
-    setTransform(transform);
-    setWidth(colliderData.mWidth);
-    setHeight(colliderData.mHeight);
-}
 
 bool BoxCollider::isTrigger() const { return mIsTrigger; }
 

@@ -4,13 +4,36 @@ TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath
 
 void TileMapParser::parse() {
     std::ifstream file(mFilePath);
-    if (file.is_open()) {
-        file >> mJsonData;
-        file.close();
-    } else {
-        throw std::runtime_error("Unable to open file: " + mFilePath);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file: " + mFilePath);
     }
 
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string content = buffer.str();
+
+    if (content.empty()) {
+        throw std::runtime_error("File is empty: " + mFilePath);
+    }
+
+    try {
+        mJsonData = nlohmann::json::parse(content);
+    } catch (const nlohmann::json::parse_error& e) {
+        throw std::runtime_error("File is empty or invalid JSON: " + mFilePath);
+    }
+
+    if (mJsonData.is_null()) {
+        throw std::runtime_error("File is empty: " + mFilePath);
+    }
+
+    if (!mJsonData.contains("tilesets")) {
+        throw std::runtime_error("Missing 'tilesets' in JSON: " + mFilePath);
+    }
+
+    if (!mJsonData.contains("layers")) {
+        throw std::runtime_error("Missing 'layers' in JSON: " + mFilePath);
+    }
+    
     // Extract tilesets
     for (const auto& tileset : mJsonData["tilesets"]) {
         mTilesets.push_back(tileset);
@@ -30,12 +53,50 @@ void TileMapParser::parse() {
                 }
             }
             mTileMapData.mLayers.push_back(grid);
-            mLayerNames.push_back(layer["name"]);
+            mTileMapData.mLayerNames.push_back(layer["name"]);
+        }
+        else if (layer["type"] == "objectgroup") {
+            parseObjectLayer(layer);
         }
     }
 
     // Store tile information in a map
     storeTileInfo();
+}
+
+void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
+    for (const auto& object : layer["objects"]) {
+        if (object.contains("properties")) {
+            for (const auto& property : object["properties"]) {
+                if (property["name"] == "isPlayerSpawn" && property["type"] == "bool" && property["value"] == true) {
+                    SpawnPoint spawnPoint;
+                    spawnPoint.x = object["x"];
+                    spawnPoint.y = object["y"];
+                    spawnPoint.isPlayerSpawn = true;
+                    mTileMapData.mSpawnPoints.push_back(spawnPoint);
+                } else if (property["name"] == "isEnemySpawn" && property["type"] == "bool" && property["value"] == true) {
+                    SpawnPoint spawnPoint;
+                    spawnPoint.x = object["x"];
+                    spawnPoint.y = object["y"];
+                    spawnPoint.isEnemySpawn = true;
+                    if (object.contains("roomID")) {
+                        spawnPoint.roomID = object["roomID"];
+                    }
+                    mTileMapData.mSpawnPoints.push_back(spawnPoint);
+                } else if (property["name"] == "roomID" && property["type"] == "string") {
+                    RoomTrigger roomTrigger;
+                    roomTrigger.x = object["x"];
+                    roomTrigger.y = object["y"];
+                    roomTrigger.mWidth = object["width"];
+                    roomTrigger.mHeight = object["height"];
+                    roomTrigger.roomID = property["value"];
+                    if (object["type"] == "room_entry") {
+                        mTileMapData.mRoomTriggers.push_back(roomTrigger);
+                    }
+                }
+            }
+        }
+    }
 }
 
 std::pair<int, int> TileMapParser::getTilePosition(int gID) const {
@@ -95,8 +156,6 @@ void TileMapParser::storeTileInfo() {
                                         object.at("height").get<float>()
                                     };
                                     tileInfo.mColliders.push_back(collider);
-                                    // Debug print to verify collider parsing
-                                    std::cout << "Added collider to gID " << gID << ": x=" << collider.x << ", y=" << collider.y << ", width=" << collider.mWidth << ", height=" << collider.mHeight << std::endl;
                                 } catch (const nlohmann::json::type_error& e) {
                                     std::cerr << "Error parsing collider for gID " << gID << ": " << e.what() << std::endl;
                                 }
@@ -110,63 +169,6 @@ void TileMapParser::storeTileInfo() {
             }
         }
     }
-}
-
-void TileMapParser::printTileInfo(int gID) const {
-    auto it = mTileMapData.mTileInfoMap.find(gID);
-    if (it != mTileMapData.mTileInfoMap.end()) {
-        const TileInfo& info = it->second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-        for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
-        }
-    } else {
-        std::cerr << "gID " << gID << " not found in tile info map" << std::endl;
-    }
-}
-
-void TileMapParser::printTileInfoMap() const {
-    for (const auto& pair : mTileMapData.mTileInfoMap) {
-        int gID = pair.first;
-        const TileInfo& info = pair.second;
-        std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: (" << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-        for (const auto& collider : info.mColliders) {
-            std::cout << "  Collider - x: " << collider.x << ", y: " << collider.y << ", width: " << collider.mWidth << ", height: " << collider.mHeight << std::endl;
-        }
-    }
-}
-
-void TileMapParser::printLayers() const {
-    for (size_t layerIndex = 0; layerIndex < mTileMapData.mLayers.size(); ++layerIndex) {
-        std::cout << "Layer " << layerIndex << " (" << mLayerNames[layerIndex] << "):\n";
-        for (const auto& row : mTileMapData.mLayers[layerIndex]) {
-            for (int tile : row) {
-                std::cout << tile << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-}
-
-int TileMapParser::getGIDFromCoordinate(int layer, int x, int y) const {
-    if (layer >= mTileMapData.mLayers.size()) {
-        throw std::out_of_range("Layer index out of range");
-    }
-    if (y >= mTileMapData.mLayers[layer].size() || x >= mTileMapData.mLayers[layer][y].size()) {
-        throw std::out_of_range("Grid coordinates out of range");
-    }
-    return mTileMapData.mLayers[layer][y][x];
-}
-
-std::pair<int, int> TileMapParser::getGridTilePosition(int layerIndex, int x, int y) const {
-    if (layerIndex >= mTileMapData.mLayers.size()) {
-        throw std::out_of_range("Layer index out of range");
-    }
-    if (y >= mTileMapData.mLayers[layerIndex].size() || x >= mTileMapData.mLayers[layerIndex][y].size()) {
-        throw std::out_of_range("Grid coordinates out of range");
-    }
-    int gID = mTileMapData.mLayers[layerIndex][y][x];
-    return getTilePosition(gID);
 }
 
 const TileMapData& TileMapParser::getTileMapData() const {

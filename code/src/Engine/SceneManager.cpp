@@ -1,4 +1,5 @@
 #include "Engine/SceneManager.h"
+#include "EngineBravo.h"
 
 SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1) {}
 
@@ -17,23 +18,9 @@ bool SceneManager::sceneChanged() {
     return false;
 }
 
-int SceneManager::addScene(const Scene& scene) {
-    mScenes.push_back(std::make_unique<Scene>(scene));
-    if (mCurrentSceneIndex == -1) {
-        mCurrentSceneIndex = 0;
-    }
-    return mScenes.size() - 1;
-}
-
 void SceneManager::requestSceneChange(const std::string& sceneName) { mNewSceneName = sceneName; }
 
 void SceneManager::requestSceneChange(int sceneID) { mNewSceneID = sceneID; }
-
-void SceneManager::loadScene(int index) {
-    if (index >= 0 && index < mScenes.size()) {
-        mCurrentSceneIndex = index;
-    }
-}
 
 int SceneManager::getNewSceneID() {
     bool idFound = false;
@@ -85,13 +72,59 @@ Scene* SceneManager::createScene(std::string aSceneName, int aSceneID) {
     // return mScenes[mScenes.size() - 1].get();
 }
 
+void SceneManager::removeScene(const std::string& sceneName) {
+    for (int i = 0; i < mScenes.size(); ++i) {
+        if (mScenes[i]->getName() == sceneName) {
+            mScenes.erase(mScenes.begin() + i);
+            break;
+        }
+    }
+}
+
+void SceneManager::loadScene(int index) {
+    Scene* currentScene = getCurrentScene();
+    if (currentScene) {
+        currentScene->releasePersistentGameObjects();
+    }
+
+    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+
+    currentScene->clearPersistentGameObjects();
+
+    if (index >= 0 && index < mScenes.size()) {
+        mCurrentSceneIndex = index;
+    }
+
+    currentScene = getCurrentScene();
+
+    for (auto& object : persistentGameObjects) {
+        currentScene->addPersistentGameObject(object);
+    }
+}
+
 void SceneManager::loadScene(const std::string& sceneName) {
+    Scene* currentScene = getCurrentScene();
+    if (currentScene) {
+        currentScene->releasePersistentGameObjects();
+    }
+
+    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+
+    currentScene->clearPersistentGameObjects();
+
     for (int i = 0; i < mScenes.size(); ++i) {
         if (mScenes[i]->getName() == sceneName) {
             std::cout << "Loading scene: " << sceneName << std::endl;
             mCurrentSceneIndex = i;
+            EngineBravo::getInstance().getAudioManager().wake();
             break;
         }
+    }
+
+    currentScene = getCurrentScene();
+
+    for (auto& object : persistentGameObjects) {
+        currentScene->addPersistentGameObject(object);
     }
 }
 

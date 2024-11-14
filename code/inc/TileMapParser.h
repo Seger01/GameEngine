@@ -24,30 +24,43 @@ struct TileInfo {
     std::vector<ColliderData> mColliders;
 };
 
+struct SpawnPoint {
+    float x;
+    float y;
+    bool isPlayerSpawn = false;
+    bool isEnemySpawn = false;
+    std::string roomID = "";
+};
+
+struct RoomTrigger {
+    float x;
+    float y;
+    float mWidth;
+    float mHeight;
+    std::string roomID;
+};
+
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
+    std::vector<std::string> mLayerNames;
     std::unordered_map<int, TileInfo> mTileInfoMap;
+    std::vector<SpawnPoint> mSpawnPoints;
+    std::vector<RoomTrigger> mRoomTriggers;
 };
 
 class TileMapParser {
 public:
     TileMapParser(const std::string& aFilePath);
-    //virtual ~TileMapParser();
     void parse();
     std::pair<int, int> getTilePosition(int gID) const;
-    int getGIDFromCoordinate(int layer, int x, int y) const;
     void storeTileInfo();
-    void printTileInfo(int gID) const;
-    void printLayers() const;
-    void printTileInfoMap() const;
-    std::pair<int, int> getGridTilePosition(int layerIndex, int x, int y) const;
+    void parseObjectLayer(const nlohmann::json& layer);
     const TileMapData& getTileMapData() const;
 
 private:
     std::string mFilePath;
     nlohmann::json mJsonData;
     std::vector<nlohmann::json> mTilesets;
-    std::vector<std::string> mLayerNames;
     TileMapData mTileMapData;
 };
 

@@ -14,7 +14,7 @@ public:
     RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties);
     RigidBody();
     ~RigidBody();
-
+    std::unique_ptr<Component> clone() const override;
     Transform getTransform() const;
     void setTransform(const Transform& aTransform);
 

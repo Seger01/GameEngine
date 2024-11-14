@@ -8,7 +8,7 @@
 struct SpriteDef {
     std::string texturePath = "";
     Rect sourceRect; // is set to 0,0,0,0 on creation
-    int width = 0, height = 0;
+    float width = 0, height = 0;
 };
 
 #endif

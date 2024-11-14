@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
+
 #include "Scene.h"
 #include <iostream>
 #include <memory>
@@ -11,13 +13,14 @@ public:
 
     bool sceneChanged();
 
-    int addScene(const Scene& scene);
     // int addSceneLevel(const Map& map);
     void requestSceneChange(const std::string& sceneName);
     void requestSceneChange(int sceneID);
 
     Scene* getCurrentScene();
     Scene* createScene(std::string aSceneName, int aSceneID = -1);
+
+    void removeScene(const std::string& sceneName);
 
 private:
     void loadScene(int index);
@@ -37,3 +40,5 @@ private:
     std::string mNewSceneName;
     int mNewSceneID;
 };
+
+#endif // SCENEMANAGER_H
