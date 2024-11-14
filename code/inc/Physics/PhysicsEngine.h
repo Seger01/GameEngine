@@ -2,6 +2,7 @@
 #define PHYSICSENGINE_H
 
 #include "GameObject.h"
+#include "IBehaviourScript.h"
 #include "Physics/BodyProxy.h"
 #include "Physics/World.h"
 #include "RigidBody.h"
@@ -13,6 +14,8 @@ public:
 
     void updateReferences(std::vector<GameObject*>&);
     void update();
+    void updateFlags();
+    void updateForces();
 
     void setSubStep(int);
     float getSubStep() const;
@@ -32,6 +35,11 @@ public:
     void reset();
 
     GameObject* getGameObjectByID(int aID);
+
+    void setCollision(int aBodyID, bool aState);
+
+    GameObject* convertFromBox2D(GameObject* aGameObject);
+    GameObject* convertToBox2D(GameObject* aGameObject);
 
 private:
     World mWorld;
