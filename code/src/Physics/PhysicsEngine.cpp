@@ -121,8 +121,6 @@ float PhysicsEngine::getStep() const { return mStep; }
 void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBodyIDs) {
 
     for (int i = 0; i < aBodyIDs.size(); i++) {
-        std::cout << "bodyID first: " << aBodyIDs.at(0).first << std::endl;
-        std::cout << "bodyID second: " << aBodyIDs.at(0).second << std::endl;
         GameObject* gameObject = getGameObjectByID(aBodyIDs.at(i).first);
         if (gameObject != nullptr) {
 
