@@ -1,7 +1,6 @@
 #include "PlayerPrefab.h"
 
 #include "AudioBehaviourScript.h"
-#include "AudioSource.h"
 #include "GameObject.h"
 
 const int spriteWidth = 16;  // Width of each sprite
@@ -177,13 +176,4 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject) {
     step->setTag("step");
     gameObject->addComponent(step);
     gameObject->addComponent<AudioBehaviourScript>();
-
-    // Add music
-    AudioSource* music = new AudioSource("Audio/music.wav", true);
-    music->setPlayOnWake(true);
-    music->setVolume(10);
-    music->setXDirection(0);
-    gameObject->addComponent(music);
-
-    EngineBravo::getInstance().getAudioManager().addSound(*gameObject);
 }

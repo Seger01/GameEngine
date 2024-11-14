@@ -1,5 +1,6 @@
 #include "InitBehaviourScript.h"
 
+#include "AudioSource.h"
 #include "BoxCollider.h"
 #include "Button.h"
 #include "CanvasBehaviourScript.h"
@@ -132,6 +133,17 @@ void InitBehaviourScript::createLevel1() {
     text->addComponent(textBackground);
 
     scene->addGameObject(text);
+
+    GameObject* musicObject = new GameObject;
+
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(10);
+    music->setXDirection(0);
+    musicObject->addComponent(music);
+
+    scene->addGameObject(musicObject);
 
     sceneManager.requestSceneChange("Level-1");
 
