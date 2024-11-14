@@ -23,14 +23,6 @@ void RoomBehaviourScript::onUpdate() {
     //If so, openDoors() & set mDoorsOpen to true
 }
 
-void RoomBehaviourScript::onTriggerEnter(GameObject* aPlayer) {
-    std::cout << "Player entered room: " << mRoomID << std::endl;
-    mDoorsOpen = false;
-    spawnEnemies();
-    closeDoors();
-    //Remove collider for room trigger
-}
-
 void RoomBehaviourScript::spawnEnemies() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
