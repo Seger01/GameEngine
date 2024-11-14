@@ -180,7 +180,12 @@ void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
 }
 
 void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {
-    std::cout << "TODO destroy player object for client " << clientID.ToString() << std::endl;
+    EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
+
+    SLNet::BitStream bs;
+    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_DESTROY);
+    setBitStreamGUID(bs, clientID);
+    sendToAllClients(bs);
 }
 
 void NetworkServer::sendToAllClients(SLNet::BitStream& aBitStream) {

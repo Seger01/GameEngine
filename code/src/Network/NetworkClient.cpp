@@ -139,6 +139,9 @@ void NetworkClient::handleIncomingPackets() {
             std::cout << "Received player init packet\n";
             handlePlayerInstantiation(packet);
             break;
+        case (SLNet::MessageID)NetworkMessage::ID_PLAYER_DESTROY:
+            std::cout << "Received player destroy packet\n";
+            break;
         default:
             std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
             break;
@@ -234,6 +237,10 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
                                                                                                      // client-side
                                                                                                      // player
+    if (!player) {
+        std::cout << "Player already exists\n";
+        return;
+    }
     std::vector<NetworkObject*> networkObjects = player->getComponents<NetworkObject>();
     if (networkObjects.size() == 0) {
         throw std::runtime_error("Player does not have a NetworkObject component");
@@ -243,6 +250,14 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     } else {
         networkObjects[0]->setOwner(false); // This client does not own the player object
     }
+}
+
+void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
+    SLNet::RakNetGUID playerID;
+    SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+    getBitStreamData(bs, playerID);
+
+    EngineBravo::getInstance().getNetworkManager().destroyPlayer(playerID);
 }
 
 void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {

@@ -99,6 +99,18 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID) {
         throw std::runtime_error("Player prefab not set.");
     }
 
+    std::vector<GameObject*> persistantObjects =
+        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
+    for (auto object : persistantObjects) {
+        if (!object->hasComponent<NetworkObject>()) {
+            continue;
+        }
+        NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
+        if (networkObject->getClientID() == playerID) {
+            return nullptr;
+        }
+    }
+
     GameObject* player = new GameObject(*mDefaultPlayerPrefab); // Clone prefab
     auto networkObjects = player->getComponents<NetworkObject>();
     if (networkObjects.size() == 0) {
@@ -108,6 +120,21 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID) {
     networkObjects[0]->setPlayer(true);       // Mark as player
     EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
     return player;
+}
+
+void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID) {
+    std::vector<GameObject*> persistantObjects =
+        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
+    for (auto object : persistantObjects) {
+        if (!object->hasComponent<NetworkObject>()) {
+            continue;
+        }
+        NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
+        if (networkObject->getClientID() == playerID) {
+            EngineBravo::getInstance().getSceneManager().getCurrentScene()->removePersistentGameObject(object);
+            break;
+        }
+    }
 }
 
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
