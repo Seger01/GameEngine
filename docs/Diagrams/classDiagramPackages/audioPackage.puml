@@ -26,13 +26,13 @@ class AudioSource implements Component_Proxy{
 }
 
 interface IAudioFacade {
-    + addSound(string path) : virtual void
+    + loadSound(string aPath) : virtual void
     + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection) : virtual void
     + playSound(string aPath, int aLooping, unsigned aVolume, int aListenerX, int aSoundX, float aScale) : virtual void
-    + addMusic(string path) : virtual void
+    + loadMusic(string aPath) : virtual void
     + playMusic(int aVolume) : virtual void
     + stopMusic() : virtual void
-    + isPlaying() : virtual bool
+    + isPlaying(string aPath) : virtual bool
 }
 
 class MixerFacade implements IAudioFacade {
@@ -50,7 +50,7 @@ class MixerContainer {
     + ~MixerContainer()
     + addSound(string aPath, Mix_Chunk aSound) : void
     + getSound(string aIndex) : Mix_Chunk*
-    - getSound(string aIndex) : const Mix_Chunk*
+    + getSound(string aIndex) : const Mix_Chunk*
     + addMusic(Mix_Music *aMusic) : void
     + getMusic() : Mix_Music*
     + clear() : void
