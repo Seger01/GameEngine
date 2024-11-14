@@ -5,11 +5,10 @@
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
-#include "RoomBehaviourScript.h"
 #include "FSConverter.h"
 #include "GameObject.h"
-#include "PlayerBehaviourScript.h"
 #include "RigidBody.h"
+#include "RoomBehaviourScript.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "Text.h"
@@ -24,8 +23,9 @@ void InitBehaviourScript::createLevel1() {
     SceneManager& sceneManager = engine.getSceneManager();
 
     Scene* scene = sceneManager.createScene("Level-1");
-    if (scene == nullptr)
+    if (scene == nullptr) {
         exit(1);
+    }
 
     int cameraID = scene->addCamera();
     scene->setActiveCamera(cameraID);
@@ -33,7 +33,6 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
-
 
     GameObject* gameObject2 = new GameObject;
     Transform objectTransform2;
@@ -75,17 +74,16 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID
-                  << " at (" << roomTrigger.x << ", " << roomTrigger.y
+        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID << " at (" << roomTrigger.x << ", " << roomTrigger.y
                   << ") with dimensions (" << roomTrigger.mWidth << ", " << roomTrigger.mHeight << ")" << std::endl;
 
-        // Collect enemy spawns for this room
+        // Collect enemy spawns for thi(5, 0)s room
         std::vector<SpawnPoint> enemySpawns;
         for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
             if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
                 enemySpawns.push_back(spawnPoint);
             }
-        }  
+        }
 
         GameObject* roomObject = new GameObject;
         roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
@@ -104,24 +102,6 @@ void InitBehaviourScript::createLevel1() {
         scene->addGameObject(roomObject);
     }
 
-    GameObject* gameObject = new GameObject;
-
-    Transform objectTransform;
-    // objectTransform.position.x = 80;
-    // objectTransform.position.y = 100;
-    for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
-        if (spawnPoint.isPlayerSpawn) {
-            objectTransform.position.x = spawnPoint.x;
-            objectTransform.position.y = spawnPoint.y;
-            break;
-        }
-    }
-    gameObject->setTransform(objectTransform);
-
-    gameObject->addComponent<PlayerBehaviourScript>();
-
-    scene->addGameObject(gameObject);
-
     GameObject* canvasObject = new GameObject;
 
     canvasObject->addComponent<CanvasBehaviourScript>();
@@ -137,8 +117,8 @@ void InitBehaviourScript::createLevel1() {
 
     int textWidth = 0;
     int textHeight = 0;
-    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight, text->getScale(),
-                                              scene)) {
+    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
+                                              text->getScale())) {
         std::cout << "Failed to get text size for FPS counter.\n";
     }
 
@@ -206,7 +186,7 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setTransform(transform);
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
-                            if(isDoorsLayer) {
+                            if (isDoorsLayer) {
 
                                 boxCollider->setActive(false);
                             }
@@ -270,3 +250,5 @@ void InitBehaviourScript::onStart() {
 void InitBehaviourScript::onUpdate() {}
 
 void InitBehaviourScript::onCollide(GameObject* aGameObject) {}
+
+std::unique_ptr<Component> InitBehaviourScript::clone() const { return std::make_unique<InitBehaviourScript>(*this); }

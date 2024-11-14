@@ -20,8 +20,7 @@ public:
     Renderer& getRenderer();
     Window& getWindow();
 
-    bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale,
-                     Scene* aScene);
+    bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale);
 
 private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);

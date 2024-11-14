@@ -7,6 +7,8 @@
 #include "PlayerStatsBehaviourScript.h"
 #include "Text.h"
 
+#include "Network/NetworkObject.h"
+
 SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{0, 287, 64, 16}, 64, 16};
 
 void CanvasBehaviourScript::onStart() {
@@ -19,11 +21,10 @@ void CanvasBehaviourScript::onStart() {
     buttonObject->setTransform(Transform(Vector2(10, 50)));
     buttonObject->addComponent<HelloWorldButtonBehaviour>();
 
-    Sprite* sprite = engine.getResourceManager().createSprite(buttonSpriteDef);
-    sprite->setLayer(4);
-    buttonObject->addComponent(sprite);
-    buttonObject->setWidth(sprite->getWidth());
-    buttonObject->setHeight(sprite->getHeight());
+    Text* buttonText = new Text("Button1", "werkt niet", Color(15, 110, 47), Vector2(0, 0), Vector2(0.5, 0.5));
+    buttonText->setParent(buttonObject);
+    buttonObject->setWidth(40);
+    buttonObject->setHeight(10);
     buttonObject->setParent(mGameObject);
 
     GameObject* textObject = new Text("Canvas", "undefined", Color(15, 110, 47), Vector2(10, 10), Vector2(1, 1));
@@ -37,6 +38,7 @@ void CanvasBehaviourScript::onStart() {
     scene->addGameObject(playerStats);
     scene->addGameObject(textObject);
     scene->addGameObject(buttonObject);
+    scene->addGameObject(buttonText);
 
     return;
 }

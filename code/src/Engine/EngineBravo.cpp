@@ -4,12 +4,14 @@
 #include <chrono>
 #include <thread>
 
+#include "slikenet/sleep.h"
+
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(5000), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -18,7 +20,7 @@ EngineBravo& EngineBravo::getInstance() {
     return instance;
 }
 
-void EngineBravo::initizalize() {
+void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
     mConfiguration.setConfig("render_colliders", true);
@@ -26,11 +28,14 @@ void EngineBravo::initizalize() {
 
     if (mSceneManager.sceneChanged()) {
     }
-    startBehaviourScripts();
+
+    mNetworkManager.initialize();
 
     Time::initialize();
 
     mUIManager.init();
+
+    mPhysicsManager.startPhysicsEngine(Vector2(0, 0.0f));
     return;
 }
 
@@ -48,9 +53,9 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
+        startBehaviourScripts();
+
         if (mSceneManager.sceneChanged()) {
-            startBehaviourScripts();
-            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0.0f));
         }
         input.update();
 
@@ -68,6 +73,7 @@ void EngineBravo::run() {
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
+        mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
     }
 }
@@ -108,11 +114,16 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
+
+NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
 Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 

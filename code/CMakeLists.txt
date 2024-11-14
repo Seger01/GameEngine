@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add a CMake option to enable or disable debug mode
-option(ENABLE_DEBUG "Enable debug mode" ON)
+option(ENABLE_DEBUG "Enable debug mode" OFF)
 
 # Option to enable or disable building tests
 option(ENABLE_TESTS "Enable building tests" OFF)
@@ -68,6 +68,11 @@ include_directories(${PROJECT_SOURCE_DIR}/inc/Global)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
 include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
 include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Network)
+include_directories(${PROJECT_SOURCE_DIR}/inc/Audio)
+
+include_directories(${PROJECT_SOURCE_DIR}/external/SLikeNet/Source)
+
 
 # Automatically search for source files
 file(GLOB_RECURSE LIBRARY_SOURCES

@@ -20,10 +20,8 @@ GameObject::GameObject(const GameObject& other)
     // Deep copy each component using its copy constructor
     for (const auto& component : other.mComponents) {
         if (component) {
-            std::cout << "Copying component with Tag: " << component->getTag() << std::endl;
             mComponents.push_back(std::move(component->clone())); // Using copy constructor
             mComponents.back()->setGameObjectParent(this);
-            std::cout << "Copied component with Tag: " << mComponents.back()->getTag() << std::endl;
         }
     }
 }
