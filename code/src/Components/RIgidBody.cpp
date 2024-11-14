@@ -13,10 +13,7 @@ RigidBody::~RigidBody() {}
 std::unique_ptr<Component> RigidBody::clone() const { return std::make_unique<RigidBody>(*this); }
 
 Transform RigidBody::getTransform() const { return mTransform; }
-void RigidBody::setTransform(const Transform& aTransform) {
-    std::cout << "transform pos is: " << aTransform.position.x << " " << aTransform.position.y << std::endl;
-    mTransform = aTransform;
-}
+void RigidBody::setTransform(const Transform& aTransform) { mTransform = aTransform; }
 
 bool RigidBody::getHasGravity() const { return mHasGravity; }
 void RigidBody::setHasGravity(bool aHasGravity) { mHasGravity = aHasGravity; }

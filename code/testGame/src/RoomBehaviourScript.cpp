@@ -9,13 +9,12 @@
 #include "EnemyBehaviourScript.h"
 
 void RoomBehaviourScript::onStart() {
-        std::cout << "getting spritesheet for doors" << std::endl;
-        FSConverter fsConverter;
-        std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
-        const Point doorOpenPosition = {320, 80};
-        const Point doorClosedPosition = {256, 80};
-        mClosedDoorSpriteDef = {doorSpriteSheetPath, Rect{doorClosedPosition.x, doorClosedPosition.y, 64, 64}, 64, 64};
-        mOpenDoorSpriteDef = {doorSpriteSheetPath, Rect{doorOpenPosition.x, doorOpenPosition.y, 64, 64}, 64, 64};
+    FSConverter fsConverter;
+    std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
+    const Point doorOpenPosition = {320, 80};
+    const Point doorClosedPosition = {256, 80};
+    mClosedDoorSpriteDef = {doorSpriteSheetPath, Rect{doorClosedPosition.x, doorClosedPosition.y, 64, 64}, 64, 64};
+    mOpenDoorSpriteDef = {doorSpriteSheetPath, Rect{doorOpenPosition.x, doorOpenPosition.y, 64, 64}, 64, 64};
 }
 
 void RoomBehaviourScript::onUpdate() {

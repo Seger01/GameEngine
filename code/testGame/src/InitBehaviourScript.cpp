@@ -64,7 +64,6 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(gameObject2);
 
     FSConverter fsConverter;
-    std::cout << "getting map path" << std::endl;
     std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
     TileMapParser tileMapParser(path);
@@ -75,9 +74,6 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID << " at (" << roomTrigger.x << ", " << roomTrigger.y
-                  << ") with dimensions (" << roomTrigger.mWidth << ", " << roomTrigger.mHeight << ")" << std::endl;
-
         // Collect enemy spawns for thi(5, 0)s room
         std::vector<SpawnPoint> enemySpawns;
         for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
@@ -122,8 +118,6 @@ void InitBehaviourScript::createLevel1() {
                                               text->getScale())) {
         std::cout << "Failed to get text size for FPS counter.\n";
     }
-
-    std::cout << "Text width: " << textWidth << ", Text height: " << textHeight << std::endl;
 
     Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
     textBackground->setLayer(3);
