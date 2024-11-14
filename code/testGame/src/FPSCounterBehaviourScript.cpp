@@ -26,7 +26,17 @@ void FPSCounterBehaviourScript::onUpdate() {
 
         Sprite* sprite = text->getComponents<Sprite>()[0];
 
-        sprite->setWidth(textWidth);
-        sprite->setHeight(textHeight);
+        sprite->setWidth(textWidth + 50);
+        sprite->setHeight(textHeight + 10);
+
+        Transform spritePos = sprite->getRelativePosition();
+        spritePos.position.x = -25;
+        spritePos.position.y = -5;
+
+        sprite->setRelativePosition(spritePos);
     }
+}
+
+void FPSCounterBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "FPSCounterBehaviourScript collided with " << aGameObject->getName() << std::endl;
 }

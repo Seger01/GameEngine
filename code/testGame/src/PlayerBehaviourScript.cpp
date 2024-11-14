@@ -144,9 +144,30 @@ void PlayerBehaviourScript::onStart() {
     mGameObject->addComponent(playerIdleSideAnimation);
     mGameObject->addComponent(playerIdleBackAnimation);
 
+    RigidBody* rigidBody = new RigidBody();
+
+    rigidBody->setCanRotate(false);
+    rigidBody->setHasGravity(false);
+    rigidBody->setIsMoveableByForce(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.6f);
+    rigidBody->setRestitution(0.0f);
+    rigidBody->setGravityScale(0.0f);
+    rigidBody->setMass(5.0f);
+    rigidBody->setLinearDamping(0.5f);
+    rigidBody->setAngularDamping(0.5f);
+
+    mGameObject->addComponent(rigidBody);
+
+    BoxCollider* boxCollider = new BoxCollider();
+    boxCollider->setWidth(playerIdleFrontAnimation->getFrame(0)->getWidth());
+    boxCollider->setHeight(playerIdleFrontAnimation->getFrame(0)->getHeight());
+
+    mGameObject->addComponent(boxCollider);
+
     for (auto animation : mGameObject->getComponents<Animation>()) {
         animation->setActive(false);
-        animation->setLayer(3);
+        animation->setLayer(4);
     }
 
     playerIdleFrontAnimation->setActive(true);
@@ -300,4 +321,8 @@ void PlayerBehaviourScript::onUpdate() {
             emitter->getRelativeTransform().rotation = 0.0f;
         }
     }
+}
+
+void PlayerBehaviourScript::onCollide(GameObject* aGameObject) {
+    std::cout << "Player collided with " << aGameObject->getName() << std::endl;
 }

@@ -21,7 +21,7 @@ EngineBravo& EngineBravo::getInstance() {
 void EngineBravo::initizalize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-    mConfiguration.setConfig("render_colliders", false);
+    mConfiguration.setConfig("render_colliders", true);
     mConfiguration.setConfig("render_fps", true);
 
     if (mSceneManager.sceneChanged()) {
@@ -48,16 +48,21 @@ void EngineBravo::run() {
 
         mEventManager.handleEvents();
 
+        if (mSceneManager.sceneChanged()) {
+            startBehaviourScripts();
+            mPhysicsManager.startPhysicsEngine(mSceneManager.getCurrentScene()->getGameObjects(), Vector2(0, 0.0f));
+        }
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
 
         mSceneManager.sceneChanged();
 
-        // std::cout << "Start frame" << std::endl;
         startBehaviourScripts();
 
         runBehaviourScripts();
+
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         mParticleSystem.update(mSceneManager.getCurrentScene());
 
@@ -140,12 +145,10 @@ void EngineBravo::runBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
-                if (!behaviourScript->hasScriptStarted()) {
-                    behaviourScript->onStart();
-                    behaviourScript->setScriptStarted(true);
-                }
                 behaviourScript->onUpdate();
             }
         }
     }
 }
+
+PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }

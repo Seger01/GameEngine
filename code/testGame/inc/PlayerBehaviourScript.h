@@ -3,11 +3,13 @@
 
 #include "Animation.h"
 #include "Components/IBehaviourScript.h"
+#include "GameObject.h"
 
 class PlayerBehaviourScript : public IBehaviourScript {
 public:
     void onStart() override;
     void onUpdate() override;
+    void onCollide(GameObject* aGameObject) override;
 
     std::unique_ptr<Component> clone() const override { return std::make_unique<PlayerBehaviourScript>(*this); }
 
