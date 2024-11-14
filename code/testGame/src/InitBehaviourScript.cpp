@@ -27,11 +27,6 @@ void InitBehaviourScript::createLevel1() {
         exit(1);
     }
 
-    std::vector<GameObject*> networkGameObjects = engine.getNetworkManager().getGameObjects();
-    for (auto gameObject : networkGameObjects) {
-        scene->addGameObject(gameObject);
-    }
-
     int cameraID = scene->addCamera();
     scene->setActiveCamera(cameraID);
 
