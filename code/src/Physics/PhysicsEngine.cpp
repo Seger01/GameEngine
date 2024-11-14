@@ -13,8 +13,54 @@ void PhysicsEngine::update() {
 
             RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
 
-            BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
-            mWorld.updateBody(rigidBody->getBodyId(), bodyProxy);
+            Transform transform = mGameObjects.at(i)->getTransform();
+
+            transform.position =
+                transform.position + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getTransform().position;
+
+            transform.position.x =
+                transform.position.x + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth();
+            transform.position.y =
+                transform.position.y + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight();
+
+            Vector2 newPos = Vector2(-transform.position.x, -transform.position.y);
+
+            // Vector2 readPos = mWorld.getPosition(rigidBody->getBodyId());
+            // std::cout << "-------------------" << std::endl;
+            // std::cout << "ReadPos: " << readPos.x << " " << readPos.y << std::endl;
+            // std::cout << "NewPos: " << newPos.x << " " << newPos.y << std::endl;
+            // std::cout << "Collider Size: " << mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth() << " "
+            //           << mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight() << std::endl;
+            // std::cout << "____________________" << std::endl;
+            mWorld.setPosition(rigidBody->getBodyId(), newPos);
+            // BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
+            // mWorld.updateBody(rigidBody->getBodyId(), bodyProxy);
+
+            // for (BoxCollider* boxCollider : bodyProxy.getBoxColliders()) {
+            //     boxCollider->setWidth(boxCollider->getWidth() * 2);
+            //     boxCollider->setHeight(boxCollider->getHeight() * 2);
+            // }
+
+            // if (mGameObjects.at(i)->hasComponent<BoxCollider>()) {
+            //     BoxCollider* boxCollider = mGameObjects.at(i)->getComponents<BoxCollider>()[0];
+            //
+            //     boxCollider->setWidth(boxCollider->getWidth() * 2);
+            //     boxCollider->setHeight(boxCollider->getHeight() * 2);
+            //
+            //     // Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+            //     // Transform transform = mGameObjects.at(i)->getTransform();
+            //     //
+            //     // transform.position = position;
+            //     //
+            //     // transform = Transform(Vector2(-position.x, -position.y));
+            //     //
+            //     // transform.position.x = transform.position.x + (boxCollider->getWidth() / 2);
+            //     // transform.position.y = transform.position.y + (boxCollider->getHeight() / 2);
+            //     //
+            //     // transform.position = transform.position - boxCollider->getTransform().position;
+            //
+            //     // mGameObjects.at(i)->setTransform(transform);
+            // }
         }
     }
 
