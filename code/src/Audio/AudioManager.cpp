@@ -1,20 +1,41 @@
 #include "AudioManager.h"
 #include "AudioSource.h"
+#include "EngineBravo.h"
 #include "IAudioFacade.h"
 #include "MixerFacade.h"
+#include "Scene.h"
 #include <stdexcept>
 
+/**
+ * @brief Construct a new AudioManager::AudioManager object. Currently creates a MixerFacade object.
+ */
 AudioManager::AudioManager() { mFacade = std::make_unique<MixerFacade>(); }
 
+/**
+ * @brief Play the audio source.
+ *
+ * @param aSource The audio source to play. Uses the file name, looping, volume, and x direction.
+ */
 void AudioManager::play(const AudioSource& aSource) {
     if (aSource.isMusic()) {
+        // If the music is not loaded, load it
+        if (!getFacade().musicIsLoaded(aSource.getFileName())) {
+            getFacade().loadMusic(aSource.getFileName());
+        }
         getFacade().playMusic(aSource.getVolume());
     } else {
+        // If the sound is not loaded, load it
+        if (!getFacade().audioIsLoaded(aSource.getFileName())) {
+            getFacade().loadMusic(aSource.getFileName());
+        }
         getFacade().playSound(aSource.getFileName(), aSource.getLooping(), aSource.getVolume(),
                               aSource.getXDirection());
     }
 }
 
+/**
+ * @brief Stop the audio source. If it is not a music source, throw an error.
+ */
 void AudioManager::stop(const AudioSource& aSource) {
     if (aSource.isMusic()) {
         getFacade().stopMusic();
@@ -23,9 +44,18 @@ void AudioManager::stop(const AudioSource& aSource) {
     }
 }
 
+/**
+ * @brief Plays all the audio sources in the current scene, where play on wake is true
+ */
 void AudioManager::wake() {
-    for (auto& gameObject : mGameObjects) {
-        for (AudioSource* component : gameObject.get().getComponents<AudioSource>()) {
+    // Get the current scene
+    EngineBravo& engine = EngineBravo::getInstance();
+    Scene* currScene = engine.getSceneManager().getCurrentScene();
+
+    // Iterate through all objects in the scene
+    for (auto& gameObject : currScene->getGameObjects()) {
+        // Iterate through all audio sources in the object
+        for (AudioSource* component : gameObject->getComponents<AudioSource>()) {
             if (component->getPlayOnWake()) {
                 play(*component);
             }
@@ -35,25 +65,15 @@ void AudioManager::wake() {
 
 IAudioFacade& AudioManager::getFacade() { return *mFacade.get(); }
 
-void AudioManager::addSound(const GameObject& aGameObject) {
-    mGameObjects.push_back(aGameObject);
-    for (AudioSource* audioSource : aGameObject.getComponents<AudioSource>()) {
-        if (audioSource->isMusic()) {
-            mFacade->addMusic(audioSource->getFileName());
-            continue;
-        }
-        mFacade->addSound(audioSource->getFileName());
-    }
-
-    mFacade->addSound(aGameObject.getComponents<AudioSource>().front()->getFileName());
-}
-
-void AudioManager::removeSound(const GameObject& aGameObject) {
-    auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
-                           [&aGameObject](const GameObject& obj) { return &obj == &aGameObject; });
-    if (it != mGameObjects.end()) {
-        mGameObjects.erase(it);
+/**
+ * @brief Load the sound from the audio source into memory
+ */
+void AudioManager::loadSound(const AudioSource& aAudio) {
+    if (aAudio.isMusic()) {
+        getFacade().loadMusic(aAudio.getFileName());
     } else {
-        throw std::logic_error("GameObject not found in AudioManager.");
+        getFacade().loadSound(aAudio.getFileName());
     }
 }
+
+void AudioManager::clearSounds() { getFacade().unloadAll(); }

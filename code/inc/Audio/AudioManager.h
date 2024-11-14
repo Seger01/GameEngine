@@ -10,16 +10,19 @@
 class AudioManager {
 public:
     AudioManager();
-    void play(const AudioSource&);
-    void stop(const AudioSource&);
+
+public:
+    void play(const AudioSource& aAudio);
+    void stop(const AudioSource& aAudio);
     void wake();
+
+public:
     IAudioFacade& getFacade();
 
 public:
-    void addObject(const GameObject& aGameObjecte);
-    void removeObject(const GameObject& aGameObject);
+    void loadSound(const AudioSource& aAudio);
+    void clearSounds();
 
 private:
-    std::vector<std::reference_wrapper<const GameObject>> mGameObjects;
     std::unique_ptr<IAudioFacade> mFacade;
 };
