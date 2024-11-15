@@ -121,15 +121,29 @@ float PhysicsEngine::getStep() const { return mStep; }
 void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBodyIDs) {
 
     for (int i = 0; i < aBodyIDs.size(); i++) {
-        GameObject* gameObject = getGameObjectByID(aBodyIDs.at(i).first);
-        if (gameObject != nullptr) {
+        GameObject* gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
+        GameObject* gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
 
-            if (gameObject->hasComponent<IBehaviourScript>()) {
-                std::vector<IBehaviourScript*> behaviourScript = gameObject->getComponents<IBehaviourScript>();
-                GameObject* otherGameObject = getGameObjectByID(aBodyIDs.at(i).second);
-                if (otherGameObject != nullptr) {
+        if (gameObjectA != nullptr) {
 
-                    behaviourScript.at(0)->onCollide(otherGameObject);
+            if (gameObjectA->hasComponent<IBehaviourScript>()) {
+                std::vector<IBehaviourScript*> behaviourScript = gameObjectA->getComponents<IBehaviourScript>();
+
+                for (int i = 0; i < behaviourScript.size(); i++) {
+                    behaviourScript.at(i)->onCollide(gameObjectB);
+                }
+            }
+        }
+
+        if (gameObjectB != nullptr) {
+
+            if (gameObjectB->hasComponent<IBehaviourScript>()) {
+                if (gameObjectB->hasComponent<IBehaviourScript>()) {
+                    std::vector<IBehaviourScript*> behaviourScript = gameObjectB->getComponents<IBehaviourScript>();
+
+                    for (int i = 0; i < behaviourScript.size(); i++) {
+                        behaviourScript.at(i)->onCollide(gameObjectA);
+                    }
                 }
             }
         }
@@ -197,10 +211,11 @@ void PhysicsEngine::setCollision(int aBodyID, bool aState) {
 void PhysicsEngine::updateFlags() {
     for (int i = 0; i < mGameObjects.size(); i++) {
         if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
+            int bodyID = mGameObjects.at(i)->getComponents<RigidBody>()[0]->getBodyId();
             BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
-            mWorld.updateBodyFlags(bodyProxy);
+            mWorld.updateBodyFlags(bodyProxy, bodyID);
 
-            mWorld.setBodyActivity(bodyProxy.getBodyID(), mGameObjects.at(i)->isActive());
+            mWorld.setBodyActivity(bodyID, mGameObjects.at(i)->getComponents<RigidBody>().at(0)->isActive());
         }
     }
 }

@@ -26,7 +26,6 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         mGravityScale = rigidBody->getGravityScale();
         mLinearDamping = rigidBody->getLinearDamping();
         mAngularDamping = rigidBody->getAngularDamping();
-        mBodyID = rigidBody->getBodyId();
 
         processBodyType();
 
@@ -70,5 +69,3 @@ Vector2 BodyProxy::getPosition() const { return mPosition; }
 Vector2 BodyProxy::getSize() const { return mSize; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
-
-int BodyProxy::getBodyID() const { return mBodyID; }

@@ -1,12 +1,13 @@
 #include "RoomBehaviourScript.h"
-#include "SceneManager.h"
-#include "EngineBravo.h"
-#include "GameObject.h"
-#include "SpriteDef.h"
-#include "Sprite.h"
 #include "BoxCollider.h"
-#include "FSConverter.h"
 #include "EnemyBehaviourScript.h"
+#include "EngineBravo.h"
+#include "FSConverter.h"
+#include "GameObject.h"
+#include "RigidBody.h"
+#include "SceneManager.h"
+#include "Sprite.h"
+#include "SpriteDef.h"
 
 void RoomBehaviourScript::onStart() {
     FSConverter fsConverter;
@@ -18,8 +19,8 @@ void RoomBehaviourScript::onStart() {
 }
 
 void RoomBehaviourScript::onUpdate() {
-    //Check if enemy count is zero after entering
-    //If so, openDoors() & set mDoorsOpen to true
+    // Check if enemy count is zero after entering
+    // If so, openDoors() & set mDoorsOpen to true
 }
 
 void RoomBehaviourScript::spawnEnemies() {
@@ -38,7 +39,6 @@ void RoomBehaviourScript::spawnEnemies() {
         }
     }
 }
-
 
 void RoomBehaviourScript::openDoors() {
     updateDoors(mOpenDoorSpriteDef);
@@ -65,23 +65,19 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
         std::vector<Sprite*> sprites = doorPart->getComponents<Sprite>();
         for (Sprite* sprite : sprites) {
             if (sprite) {
-                int index = i % 12; // Reset index after every 12 door parts
+                int index = i % 12;  // Reset index after every 12 door parts
                 int col = index % 4; // 4 tiles per row
                 int row = index / 4; // 4 tiles per column
 
-                Rect sourceRect = {
-                    spriteDef.sourceRect.x + col * spriteWidth,
-                    spriteDef.sourceRect.y + row * spriteHeight,
-                    spriteWidth,
-                    spriteHeight
-                };
+                Rect sourceRect = {spriteDef.sourceRect.x + col * spriteWidth,
+                                   spriteDef.sourceRect.y + row * spriteHeight, spriteWidth, spriteHeight};
 
                 sprite->setSource(sourceRect);
             }
         }
-        std::vector<BoxCollider*> colliders = doorPart->getComponents<BoxCollider>();
-        if (!colliders.empty()) {
-            colliders.at(0)->setActive(!mDoorsOpen);
+        std::vector<RigidBody*> bodies = doorPart->getComponents<RigidBody>();
+        if (!bodies.empty()) {
+            bodies.at(0)->setActive(!mDoorsOpen);
         }
     }
 }
@@ -91,8 +87,7 @@ void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
     if (mDoorsOpen) {
         spawnEnemies();
         closeDoors();
-    }
-    else {
+    } else {
         openDoors();
     }
 }

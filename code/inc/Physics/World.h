@@ -17,7 +17,7 @@ public:
 
     int createWorld(Vector2 aGravity);
     int createBody(BodyProxy& aBodyProxy);
-    void createShape(BodyProxy& aBodyProxy);
+    void createShape(BodyProxy& aBodyProxy, int aBodyID);
     void updateBody(int aBodyID, BodyProxy& aBodyProxy);
     void applyLinearForce(int aBodyID, std::vector<Vector2> aForce);
     void applyTorque(int aBodyID, std::vector<float> aTorque);
@@ -28,8 +28,7 @@ public:
     void setGravity(Vector2 aGravity);
     Vector2 getGravity();
 
-    void setActiveBody(int aBodyID, bool aState);
-    void updateBodyFlags(BodyProxy& aBodyProxy);
+    void updateBodyFlags(BodyProxy& aBodyProxy, int aBodyID);
 
     std::vector<std::pair<int, int>> getContactEvents();
     std::vector<std::pair<int, int>> getSensorEvents();
