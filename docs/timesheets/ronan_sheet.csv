@@ -61,4 +61,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-12, 12:00, 5.25, updated tilemapparser to parse triggerareas and worked on implementing room behaviour
 2024-11-13, 9:15, 7.5, worked on room behaviour and implementing physics for room and also updated fsconverter
 2024-11-14, 9:15, 5.5, worked on room behaviour and fixing issues for physics and prepared for presentation
-2024-11-15, 9:00, 2, group lesson with bob
+2024-11-15, 9:00, 2.25, group lesson with bob and added colliders to doors
