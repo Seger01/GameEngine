@@ -129,16 +129,13 @@ std::vector<std::pair<int, int>> World::getContactEvents() {
 }
 
 void World::setBodyActivity(int aBodyID, bool aState) {
-    b2BodyId test = {aBodyID, 0, 1};
-    if (aState != b2Body_IsEnabled(test)) {
+    b2BodyId box2DID = {aBodyID, 0, 1};
+    if (aState != b2Body_IsEnabled(box2DID)) {
+
         if (aState) {
-            std::cout << "enabling body: " << test.index1 << std::endl;
-
-            b2Body_Enable(test);
+            b2Body_Enable(box2DID);
         } else {
-            std::cout << "disabling body: " << test.index1 << std::endl;
-
-            b2Body_Disable(test);
+            b2Body_Disable(box2DID);
         }
     }
 }
