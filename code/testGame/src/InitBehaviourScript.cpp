@@ -194,7 +194,6 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
                             if (isDoorsLayer) {
-
                                 boxCollider->setActive(false);
                             }
                             gameObject->addComponent(boxCollider);
@@ -203,6 +202,11 @@ void InitBehaviourScript::createLevel1() {
                         if (!tileInfo.mColliders.empty()) {
                             RigidBody* rigidBody = new RigidBody();
                             rigidBody->setTransform(objectTransform);
+                            if (isDoorsLayer) {
+                                if (rigidBody != nullptr)   {
+                                    rigidBody->setActive(false);
+                                }
+                            }
                             gameObject->addComponent(rigidBody);
                             gameObject->setName("Tile");
                         }
