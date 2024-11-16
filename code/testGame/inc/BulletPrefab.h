@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "Rect.h"
 #include "FSConverter.h"
+#include "BulletBehaviourScript.h"
 #include <iostream>
 #include <vector>
 

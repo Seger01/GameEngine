@@ -6,6 +6,8 @@
 
 class BulletBehaviourScript : public IBehaviourScript {
 public:
+    BulletBehaviourScript() {}
+    ~BulletBehaviourScript() {}
     void onStart() override;
     void onUpdate() override;
     void onCollide(GameObject* aGameObject) override;

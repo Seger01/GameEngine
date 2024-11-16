@@ -13,6 +13,9 @@
 #include "Sprite.h"
 #include "SpriteDef.h"
 #include "SpriteDefUtil.h"
+#include "BulletPrefab.h"
+#include "BulletBehaviourScript.h"
+
 
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
@@ -156,6 +159,33 @@ void PlayerBehaviourScript::hanldeCameraMovement() {
     currentCam.setTransform(playerTransform);
 }
 
+void PlayerBehaviourScript::fireBullet() {
+    EngineBravo& engine = EngineBravo::getInstance();
+    SceneManager& sceneManager = engine.getSceneManager();
+    Input& input = Input::getInstance();
+    
+    // Get the mouse position
+    Point mousePosition = input.MousePosition();
+    Vector2 mousePositionVector = Vector2(mousePosition.x, mousePosition.y);
+
+    // Calculate the direction from the player to the mouse position
+    Vector2 playerPosition = mGameObject->getTransform().position;
+    Vector2 direction = mousePositionVector - playerPosition;
+
+    // Normalize the direction vector
+    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (length != 0) {
+        direction.x /= length;
+        direction.y /= length;
+    }
+
+    GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*this->mGameObject);
+
+    RigidBody* bulletRigidBody = bulletObject->getComponents<RigidBody>()[0];
+    bulletRigidBody->addForce(direction * 500.0f); // Adjust the speed as needed
+
+    sceneManager.getCurrentScene()->addGameObject(bulletObject);
+}
 void PlayerBehaviourScript::onUpdate() {
     Input& input = Input::getInstance();
 
@@ -172,6 +202,10 @@ void PlayerBehaviourScript::onUpdate() {
     if (input.GetKeyDown(Key::Key_F)) {
         Configuration& config = EngineBravo::getInstance().getConfiguration();
         config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
+    }
+
+    if (input.GetMouseButtonDown(MouseButton::LEFT)) {
+        fireBullet();
     }
 
     if (mGameObject->hasComponent<ParticleEmitter>()) {

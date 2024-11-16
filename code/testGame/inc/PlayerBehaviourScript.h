@@ -24,6 +24,7 @@ private:
     void handleAnimations();
     void handleMovement();
     void hanldeCameraMovement();
+    void fireBullet();
 };
 
 #endif
