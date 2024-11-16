@@ -7,7 +7,9 @@ void BulletBehaviourScript::onUpdate() {
 }
 
 void BulletBehaviourScript::onCollide(GameObject* aGameObject) {
-    std::cout << "BulletBehaviourScript collided with " << aGameObject->getName() << std::endl;
-    //aGameObject->takeDamage()
-    //Remove bullet
+    EngineBravo& engine = EngineBravo::getInstance();
+    SceneManager& sceneManager = engine.getSceneManager();
+    if (aGameObject->getName() != "Player") {
+        sceneManager.getCurrentScene()->removeGameObject(mGameObject);
+    }
 }

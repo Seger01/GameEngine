@@ -3,6 +3,8 @@
 #include "IBehaviourScript.h"
 #include "GameObject.h"
 #include <iostream>
+#include "EngineBravo.h"
+#include "SceneManager.h"
 
 class BulletBehaviourScript : public IBehaviourScript {
 public:

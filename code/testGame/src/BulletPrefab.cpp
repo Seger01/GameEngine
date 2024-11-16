@@ -40,10 +40,10 @@ void BulletPrefabFactory::addSprite(GameObject* gameObject) {
 void BulletPrefabFactory::addRigidBody(GameObject* gameObject) {
     RigidBody* rigidBody = new RigidBody();
 
-    rigidBody->setCanRotate(false);
+    rigidBody->setCanRotate(true);
     rigidBody->setHasGravity(false);
     rigidBody->setIsMoveableByForce(true);
-    rigidBody->setDensity(0.0f);
+    rigidBody->setDensity(1.0f);
     rigidBody->setFriction(0.0f);
     rigidBody->setRestitution(0.0f);
     rigidBody->setGravityScale(0.0f);
