@@ -74,9 +74,9 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        // Collect enemy spawns for thi(5, 0)s room
+        // Collect enemy spawns for this room
         std::vector<SpawnPoint> enemySpawns;
-        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
+        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {            
             if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
                 enemySpawns.push_back(spawnPoint);
             }

@@ -72,15 +72,21 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
                     SpawnPoint spawnPoint;
                     spawnPoint.x = object["x"];
                     spawnPoint.y = object["y"];
+                    spawnPoint.width = object["width"];
+                    spawnPoint.height = object["height"];
                     spawnPoint.isPlayerSpawn = true;
                     mTileMapData.mSpawnPoints.push_back(spawnPoint);
                 } else if (property["name"] == "isEnemySpawn" && property["type"] == "bool" && property["value"] == true) {
                     SpawnPoint spawnPoint;
                     spawnPoint.x = object["x"];
                     spawnPoint.y = object["y"];
+                    spawnPoint.width = object["width"];
+                    spawnPoint.height = object["height"];
                     spawnPoint.isEnemySpawn = true;
-                    if (object.contains("roomID")) {
-                        spawnPoint.roomID = object["roomID"];
+                    for (const auto& prop : object["properties"]) {
+                        if (prop["name"] == "roomID" && prop["type"] == "string") {
+                            spawnPoint.roomID = prop["value"];
+                        }
                     }
                     mTileMapData.mSpawnPoints.push_back(spawnPoint);
                 } else if (property["name"] == "roomID" && property["type"] == "string") {

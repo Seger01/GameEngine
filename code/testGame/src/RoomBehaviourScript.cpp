@@ -8,14 +8,18 @@
 #include "SceneManager.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
+#include "BulletPrefab.h"
+#include <random>
 
 void RoomBehaviourScript::onStart() {
     FSConverter fsConverter;
     std::string doorSpriteSheetPath = fsConverter.getResourcePath("Dungeontileset/atlas_walls_high-16x32.png");
+    std::string enemySpritePath = fsConverter.getResourcePath("Dungeontileset/0x72_DungeonTilesetII_v1.7.png");
     const Point doorOpenPosition = {320, 80};
     const Point doorClosedPosition = {256, 80};
     mClosedDoorSpriteDef = {doorSpriteSheetPath, Rect{doorClosedPosition.x, doorClosedPosition.y, 64, 64}, 64, 64};
     mOpenDoorSpriteDef = {doorSpriteSheetPath, Rect{doorOpenPosition.x, doorOpenPosition.y, 64, 64}, 64, 64};
+    mEnemyFrameDef = {enemySpritePath, Rect{182, 389, 20, 27}, 20, 27};
 }
 
 void RoomBehaviourScript::onUpdate() {
@@ -26,16 +30,46 @@ void RoomBehaviourScript::onUpdate() {
 void RoomBehaviourScript::spawnEnemies() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
     for (const auto& spawnPoint : mEnemySpawns) {
         if (spawnPoint.roomID == mRoomID && mEnemySpawns.size() > 0) {
+            std::uniform_real_distribution<> disX(spawnPoint.x, spawnPoint.x + spawnPoint.width);
+            std::uniform_real_distribution<> disY(spawnPoint.y, spawnPoint.y + spawnPoint.height);
+
+            float randomX = disX(gen);
+            float randomY = disY(gen);
+
             GameObject* enemy = new GameObject;
             Transform transform;
-            transform.position.x = spawnPoint.x;
-            transform.position.y = spawnPoint.y;
+            transform.position.x = randomX;
+            transform.position.y = randomY;
+            Sprite* enemySprite = engine.getResourceManager().createSprite(mEnemyFrameDef);
+            enemySprite->setLayer(3);
+            enemy->addComponent(enemySprite);
+
+            enemy->addComponent<BoxCollider>();
+            enemy->getComponents<BoxCollider>().at(0)->setWidth(enemySprite->getWidth());
+            enemy->getComponents<BoxCollider>().at(0)->setHeight(enemySprite->getHeight());
+
+            enemy->addComponent<RigidBody>();
+            RigidBody* rigidBody = enemy->getComponents<RigidBody>().at(0);
+            rigidBody->setHasGravity(true);
+            rigidBody->setDensity(1.0f);
+            rigidBody->setFriction(0.3f);
+            rigidBody->setRestitution(0.2f);
+            rigidBody->setMass(1.0f);
+            rigidBody->setGravityScale(10.0f);
+            rigidBody->setCanRotate(false);
             enemy->setTransform(transform);
             enemy->addComponent(new EnemyBehaviourScript());
             std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
             sceneManager.getCurrentScene()->addGameObject(enemy);
+
+
+            GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*enemy);
+            sceneManager.getCurrentScene()->addGameObject(bulletObject);
         }
     }
 }
