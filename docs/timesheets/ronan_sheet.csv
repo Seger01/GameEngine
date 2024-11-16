@@ -62,3 +62,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-13, 9:15, 7.5, worked on room behaviour and implementing physics for room and also updated fsconverter
 2024-11-14, 9:15, 5.5, worked on room behaviour and fixing issues for physics and prepared for presentation
 2024-11-15, 9:00, 2.25, group lesson with bob and added colliders to doors
+2024-11-16, 14:00, 3.25, worked on enemy spawning and spawning bullets
+2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
