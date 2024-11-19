@@ -1,5 +1,6 @@
 #include "AudioManager.h"
 #include "EngineBravo.h"
+#include "MixerContainer.h"
 #include <gtest/gtest.h>
 
 class AudioTest : public ::testing::Test {
@@ -170,4 +171,9 @@ TEST_F(AudioTest, playOnWake) {
 
     // Verify that the sound is playing
     ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+}
+
+TEST_F(AudioTest, containerLoadNonExistent) {
+    MixerContainer container;
+    ASSERT_EQ(container.getSound("nonexistent"), nullptr);
 }
