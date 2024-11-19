@@ -31,7 +31,7 @@ void MixerFacade::loadSound(const std::string& aPath) {
     if (sound == NULL) {
         throw std::runtime_error("Failed to load sound. SDL_Mixer error: " + std::string(Mix_GetError()));
     }
-    mMixerContainer.addSound(aPath, *sound);
+    mMixerContainer.addSound(aPath, sound);
 }
 
 /**
