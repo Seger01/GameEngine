@@ -20,6 +20,7 @@ private:
     void stopMusic() override;
 
     bool isPlaying(const std::string& aPath) const override;
+    bool isMusicPlaying() const override;
 
     int distanceToAngle(int aDirection) const;
     int findAvailableChannel();
