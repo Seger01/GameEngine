@@ -1,5 +1,6 @@
 #include "AudioManager.h"
 #include "EngineBravo.h"
+#include "FSConverter.h"
 #include "MixerContainer.h"
 #include "MixerFacade.h"
 #include <gtest/gtest.h>
@@ -182,4 +183,22 @@ TEST_F(AudioTest, containerLoadNonExistent) {
 TEST_F(AudioTest, MixerFacadeLoadInvalid) {
     MixerFacade mixer;
     ASSERT_THROW(mixer.loadSound("nonexistent"), std::runtime_error);
+}
+
+TEST_F(AudioTest, MixerFacadeLoadInvalidMusic) {
+    MixerFacade mixer;
+    ASSERT_THROW(mixer.loadMusic("nonexistent"), std::runtime_error);
+}
+
+TEST_F(AudioTest, FloodMixerChannels) {
+    std::string fullPath = FSConverter().getResourcePath("Audio/gun1.wav");
+    // Test if, when playing a sound on each channel, the next sound is played on the last played channel
+    MixerFacade mixer;
+    for (int i = 0; i < MIX_CHANNELS; ++i) {
+        mixer.loadSound(fullPath);
+        mixer.playSound(fullPath, false, 100, 0);
+    }
+    mixer.loadSound(fullPath);
+    ASSERT_EQ(mixer.findAvailableChannel(), 0);
+    ASSERT_EQ(mixer.findAvailableChannel(), 1); // The channel should increment, because channel 0 is assumed used.
 }

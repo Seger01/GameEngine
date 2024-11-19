@@ -26,7 +26,7 @@ public:
     int findAvailableChannel();
 
 private:
-    const unsigned mChannelCount{MIX_CHANNELS};
+    const unsigned mChannelCount;
     unsigned mLastUsedChannel; // to help with finding the next available channel
     MixerContainer mMixerContainer;
 };
