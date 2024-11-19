@@ -1,4 +1,5 @@
 #include "MixerFacade.h"
+#include "FSConverter.h"
 #include <SDL2/SDL.h>
 #include <SDL_mixer.h>
 #include <iostream>
@@ -46,7 +47,10 @@ void MixerFacade::loadMusic(const std::string& aPath) {
 
 void MixerFacade::unloadAll() { mMixerContainer.clear(); }
 
-bool MixerFacade::audioIsLoaded(const std::string& aPath) const { return mMixerContainer.getSound(aPath) != nullptr; }
+bool MixerFacade::audioIsLoaded(const std::string& aPath) const {
+    std::string wholePath = FSConverter().getResourcePath(aPath);
+    return mMixerContainer.getSound(wholePath) != nullptr;
+}
 
 bool MixerFacade::musicIsLoaded() const { return mMixerContainer.getMusic() != nullptr; }
 
