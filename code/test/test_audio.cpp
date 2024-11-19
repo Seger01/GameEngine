@@ -1,6 +1,7 @@
 #include "AudioManager.h"
 #include "EngineBravo.h"
 #include "MixerContainer.h"
+#include "MixerFacade.h"
 #include <gtest/gtest.h>
 
 class AudioTest : public ::testing::Test {
@@ -176,4 +177,9 @@ TEST_F(AudioTest, playOnWake) {
 TEST_F(AudioTest, containerLoadNonExistent) {
     MixerContainer container;
     ASSERT_EQ(container.getSound("nonexistent"), nullptr);
+}
+
+TEST_F(AudioTest, MixerFacadeLoadInvalid) {
+    MixerFacade mixer;
+    ASSERT_THROW(mixer.loadSound("nonexistent"), std::runtime_error);
 }

@@ -8,7 +8,7 @@ class MixerFacade : public IAudioFacade {
 public:
     MixerFacade();
 
-private:
+public:
     void loadSound(const std::string& aPath) override;
     void loadMusic(const std::string& aPath) override;
     void unloadAll() override;
