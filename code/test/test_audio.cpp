@@ -15,14 +15,14 @@ protected:
 
 TEST_F(AudioTest, AddSound) {
     // Add a sound to the audio manager
-    AudioSource audio("gun1.wav", false);
+    AudioSource audio("Audio/gun1.wav", false);
 
     // Verify that the sound is not loaded
-    ASSERT_FALSE(audioManager->getFacade().audioIsLoaded("gun1.wav"));
+    ASSERT_FALSE(audioManager->getFacade().audioIsLoaded("Audio/gun1.wav"));
 
     // Load the sound
     audioManager->loadSound(audio);
 
     // Verify that the sound was added
-    ASSERT_TRUE(audioManager->getFacade().audioIsLoaded("test.wav"));
+    ASSERT_TRUE(audioManager->getFacade().audioIsLoaded("Audio/gun1.wav"));
 }
