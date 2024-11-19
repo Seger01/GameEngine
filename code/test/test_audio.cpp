@@ -85,3 +85,34 @@ TEST_F(AudioTest, unloadSounds) {
     ASSERT_FALSE(audioManager->getFacade().audioIsLoaded(path1));
     ASSERT_FALSE(audioManager->getFacade().audioIsLoaded(path2));
 }
+
+TEST_F(AudioTest, stopMusic) {
+    // Add a music file to the audio manager
+    std::string path = "Audio/music.wav";
+    AudioSource audio(path, true);
+    audioManager->loadSound(audio);
+
+    // Play the music
+    audioManager->play(audio);
+    ASSERT_TRUE(audioManager->getFacade().isMusicPlaying());
+
+    // Stop the music
+    audioManager->stop(audio);
+
+    // Verify that the music is not playing
+    ASSERT_FALSE(audioManager->getFacade().isMusicPlaying());
+}
+
+TEST_F(AudioTest, stopSound) {
+    // Add a sound to the audio manager
+    std::string path = "Audio/gun1.wav";
+    AudioSource audio(path, false);
+    audioManager->loadSound(audio);
+
+    // Play the sound
+    audioManager->play(audio);
+    ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+
+    // Stop the sound
+    ASSERT_THROW(audioManager->stop(audio), std::logic_error);
+}
