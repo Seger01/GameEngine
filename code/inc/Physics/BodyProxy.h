@@ -38,8 +38,6 @@ public:
 
     bool getCanCollide() const;
 
-    int getBodyID() const;
-
     std::vector<BoxCollider*> getBoxColliders() const;
     std::vector<CircleCollider*> getCircleColliders() const;
 
@@ -65,8 +63,6 @@ private:
 
     std::vector<BoxCollider*> mBoxColliders;
     std::vector<CircleCollider*> mCircleColliders;
-
-    int mBodyID;
 };
 
 #endif // BODYPROXY_H

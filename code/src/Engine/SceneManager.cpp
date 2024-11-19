@@ -1,9 +1,22 @@
 #include "Engine/SceneManager.h"
 #include "EngineBravo.h"
 
-SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1) {}
+SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1), mScenes{} {}
 
 SceneManager::~SceneManager() {}
+
+void SceneManager::update() {
+    if (mScenes.size() == 0) {
+        return;
+    }
+
+    if (mCurrentSceneIndex <= mScenes.size() - 1) {
+        mScenes[mCurrentSceneIndex]->update();
+    }
+
+    // check if scene would like to be changed
+    sceneChanged();
+}
 
 bool SceneManager::sceneChanged() {
     if (mNewSceneName != "") {

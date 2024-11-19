@@ -27,6 +27,8 @@ struct TileInfo {
 struct SpawnPoint {
     float x;
     float y;
+    float width;
+    float height;
     bool isPlayerSpawn = false;
     bool isEnemySpawn = false;
     std::string roomID = "";

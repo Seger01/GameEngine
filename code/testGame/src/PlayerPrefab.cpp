@@ -1,7 +1,6 @@
 #include "PlayerPrefab.h"
 
 #include "AudioBehaviourScript.h"
-#include "AudioSource.h"
 #include "GameObject.h"
 
 const int spriteWidth = 16;  // Width of each sprite
@@ -24,6 +23,7 @@ SpriteDef firstFramePlayerIdleFront = {
 
 GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     GameObject* defaultPlayerPrefab = new GameObject;
+    defaultPlayerPrefab->setName("Player");
 
     setTransform(defaultPlayerPrefab);
     addPlayerBehaviourScript(defaultPlayerPrefab);
@@ -180,12 +180,4 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject) {
     gameObject->addComponent(step);
     gameObject->addComponent<AudioBehaviourScript>();
     audioManager.loadSound(*step);
-
-    // Add music
-    AudioSource* music = new AudioSource("Audio/music.wav", true);
-    music->setPlayOnWake(true);
-    music->setVolume(10);
-    music->setXDirection(0);
-    gameObject->addComponent(music);
-    audioManager.loadSound(*music);
 }

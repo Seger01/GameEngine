@@ -1,5 +1,6 @@
 #include "InitBehaviourScript.h"
 
+#include "AudioSource.h"
 #include "BoxCollider.h"
 #include "Button.h"
 #include "CanvasBehaviourScript.h"
@@ -63,7 +64,6 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(gameObject2);
 
     FSConverter fsConverter;
-    std::cout << "getting map path" << std::endl;
     std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
     TileMapParser tileMapParser(path);
@@ -74,12 +74,9 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        std::cout << "Parsed Room Trigger: " << roomTrigger.roomID << " at (" << roomTrigger.x << ", " << roomTrigger.y
-                  << ") with dimensions (" << roomTrigger.mWidth << ", " << roomTrigger.mHeight << ")" << std::endl;
-
-        // Collect enemy spawns for thi(5, 0)s room
+        // Collect enemy spawns for this room
         std::vector<SpawnPoint> enemySpawns;
-        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
+        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {            
             if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
                 enemySpawns.push_back(spawnPoint);
             }
@@ -94,6 +91,7 @@ void InitBehaviourScript::createLevel1() {
         boxCollider->setTransform(transform);
         boxCollider->setWidth(roomTrigger.mWidth);
         boxCollider->setHeight(roomTrigger.mHeight);
+        boxCollider->setTrigger(true);
         roomObject->addComponent(boxCollider);
         RigidBody* rigidBody = new RigidBody();
         rigidBody->setTransform(transform);
@@ -122,8 +120,6 @@ void InitBehaviourScript::createLevel1() {
         std::cout << "Failed to get text size for FPS counter.\n";
     }
 
-    std::cout << "Text width: " << textWidth << ", Text height: " << textHeight << std::endl;
-
     Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
     textBackground->setLayer(3);
     textBackground->setWidth(10);
@@ -132,6 +128,17 @@ void InitBehaviourScript::createLevel1() {
     text->addComponent(textBackground);
 
     scene->addGameObject(text);
+
+    GameObject* musicObject = new GameObject;
+
+    // Add music
+    AudioSource* music = new AudioSource("Audio/music.wav", true);
+    music->setPlayOnWake(true);
+    music->setVolume(10);
+    music->setXDirection(0);
+    musicObject->addComponent(music);
+
+    scene->addGameObject(musicObject);
 
     sceneManager.requestSceneChange("Level-1");
 
@@ -187,7 +194,6 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
                             if (isDoorsLayer) {
-
                                 boxCollider->setActive(false);
                             }
                             gameObject->addComponent(boxCollider);
@@ -196,6 +202,11 @@ void InitBehaviourScript::createLevel1() {
                         if (!tileInfo.mColliders.empty()) {
                             RigidBody* rigidBody = new RigidBody();
                             rigidBody->setTransform(objectTransform);
+                            if (isDoorsLayer) {
+                                if (rigidBody != nullptr)   {
+                                    rigidBody->setActive(false);
+                                }
+                            }
                             gameObject->addComponent(rigidBody);
                             gameObject->setName("Tile");
                         }

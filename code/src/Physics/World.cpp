@@ -1,4 +1,5 @@
 #include "Physics/World.h"
+#include "box2d/box2d.h"
 
 World::World() {}
 
@@ -14,8 +15,6 @@ void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID,
 void World::resetWorld() { b2DestroyWorld(mWorldID); }
 
 int World::createBody(BodyProxy& aBodyProxy) {
-    std::cout << "World::createBody()" << std::endl;
-
     b2BodyDef bodyDef = b2DefaultBodyDef();
 
     switch (aBodyProxy.getBodyType()) {
@@ -25,7 +24,6 @@ int World::createBody(BodyProxy& aBodyProxy) {
 
         break;
     case BodyType::DYNAMIC:
-        std::cout << "create dynamicbody" << std::endl;
         bodyDef.type = b2_dynamicBody;
         bodyDef.linearDamping = 0.8f;
         bodyDef.angularDamping = 0.8f;
@@ -39,17 +37,8 @@ int World::createBody(BodyProxy& aBodyProxy) {
     bodyDef.angularDamping = aBodyProxy.getAngularDamping();
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 
-    std::cout << "BodyID index: " << bodyID.index1 << std::endl;
-    std::cout << "BodyID revision: " << bodyID.revision << std::endl;
-    std::cout << "BodyID world0: " << bodyID.world0 << std::endl;
-    std::cout << "creating body at: (" << aBodyProxy.getPosition().x << ", " << aBodyProxy.getPosition().y << ")"
-              << std::endl;
-
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
         b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
-
-        std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-        std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
 
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
@@ -70,13 +59,13 @@ int World::createBody(BodyProxy& aBodyProxy) {
     return bodyID.index1;
 }
 
-void World::createShape(BodyProxy& aBodyProxy) {
-    b2BodyId constructedBodyID = {aBodyProxy.getBodyID(), 0, 1};
+void World::createShape(BodyProxy& aBodyProxy, int aBodyID) {
+    b2BodyId constructedBodyID = {aBodyID, 0, 1};
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
         b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
 
-        std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-        std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
+        // std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
+        // std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
 
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
@@ -133,45 +122,35 @@ std::vector<std::pair<int, int>> World::getContactEvents() {
     b2ContactEvents contactlist = b2World_GetContactEvents(mWorldID);
 
     for (int i = 0; i < contactlist.beginCount; i++) {
-        collisionList.push_back(
-            {contactlist.beginEvents[i].shapeIdA.index1, contactlist.beginEvents[i].shapeIdB.index1});
-        // std::cout << "begincount is: " << contactlist.beginCount << std::endl;
-        // std::cout << "contact found: " << std::endl;
-        // std::cout << "A: " << contactlist.beginEvents[i].shapeIdA.index1 << std::endl;
-        // std::cout << "B: " << contactlist.beginEvents[i].shapeIdB.index1 << std::endl;
+        collisionList.push_back({b2Shape_GetBody(contactlist.beginEvents[i].shapeIdA).index1,
+                                 b2Shape_GetBody(contactlist.beginEvents[i].shapeIdB).index1});
     }
     return collisionList;
 }
 
 void World::setBodyActivity(int aBodyID, bool aState) {
-    b2BodyId test = {aBodyID, 0, 1};
-    if (aState) {
-        b2Body_Enable(test);
-    } else {
-        b2Body_Disable(test);
+    b2BodyId box2DID = {aBodyID, 0, 1};
+    if (aState != b2Body_IsEnabled(box2DID)) {
+
+        if (aState) {
+            b2Body_Enable(box2DID);
+        } else {
+            b2Body_Disable(box2DID);
+        }
     }
 }
 
-void World::setActiveBody(int aBodyID, bool aState) {
-    b2BodyId test = {aBodyID, 0, 1};
-    if (aState) {
-        b2Body_Enable(test);
-    } else {
-        b2Body_Disable(test);
-    }
-}
-
-void World::updateBodyFlags(BodyProxy& aBodyProxy) {
-    b2BodyId test = {aBodyProxy.getBodyID(), 0, 1};
+void World::updateBodyFlags(BodyProxy& aBodyProxy, int aBodyID) {
+    b2BodyId box2DID = {aBodyID, 0, 1};
     b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
-    b2Body_GetShapes(test, shapeArray, aBodyProxy.getBoxColliders().size());
+    b2Body_GetShapes(box2DID, shapeArray, aBodyProxy.getBoxColliders().size());
 
     for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++) {
 
         if (b2Shape_IsSensor(shapeArray[i]) != aBodyProxy.getBoxColliders().at(i)->isTrigger()) {
             b2DestroyShape(shapeArray[i]);
-            std::cout << aBodyProxy.getBoxColliders().at(i)->isTrigger() << std::endl;
-            createShape(aBodyProxy);
+            // std::cout << aBodyProxy.getBoxColliders().at(i)->isTrigger() << std::endl;
+            createShape(aBodyProxy, aBodyID);
         }
     }
 }
@@ -181,9 +160,10 @@ std::vector<std::pair<int, int>> World::getSensorEvents() {
     b2SensorEvents sensorEvents = b2World_GetSensorEvents(mWorldID);
 
     for (int i = 0; i < sensorEvents.beginCount; i++) {
-        std::cout << "sensor found: " << std::endl;
-        sensorList.push_back(
-            {sensorEvents.beginEvents[i].visitorShapeId.index1, sensorEvents.beginEvents[i].sensorShapeId.index1});
+        // std::cout << "sensor found: " << "(" << sensorEvents.beginEvents[i].sensorShapeId.index1 << ","
+        //           << sensorEvents.beginEvents[i].visitorShapeId.index1 << ")" << std::endl;
+        sensorList.push_back({b2Shape_GetBody(sensorEvents.beginEvents[i].sensorShapeId).index1,
+                              b2Shape_GetBody(sensorEvents.beginEvents[i].visitorShapeId).index1});
     }
     return sensorList;
 }
