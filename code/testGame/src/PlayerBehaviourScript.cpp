@@ -16,6 +16,15 @@
 #include "SpriteDef.h"
 #include "SpriteDefUtil.h"
 
+std::string PlayerBehaviourScript::currentActiveAnimationTag() {
+    for (auto animation : mGameObject->getComponents<Animation>()) {
+        if (animation->isActive()) {
+            return animation->getTag();
+        }
+    }
+    return "";
+}
+
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
         for (auto animation : mGameObject->getComponents<Animation>()) {
@@ -68,26 +77,35 @@ void PlayerBehaviourScript::handleAnimations() {
         }
     }
     static Transform previousTransform = this->mGameObject->getTransform();
+    Transform currentTransform = this->mGameObject->getTransform();
 
-    // deactivateAllAnimations();
-    // setAnimationActive(playerIdleFrontAnimation, true);
-    // if (previousTransform.position.x < this->mGameObject->getTransform().position.x) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleSideAnimation, true);
-    //     setFlipX(false);
-    // } else if (previousTransform.position.x > this->mGameObject->getTransform().position.x) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleSideAnimation, true);
-    //     setFlipX(true);
-    // } else if (previousTransform.position.y < this->mGameObject->getTransform().position.y) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleBackAnimation, true);
-    //     setFlipX(false);
-    // } else if (previousTransform.position.y > this->mGameObject->getTransform().position.y) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleFrontAnimation, true);
-    //     setFlipX(false);
-    // }
+    if (abs(previousTransform.position.x - currentTransform.position.x) < 0.1 &&
+        abs(previousTransform.position.y - currentTransform.position.y) < 0.1) {
+        deactivateAllAnimations();
+        setAnimationActive("playerIdleFront", true);
+    } else {
+        if (currentTransform.position.y > previousTransform.position.y &&
+            abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+            deactivateAllAnimations();
+            setAnimationActive("playerWalkingFront", true);
+        } else {
+            deactivateAllAnimations();
+            setAnimationActive("playerWalkingBack", true);
+        }
+        if (currentTransform.position.x > previousTransform.position.x) {
+            setFlipX(false);
+        } else {
+            setFlipX(true);
+        }
+
+        if (currentTransform.position.y > previousTransform.position.y) {
+            deactivateAllAnimations();
+            setAnimationActive("playerWalkingFront", true);
+        } else {
+            deactivateAllAnimations();
+            setAnimationActive("playerWalkingBack", true);
+        }
+    }
 
     previousTransform = this->mGameObject->getTransform();
 }
@@ -121,27 +139,15 @@ void PlayerBehaviourScript::handleMovement() {
     }
 
     if (input.GetKey(Key::Key_W)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleBack", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 200));
     }
     if (input.GetKey(Key::Key_A)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleSide", true);
-        setFlipX(true);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(200, 0));
     }
     if (input.GetKey(Key::Key_S)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleFront", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, -200));
     }
     if (input.GetKey(Key::Key_D)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleSide", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(-200, 0));
     }
     this->mGameObject->setTransform(parentTransform);

@@ -14,6 +14,8 @@ public:
     std::unique_ptr<Component> clone() const override { return std::make_unique<PlayerBehaviourScript>(*this); }
 
 private:
+    std::string currentActiveAnimationTag();
+
     void setFlipX(bool aState);
     void setFlipY(bool aState);
 
