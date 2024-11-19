@@ -44,10 +44,14 @@ void AudioSource::setVolume(unsigned aVolume) {
 unsigned AudioSource::getVolume() const { return mVolume; }
 
 void AudioSource::setXDirection(int aXCoord) {
-    if (aXCoord < minXDirection || aXCoord > maxXDirection) {
-        std::cerr << "X coordinate must be between " << minXDirection << " and " << maxXDirection
-                  << ". Setting to 0 instead\n";
-        mXCoord = 0;
+    if (aXCoord < mMinXDirection) {
+        std::cerr << "X coordinate must be greater than or equal to " << mMinXDirection << ". Setting to "
+                  << mMinXDirection << " instead\n";
+        mXCoord = mMinXDirection;
+    } else if (aXCoord > mMaxXDirection) {
+        std::cerr << "X coordinate must be less than or equal to " << mMaxXDirection << ". Setting to "
+                  << mMaxXDirection << " instead\n";
+        mXCoord = mMaxXDirection;
     } else {
         mXCoord = aXCoord;
     }

@@ -239,3 +239,39 @@ TEST_F(AudioTest, StopComponent) {
     // Verify that the sound cannot be stopped
     ASSERT_THROW(audioComponent->stop(), std::logic_error);
 }
+
+TEST_F(AudioTest, componentVolume) {
+    AudioSource audio("Audio/gun1.wav", false);
+    audio.setVolume(50);
+    ASSERT_EQ(audio.getVolume(), 50);
+    audio.setVolume(0);
+    ASSERT_EQ(audio.getVolume(), 0);
+    audio.setVolume(100);
+    ASSERT_EQ(audio.getVolume(), 100);
+    audio.setVolume(101);
+    ASSERT_EQ(audio.getVolume(), 100);
+}
+
+TEST_F(AudioTest, componentDirection) {
+    AudioSource audio("Audio/gun1.wav", false);
+    audio.setXDirection(-1);
+    ASSERT_EQ(audio.getXDirection(), -1);
+    audio.setXDirection(0);
+    ASSERT_EQ(audio.getXDirection(), 0);
+    audio.setXDirection(1);
+    ASSERT_EQ(audio.getXDirection(), 1);
+    audio.setXDirection(200);
+    ASSERT_EQ(audio.getXDirection(), 100);
+    audio.setXDirection(-200);
+    ASSERT_EQ(audio.getXDirection(), -100);
+}
+
+TEST_F(AudioTest, componentClone) {
+    AudioSource audio("Audio/gun1.wav", false);
+    AudioSource* clone = dynamic_cast<AudioSource*>(audio.clone().get());
+    ASSERT_EQ(clone->getFileName(), audio.getFileName());
+    ASSERT_EQ(clone->getLooping(), audio.getLooping());
+    ASSERT_EQ(clone->getPlayOnWake(), audio.getPlayOnWake());
+    ASSERT_EQ(clone->getVolume(), audio.getVolume());
+    ASSERT_EQ(clone->getXDirection(), audio.getXDirection());
+}
