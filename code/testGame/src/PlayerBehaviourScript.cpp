@@ -58,12 +58,14 @@ void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool a
 void PlayerBehaviourScript::onStart() {}
 
 void PlayerBehaviourScript::handleAnimations() {
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
-    }
-    if (!networkObject->isOwner()) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
     static Transform previousTransform = this->mGameObject->getTransform();
 
@@ -93,12 +95,14 @@ void PlayerBehaviourScript::handleAnimations() {
 void PlayerBehaviourScript::handleMovement() {
     static const float movementSpeed = 50.0f;
 
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
-    }
-    if (!networkObject->isOwner()) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
 
     Input& input = Input::getInstance();
@@ -144,13 +148,16 @@ void PlayerBehaviourScript::handleMovement() {
 }
 
 void PlayerBehaviourScript::hanldeCameraMovement() {
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
-    if (!networkObject->isOwner()) {
-        return;
-    }
+
     Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
 
     Transform playerTransform = this->mGameObject->getTransform();
