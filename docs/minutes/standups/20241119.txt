@@ -1,0 +1,24 @@
+Minutes 19-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Not worked on project since last standup.
+- Angel: Fixed issues with physics sensor.
+- Ronan: Improved room and player behaviour. Enemies now get spawned.
+- Sean: Prepare presentation for class, create Jenkins server.
+- Seger: Not worked on project since last standup
+
+What is going to be done:
+- Siem: To be discussed
+- Angel: Implement physics filter (to offer the game dev options to not collide certain colliders)
+- Ronan: Improve game design / implement game
+- Sean: Design validation app networking
+- Seger: Various small improvements to scenes and rendering
+
+Roadblocks:
+- Siem:
+- Angel: Box2d documentation is bad.
+- Ronan: 
+- Sean: Complex network design
+- Seger: -
