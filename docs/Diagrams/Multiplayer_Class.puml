@@ -109,6 +109,13 @@ class INetworkSerializable {
     ' + Deserialize()
 }
 
+interface GamePacket {
+    + Serialize()
+    + Deserialize()
+}
+
+class 
+
 NetworkManager *-- "0..1"NetworkClient
 NetworkManager *-- "0..1"NetworkServer
 NetworkManager *-- "0..1"NetworkHost
