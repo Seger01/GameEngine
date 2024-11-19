@@ -11,7 +11,7 @@ SpriteDef firstFramePlayerIdleBack = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleBackPosition.x, playerIdleBackPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
 
-Point playerIdleSidePosition = {21, 66};
+const Point playerIdleSidePosition = {21, 66};
 SpriteDef firstFramePlayerIdleSize = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleSidePosition.x, playerIdleSidePosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
@@ -20,6 +20,18 @@ const Point playerIdleFrontPosition = {21, 37};
 SpriteDef firstFramePlayerIdleFront = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleFrontPosition.x, playerIdleFrontPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
+
+const Point playerWalkingFrontPosition = {22, 187};
+SpriteDef firstFramePlayerWalkingFront = {
+    "enter_the_gungeon_spritesheet.png",
+    Rect{playerWalkingFrontPosition.x, playerWalkingFrontPosition.y, spriteWidth, spriteHeight}, spriteWidth,
+    spriteHeight};
+
+const Point playerWalkingBackPosition = {20, 251};
+SpriteDef firstFramePlayerWalkingBack = {
+    "enter_the_gungeon_spritesheet.png",
+    Rect{playerWalkingBackPosition.x, playerWalkingBackPosition.y, spriteWidth, spriteHeight}, spriteWidth,
+    spriteHeight};
 
 GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     GameObject* defaultPlayerPrefab = new GameObject;
@@ -60,6 +72,9 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
     Animation* playerIdleSideAnimation = nullptr;
     Animation* playerIdleBackAnimation = nullptr;
 
+    Animation* playerWalkingFrontAnimation = nullptr;
+    Animation* playerWalkingBackAnimation = nullptr;
+
     {
         std::vector<SpriteDef> playerIdleBackAnimationFrames =
             SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleBack, 3);
@@ -94,10 +109,42 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         playerIdleFrontAnimation =
             EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
     }
+    {
+        std::vector<SpriteDef> playerWalkingFrontAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingFront, 3);
+
+        std::vector<SpriteDef> playerAnimationWalkingFront = {
+            playerWalkingFrontAnimationFrames[0], playerWalkingFrontAnimationFrames[1],
+            playerWalkingFrontAnimationFrames[2], playerWalkingFrontAnimationFrames[1]};
+
+        playerWalkingFrontAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 200, true);
+    }
+    {
+        std::vector<SpriteDef> playerWalkingBackAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingBack, 3);
+
+        std::vector<SpriteDef> playerAnimationWalkingBack = playerWalkingBackAnimationFrames;
+
+        playerWalkingBackAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBack, 200, true);
+    }
+    {
+        std::vector<SpriteDef> playerWalkingFrontAnimationFrames =
+            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingFront, 3);
+
+        std::vector<SpriteDef> playerAnimationWalkingFront = playerWalkingFrontAnimationFrames;
+
+        playerWalkingFrontAnimation =
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 200, true);
+    }
 
     playerIdleBackAnimation->setTag("playerIdleBack");
     playerIdleSideAnimation->setTag("playerIdleSide");
     playerIdleFrontAnimation->setTag("playerIdleFront");
+
+    playerWalkingFrontAnimation->setTag("playerWalkingFront");
+    playerWalkingBackAnimation->setTag("playerWalkingBack");
 
     gameObject->addComponent(playerIdleFrontAnimation);
     gameObject->addComponent(playerIdleSideAnimation);
