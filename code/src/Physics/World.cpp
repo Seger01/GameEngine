@@ -64,8 +64,8 @@ void World::createShape(BodyProxy& aBodyProxy, int aBodyID) {
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
         b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
 
-        std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-        std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
+        // std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
+        // std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
 
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
@@ -149,7 +149,7 @@ void World::updateBodyFlags(BodyProxy& aBodyProxy, int aBodyID) {
 
         if (b2Shape_IsSensor(shapeArray[i]) != aBodyProxy.getBoxColliders().at(i)->isTrigger()) {
             b2DestroyShape(shapeArray[i]);
-            std::cout << aBodyProxy.getBoxColliders().at(i)->isTrigger() << std::endl;
+            // std::cout << aBodyProxy.getBoxColliders().at(i)->isTrigger() << std::endl;
             createShape(aBodyProxy, aBodyID);
         }
     }
@@ -160,8 +160,8 @@ std::vector<std::pair<int, int>> World::getSensorEvents() {
     b2SensorEvents sensorEvents = b2World_GetSensorEvents(mWorldID);
 
     for (int i = 0; i < sensorEvents.beginCount; i++) {
-        std::cout << "sensor found: " << "(" << sensorEvents.beginEvents[i].sensorShapeId.index1 << ","
-                  << sensorEvents.beginEvents[i].visitorShapeId.index1 << ")" << std::endl;
+        // std::cout << "sensor found: " << "(" << sensorEvents.beginEvents[i].sensorShapeId.index1 << ","
+        //           << sensorEvents.beginEvents[i].visitorShapeId.index1 << ")" << std::endl;
         sensorList.push_back({b2Shape_GetBody(sensorEvents.beginEvents[i].sensorShapeId).index1,
                               b2Shape_GetBody(sensorEvents.beginEvents[i].visitorShapeId).index1});
     }
