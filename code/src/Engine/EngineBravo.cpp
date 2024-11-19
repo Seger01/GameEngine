@@ -26,8 +26,7 @@ void EngineBravo::initialize() {
     mConfiguration.setConfig("render_colliders", true);
     mConfiguration.setConfig("render_fps", true);
 
-    if (mSceneManager.sceneChanged()) {
-    }
+    mSceneManager.update();
 
     mNetworkManager.initialize();
 
@@ -50,14 +49,11 @@ void EngineBravo::run() {
 
     while (mRunning) {
         Time::update();
-
         mEventManager.handleEvents();
-
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
-
-        mSceneManager.sceneChanged();
+        mSceneManager.update();
 
         startBehaviourScripts();
 
@@ -66,7 +62,6 @@ void EngineBravo::run() {
         mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         mParticleSystem.update(mSceneManager.getCurrentScene());
-
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
         mNetworkManager.update();
