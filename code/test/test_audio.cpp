@@ -116,3 +116,58 @@ TEST_F(AudioTest, stopSound) {
     // Stop the sound
     ASSERT_THROW(audioManager->stop(audio), std::logic_error);
 }
+
+TEST_F(AudioTest, playUnloadedSound) {
+    audioManager->clearSounds();
+    // Add a sound to the audio manager
+    std::string path = "Audio/gun1.wav";
+    AudioSource audio(path, false);
+
+    // Verify that the sound is not loaded
+    ASSERT_FALSE(audioManager->getFacade().audioIsLoaded(path));
+
+    // Play the sound
+    audioManager->play(audio);
+
+    // Verify that the sound is playing
+    ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+}
+
+TEST_F(AudioTest, playUnloadedMusci) {
+    audioManager->clearSounds();
+    // Add a music file to the audio manager
+    std::string path = "Audio/music.wav";
+    AudioSource audio(path, true);
+
+    // Verify that the music is not loaded
+    ASSERT_FALSE(audioManager->getFacade().musicIsLoaded());
+
+    // Play the music
+    audioManager->play(audio);
+
+    // Verify that the music is playing
+    ASSERT_TRUE(audioManager->getFacade().isMusicPlaying());
+}
+
+TEST_F(AudioTest, playOnWake) {
+    // create a scene
+    engine->getSceneManager().createScene("testScene");
+    GameObject* gameObject = new GameObject();
+    engine->getSceneManager().requestSceneChange("testScene");
+    engine->getSceneManager().getCurrentScene()->addGameObject(gameObject);
+
+    // Add a sound to the audio manager
+    std::string path = "Audio/gun1.wav";
+    AudioSource* audio{new AudioSource(path, false)};
+    audio->setPlayOnWake(true);
+    gameObject->addComponent(audio);
+
+    // Verify that the sound is not playing
+    ASSERT_FALSE(audioManager->getFacade().isPlaying(path));
+
+    // Wake the audio manager
+    audioManager->wake();
+
+    // Verify that the sound is playing
+    ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+}
