@@ -202,3 +202,40 @@ TEST_F(AudioTest, FloodMixerChannels) {
     ASSERT_EQ(mixer.findAvailableChannel(), 0);
     ASSERT_EQ(mixer.findAvailableChannel(), 1); // The channel should increment, because channel 0 is assumed used.
 }
+
+TEST_F(AudioTest, PlayComponent) {
+    // Add a sound to the audio manager
+    std::string path = "Audio/gun1.wav";
+    AudioSource audio(path, false);
+
+    // Create a game object and add the audio source component
+    GameObject gameObject;
+    AudioSource* audioComponent = new AudioSource(path, false);
+    gameObject.addComponent(audioComponent);
+
+    // Play the sound
+    audioComponent->play(false);
+
+    // Verify that the sound is playing
+    ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+}
+
+TEST_F(AudioTest, StopComponent) {
+    // Add a sound to the audio manager
+    std::string path = "Audio/gun1.wav";
+    AudioSource audio(path, false);
+
+    // Create a game object and add the audio source component
+    GameObject gameObject;
+    AudioSource* audioComponent = new AudioSource(path, false);
+    gameObject.addComponent(audioComponent);
+
+    // Play the sound
+    audioComponent->play(false);
+
+    // Verify that the sound is playing
+    ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
+
+    // Verify that the sound cannot be stopped
+    ASSERT_THROW(audioComponent->stop(), std::logic_error);
+}

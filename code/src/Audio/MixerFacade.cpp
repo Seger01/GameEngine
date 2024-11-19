@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-MixerFacade::MixerFacade() {
+MixerFacade::MixerFacade() : mChannelCount(MIX_CHANNELS), mLastUsedChannel(0) {
     // Initialize SDL with audio support
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -19,6 +19,8 @@ MixerFacade::MixerFacade() {
 
 /**
  * @brief Load a sound effect into the mixer container. If the sound is already loaded, do nothing.
+ *
+ * @param aPath The path to the sound effect. Must be an absolute path.
  */
 void MixerFacade::loadSound(const std::string& aPath) {
     // Check if the sound is already loaded
