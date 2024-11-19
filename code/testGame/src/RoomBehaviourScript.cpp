@@ -112,6 +112,10 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
         if (!bodies.empty()) {
             bodies.at(0)->setActive(mDoorsOpen);
         }
+        std::vector<BoxCollider*> colliders = doorPart->getComponents<BoxCollider>();
+        if (!colliders.empty()) {
+            colliders.at(0)->setActive(mDoorsOpen);
+        }
     }
 }
 
