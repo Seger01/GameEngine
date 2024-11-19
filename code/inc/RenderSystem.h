@@ -30,7 +30,7 @@ private:
 
     // void renderButton(Camera& aCurrentCamera, Button* aButton);
 
-    void renderDeubgInfo(Scene* aScene);
+    void renderDebugInfo(Scene* aScene);
 
     int getLowestLayer(Scene* aScene);
     int getHighestLayer(Scene* aScene);
