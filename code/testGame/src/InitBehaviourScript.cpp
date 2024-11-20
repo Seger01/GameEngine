@@ -44,6 +44,7 @@ void InitBehaviourScript::createLevel1() {
     Transform objectTransform2;
     objectTransform2.position.x = 50;
     objectTransform2.position.y = 80;
+
     gameObject2->setTransform(objectTransform2);
 
     Sprite* guySprite = engine.getResourceManager().createSprite(guyFrameDef);
@@ -54,6 +55,9 @@ void InitBehaviourScript::createLevel1() {
 
     gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
     gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+    Transform transform;
+    transform.position = {0.0f, 5.0f};
+    gameObject2->getComponents<BoxCollider>().at(0)->setTransform(transform);
 
     gameObject2->addComponent<RigidBody>();
     RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);

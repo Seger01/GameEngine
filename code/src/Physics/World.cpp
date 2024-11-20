@@ -1,5 +1,6 @@
 #include "Physics/World.h"
 #include "box2d/box2d.h"
+#include "box2d/collision.h"
 
 World::World() {}
 
@@ -43,10 +44,9 @@ void World::createShape(BodyProxy& aBodyProxy, int aBodyID) {
     b2BodyId bodyID = {aBodyID, 0, 1};
 
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
-        b2Polygon polygon = b2MakeBox(boxCollider->getWidth(), boxCollider->getHeight());
-        // std::cout << "BoxCollider width: " << boxCollider->getWidth() << std::endl;
-        // std::cout << "BoxCollider height: " << boxCollider->getHeight() << std::endl;
-
+        b2Polygon polygon =
+            b2MakeOffsetBox(boxCollider->getWidth(), boxCollider->getHeight(),
+                            {boxCollider->getTransform().position.x, boxCollider->getTransform().position.y}, 0.0f);
         b2ShapeDef shapeDef = b2DefaultShapeDef();
         shapeDef.density = aBodyProxy.getDensity();
         shapeDef.friction = aBodyProxy.getFriction();
@@ -110,7 +110,6 @@ void World::setBodyActivity(int aBodyID, bool aState) {
 }
 
 void World::updateBodyProperties(BodyProxy& aBodyProxy, int aBodyID) {
-    std::cout << "Updating body properties" << std::endl;
     b2BodyId bodyID = {aBodyID, 0, 1};
 
     b2Body_SetFixedRotation(bodyID, !aBodyProxy.getCanRotate());
@@ -120,7 +119,6 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, int aBodyID) {
 }
 
 void World::updateShapeProperties(BodyProxy& aBodyProxy, int aBodyID) {
-    std::cout << "Updating shape properties" << std::endl;
     b2BodyId bodyID = {aBodyID, 0, 1};
 
     b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
@@ -134,7 +132,6 @@ void World::updateShapeProperties(BodyProxy& aBodyProxy, int aBodyID) {
 
         if (b2Shape_IsSensor(shapeArray[i]) != aBodyProxy.getBoxColliders().at(i)->isTrigger()) {
             b2DestroyShape(shapeArray[i]);
-            // std::cout << aBodyProxy.getBoxColliders().at(i)->isTrigger() << std::endl;
             createShape(aBodyProxy, aBodyID);
         }
     }
@@ -145,8 +142,6 @@ std::vector<std::pair<int, int>> World::getSensorEvents() {
     b2SensorEvents sensorEvents = b2World_GetSensorEvents(mWorldID);
 
     for (int i = 0; i < sensorEvents.beginCount; i++) {
-        // std::cout << "sensor found: " << "(" << sensorEvents.beginEvents[i].sensorShapeId.index1 << ","
-        //           << sensorEvents.beginEvents[i].visitorShapeId.index1 << ")" << std::endl;
         sensorList.push_back({b2Shape_GetBody(sensorEvents.beginEvents[i].sensorShapeId).index1,
                               b2Shape_GetBody(sensorEvents.beginEvents[i].visitorShapeId).index1});
     }

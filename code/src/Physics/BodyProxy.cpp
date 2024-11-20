@@ -5,14 +5,7 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         RigidBody* rigidBody = aGameObject->getComponents<RigidBody>().at(0);
         mBoxColliders = aGameObject->getComponents<BoxCollider>();
 
-        Transform transform = aGameObject->getTransform();
-
-        transform.position = transform.position + mBoxColliders[0]->getTransform().position;
-
-        transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
-        transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
-
-        mPosition = Vector2(-transform.position.x, -transform.position.y);
+        mPosition = aGameObject->getTransform().position;
 
         mSize = aGameObject->getTransform().scale;
 
@@ -28,11 +21,6 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         mAngularDamping = rigidBody->getAngularDamping();
 
         processBodyType();
-
-        for (BoxCollider* boxCollider : mBoxColliders) {
-            boxCollider->setWidth(boxCollider->getWidth() / 2);
-            boxCollider->setHeight(boxCollider->getHeight() / 2);
-        }
 
     } else {
         return;

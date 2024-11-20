@@ -154,24 +154,21 @@ void PlayerPrefabFactory::addRigidBody(GameObject* gameObject) {
 }
 
 void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
-    std::cout << firstFramePlayerIdleFront.width << " " << firstFramePlayerIdleFront.height << std::endl;
     Transform transform;
-    transform.position = {0.0f, 0.0f};
+    transform.position = {firstFramePlayerIdleFront.width / 2, 10.0f};
     BoxCollider* boxCollider = new BoxCollider();
-    boxCollider->setWidth(firstFramePlayerIdleFront.width / 2); // 16
-    boxCollider->setHeight(firstFramePlayerIdleFront.height);   // 25
+    boxCollider->setWidth(firstFramePlayerIdleFront.width);
+    boxCollider->setHeight(firstFramePlayerIdleFront.height / 2);
     boxCollider->setTransform(transform);
-
     Transform transform2;
-    transform2.position = {firstFramePlayerIdleFront.width, 0.0f};
+    transform.position = {firstFramePlayerIdleFront.width / 2, -firstFramePlayerIdleFront.height / 2};
 
     BoxCollider* boxCollider2 = new BoxCollider();
-    boxCollider2->setWidth(firstFramePlayerIdleFront.width / 2);
-    boxCollider2->setHeight(firstFramePlayerIdleFront.height);
+    boxCollider2->setWidth(firstFramePlayerIdleFront.width);
+    boxCollider2->setHeight(firstFramePlayerIdleFront.height / 2);
     boxCollider2->setTransform(transform2);
 
     gameObject->addComponent(boxCollider);
-    gameObject->addComponent(boxCollider2);
 }
 
 void PlayerPrefabFactory::addSound(GameObject* gameObject) {
