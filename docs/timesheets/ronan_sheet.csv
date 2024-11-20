@@ -64,3 +64,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-15, 9:00, 2.25, group lesson with bob and added colliders to doors
 2024-11-16, 14:00, 3.25, worked on enemy spawning and spawning bullets
 2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
+2024-11-19, 9:15, 7.5, worked on game template and fixing tests for tilemapparser and worked on design for validation game
