@@ -6,7 +6,7 @@
 // Test fixture for TileMapParser
 class TileMapParserTest : public ::testing::Test {
 protected:
-    void SetUp() override {
+ void SetUp() override {
         // Create a sample JSON file for testing
         std::ofstream file("test_map.json");
         if (!file) {
@@ -45,7 +45,7 @@ protected:
                 {
                     "type": "objectgroup",
                     "objects": [
-                        {"x": 10, "y": 20, "properties": [{"name": "isPlayerSpawn", "type": "bool", "value": true}]}
+                        {"x": 10, "y": 20, "width" : 50, "height" : 50, "properties": [{"name": "isPlayerSpawn", "type": "bool", "value": true}]}
                     ]
                 }
             ]
