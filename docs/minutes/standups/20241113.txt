@@ -1,0 +1,24 @@
+Minutes 13-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Audio implementation updates, memory leak detection
+- Angel: Physics: finished moving objects using box2d forces. Executing collision script on collide.
+- Ronan: Expanding level and room behaviour script. Validation game design.
+- Sean: Networking impla: connecting client to server and sharing a transform
+- Seger: Improved memory safety, text ui usability
+
+What is going to be done:
+- Siem: Finalizing memory leak detection, audio unit tests
+- Angel: Adding option to enable and disable physics collision.
+- Ronan: Testing room behaviour
+- Sean: Adding interpolation to transfrom object for multiplayer
+- Seger: improving text ui usability
+
+Roadblocks:
+- Siem: Issues with valgrind suppression.
+- Angel: Box2d not well enough documented
+- Ronan: Physics not implemented enough to test room behaviour
+- Sean: -
+- Seger: Helping Sean with multiplayer

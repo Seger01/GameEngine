@@ -1,0 +1,28 @@
+15-11-24: class with groups Alpha and Charlie present.
+
+Group Alpha:
+- Tasks via Kanban: tasks divided in three levels of size (s, m en l)
+- 3 afternoons per week beschikbaar (waarvan maar 1 fysiek) (waarom?)
+- Their scene owns the b2world. How do we do this?
+- Question for gropu: How input by SDL and output by SDL are separated.
+- Texture culling: gewerkt aan het niet renderen van textures die buiten de camera vallen.
+
+tip group c:
+- Component manager (which lives as long as the engine), own all components.
+tip group a:
+- Check if SDL_quit is called at the end of the program (after sdl window etc. are destroyed).
+
+Group Charlie:
+- Very expansive kanban board
+- Particle system is responsible for containing (/colliding?) the particles
+- Testing audio and video: not very much done yet, but what has been done does not test within the libs, just what is inputted into the libs.
+- Use Kanban board as a guide during the standup meetings. Good idea!
+
+Focus for the next week: first 60% of the grading (professional attitude etc., see 'papierwerk' document).
+
+Tip Bob: making sure there is a clear and concise presentation (not per se in a powerpoint sense), but to make sure that the execution is concise.
+
+Short meeting with Bob:
+- What does the customer prefer in the sense of changing the camera / viewport?
+- A: Bob prefers to make it similar to Unity. Bob wants the option to limit how much of the game world is viewed. He does not want to stretch sprites, so use letter- or pillarboxing. He also wants an option to simply see more of the world when the aspect ratio changes.
+- Indicated that physics is still a small roadblock.
