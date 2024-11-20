@@ -5,12 +5,13 @@
 #include "Components/BoxCollider.h"
 #include "Components/CircleCollider.h"
 #include "Components/Collider.h"
+
 #include "GameObject.h"
-#include "Point.h"
 #include "RigidBody.h"
 #include "Vector2.h"
 #include <iostream>
 #include <vector>
+
 class BodyProxy {
 public:
     BodyProxy(GameObject* aGameObject);

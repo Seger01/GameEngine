@@ -12,34 +12,30 @@ class PhysicsEngine {
 public:
     PhysicsEngine();
 
+    void createWorld(Vector2 aGravity);
+    void reset();
+
+    void createBodies();
+
     void updateReferences(std::vector<GameObject*>&);
     void update();
     void updateFlags();
     void updateForces();
 
-    void setSubStep(int);
-    float getSubStep() const;
-    void setStep(float);
-    float getStep() const;
     void setgameObjects(std::vector<GameObject*>);
+    void setStep(float);
+    void setSubStep(int);
+
     std::vector<GameObject*> getgameObjects() const;
+    float getStep() const;
+    float getSubStep() const;
+    World& getWorld();
+    GameObject* getGameObjectByID(int aID);
 
     void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
-    void createBodies();
-
-    void createWorld(Vector2 aGravity);
-
-    World& getWorld();
-
-    void reset();
-
-    GameObject* getGameObjectByID(int aID);
-
-    void setCollision(int aBodyID, bool aState);
-
-    GameObject* convertFromBox2D(GameObject* aGameObject);
-    GameObject* convertToBox2D(GameObject* aGameObject);
+    void convertFromBox2D(GameObject* aGameObject);
+    void convertToBox2D(GameObject* aGameObject);
 
 private:
     World mWorld;

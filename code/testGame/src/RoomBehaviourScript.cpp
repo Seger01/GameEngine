@@ -1,5 +1,6 @@
 #include "RoomBehaviourScript.h"
 #include "BoxCollider.h"
+#include "BulletPrefab.h"
 #include "EnemyBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FSConverter.h"
@@ -8,7 +9,6 @@
 #include "SceneManager.h"
 #include "Sprite.h"
 #include "SpriteDef.h"
-#include "BulletPrefab.h"
 #include <random>
 
 void RoomBehaviourScript::onStart() {
@@ -66,10 +66,6 @@ void RoomBehaviourScript::spawnEnemies() {
             enemy->addComponent(new EnemyBehaviourScript());
             std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
             sceneManager.getCurrentScene()->addGameObject(enemy);
-
-
-            GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*enemy);
-            sceneManager.getCurrentScene()->addGameObject(bulletObject);
         }
     }
 }

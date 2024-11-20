@@ -4,14 +4,15 @@
 PhysicsManager::PhysicsManager() {}
 
 void PhysicsManager::startPhysicsEngine(Vector2 aGravity) {
-    mPhysicsEngine.createWorld(aGravity);
+    float timeStep = 20.0f / 60.0f;
 
-    mPhysicsEngine.setStep(1.0f / 60.0f);
-    mPhysicsEngine.setSubStep(6);
+    mPhysicsEngine.setStep(timeStep);
+    mPhysicsEngine.setSubStep(4);
+
+    mPhysicsEngine.createWorld(aGravity);
 }
 
 void PhysicsManager::updatePhysicsEngine(Scene* aScene) {
     mPhysicsEngine.updateReferences(aScene->getGameObjects());
-
     mPhysicsEngine.update();
 }

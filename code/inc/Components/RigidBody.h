@@ -5,7 +5,6 @@
 #include "Structs/BodyProperties.h"
 #include "Transform.h"
 #include "Vector2.h"
-#include "box2d/id.h"
 
 #include <vector>
 
@@ -60,6 +59,9 @@ public:
     void addTorque(float aTorque);
     std::vector<float> getTorqueBuffer() const;
 
+    void setIsUpdated(bool aIsUpdated);
+    bool getIsUpdated() const;
+
     void clearForcesBuffer();
     void clearTorqueBuffer();
 
@@ -84,7 +86,6 @@ private:
     float mGravityScale = 0;
 
     int mBodyId = -1;
-    b2BodyId mB2BodyId;
 
     std::vector<Vector2> mForcesBuffer;
     std::vector<float> mTorqueBuffer;

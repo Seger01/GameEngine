@@ -4,34 +4,35 @@
 #include "Physics/BodyProxy.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
-#include "box2d/id.h"
 #include <utility>
 #include <vector>
+
 class World {
 public:
     World();
 
-    void executeWorldStep(float step, int subStep);
-
+    int createWorld(Vector2 aGravity);
     void resetWorld();
 
-    int createWorld(Vector2 aGravity);
+    void executeWorldStep(float step, int subStep);
+
+    void updateBodyPosition(int aBodyID, BodyProxy& aBodyProxy);
+    void updateBodyProperties(BodyProxy& aBodyProxy, int aBodyID);
+    void updateShapeProperties(BodyProxy& aBodyProxy, int aBodyID);
+
     int createBody(BodyProxy& aBodyProxy);
     void createShape(BodyProxy& aBodyProxy, int aBodyID);
-    void updateBody(int aBodyID, BodyProxy& aBodyProxy);
+
     void applyLinearForce(int aBodyID, std::vector<Vector2> aForce);
     void applyTorque(int aBodyID, std::vector<float> aTorque);
 
     void setPosition(int BodyID, Vector2 aPosition);
-    Vector2 getPosition(int aBodyID);
-
     void setGravity(Vector2 aGravity);
-    Vector2 getGravity();
-
-    void updateBodyFlags(BodyProxy& aBodyProxy, int aBodyID);
-
     std::vector<std::pair<int, int>> getContactEvents();
     std::vector<std::pair<int, int>> getSensorEvents();
+
+    Vector2 getPosition(int aBodyID);
+    Vector2 getGravity();
 
     void setBodyActivity(int aBodyID, bool aState);
 
