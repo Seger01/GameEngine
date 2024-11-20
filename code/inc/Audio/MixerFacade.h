@@ -8,7 +8,7 @@ class MixerFacade : public IAudioFacade {
 public:
     MixerFacade();
 
-private:
+public:
     void loadSound(const std::string& aPath) override;
     void loadMusic(const std::string& aPath) override;
     void unloadAll() override;
@@ -20,12 +20,13 @@ private:
     void stopMusic() override;
 
     bool isPlaying(const std::string& aPath) const override;
+    bool isMusicPlaying() const override;
 
     int distanceToAngle(int aDirection) const;
     int findAvailableChannel();
 
 private:
-    const unsigned mChannelCount{MIX_CHANNELS};
+    const unsigned mChannelCount;
     unsigned mLastUsedChannel; // to help with finding the next available channel
     MixerContainer mMixerContainer;
 };

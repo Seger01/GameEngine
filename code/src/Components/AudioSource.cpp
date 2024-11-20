@@ -5,8 +5,8 @@
 #include <stdexcept>
 
 AudioSource::AudioSource(std::string aPath, bool aIsMusic)
-    : Component("defaultAudioScource"), mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME},
-      mXCoord{0} {
+    : Component("defaultAudioScource"), mPlayOnAwake{false}, mLoop{false},
+      mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0} {
     mFileName = FSConverter().getResourcePath(aPath);
 }
 
@@ -16,13 +16,13 @@ void AudioSource::play(bool aLooping) {
     EngineBravo::getInstance().getAudioManager().play(*this);
 }
 
-void AudioSource::stop() {
-    if (mIsMusic) {
-        EngineBravo::getInstance().getAudioManager().stop(*this);
-    } else {
-        throw std::logic_error("Only music sources can be stopped.");
-    }
-}
+/**
+ * @brief Stop playing this audio source
+ *
+ * @note Does not check if this is a music source (only music sources can be stopped), because this is the
+ * responsibility of the AudioManager
+ */
+void AudioSource::stop() { EngineBravo::getInstance().getAudioManager().stop(*this); }
 
 void AudioSource::setPlayOnWake(bool aValue) { mPlayOnAwake = aValue; }
 
@@ -44,10 +44,14 @@ void AudioSource::setVolume(unsigned aVolume) {
 unsigned AudioSource::getVolume() const { return mVolume; }
 
 void AudioSource::setXDirection(int aXCoord) {
-    if (aXCoord < minXDirection || aXCoord > maxXDirection) {
-        std::cerr << "X coordinate must be between " << minXDirection << " and " << maxXDirection
-                  << ". Setting to 0 instead\n";
-        mXCoord = 0;
+    if (aXCoord < mMinXDirection) {
+        std::cerr << "X coordinate must be greater than or equal to " << mMinXDirection << ". Setting to "
+                  << mMinXDirection << " instead\n";
+        mXCoord = mMinXDirection;
+    } else if (aXCoord > mMaxXDirection) {
+        std::cerr << "X coordinate must be less than or equal to " << mMaxXDirection << ". Setting to "
+                  << mMaxXDirection << " instead\n";
+        mXCoord = mMaxXDirection;
     } else {
         mXCoord = aXCoord;
     }

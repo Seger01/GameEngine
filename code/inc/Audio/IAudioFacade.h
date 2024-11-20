@@ -15,4 +15,5 @@ public:
     virtual void stopMusic() = 0;
 
     virtual bool isPlaying(const std::string& aPath) const = 0;
+    virtual bool isMusicPlaying() const = 0;
 };
