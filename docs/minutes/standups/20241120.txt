@@ -1,0 +1,24 @@
+Minutes 20-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Helping Sean with networking design, fully testing audio, engine game object update queue.
+- Angel: Fixing flag update system for physics. Fixing issues with updating position in box2d. Implementing box2d collider offset.
+- Ronan: Work on issues with game template repo build system. Fixed issues with tests for tilemap parser. Validation app design.
+- Sean: Multiplayer design. Fixed issues in game template repo build system. Wrote tests for multiplayer.
+- Seger: Implementing delete queue for scenes. Improved animations for player object.
+
+What is going to be done:
+- Siem: Proceed with engine game object update queue. Help Ronan with validation app design.
+- Angel: Implementing box2d collider offset.
+- Ronan: Proceed with validation app design, setting up a first implementation.
+- Sean: Networking implementation.
+- Seger: Finishing player animation improvements. Create repo for validation app. Then implement camera functionality.
+
+Roadblocks:
+- Siem: Dynamic typechecking for update queue.
+- Angel: Issues with translating between engine and box2d.
+- Ronan: -
+- Sean: Understanding difficult example code.
+- Seger: -

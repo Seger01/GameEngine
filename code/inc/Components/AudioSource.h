@@ -31,8 +31,8 @@ private:
 
 private:
     const static int mMaxVolume{100};
-    const static int minXDirection{-100};
-    const static int maxXDirection{100};
+    const static int mMinXDirection{-100};
+    const static int mMaxXDirection{100};
     int mVolume;
     int mXCoord;
 };

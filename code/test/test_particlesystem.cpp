@@ -26,13 +26,7 @@ protected:
         scene->addGameObject(gameObject);
     }
 
-    void TearDown() override {
-        // delete particleSystem;
-        // delete scene;
-        // delete gameObject;
-        EngineBravo::getInstance().getSceneManager().removeScene("Particle System Test Scene");
-        // ParticleEmitter cleanup is managed by GameObject's destructor
-    }
+    void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("Particle System Test Scene"); }
 };
 
 TEST_F(ParticleSystemTest, Update_ActiveGameObjectAndEmitter) {

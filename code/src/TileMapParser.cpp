@@ -1,4 +1,7 @@
 #include "TileMapParser.h"
+#include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath) {}
 
@@ -19,7 +22,7 @@ void TileMapParser::parse() {
     try {
         mJsonData = nlohmann::json::parse(content);
     } catch (const nlohmann::json::parse_error& e) {
-        throw std::runtime_error("File is empty or invalid JSON: " + mFilePath);
+        throw std::runtime_error("Invalid JSON: " + mFilePath  );//+ " - " + e.what());
     }
 
     if (mJsonData.is_null()) {
@@ -41,6 +44,9 @@ void TileMapParser::parse() {
 
     // Extract layers
     for (const auto& layer : mJsonData["layers"]) {
+        if (!layer.contains("type")) {
+            throw std::runtime_error("Layer missing 'type' key");
+        }
         if (layer["type"] == "tilelayer") {
             int width = layer["width"];
             int height = layer["height"];
@@ -53,7 +59,9 @@ void TileMapParser::parse() {
                 }
             }
             mTileMapData.mLayers.push_back(grid);
-            mTileMapData.mLayerNames.push_back(layer["name"]);
+            if (layer.contains("name")) {
+                mTileMapData.mLayerNames.push_back(layer["name"]);
+            }
         }
         else if (layer["type"] == "objectgroup") {
             parseObjectLayer(layer);
@@ -65,6 +73,9 @@ void TileMapParser::parse() {
 }
 
 void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
+    if (!layer.contains("objects") || !layer["objects"].is_array()) {
+        throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
+    }
     for (const auto& object : layer["objects"]) {
         if (object.contains("properties")) {
             for (const auto& property : object["properties"]) {
@@ -102,6 +113,9 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
                 }
             }
         }
+        else {
+            throw std::runtime_error("Object layer 'objects' is missing 'properties' key in JSON: " + mFilePath);
+        }
     }
 }
 
@@ -127,6 +141,9 @@ void TileMapParser::storeTileInfo() {
     std::unordered_set<int> usedGIDs;
 
     // Collect all used gIDs from the layers
+    if (mTileMapData.mLayers.empty()) {
+        throw std::runtime_error("No layers found in JSON: " + mFilePath);
+    }
     for (const auto& layer : mTileMapData.mLayers) {
         for (const auto& row : layer) {
             for (int gID : row) {

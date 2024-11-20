@@ -1,0 +1,21 @@
+Minutes 04-11-24
+
+What was discussed:
+The validation app design should contain a checklist with all requirements.
+
+What has been done:
+Everyone worked on the design document and validation app design
+
+What is going to be done:
+- Siem: Audio implementation, integrate with engine. After that work on validation app design
+- Angel: Physics implementation
+- Ronan: Tilemap implementation / combining with engine
+- Sean: Networking implementation
+- Seger: Level loading implementation, camera implementation.
+
+Roadblocks:
+- Siem: Merging audio code with the rest of engine
+- Angel: -
+- Ronan: Integration with rendering, cooperating on this with Seger
+- Sean: Uncertainty about networking design
+- Seger: Integration with rendering, cooperating on this with Ronan

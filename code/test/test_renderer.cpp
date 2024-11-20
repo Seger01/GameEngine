@@ -84,6 +84,15 @@ TEST_F(RendererTest, RenderText) {
     }()));
 }
 
+TEST_F(RendererTest, RenderCircle) {
+    ASSERT_NO_THROW(([&]() {
+        mRenderer->drawCircle(Vector2(100, 100), 200, Color(255, 255, 255), false);
+        mRenderer->drawCircle(Vector2(100, 100), 200, Color(255, 255, 255), true);
+
+        mRenderer->drawCircle(Vector2(200000, -100), -200, Color(255, 255, 255), true);
+    }()));
+}
+
 TEST_F(RendererTest, ClearAndShow) {
     ASSERT_NO_THROW(([&]() {
         Color clearColor{0, 0, 0, 255};
