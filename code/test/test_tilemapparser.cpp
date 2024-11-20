@@ -62,7 +62,7 @@ protected:
 TEST_F(TileMapParserTest, ParseJSONFile) {
     TileMapParser parser("test_map.json");
     parser.parse();
-
+    
     const TileMapData& data = parser.getTileMapData();
     ASSERT_EQ(data.mLayers.size(), 1);
     ASSERT_EQ(data.mLayers[0].size(), 2);
