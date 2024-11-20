@@ -10,11 +10,11 @@ MixerContainer::~MixerContainer() { clear(); }
  *
  * @note Does not check if the sound is already in the container
  */
-void MixerContainer::addSound(std::string aPath, Mix_Chunk aSound) { mSfx.insert({aPath, aSound}); }
+void MixerContainer::addSound(std::string aPath, Mix_Chunk* aSound) { mSfx.insert({aPath, aSound}); }
 
 Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
     try {
-        return &mSfx.at(aIndex);
+        return mSfx.at(aIndex);
     } catch (const std::out_of_range& e) {
         return nullptr;
     }
@@ -22,7 +22,7 @@ Mix_Chunk* MixerContainer::getSound(std::string aIndex) {
 
 const Mix_Chunk* MixerContainer::getSound(std::string aIndex) const {
     try {
-        return &mSfx.at(aIndex);
+        return mSfx.at(aIndex);
     } catch (const std::out_of_range& e) {
         return nullptr;
     }
@@ -40,8 +40,10 @@ Mix_Music* MixerContainer::getMusic() { return mMusic; }
 const Mix_Music* MixerContainer::getMusic() const { return mMusic; }
 
 void MixerContainer::clear() {
+    // Stop all channels from playing
+    Mix_HaltChannel(-1);
     for (auto& sound : mSfx) {
-        Mix_FreeChunk(&sound.second);
+        Mix_FreeChunk(sound.second);
         // sound.second = nullptr;
     }
     Mix_FreeMusic(mMusic);

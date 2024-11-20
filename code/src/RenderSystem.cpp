@@ -292,6 +292,37 @@ void RenderSystem::renderDebugInfo(Scene* aScene) {
                     mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
                 }
             }
+            if (gameObject->hasComponent<CircleCollider>()) {
+                for (auto circleCollider : gameObject->getComponents<CircleCollider>()) {
+                    Camera& aCurrentCamera = aScene->getActiveCamera();
+
+                    int WindowWidth = mWindow->getSize().x;
+                    int WindowHeight = mWindow->getSize().y;
+
+                    Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
+
+                    float circleRadius = circleCollider->getRadius();
+
+                    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+
+                    Vector2 drawPosition = circlePos - cameraOrigin;
+
+                    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+                    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+                    circleRadius = std::ceil(static_cast<int>(
+                        static_cast<float>(circleRadius) *
+                        (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+
+                    Color renderColor = Color(0, 0, 255);
+
+                    if (!circleCollider->isActive()) {
+                        renderColor = Color(252, 3, 252);
+                    }
+
+                    mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
+                }
+            }
         }
     }
 }

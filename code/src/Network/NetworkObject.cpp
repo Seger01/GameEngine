@@ -1,7 +1,8 @@
-#include "NetworkObject.h"
-#include <stdexcept>
+#include "Network/NetworkObject.h"
 
-NetworkObject::NetworkObject() : mIsOwner(false), mIsPlayer(false) { this->setTag("NetworkObject"); }
+NetworkObject::NetworkObject() : mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false) {
+    this->setTag("DefaultNetworkObject");
+}
 
 std::unique_ptr<Component> NetworkObject::clone() const { return std::make_unique<NetworkObject>(*this); }
 

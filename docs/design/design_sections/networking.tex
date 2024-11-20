@@ -28,3 +28,22 @@ If a game programmer wants more control of what information is send when it shou
 
 To send information over the network a NetworkVariable must be used.
 This is a template class that defines information and how that information can be serialized.
+
+ID's for networking:
+Message ID :defines what kind of message is send
+NetworkObject ID: defines the unique identifier of a networkObject. Only server may make this ID
+Prefab ID: Things that can be spawned over the network must be defined as a prefab and the manager gives this a unique ID
+GamePacketID: when a game dev makes a concrete implemenation of a GamePacket it must add this to a factory which gives it a unique ID that can be used by both server and client 
+
+Spawning new object across network:
+Client must send a request to the server to spawn a new object. The server will then spawn the object and send the information to all clients. All clients will then spawn the object.
+message info from client: Message ID (spawn object), Prefab ID (which object)
+message info from server: Message ID (spawn object), Prefab ID (which object), NetworkObject ID (unique ID of the object)
+
+Sending object information:
+Cient and server can send info about objects
+message info client: Message ID (object info), NetworkObject ID (unique ID of the object), GamePacketID (unique ID of the packet), data (the data that is send)
+message info server: Message ID (object info), NetworkObject ID (unique ID of the object), GamePacketID (unique ID of the packet), data (the data that is send)
+
+NetworkVariable:
+Template class which expects a GamePacket derived class. This class automatically syncs data between clients and server. The game programmer must set the data within the GamePacket. The networkmanager will check if data is changed and send this data over the network.

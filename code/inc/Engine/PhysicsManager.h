@@ -1,3 +1,6 @@
+#ifndef PHYSICSMANAGER_H
+#define PHYSICSMANAGER_H
+
 #include "Physics/PhysicsEngine.h"
 #include "SceneManager.h"
 
@@ -10,3 +13,5 @@ public:
 private:
     PhysicsEngine mPhysicsEngine;
 };
+
+#endif // PHYSICSMANAGER_H

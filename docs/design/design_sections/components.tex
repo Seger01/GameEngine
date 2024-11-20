@@ -42,6 +42,9 @@ See \autoref{sec:physics} for more information.
 
 \subsection{IBehaviourScript}
 IBehaviour script is an interface that can be used to create behaviour scripts for GameObjects.
+The copy constructor copies the variable which checks if onStart is already called. 
+With this when a prefab is defined the on start will be called for the new object.
+If an already initialized object is copied, the onStart will not be called again.
 
 \subsection{ParticleEmitter}
 Particle emitter is a component that can be used to create particle effects.

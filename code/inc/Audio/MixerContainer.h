@@ -8,7 +8,7 @@ class MixerContainer {
 public:
     MixerContainer();
     virtual ~MixerContainer();
-    void addSound(std::string aPath, Mix_Chunk aSound);
+    void addSound(std::string aPath, Mix_Chunk* aSound);
     Mix_Chunk* getSound(std::string aIndex);
     const Mix_Chunk* getSound(std::string aIndex) const;
 
@@ -20,6 +20,6 @@ public:
 
 private:
     /// @brief Map of sound effects. key is the path to the sound
-    std::unordered_map<std::string, Mix_Chunk> mSfx;
+    std::unordered_map<std::string, Mix_Chunk*> mSfx;
     Mix_Music* mMusic;
 };

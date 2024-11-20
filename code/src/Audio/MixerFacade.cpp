@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-MixerFacade::MixerFacade() {
+MixerFacade::MixerFacade() : mChannelCount(MIX_CHANNELS), mLastUsedChannel(0) {
     // Initialize SDL with audio support
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -19,6 +19,8 @@ MixerFacade::MixerFacade() {
 
 /**
  * @brief Load a sound effect into the mixer container. If the sound is already loaded, do nothing.
+ *
+ * @param aPath The path to the sound effect. Must be an absolute path.
  */
 void MixerFacade::loadSound(const std::string& aPath) {
     // Check if the sound is already loaded
@@ -31,7 +33,7 @@ void MixerFacade::loadSound(const std::string& aPath) {
     if (sound == NULL) {
         throw std::runtime_error("Failed to load sound. SDL_Mixer error: " + std::string(Mix_GetError()));
     }
-    mMixerContainer.addSound(aPath, *sound);
+    mMixerContainer.addSound(aPath, sound);
 }
 
 /**
@@ -82,7 +84,8 @@ void MixerFacade::playMusic(int aVolume) {
 void MixerFacade::stopMusic() { Mix_HaltMusic(); }
 
 bool MixerFacade::isPlaying(const std::string& aPath) const {
-    const Mix_Chunk* chunk = mMixerContainer.getSound(aPath);
+    std::string wholePath = FSConverter().getResourcePath(aPath);
+    const Mix_Chunk* chunk = mMixerContainer.getSound(wholePath);
     int numChannels = Mix_AllocateChannels(-1); // Get the number of allocated channels
     for (int i = 0; i < numChannels; ++i) {
         if (Mix_Playing(i) && Mix_GetChunk(i) == chunk) {
@@ -91,6 +94,8 @@ bool MixerFacade::isPlaying(const std::string& aPath) const {
     }
     return false; // The chunk is not playing on any channel
 }
+
+bool MixerFacade::isMusicPlaying() const { return Mix_PlayingMusic(); }
 
 int MixerFacade::distanceToAngle(int aDirection) const {
     if (aDirection < 0) {

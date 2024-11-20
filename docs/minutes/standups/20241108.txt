@@ -1,0 +1,24 @@
+Minutes 08-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Add savegame tests / savegame improvements. Troubleshooting sdl mixer with cmake building.
+- Angel: Creating bodies in box2d
+- Ronan: Fileparser: added spawn points and colliders
+- Sean: Dynamically connection with servers. Ran into issue with retrieving ip address while in vm.
+- Seger: Created a canvas for UI
+
+What is going to be done:
+- Siem: Fix sdl mixer building issues, procede with audio implementation.
+- Angel: Continue with physics body creation
+- Ronan: SDL: fix performance issues, write tests for map parser
+- Sean: Implement network object and network transform, testing if that can be sent over the network. Help Siem with audio issues.
+- Seger: Help Sean with button testing, writing tests for UI
+
+Roadblocks:
+- Siem: Getting sdl mixer to build with cmake.
+- Angel: Using set transform in box2d to move an object in a 'jump' manner.
+- Ronan: Getting gcovr to work
+- Sean: Engine might not be implemented enough to easily test the multiplayer.
+- Seger: -

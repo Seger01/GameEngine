@@ -16,6 +16,15 @@
 #include "SpriteDef.h"
 #include "SpriteDefUtil.h"
 
+std::string PlayerBehaviourScript::currentActiveAnimationTag() {
+    for (auto animation : mGameObject->getComponents<Animation>()) {
+        if (animation->isActive()) {
+            return animation->getTag();
+        }
+    }
+    return "";
+}
+
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
         for (auto animation : mGameObject->getComponents<Animation>()) {
@@ -68,26 +77,62 @@ void PlayerBehaviourScript::handleAnimations() {
         }
     }
     static Transform previousTransform = this->mGameObject->getTransform();
+    Transform currentTransform = this->mGameObject->getTransform();
 
-    // deactivateAllAnimations();
-    // setAnimationActive(playerIdleFrontAnimation, true);
-    // if (previousTransform.position.x < this->mGameObject->getTransform().position.x) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleSideAnimation, true);
-    //     setFlipX(false);
-    // } else if (previousTransform.position.x > this->mGameObject->getTransform().position.x) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleSideAnimation, true);
-    //     setFlipX(true);
-    // } else if (previousTransform.position.y < this->mGameObject->getTransform().position.y) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleBackAnimation, true);
-    //     setFlipX(false);
-    // } else if (previousTransform.position.y > this->mGameObject->getTransform().position.y) {
-    //     deactivateAllAnimations();
-    //     setAnimationActive(playerIdleFrontAnimation, true);
-    //     setFlipX(false);
-    // }
+    if (abs(previousTransform.position.x - currentTransform.position.x) < 0.1 &&
+        abs(previousTransform.position.y - currentTransform.position.y) < 0.1) {
+        if ((currentActiveAnimationTag() == "playerIdleFront") || (currentActiveAnimationTag() == "playerIdleBack") ||
+            (currentActiveAnimationTag() == "playerIdleSide")) {
+        } else {
+            if (currentActiveAnimationTag() == "playerWalkingFront") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleFront", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingBack") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingFrontSide") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleSide", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingBackSide") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            } else {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            }
+        }
+
+        if (previousTransform.position.x > currentTransform.position.x) {
+            setFlipX(true);
+        } else if (currentTransform.position.x > previousTransform.position.x) {
+            setFlipX(false);
+        }
+
+    } else {
+        if (currentTransform.position.y < previousTransform.position.y) {
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingBackSide", true);
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingBack", true);
+            }
+        } else {
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingFrontSide", true);
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingFront", true);
+            }
+        }
+
+        if ((currentTransform.position.x - previousTransform.position.x) < -0.1) {
+            setFlipX(false);
+        } else if ((currentTransform.position.x - previousTransform.position.x) > 0.1) {
+            setFlipX(true);
+        }
+    }
 
     previousTransform = this->mGameObject->getTransform();
 }
