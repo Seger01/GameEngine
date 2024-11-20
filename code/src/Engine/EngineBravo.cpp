@@ -10,6 +10,7 @@
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
+#include "Text.h"
 
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
@@ -157,9 +158,16 @@ PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }
 void EngineBravo::addToUpdateQueue(GameObject& aGameObject) { mUpdateQueue.push(aGameObject); }
 
 void EngineBravo::updateManagers() {
-    // Scene manager
-    // Render system
-    for (auto& gameObject : mUpdateQueue) {
-        // if (gameObject.hasComponent)
+    // Iterate through the objects and update each manager
+
+    while (!mUpdateQueue.empty()) {
+        GameObject& gameObject = mUpdateQueue.front();
+        mUpdateQueue.pop();
+        // Scene manager
+        // Render system
+        mRenderSystem.removeObject();
+        if (typeid(gameObject) == typeid(Text)) {
+            mRenderSystem.addObject(gameObject);
+        }
     }
 }

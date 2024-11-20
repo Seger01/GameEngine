@@ -40,6 +40,8 @@ public:
     // UIManager& getUIManager();
     PhysicsManager& getPhysicsManager();
 
+    void addToUpdateQueue(GameObject& aGameObject);
+
 private:
     // Private constructor and destructor
     EngineBravo();
@@ -56,13 +58,11 @@ private:
 
     void handleEvent(const Event& aEvent);
 
-    void addToUpdateQueue(GameObject& aGameObject);
-
 private:
     void updateManagers();
 
 private:
-    std::queue<GameObject&> mUpdateQueue;
+    std::queue<std::reference_wrapper<GameObject>> mUpdateQueue;
     int mFrameRateLimit;
     bool mRunning;
 
