@@ -15,8 +15,6 @@ public:
     std::unique_ptr<Component> clone() const override;
 
 private:
-    Transform mRelativeTransform;
-
     float mRadius;
 };
 
