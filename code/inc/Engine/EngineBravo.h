@@ -59,7 +59,8 @@ private:
     void handleEvent(const Event& aEvent);
 
 private:
-    void updateManagers();
+    void updateAdditions();
+    void updateRemovals();
 
 private:
     std::vector<std::reference_wrapper<GameObject>> mUpdateObjects;

@@ -57,21 +57,29 @@ void EngineBravo::run() {
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
-        mSceneManager.update();
 
-        updateManagers();
+        mSceneManager.update(); // can remove objects
 
         startBehaviourScripts();
 
-        runBehaviourScripts();
+        runBehaviourScripts(); // can add and remove
+
+        // Update managers (changed components and new objects)
+        // To make sure that the physics, rendering etc. have access to the changes caused in the behaviourscripts.
+        updateAdditions();
 
         mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
         mParticleSystem.update(mSceneManager.getCurrentScene());
+
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
         mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
+
+        // Update managers (removed objects)
+        // Must be done after physics update, because physics system requires the deletion queue from the current scene.
+        updateRemovals();
     }
 }
 
@@ -170,14 +178,8 @@ void EngineBravo::addToUpdateObjects(GameObject& aGameObject) {
     }
 }
 
-void EngineBravo::updateManagers() {
+void EngineBravo::updateAdditions() {
     // Iterate through the objects and update each manager
-
-    // todo: request objects to be deleted from scene manager, and remove those from all managers
-    for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
-        // delete these objects from all managers
-        mRenderSystem.removeObject(*gameObject);
-    }
 
     if (!mUpdateObjects.empty()) {
         std::cout << "Queue size: " << mUpdateObjects.size() << std::endl;
@@ -200,4 +202,11 @@ void EngineBravo::updateManagers() {
         }
     }
     mUpdateObjects.clear();
+}
+
+void EngineBravo::updateRemovals() {
+    for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
+        // delete these objects from all managers
+        mRenderSystem.removeObject(*gameObject);
+    }
 }
