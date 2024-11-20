@@ -81,29 +81,58 @@ void PlayerBehaviourScript::handleAnimations() {
 
     if (abs(previousTransform.position.x - currentTransform.position.x) < 0.1 &&
         abs(previousTransform.position.y - currentTransform.position.y) < 0.1) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleFront", true);
-    } else {
-        if (currentTransform.position.y > previousTransform.position.y &&
-            abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
-            deactivateAllAnimations();
-            setAnimationActive("playerWalkingFront", true);
+        std::cout << "Player stopped" << std::endl;
+        if ((currentActiveAnimationTag() == "playerIdleFront") || (currentActiveAnimationTag() == "playerIdleBack") ||
+            (currentActiveAnimationTag() == "playerIdleSide")) {
+            std::cout << "Player idle animation already active" << std::endl;
         } else {
-            deactivateAllAnimations();
-            setAnimationActive("playerWalkingBack", true);
-        }
-        if (currentTransform.position.x > previousTransform.position.x) {
-            setFlipX(false);
-        } else {
-            setFlipX(true);
+            if (currentActiveAnimationTag() == "playerWalkingFront") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleFront", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingBack") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingFrontSide") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleSide", true);
+            } else if (currentActiveAnimationTag() == "playerWalkingBackSide") {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            } else {
+                deactivateAllAnimations();
+                setAnimationActive("playerIdleBack", true);
+            }
         }
 
-        if (currentTransform.position.y > previousTransform.position.y) {
-            deactivateAllAnimations();
-            setAnimationActive("playerWalkingFront", true);
+        if (previousTransform.position.x > currentTransform.position.x) {
+            setFlipX(true);
+        } else if (currentTransform.position.x > previousTransform.position.x) {
+            setFlipX(false);
+        }
+
+    } else {
+        if (currentTransform.position.y < previousTransform.position.y) {
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingBackSide", true);
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingBack", true);
+            }
         } else {
-            deactivateAllAnimations();
-            setAnimationActive("playerWalkingBack", true);
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingFrontSide", true);
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+                deactivateAllAnimations();
+                setAnimationActive("playerWalkingFront", true);
+            }
+        }
+
+        if ((currentTransform.position.x - previousTransform.position.x) < -0.1) {
+            setFlipX(false);
+        } else if ((currentTransform.position.x - previousTransform.position.x) > 0.1) {
+            setFlipX(true);
         }
     }
 
