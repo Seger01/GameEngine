@@ -37,7 +37,7 @@ public:
     void clearPersistentGameObjects();
     void releasePersistentGameObjects();
 
-    std::vector<GameObject*> getGameObjectsToBeRemove();
+    std::vector<GameObject*> getGameObjectsToBeRemoved();
 
 private:
     Scene(std::string aSceneName, int aSceneID);

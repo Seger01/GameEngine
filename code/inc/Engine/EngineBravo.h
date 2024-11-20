@@ -40,7 +40,7 @@ public:
     // UIManager& getUIManager();
     PhysicsManager& getPhysicsManager();
 
-    void addToUpdateQueue(GameObject& aGameObject);
+    void addToUpdateObjects(GameObject& aGameObject);
 
 private:
     // Private constructor and destructor
@@ -62,7 +62,7 @@ private:
     void updateManagers();
 
 private:
-    std::queue<std::reference_wrapper<GameObject>> mUpdateQueue;
+    std::vector<std::reference_wrapper<GameObject>> mUpdateObjects;
     int mFrameRateLimit;
     bool mRunning;
 

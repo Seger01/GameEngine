@@ -82,7 +82,7 @@ void GameObject::addComponent(Component* aComponent) {
     if (aComponent) {
         aComponent->setGameObjectParent(this);
         mComponents.push_back(std::unique_ptr<Component>(aComponent));
-        EngineBravo::getInstance().addToUpdateQueue(*this);
+        EngineBravo::getInstance().addToUpdateObjects(*this);
     }
 }
 
@@ -91,7 +91,7 @@ void GameObject::removeComponent(Component* component) {
                              [component](const std::unique_ptr<Component>& comp) { return comp.get() == component; });
     if (it != mComponents.end()) {
         mComponents.erase(it, mComponents.end()); // unique_ptr automatically deletes the component
-        EngineBravo::getInstance().addToUpdateQueue(*this);
+        EngineBravo::getInstance().addToUpdateObjects(*this);
     }
 }
 

@@ -168,4 +168,4 @@ void Scene::releasePersistentGameObjects() {
     }
 }
 
-std::vector<GameObject*> Scene::getGameObjectsToBeRemove() { return mGameObjectsToRemove; }
+std::vector<GameObject*> Scene::getGameObjectsToBeRemoved() { return mGameObjectsToRemove; }

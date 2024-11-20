@@ -6,10 +6,12 @@
 
 #include "slikenet/sleep.h"
 
+#include "Animation.h"
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
+#include "Sprite.h"
 #include "Text.h"
 
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
@@ -50,11 +52,14 @@ void EngineBravo::run() {
 
     while (mRunning) {
         Time::update();
+
         mEventManager.handleEvents();
         input.update();
 
         mUIManager.update(mSceneManager.getCurrentScene());
         mSceneManager.update();
+
+        updateManagers();
 
         startBehaviourScripts();
 
@@ -155,19 +160,44 @@ void EngineBravo::runBehaviourScripts() {
 
 PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }
 
-void EngineBravo::addToUpdateQueue(GameObject& aGameObject) { mUpdateQueue.push(aGameObject); }
+void EngineBravo::addToUpdateObjects(GameObject& aGameObject) {
+    auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
+                           [&aGameObject](const std::reference_wrapper<GameObject>& wrapper) {
+                               return &wrapper.get() == &aGameObject; // Compare addresses
+                           });
+    if (it == mUpdateObjects.end()) {
+        mUpdateObjects.push_back(aGameObject);
+    }
+}
 
 void EngineBravo::updateManagers() {
     // Iterate through the objects and update each manager
 
-    while (!mUpdateQueue.empty()) {
-        GameObject& gameObject = mUpdateQueue.front();
-        mUpdateQueue.pop();
+    // todo: request objects to be deleted from scene manager, and remove those from all managers
+    for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
+        // delete these objects from all managers
+        mRenderSystem.removeObject(*gameObject);
+    }
+
+    if (!mUpdateObjects.empty()) {
+        std::cout << "Queue size: " << mUpdateObjects.size() << std::endl;
+    }
+    for (GameObject& gameObject : mUpdateObjects) {
         // Scene manager
         // Render system
-        mRenderSystem.removeObject();
+        mRenderSystem.removeObject(gameObject);
         if (typeid(gameObject) == typeid(Text)) {
             mRenderSystem.addObject(gameObject);
         }
+        if (gameObject.hasComponent<Animation>()) {
+            mRenderSystem.addObject(gameObject);
+        }
+        if (gameObject.hasComponent<Sprite>()) {
+            mRenderSystem.addObject(gameObject);
+        }
+        if (gameObject.hasComponent<ParticleEmitter>()) {
+            mRenderSystem.addObject(gameObject);
+        }
     }
+    mUpdateObjects.clear();
 }
