@@ -190,10 +190,6 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
     }
 
     playerIdleFrontAnimation->setActive(true);
-    // playerWalkingBackAnimation->setActive(true);
-    // playerWalkingFrontAnimation->setActive(true);
-    // playerWalkingBackSideAnimation->setActive(true);
-    // playerWalkingFrontSideAnimation->setActive(true);
 }
 
 void PlayerPrefabFactory::addParticleEmitter(GameObject* gameObject) {
