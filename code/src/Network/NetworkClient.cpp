@@ -1,6 +1,8 @@
 #include "NetworkClient.h"
+
 #include "Network/NetworkInformation.h"
 #include "Network/NetworkObject.h"
+#include "Network/NetworkSharedFunctions.h"
 #include "Network/NetworkTransform.h"
 
 #include "Engine/EngineBravo.h"
@@ -92,7 +94,7 @@ void NetworkClient::sendPackets() {
 
 void NetworkClient::requestPlayerInstantiation() {
     SLNet::BitStream bs;
-    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+    NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
 
     sendToServer(bs);
 }
@@ -120,7 +122,7 @@ void NetworkClient::handleIncomingPackets() {
             break;
         case ID_UNCONNECTED_PONG: {
             std::cout << "Got pong from " << packet->systemAddress.ToString() << std::endl;
-            getBitStreamData(bs);
+            NetworkSharedFunctions::getBitStreamData(bs);
             std::string serverIp;
             serverIp = packet->systemAddress.ToString(false);
             mServerAddresses.push_back(serverIp);
@@ -166,7 +168,7 @@ void NetworkClient::sendTransform() {
             Transform transform = gameObject->getTransform();
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             SLNet::BitStream bs;
-            makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+            NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
             if (networkTransform->getSendPositionX()) {
                 bs.Write(transform.position.x);
             }
@@ -192,8 +194,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 
     SLNet::RakNetGUID clientGuid;
-
-    getBitStreamData(bs, clientGuid);
+    NetworkSharedFunctions::getBitStreamData(bs, clientGuid);
 
     for (auto gameObject : networkObjects) {
         if (!gameObject->hasComponent<NetworkObject>()) {
@@ -232,7 +233,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    getBitStreamData(bs, playerID);
+    NetworkSharedFunctions::getBitStreamData(bs, playerID);
 
     GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
                                                                                                      // client-side
@@ -255,51 +256,11 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
 void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    getBitStreamData(bs, playerID);
+    NetworkSharedFunctions::getBitStreamData(bs, playerID);
 
     EngineBravo::getInstance().getNetworkManager().destroyPlayer(playerID);
 }
 
 void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {
     mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
-}
-
-void NetworkClient::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
-    aBitStream.Reset();
-    aBitStream.Write(aMessageID);
-
-    auto now = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-    auto timestamp = duration.count();
-
-    aBitStream.Write(timestamp);
-}
-
-void NetworkClient::getBitStreamData(SLNet::BitStream& aBitStream) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
-    aBitStream.IgnoreBytes(sizeof(SLNet::RakNetGUID));
-}
-
-void NetworkClient::getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.Read(aTimeStamp);
-    aBitStream.IgnoreBytes(sizeof(SLNet::RakNetGUID));
-}
-
-void NetworkClient::getBitStreamData(SLNet::BitStream& aBitStream, SLNet::RakNetGUID& aGUID) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
-    aBitStream.Read(aGUID);
-}
-
-void NetworkClient::getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp,
-                                     SLNet::RakNetGUID& aGUID) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.Read(aTimeStamp);
-    aBitStream.Read(aGUID);
 }

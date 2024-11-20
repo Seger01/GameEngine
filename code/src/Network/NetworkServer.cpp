@@ -2,6 +2,7 @@
 
 #include "Network/NetworkInformation.h"
 #include "Network/NetworkObject.h"
+#include "Network/NetworkSharedFunctions.h"
 #include "Network/NetworkTransform.h"
 
 #include "Engine/EngineBravo.h"
@@ -46,8 +47,8 @@ bool NetworkServer::isConnected() const { return mServer->IsActive(); }
 void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
     std::cout << "Sending player instantiation message to all clients.\n";
     SLNet::BitStream bs;
-    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
-    setBitStreamGUID(bs, playerID);
+    NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+    NetworkSharedFunctions::setBitStreamGUID(bs, playerID);
 
     sendToAllClients(bs);
 }
@@ -99,9 +100,9 @@ void NetworkServer::sendTransform() {
         Transform transform = gameObject->getTransform();
         NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
         SLNet::BitStream bs;
-        makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+        NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
         NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
-        setBitStreamGUID(bs, networkObject->getClientID());
+        NetworkSharedFunctions::setBitStreamGUID(bs, networkObject->getClientID());
 
         if (networkTransform->getSendPositionX()) {
             bs.Write(transform.position.x);
@@ -128,7 +129,7 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
         throw std::runtime_error("Game objects not set");
     }
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    getBitStreamData(bs);
+    NetworkSharedFunctions::getBitStreamData(bs);
 
     for (auto gameObject : *mGameObjects) {
         if (!gameObject->hasComponent<NetworkObject>()) {
@@ -183,8 +184,8 @@ void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {
     EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
 
     SLNet::BitStream bs;
-    makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_DESTROY);
-    setBitStreamGUID(bs, clientID);
+    NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_DESTROY);
+    NetworkSharedFunctions::setBitStreamGUID(bs, clientID);
     sendToAllClients(bs);
 }
 
@@ -205,39 +206,4 @@ void NetworkServer::sendPackets() {
     }
     sendTransform();
     mLastSendPacketsTime = now;
-}
-
-void NetworkServer::makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID) {
-    aBitStream.Reset();
-    aBitStream.Write(aMessageID);
-
-    auto now = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-    auto timestamp = duration.count();
-
-    aBitStream.Write(timestamp);
-
-    SLNet::RakNetGUID placeholderGUID = SLNet::UNASSIGNED_RAKNET_GUID;
-    aBitStream.Write(placeholderGUID);
-}
-
-void NetworkServer::getBitStreamData(SLNet::BitStream& aBitStream) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.IgnoreBytes(sizeof(std::chrono::milliseconds::rep));
-}
-
-void NetworkServer::getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp) {
-    SLNet::MessageID messageID;
-    aBitStream.IgnoreBytes(sizeof(SLNet::MessageID));
-    aBitStream.Read(aTimeStamp);
-}
-
-void NetworkServer::setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID) {
-    // Find the position of the GUID and time in the bitstream
-    size_t Position = sizeof(SLNet::MessageID) + sizeof(std::chrono::milliseconds::rep);
-    SLNet::BitSize_t aWriteOffset = aBitStream.GetWriteOffset();
-    aBitStream.SetWriteOffset(Position * 8); // Convert to bits
-    aBitStream.Write(aGUID);
-    aBitStream.SetWriteOffset(aWriteOffset); // Reset write offset
 }
