@@ -1,7 +1,7 @@
 #include "TileMapParser.h"
+#include <fstream>
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
-#include <fstream>
 
 // Test fixture for TileMapParser
 class TileMapParserTest : public ::testing::Test {
