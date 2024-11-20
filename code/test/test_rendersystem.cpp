@@ -123,7 +123,10 @@ TEST_F(RenderSystemTest, GetTextSize_CorrectSize) {
     // Test that the text size is correct
     int height = 0, width = 0;
 
-    ASSERT_TRUE(mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1), mScene));
+    // ASSERT_TRUE(mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1)));
+    bool res = mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1));
+
+    ASSERT_EQ(res, 1);
 
     std::cout << "Calculated Text size: " << std::endl;
     std::cout << "Width: " << width << " Height: " << height << std::endl;

@@ -64,8 +64,11 @@ void RoomBehaviourScript::spawnEnemies() {
             rigidBody->setCanRotate(false);
             enemy->setTransform(transform);
             enemy->addComponent(new EnemyBehaviourScript());
-            std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
+            // std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
             sceneManager.getCurrentScene()->addGameObject(enemy);
+
+            GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*enemy);
+            sceneManager.getCurrentScene()->addGameObject(bulletObject);
         }
     }
 }
@@ -73,20 +76,20 @@ void RoomBehaviourScript::spawnEnemies() {
 void RoomBehaviourScript::openDoors() {
     updateDoors(mOpenDoorSpriteDef);
     mDoorsOpen = true;
-    std::cout << "Doors opened" << std::endl;
+    // std::cout << "Doors opened" << std::endl;
 }
 
 void RoomBehaviourScript::closeDoors() {
     updateDoors(mClosedDoorSpriteDef);
     mDoorsOpen = false;
-    std::cout << "Doors closed" << std::endl;
+    // std::cout << "Doors closed" << std::endl;
 }
 
 void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     std::vector<GameObject*> doorGameObjects = sceneManager.getCurrentScene()->getGameObjectsWithTag("Door");
-    std::cout << "doorGameObjects: " << doorGameObjects.size() << std::endl;
+    // std::cout << "doorGameObjects: " << doorGameObjects.size() << std::endl;
     int spriteWidth = 16;
     int spriteHeight = 16;
 
@@ -109,11 +112,15 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
         if (!bodies.empty()) {
             bodies.at(0)->setActive(mDoorsOpen);
         }
+        std::vector<BoxCollider*> colliders = doorPart->getComponents<BoxCollider>();
+        if (!colliders.empty()) {
+            colliders.at(0)->setActive(mDoorsOpen);
+        }
     }
 }
 
 void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
-    std::cout << "RoomBehaviourScript collided with " << aGameObject->getName() << std::endl;
+    // std::cout << "RoomBehaviourScript collided with " << aGameObject->getName() << std::endl;
     if (mDoorsOpen) {
         spawnEnemies();
         closeDoors();

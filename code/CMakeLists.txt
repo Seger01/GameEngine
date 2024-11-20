@@ -18,6 +18,9 @@ option(ENABLE_DEBUG "Enable debug mode" OFF)
 # Option to enable or disable building tests
 option(ENABLE_TESTS "Enable building tests" OFF)
 
+# Option to enable or disable building the testGame
+option(ENABLE_TESTGAME "Enable building the testGame" OFF)
+
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
     message("Debug mode enabled")
@@ -29,7 +32,7 @@ else()
 endif()
 
 if(ENABLE_TESTS)
-    #Set coverage compile and link flags
+    # Set coverage compile and link flags
     add_compile_options(--coverage)
     add_link_options(--coverage)
 endif()
@@ -54,25 +57,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # Disable building tests for libraries.
 set(BUILD_TESTING OFF CACHE BOOL "Disable building tests" FORCE)
 set(BUILD_TESTS OFF CACHE BOOL "Disable building tests" FORCE)
-set(BUILD_SAMPLES OFF CACHE BOOL "Disable building samples" FORCE) # Enable these if you need samples in poc's
-set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples" FORCE) # Enable these if you need examples in poc's
+set(BUILD_SAMPLES OFF CACHE BOOL "Disable building samples" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "Disable building examples" FORCE)
 
 # Add the external libraries
 add_subdirectory(external)
-
-# Include the header files
-include_directories(${PROJECT_SOURCE_DIR}/inc)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Engine)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Components)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Global)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Input)
-include_directories(${PROJECT_SOURCE_DIR}/inc/UI)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Save)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Network)
-include_directories(${PROJECT_SOURCE_DIR}/inc/Audio)
-
-include_directories(${PROJECT_SOURCE_DIR}/external/SLikeNet/Source)
-
 
 # Automatically search for source files
 file(GLOB_RECURSE LIBRARY_SOURCES
@@ -82,16 +71,51 @@ file(GLOB_RECURSE LIBRARY_SOURCES
 # Create a library from the library sources
 add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES})
 
+# Automatically search for subdirectories in the include directory
+file(GLOB SUBDIRS RELATIVE ${PROJECT_SOURCE_DIR}/inc ${PROJECT_SOURCE_DIR}/inc/*)
+
+# Add the root include directory
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc)
+
+# Add each subdirectory under the include directory
+foreach(subdir ${SUBDIRS})
+    if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/inc/${subdir})
+        target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc/${subdir})
+    endif()
+endforeach()
+
+# Automatically search for subdirectories in external dependencies and add them
+file(GLOB EXTERNAL_INCLUDE_DIRS
+    ${PROJECT_SOURCE_DIR}/external/BehaviorTree/include/behaviortree_cpp
+    ${PROJECT_SOURCE_DIR}/external/box2d/include
+    ${PROJECT_SOURCE_DIR}/external/FreeType/include
+    ${PROJECT_SOURCE_DIR}/external/nlohmann_json/include
+    ${PROJECT_SOURCE_DIR}/external/SDL/include
+    ${PROJECT_SOURCE_DIR}/external/SDL_image/include
+    ${PROJECT_SOURCE_DIR}/external/SDL_mixer/include
+    ${PROJECT_SOURCE_DIR}/external/SDL_ttf
+    ${PROJECT_SOURCE_DIR}/external/SLikeNet/Source
+)
+
+# Include each external library directory
+foreach(ext_dir ${EXTERNAL_INCLUDE_DIRS})
+    if(IS_DIRECTORY ${ext_dir})
+        target_include_directories(${PROJECT_NAME} PUBLIC ${ext_dir})
+    endif()
+endforeach()
+
 # Define the libraries to link against
 set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json behaviortree_cpp)
 
 # Link libraries to library
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
 
-# Add the testGame subdirectory
-add_subdirectory(testGame)
+if(ENABLE_TESTGAME)
+    # Add the testGame subdirectory
+    add_subdirectory(testGame)
+endif()
 
 if(ENABLE_TESTS)
-    # Add the testGame subdirectory
+    # Add the test subdirectory
     add_subdirectory(test)
 endif()

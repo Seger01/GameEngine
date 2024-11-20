@@ -234,12 +234,12 @@ void RenderSystem::render(Scene* aScene) {
         renderLayer(aScene, layer);
     }
 
-    renderDeubgInfo(aScene);
+    renderDebugInfo(aScene);
 
     mRenderer->show();
 }
 
-void RenderSystem::renderDeubgInfo(Scene* aScene) {
+void RenderSystem::renderDebugInfo(Scene* aScene) {
     if (Time::deltaTime == 0) {
         return;
     }
@@ -283,7 +283,13 @@ void RenderSystem::renderDeubgInfo(Scene* aScene) {
                         static_cast<float>(spriteHeight) *
                         (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
 
-                    mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, Color(0, 0, 255), false);
+                    Color renderColor = Color(0, 0, 255);
+
+                    if (!boxCollider->isActive()) {
+                        renderColor = Color(252, 3, 252);
+                    }
+
+                    mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
                 }
             }
         }

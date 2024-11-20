@@ -11,12 +11,12 @@ cd "$BUILD_DIR"
 
 # Check if CMakeCache.txt exists
 if [ ! -f "CMakeCache.txt" ]; then
-    cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+    cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON -DENABLE_TESTGAME=ON
 else
     # Check CMakeCache for ENABLE_DEBUG status
     if grep -q "ENABLE_TESTS:BOOL=OFF" CMakeCache.txt; then
         # Switch to debug mode if currently in standard mode
-        cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON
+        cmake .. -DENABLE_DEBUG=ON -DENABLE_TESTS=ON -DENABLE_TESTGAME=ON
     fi
 fi
 

@@ -3,6 +3,8 @@
 #include <iostream>
 
 #include "Animation.h"
+#include "BulletBehaviourScript.h"
+#include "BulletPrefab.h"
 #include "Configuration.h"
 #include "EngineBravo.h"
 #include "GameObject.h"
@@ -13,9 +15,6 @@
 #include "Sprite.h"
 #include "SpriteDef.h"
 #include "SpriteDefUtil.h"
-#include "BulletPrefab.h"
-#include "BulletBehaviourScript.h"
-
 
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
@@ -59,12 +58,14 @@ void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool a
 void PlayerBehaviourScript::onStart() {}
 
 void PlayerBehaviourScript::handleAnimations() {
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
-    }
-    if (!networkObject->isOwner()) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
     static Transform previousTransform = this->mGameObject->getTransform();
 
@@ -94,12 +95,14 @@ void PlayerBehaviourScript::handleAnimations() {
 void PlayerBehaviourScript::handleMovement() {
     static const float movementSpeed = 50.0f;
 
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
-    }
-    if (!networkObject->isOwner()) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
 
     Input& input = Input::getInstance();
@@ -145,13 +148,16 @@ void PlayerBehaviourScript::handleMovement() {
 }
 
 void PlayerBehaviourScript::hanldeCameraMovement() {
-    NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-    if (!networkObject) {
-        return;
+    if (mGameObject->hasComponent<NetworkObject>()) {
+        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
+        if (!networkObject) {
+            return;
+        }
+        if (!networkObject->isOwner()) {
+            return;
+        }
     }
-    if (!networkObject->isOwner()) {
-        return;
-    }
+
     Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
 
     Transform playerTransform = this->mGameObject->getTransform();
@@ -163,49 +169,49 @@ void PlayerBehaviourScript::fireBullet() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     Input& input = Input::getInstance();
-    
+
     // Get the mouse position in screen space
     Point mousePosition = input.MousePosition();
     Vector2 mousePositionVector = Vector2(mousePosition.x, mousePosition.y);
-    
+
     // Get the camera
     Camera& currentCam = sceneManager.getCurrentScene()->getActiveCamera();
     Vector2 cameraOrigin = currentCam.getOrigin();
-    
+
     // Transform the mouse position to world space
     Vector2 screenCenter(currentCam.getWidth() / 2.0f, currentCam.getHeight() / 2.0f);
     Vector2 relativeMousePosition = mousePositionVector - screenCenter;
-    
+
     // Transform to world space
     Vector2 worldMousePosition = cameraOrigin + relativeMousePosition;
-    
+
     // Calculate the direction from the player to the mouse position
     Vector2 playerPosition = this->mGameObject->getTransform().position;
     Vector2 direction = worldMousePosition - playerPosition;
-    
-    std::cout << "Screen Mouse: (" << mousePosition.x << ", " << mousePosition.y << ")" << std::endl;
-    std::cout << "Screen Center: (" << screenCenter.x << ", " << screenCenter.y << ")" << std::endl;
-    std::cout << "Relative Mouse: (" << relativeMousePosition.x << ", " << relativeMousePosition.y << ")" << std::endl;
-    std::cout << "World Mouse: (" << worldMousePosition.x << ", " << worldMousePosition.y << ")" << std::endl;
-    std::cout << "Player Pos: (" << playerPosition.x << ", " << playerPosition.y << ")" << std::endl;
-    std::cout << "Direction before norm: (" << direction.x << ", " << direction.y << ")" << std::endl;
-    
+
+    // std::cout << "Screen Mouse: (" << mousePosition.x << ", " << mousePosition.y << ")" << std::endl;
+    // std::cout << "Screen Center: (" << screenCenter.x << ", " << screenCenter.y << ")" << std::endl;
+    // std::cout << "Relative Mouse: (" << relativeMousePosition.x << ", " << relativeMousePosition.y << ")" <<
+    // std::endl; std::cout << "World Mouse: (" << worldMousePosition.x << ", " << worldMousePosition.y << ")" <<
+    // std::endl; std::cout << "Player Pos: (" << playerPosition.x << ", " << playerPosition.y << ")" << std::endl;
+    // std::cout << "Direction before norm: (" << direction.x << ", " << direction.y << ")" << std::endl;
+
     // Normalize the direction vector
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
     if (length > 0.0001f) {
         direction.x /= length;
         direction.y /= length;
     }
-    
+
     direction = direction * -1;
-    
-    std::cout << "Final Direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
-    
+
+    // std::cout << "Final Direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+
     // Create and setup the bullet
     GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*this->mGameObject);
     RigidBody* bulletRigidBody = bulletObject->getComponents<RigidBody>()[0];
     bulletRigidBody->addForce(direction * 1000.0f);
-    
+
     sceneManager.getCurrentScene()->addGameObject(bulletObject);
 }
 
@@ -255,5 +261,7 @@ void PlayerBehaviourScript::onUpdate() {
 }
 
 void PlayerBehaviourScript::onCollide(GameObject* aGameObject) {
-    std::cout << "Player collided with " << aGameObject->getName() << std::endl;
+    if (aGameObject != nullptr) {
+        // std::cout << "Player collided with " << aGameObject->getName() << std::endl;
+    }
 }

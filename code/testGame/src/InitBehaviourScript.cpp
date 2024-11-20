@@ -8,6 +8,7 @@
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
 #include "GameObject.h"
+#include "PlayerPrefab.h"
 #include "RigidBody.h"
 #include "RoomBehaviourScript.h"
 #include "Scene.h"
@@ -34,6 +35,10 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
+
+    GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+
+    scene->addGameObject(defaultPlayerPrefab);
 
     GameObject* gameObject2 = new GameObject;
     Transform objectTransform2;
@@ -76,7 +81,7 @@ void InitBehaviourScript::createLevel1() {
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
         // Collect enemy spawns for this room
         std::vector<SpawnPoint> enemySpawns;
-        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {            
+        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
             if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
                 enemySpawns.push_back(spawnPoint);
             }
@@ -203,7 +208,7 @@ void InitBehaviourScript::createLevel1() {
                             RigidBody* rigidBody = new RigidBody();
                             rigidBody->setTransform(objectTransform);
                             if (isDoorsLayer) {
-                                if (rigidBody != nullptr)   {
+                                if (rigidBody != nullptr) {
                                     rigidBody->setActive(false);
                                 }
                             }
