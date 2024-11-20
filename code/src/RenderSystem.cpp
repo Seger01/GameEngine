@@ -189,20 +189,16 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
     Camera& activeCamera = aScene->getActiveCamera();
 
     for (GameObject& gameObject : mObjects) {
-        // if (gameObject.hasComponent<Animation>()) {
         for (auto animation : gameObject.getComponents<Animation>()) {
             if (animation->isActive() && animation->getLayer() == aLayer) {
                 renderAnimation(activeCamera, &gameObject, animation);
             }
         }
-        //} else if (gameObject.hasComponent<Sprite>()) {
         for (auto sprite : gameObject.getComponents<Sprite>()) {
             if (sprite->isActive() && sprite->getLayer() == aLayer) {
                 renderSprite(activeCamera, &gameObject, sprite);
             }
         }
-        //}
-        // if (gameObject.hasComponent<ParticleEmitter>()) {
         for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>()) {
             if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer) {
                 for (auto& particle : particleEmitter->getParticles()) {
@@ -210,16 +206,12 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
                 }
             }
         }
-        //}
-        if (dynamic_cast<Text*>(&gameObject)) {
-            // try {
-            Text* text = dynamic_cast<Text*>(&gameObject);
-            if (text->isActive() && text->getLayer() == aLayer) {
-                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor(),
-                           text->getScale());
+        if (typeid(gameObject) == typeid(Text)) {
+            Text& text = dynamic_cast<Text&>(gameObject);
+            if (text.isActive() && text.getLayer() == aLayer) {
+                renderText(activeCamera, text.getText(), text.getTransform().position, text.getColor(),
+                           text.getScale());
             }
-            //} catch (std::bad_cast& e) {
-            // std::cout << "Failed to cast to Text" << std::endl;
         }
     }
 }
