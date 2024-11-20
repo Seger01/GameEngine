@@ -142,6 +142,49 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
     }
 }
 
+void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill) {
+    // Set the render color
+    SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+
+    if (aFill) {
+        // Draw filled circle
+        for (int w = 0; w < radius * 2; w++) {
+            for (int h = 0; h < radius * 2; h++) {
+                int dx = radius - w; // horizontal offset
+                int dy = radius - h; // vertical offset
+                if ((dx * dx + dy * dy) <= (radius * radius)) {
+                    SDL_RenderDrawPoint(mRenderer, center.x + dx, center.y + dy);
+                }
+            }
+        }
+    } else {
+        // Draw outline circle using the midpoint circle algorithm
+        int x = radius;
+        int y = 0;
+        int decisionOver2 = 1 - x; // Decision criterion divided by 2
+
+        while (x >= y) {
+            // Draw the eight symmetrical points of the circle
+            SDL_RenderDrawPoint(mRenderer, center.x + x, center.y + y);
+            SDL_RenderDrawPoint(mRenderer, center.x + y, center.y + x);
+            SDL_RenderDrawPoint(mRenderer, center.x - x, center.y + y);
+            SDL_RenderDrawPoint(mRenderer, center.x - y, center.y + x);
+            SDL_RenderDrawPoint(mRenderer, center.x - x, center.y - y);
+            SDL_RenderDrawPoint(mRenderer, center.x - y, center.y - x);
+            SDL_RenderDrawPoint(mRenderer, center.x + x, center.y - y);
+            SDL_RenderDrawPoint(mRenderer, center.x + y, center.y - x);
+
+            y++;
+            if (decisionOver2 <= 0) {
+                decisionOver2 += 2 * y + 1; // Change in decision criterion for y -> y+1
+            } else {
+                x--;
+                decisionOver2 += 2 * (y - x) + 1; // Change for y -> y+1, x -> x-1
+            }
+        }
+    }
+}
+
 void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY) {
     // Determine if text is fully opaque
     bool isOpaque = (aColor.a == 255);
