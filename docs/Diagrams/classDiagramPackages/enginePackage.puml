@@ -6,6 +6,9 @@ package Engine {
         + getSceneManager() : SceneManager&
         + runBehaviourScripts() : void
         + getAudioManager() : AudioManager&
+        + addToUpdateQueue(GameObject &aGameObject) : void
+        - updateManagers() : void
+        - mUpdateQueue : std::queue<GameObject&>
         - mSaveGameManager : SaveGameManager 
         - mSceneManager : SceneManager
         - mTextureManager : TextureManager
