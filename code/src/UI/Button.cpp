@@ -1,12 +1,24 @@
 #include "Button.h"
-
 #include <iostream>
 
-Button::Button() : UIObject(), mWidth(0), mHeight(0), mInteractable(true) {}
+Button::Button() : UIObject(), mWidth(0), mHeight(0), mInteractable(true), mOnClickCallback(nullptr) {}
 
 Button::~Button() {}
 
-void Button::OnClick() { std::cout << "Button Clicked!" << std::endl; }
+void Button::setOnClickCallback(const std::function<void()>& callback) { mOnClickCallback = callback; }
+void Button::activateOnClickCallback() {
+    if (mOnClickCallback)
+        mOnClickCallback();
+}
+
+void Button::setOnReleaseCallback(const std::function<void()>& callback) { mOnReleaseCallback = callback; }
+void Button::activateOnReleaseCallback() {
+    if (mOnReleaseCallback)
+        mOnReleaseCallback();
+}
+
+bool Button::isHovered() const { return mHovered; }
+void Button::setHovered(bool aHovered) { mHovered = aHovered; }
 
 void Button::setWidth(float aWidth) { mWidth = aWidth; }
 void Button::setHeight(float aHeight) { mHeight = aHeight; }

@@ -54,9 +54,15 @@ Renderer::~Renderer() {
 }
 
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
-                             bool aFlipX, bool aFlipY, float aRotation) {
+                             bool aFlipX, bool aFlipY, float aRotation, Color aColor) {
     // Get the SDL_Texture from the Texture class
     SDL_Texture* sdlTexture = aTexture.getSDLTexture();
+
+    // Set the alpha modulation for the texture
+    SDL_SetTextureAlphaMod(sdlTexture, aColor.a);
+
+    // Set the color modulation for the texture
+    SDL_SetTextureColorMod(sdlTexture, aColor.r, aColor.g, aColor.b);
 
     // Define the destination rectangle where the texture will be drawn
     SDL_Rect dstRect;
@@ -65,7 +71,7 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     dstRect.w = aWidth;
     dstRect.h = aHeight;
 
-    // SDL_Rect sourceRect(aSourceRect);
+    // Define the source rectangle if specified
     std::unique_ptr<SDL_Rect> sourceRect(nullptr);
     if (aSourceRect.w != 0) {
         sourceRect = std::make_unique<SDL_Rect>(aSourceRect);

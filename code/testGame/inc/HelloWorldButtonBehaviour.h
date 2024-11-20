@@ -12,4 +12,8 @@ public:
     void onButtonPressed() override { std::cout << "Hello World!" << std::endl; }
 
     void onButtonReleased() override { std::cout << "Goodbye World!" << std::endl; }
+
+    void onButtonHover() override { std::cout << "Hovering over button!" << std::endl; }
+
+    void onButtonUnhover() override { std::cout << "No longer hovering over button!" << std::endl; }
 };
