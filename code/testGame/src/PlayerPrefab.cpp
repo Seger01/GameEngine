@@ -120,15 +120,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         playerIdleFrontAnimation =
             EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
     }
-    {
-        std::vector<SpriteDef> playerWalkingFrontAnimationFrames =
-            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingFront, 3);
 
-        std::vector<SpriteDef> playerAnimationWalkingFront = playerWalkingFrontAnimationFrames;
-
-        playerWalkingFrontAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 200, true);
-    }
     {
         std::vector<SpriteDef> playerWalkingBackAnimationFrames =
             SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingBack, 6);
@@ -136,7 +128,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         std::vector<SpriteDef> playerAnimationWalkingBack = playerWalkingBackAnimationFrames;
 
         playerWalkingBackAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBack, 200, true);
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBack, 100, true);
     }
     {
         std::vector<SpriteDef> playerWalkingFrontAnimationFrames =
@@ -145,7 +137,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         std::vector<SpriteDef> playerAnimationWalkingFront = playerWalkingFrontAnimationFrames;
 
         playerWalkingFrontAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 200, true);
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 100, true);
     }
     {
         std::vector<SpriteDef> playerWalkingBackSideAnimationFrames =
@@ -154,7 +146,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         std::vector<SpriteDef> playerAnimationWalkingBackSide = playerWalkingBackSideAnimationFrames;
 
         playerWalkingBackSideAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBackSide, 200, true);
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBackSide, 100, true);
     }
     {
         std::vector<SpriteDef> playerWalkingFrontSideAnimationFrames =
@@ -163,7 +155,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         std::vector<SpriteDef> playerAnimationWalkingFrontSide = playerWalkingFrontSideAnimationFrames;
 
         playerWalkingFrontSideAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFrontSide, 200, true);
+            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFrontSide, 100, true);
     }
 
     playerIdleBackAnimation->setTag("playerIdleBack");

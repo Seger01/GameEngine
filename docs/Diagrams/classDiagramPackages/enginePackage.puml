@@ -6,6 +6,9 @@ package Engine {
         + getSceneManager() : SceneManager&
         + runBehaviourScripts() : void
         + getAudioManager() : AudioManager&
+        + addToUpdateQueue(GameObject &aGameObject) : void
+        - updateManagers() : void
+        - mUpdateQueue : std::queue<GameObject&>
         - mSaveGameManager : SaveGameManager 
         - mSceneManager : SceneManager
         - mTextureManager : TextureManager
@@ -86,14 +89,13 @@ package Engine {
     }
 
     class AudioManager {
-        - mGameObjects : vector<reference_wrapper<GameObject>>
         + AudioManager()
         + play(const AudioSource&) : void
         + stop(const AudioSource&) : void
         + wake() : void
         + getFacade() : IAudioFacade&
-        + addSound(const GameObject&) : void
-        + removeSound(const GameObject&) : void
+        + loadSound(const AudioSource&) : void
+        + clearSounds() : void
     }
 
     class ParticleSystem {

@@ -1,0 +1,26 @@
+What was discussed:
+usage of gmock for unit testing all parts of the engine. Creating a DoD for minimum code coverage of unit tests. Conclusion: all code which is merged to development should have at least 80% test coverage.
+How the validation app will be hosted: on a git repo, which uses the engine as a submodule.
+Persistent game objects (which exist across multiple scenes): scene manager keeps track of a list of game object references, which should persist across scenes.
+
+What has been done:
+- Angel: Physics implementation
+- Ronan: tilemap parser implementation
+- Seger: Various rendering features, removed sdl event manager because we have a proprietary one
+- Sean: improving build system / cmake, to be more convenient and sturdy. Worked on multiplayer to automatically load on program start.
+- Siem: worked on savegame improvements and unit tests
+
+
+What is going to be done:
+- Angel: Work on physics implementation.
+- Ronan: tilemap implementation adding features
+- Seger: work on UI systems, help Ronan with tilemap
+- Sean: Look at issues with cmake tests. Look into how clients can find servers on the network.
+- Siem: work audio design updates and implementation. Add testing decision to PoA, make gcov for code coverage available.
+
+Roadblocks:
+- Angel: -
+- Ronan: Finding out a good way to implement spawn points and colliders in tile2d
+- Seger: -
+- Sean: Clients finding all servers on a network, which is not desirable
+- Siem: integrating SDL mixer with the existing SDL usage.
