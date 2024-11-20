@@ -66,5 +66,3 @@ Animation* ResourceManager::loadAnimation(std::vector<SpriteDef> aSpriteDefs, in
 
     return new Animation(animationFrames, aTimeBetweenFrames, aIsLooping);
 }
-
-void ResourceManager::loadAudio() {}

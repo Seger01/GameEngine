@@ -26,6 +26,8 @@ public:
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill);
     void renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill);
 
+    void drawCircle(Vector2 center, int radius, Color aColor, bool aFill);
+
     void renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY);
 
     bool calculateTextSize(const std::string& font, const std::string& text, int& width, int& height);
