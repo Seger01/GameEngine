@@ -1,7 +1,12 @@
+#include "Network/INetworkBehaviour.h"
 #include "Network/INetworkSerializable.h"
 #include "Network/NetworkObject.h"
+#include "Network/NetworkRegister.h"
 #include "Network/NetworkTransform.h"
 #include <gtest/gtest.h>
+
+#include "ConcreteNetworkBehaviour.h"
+#include "ConcreteNetworkSerializable.h"
 
 class NetworkTransformTest : public ::testing::Test {
 protected:
@@ -110,26 +115,28 @@ TEST_F(NetworkObjectTest, Clone) {
     EXPECT_EQ(clonedNo->getClientID(), clientID);
 }
 
-class TestSerializable : public INetworkSerializable {
-public:
-    void Serialize(SLNet::BitStream& stream) const override {
-        // Serialization logic
-    }
-
-    void Deserialize(SLNet::BitStream& stream) override {
-        // Deserialization logic
-    }
-
-    uint32_t GetTypeID() const override { return TYPE_ID(TestSerializable); }
-
-    AUTO_REGISTER_TYPE(TestSerializable)
+class NetworkBehaviourTest : public ::testing::Test {
+protected:
+    void SetUp() override {}
 };
 
-TEST_F(NetworkObjectTest, TestSerializableRegistration) {
-    auto& registry = NetworkRegister::Instance();
-    // registry.RegisterType<TestSerializable>();
+TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
+    ConcreteNetworkBehaviour behaviour;
 
-    std::unique_ptr<INetworkSerializable> obj = registry.Create(TYPE_ID(TestSerializable));
+    const auto& variables = behaviour.GetNetworkVariables();
+    ASSERT_EQ(variables.size(), 1);
+}
+
+class INetworkSerializableTest : public ::testing::Test {
+protected:
+    void SetUp() override {}
+};
+
+TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
+    auto& registry = NetworkRegister::Instance();
+    // registry.RegisterType<ConcreteNetworkSerializable>();
+
+    std::unique_ptr<INetworkSerializable> obj = registry.Create(TYPE_ID<ConcreteNetworkSerializable>());
     ASSERT_NE(obj, nullptr);
-    EXPECT_EQ(obj->GetTypeID(), TYPE_ID(TestSerializable));
+    EXPECT_EQ(obj->GetTypeID(), TYPE_ID<ConcreteNetworkSerializable>());
 }

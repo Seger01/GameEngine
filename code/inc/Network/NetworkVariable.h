@@ -8,8 +8,8 @@ class NetworkVariableBase {
 public:
     virtual ~NetworkVariableBase() = default;
 
-    virtual bool IsDirty() const = 0;
-    virtual void MarkClean() = 0;
+    virtual bool isDirty() const = 0;
+    virtual void setClean() = 0;
 };
 
 template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase {
@@ -31,9 +31,9 @@ public:
         }
     }
 
-    bool isDirty() const { return mDirty; }
+    bool isDirty() const override { return mDirty; }
 
-    void setClean() { mDirty = false; }
+    void setClean() override { mDirty = false; }
 
     // void serialize(SLNet::BitStream& stream) const;
     // void deserialize(SLNet::BitStream& stream);
