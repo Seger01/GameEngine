@@ -1,3 +1,4 @@
+#include "Network/INetworkSerializable.h"
 #include "Network/NetworkObject.h"
 #include "Network/NetworkTransform.h"
 #include <gtest/gtest.h>
@@ -107,4 +108,28 @@ TEST_F(NetworkObjectTest, Clone) {
     ASSERT_NE(clonedNo, nullptr);
     EXPECT_TRUE(clonedNo->isOwner());
     EXPECT_EQ(clonedNo->getClientID(), clientID);
+}
+
+class TestSerializable : public INetworkSerializable {
+public:
+    void Serialize(SLNet::BitStream& stream) const override {
+        // Serialization logic
+    }
+
+    void Deserialize(SLNet::BitStream& stream) override {
+        // Deserialization logic
+    }
+
+    uint32_t GetTypeID() const override { return TYPE_ID(TestSerializable); }
+
+    AUTO_REGISTER_TYPE(TestSerializable)
+};
+
+TEST_F(NetworkObjectTest, TestSerializableRegistration) {
+    auto& registry = NetworkRegister::Instance();
+    // registry.RegisterType<TestSerializable>();
+
+    std::unique_ptr<INetworkSerializable> obj = registry.Create(TYPE_ID(TestSerializable));
+    ASSERT_NE(obj, nullptr);
+    EXPECT_EQ(obj->GetTypeID(), TYPE_ID(TestSerializable));
 }

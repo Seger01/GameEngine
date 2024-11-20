@@ -4,7 +4,10 @@
 #define SERVER_PORT 60001
 #define CLIENT_PORT 60002
 
+#include "Network/NetworkRegister.h"
+
 #include <chrono>
+#include <slikenet/BitStream.h>
 #include <slikenet/MessageIdentifiers.h>
 
 enum class NetworkRole { UNASSIGNED, CLIENT, SERVER, HOST };

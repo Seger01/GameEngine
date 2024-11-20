@@ -1,42 +1,46 @@
 #ifndef NETWORKVARIABLE_H
 #define NETWORKVARIABLE_H
 
-#include <stdexcept> // For std::runtime_error
+#include "Network/NetworkInformation.h"
 
-enum class WritePermission
-{
-    ReadOnly,
-    ReadWrite
+class INetworkBehaviour;
+class NetworkVariableBase {
+public:
+    virtual ~NetworkVariableBase() = default;
+
+    virtual bool IsDirty() const = 0;
+    virtual void MarkClean() = 0;
 };
 
-template <typename T>
-class NetworkVariable
-{
+template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase {
 public:
-    NetworkVariable(WritePermission aWritePermission);
-    T getValue() const;
-    void setValue(T aValue);
+    // NetworkVariable(WritePermission aWritePermission);
+    NetworkVariable(INetworkBehaviour* aOwner, INetworkSerializableTemplate aValue = INetworkSerializableTemplate())
+        : mValue(std::move(aValue)), mDirty(false) {
+        if (aOwner) {
+            aOwner->RegisterNetworkVariable(this);
+        }
+    }
+
+    INetworkSerializableTemplate getValue() const { return mValue; }
+
+    void setValue(INetworkSerializableTemplate aValue) {
+        if (mValue != aValue) {
+            mValue = aValue;
+            mDirty = true;
+        }
+    }
+
+    bool isDirty() const { return mDirty; }
+
+    void setClean() { mDirty = false; }
+
+    // void serialize(SLNet::BitStream& stream) const;
+    // void deserialize(SLNet::BitStream& stream);
 
 private:
-    T mValue;
+    INetworkSerializableTemplate mValue;
+    bool mDirty;
 };
-
-template <typename T>
-NetworkVariable<T>::NetworkVariable(WritePermission aWritePermission)
-{
-    throw std::runtime_error("NetworkVariable::NetworkVariable() not implemented");
-}
-
-template <typename T>
-T NetworkVariable<T>::getValue() const
-{
-    throw std::runtime_error("NetworkVariable::getValue() not implemented");
-}
-
-template <typename T>
-void NetworkVariable<T>::setValue(T aValue)
-{
-    throw std::runtime_error("NetworkVariable::setValue() not implemented");
-}
 
 #endif // NETWORKVARIABLE_H

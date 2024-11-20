@@ -1,12 +1,6 @@
-#include "NetworkBehaviour.h"
+#include "INetworkBehaviour.h"
 #include <stdexcept>
 
-void NetworkBehaviour::serverRpc()
-{
-    throw std::runtime_error("NetworkBehaviour::serverRpc() not implemented");
-}
+void INetworkBehaviour::serverRpc() { throw std::runtime_error("INetworkBehaviour::serverRpc() not implemented"); }
 
-void NetworkBehaviour::clientRpc()
-{
-    throw std::runtime_error("NetworkBehaviour::clientRpc() not implemented");
-}
+void INetworkBehaviour::clientRpc() { throw std::runtime_error("INetworkBehaviour::clientRpc() not implemented"); }

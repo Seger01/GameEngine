@@ -42,7 +42,6 @@ class NetworkVariable{
 
 class MonoBehavior{}
 
-' Maybe not needed
 class NetworkTransform {
     + UpdateTransform()
     + SyncPosition()
@@ -104,17 +103,10 @@ class NetworkSceneManager {
 '     - mObjectAuthority: string
 ' }
 
-class INetworkSerializable {
-    + {abstract} NetworkSerialize()
-    ' + Deserialize()
-}
-
-interface GamePacket {
+interface NetworkPacket {
     + Serialize()
     + Deserialize()
 }
-
-class 
 
 NetworkManager *-- "0..1"NetworkClient
 NetworkManager *-- "0..1"NetworkServer
@@ -128,7 +120,6 @@ NetworkObject -- NetworkTransform
 
 NetworkBehaviour --|> MonoBehavior
 NetworkBehaviour <-- NetworkVariable
-NetworkBehaviour <-- INetworkSerializable
 
 NetworkTransform --|> Transform
 
