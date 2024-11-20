@@ -81,10 +81,8 @@ void PlayerBehaviourScript::handleAnimations() {
 
     if (abs(previousTransform.position.x - currentTransform.position.x) < 0.1 &&
         abs(previousTransform.position.y - currentTransform.position.y) < 0.1) {
-        std::cout << "Player stopped" << std::endl;
         if ((currentActiveAnimationTag() == "playerIdleFront") || (currentActiveAnimationTag() == "playerIdleBack") ||
             (currentActiveAnimationTag() == "playerIdleSide")) {
-            std::cout << "Player idle animation already active" << std::endl;
         } else {
             if (currentActiveAnimationTag() == "playerWalkingFront") {
                 deactivateAllAnimations();
