@@ -194,7 +194,9 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 
     SLNet::RakNetGUID clientGuid;
-    NetworkSharedFunctions::getBitStreamData(bs, clientGuid);
+    NetworkPacket networkPacket;
+    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
+    clientGuid = networkPacket.clientGUID;
 
     for (auto gameObject : networkObjects) {
         if (!gameObject->hasComponent<NetworkObject>()) {
@@ -233,7 +235,9 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkSharedFunctions::getBitStreamData(bs, playerID);
+    NetworkPacket networkPacket;
+    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
+    playerID = networkPacket.clientGUID;
 
     GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
                                                                                                      // client-side
@@ -255,8 +259,10 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
 
 void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
+    NetworkPacket networkPacket;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkSharedFunctions::getBitStreamData(bs, playerID);
+    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
+    playerID = networkPacket.clientGUID;
 
     EngineBravo::getInstance().getNetworkManager().destroyPlayer(playerID);
 }

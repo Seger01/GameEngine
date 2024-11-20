@@ -1,9 +1,10 @@
 #ifndef NETWORKSHAREDFUNCTIONS_H
 #define NETWORKSHAREDFUNCTIONS_H
 
-#include <slikenet/BitStream.h>
+#include "Network/NetworkInformation.h"
 
 #include <chrono>
+#include <slikenet/BitStream.h>
 
 class NetworkSharedFunctions {
 public:
@@ -13,11 +14,9 @@ private:
 
 private:
     static void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
+
     static void getBitStreamData(SLNet::BitStream& aBitStream);
-    static void getBitStreamData(SLNet::BitStream& aBitStream, SLNet::RakNetGUID& aGUID);
-    static void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp);
-    static void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp,
-                                 SLNet::RakNetGUID& aGUID);
+    static void getBitStreamData(SLNet::BitStream& aBitStream, NetworkPacket& aNetworkPacket);
     static void setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID);
 };
 
