@@ -2,19 +2,20 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
-#include "Network/NetworkManager.h"
 #include "AudioManager.h"
 #include "Configuration.h"
+#include "Engine/ResourceManager.h"
+#include "Engine/SaveGameManager.h"
 #include "EventManager.h"
+#include "Network/NetworkManager.h"
 #include "ParticleSystem.h"
 #include "PhysicsManager.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
-#include "Engine/ResourceManager.h"
-#include "Engine/SaveGameManager.h"
 #include "SceneManager.h"
 #include "Time.h"
 #include "UIManager.h"
+#include <queue>
 
 class EngineBravo {
 public:
@@ -55,7 +56,13 @@ private:
 
     void handleEvent(const Event& aEvent);
 
+    void addToUpdateQueue(GameObject& aGameObject);
+
 private:
+    void updateManagers();
+
+private:
+    std::queue<GameObject&> mUpdateQueue;
     int mFrameRateLimit;
     bool mRunning;
 

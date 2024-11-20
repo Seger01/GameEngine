@@ -153,3 +153,13 @@ void EngineBravo::runBehaviourScripts() {
 }
 
 PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }
+
+void EngineBravo::addToUpdateQueue(GameObject& aGameObject) { mUpdateQueue.push(aGameObject); }
+
+void EngineBravo::updateManagers() {
+    // Scene manager
+    // Render system
+    for (auto& gameObject : mUpdateQueue) {
+        // if (gameObject.hasComponent)
+    }
+}
