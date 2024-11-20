@@ -70,10 +70,11 @@ private:
     bool mHasGravity = false;
     bool mIsMoveableByForce = false;
     bool mCanRotate = false;
+    bool mCanCollide = true;
     BodyType mBodyType;
 
-    float mLinearDamping = 0;
-    float mAngularDamping = 0;
+    float mLinearDamping = 0;  // reduces linear velocity over time
+    float mAngularDamping = 0; // reduces angular velocity over time
 
     float mDensity = 0;
     float mFriction = 0;

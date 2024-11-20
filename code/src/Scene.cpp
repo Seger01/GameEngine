@@ -9,6 +9,26 @@ Scene::Scene(std::string aSceneName, int aSceneID)
 
 Scene::~Scene() = default;
 
+void Scene::update() {
+    if (mGameObjectsToRemove.size() > 0) {
+        // std::cout << "Removing GameObject in the update function" << std::endl;
+        for (auto& toBeRemoved : mGameObjectsToRemove) {
+            removeGameObject(toBeRemoved);
+        }
+        mGameObjectsToRemove.clear();
+    }
+}
+
+void Scene::removeGameObject(GameObject* aObject) {
+    for (int i = 0; i < mGameObjects.size(); i++) {
+        if (mGameObjects[i].get() == aObject) {
+            mGameObjects.erase(mGameObjects.begin() + i);
+            return;
+        }
+    }
+    // std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
+}
+
 std::vector<GameObject*>& Scene::getGameObjects() {
     static std::vector<GameObject*> gameObjectRefs;
     gameObjectRefs.clear();
@@ -34,24 +54,24 @@ void Scene::addGameObject(GameObject* object) {
     }
 }
 
-void Scene::removeGameObject(int id) {
-    auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
-                           [id](const std::unique_ptr<GameObject>& obj) { return obj->getID() == id; });
-    if (it != mGameObjects.end()) {
-        it->reset();            // Delete the object
-        mGameObjects.erase(it); // Remove the entry
-    } else {
-        throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
+void Scene::requestGameObjectRemoval(int id) {
+    for (const auto& obj : mGameObjects) {
+        if (obj->getID() == id) {
+            mGameObjectsToRemove.push_back(obj.get());
+            return;
+        }
     }
+    throw std::runtime_error("GameObject with ID " + std::to_string(id) + " not found.");
 }
 
-void Scene::removeGameObject(GameObject* object) {
-    auto it = std::find_if(mGameObjects.begin(), mGameObjects.end(),
-                           [object](const std::unique_ptr<GameObject>& obj) { return obj.get() == object; });
-    if (it != mGameObjects.end()) {
-        it->reset();            // Delete the object
-        mGameObjects.erase(it); // Remove the entry
+void Scene::requestGameObjectRemoval(GameObject* object) {
+    for (const auto& obj : mGameObjects) {
+        if (obj.get() == object) {
+            mGameObjectsToRemove.push_back(obj.get());
+            return;
+        }
     }
+    throw std::runtime_error("GameObject not found.");
 }
 
 GameObject& Scene::getGameObject(int id) {
@@ -147,3 +167,5 @@ void Scene::releasePersistentGameObjects() {
         }
     }
 }
+
+std::vector<GameObject*> Scene::getGameObjectsToBeRemove() { return mGameObjectsToRemove; }

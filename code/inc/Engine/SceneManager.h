@@ -11,7 +11,7 @@ class SceneManager {
 public:
     friend class EngineBravo;
 
-    bool sceneChanged();
+    void update();
 
     // int addSceneLevel(const Map& map);
     void requestSceneChange(const std::string& sceneName);
@@ -23,6 +23,8 @@ public:
     void removeScene(const std::string& sceneName);
 
 private:
+    bool sceneChanged();
+
     void loadScene(int index);
     void loadScene(const std::string& sceneName); // Willen we dit overloaden?
 

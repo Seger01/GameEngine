@@ -11,9 +11,12 @@ class Scene {
 public:
     friend class SceneManager;
     ~Scene();
+
+    void update();
+
     void addGameObject(GameObject* object);
-    void removeGameObject(int id);
-    void removeGameObject(GameObject* object);
+    void requestGameObjectRemoval(int id);
+    void requestGameObjectRemoval(GameObject* object);
     GameObject& getGameObject(int id);
 
     int addCamera();
@@ -32,15 +35,21 @@ public:
     void removePersistentGameObject(GameObject* object);
     std::vector<GameObject*>& getPersistentGameObjects();
     void clearPersistentGameObjects();
-
     void releasePersistentGameObjects();
+
+    std::vector<GameObject*> getGameObjectsToBeRemove();
 
 private:
     Scene(std::string aSceneName, int aSceneID);
 
 private:
+    void removeGameObject(GameObject* aObject);
+
+private:
     std::vector<std::unique_ptr<GameObject>> mGameObjects;
     std::vector<GameObject*> mPersistentGameObjects;
+
+    std::vector<GameObject*> mGameObjectsToRemove;
 
     std::vector<std::unique_ptr<Camera>> mCameras;
     int mActiveCameraIndex;

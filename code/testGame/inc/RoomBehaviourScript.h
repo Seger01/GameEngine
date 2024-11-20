@@ -28,5 +28,6 @@ private:
     std::vector<SpawnPoint> mEnemySpawns;
     SpriteDef mClosedDoorSpriteDef;
     SpriteDef mOpenDoorSpriteDef;
+    SpriteDef mEnemyFrameDef;
     bool mDoorsOpen = true;
 };

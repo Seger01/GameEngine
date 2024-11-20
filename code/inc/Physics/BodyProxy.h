@@ -36,6 +36,8 @@ public:
     float getMass() const;
     float getGravityScale() const;
 
+    bool getCanCollide() const;
+
     std::vector<BoxCollider*> getBoxColliders() const;
     std::vector<CircleCollider*> getCircleColliders() const;
 
@@ -46,6 +48,7 @@ private:
     bool mHasGravity;
     bool mIsMoveableByForce;
     bool mCanRotate;
+    bool mCanCollide;
     BodyType mBodyType;
 
     float mLinearDamping;

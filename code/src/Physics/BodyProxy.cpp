@@ -1,43 +1,41 @@
 #include "Physics/BodyProxy.h"
-#include "BoxCollider.h"
-#include "CircleCollider.h"
-#include "RigidBody.h"
-#include <vector>
 
 BodyProxy::BodyProxy(GameObject* aGameObject) {
-    std::vector<RigidBody*> rigidBodies = aGameObject->getComponents<RigidBody>();
+    if (aGameObject->hasComponent<RigidBody>()) {
+        RigidBody* rigidBody = aGameObject->getComponents<RigidBody>().at(0);
+        mBoxColliders = aGameObject->getComponents<BoxCollider>();
 
-    mBoxColliders = aGameObject->getComponents<BoxCollider>();
+        Transform transform = aGameObject->getTransform();
 
-    // mPosition = aGameObject->getTransform().position;
-    Transform transform = aGameObject->getTransform();
+        transform.position = transform.position + mBoxColliders[0]->getTransform().position;
 
-    transform.position = transform.position + mBoxColliders[0]->getTransform().position;
+        transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
+        transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
 
-    transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
-    transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
+        mPosition = Vector2(-transform.position.x, -transform.position.y);
 
-    mPosition = Vector2(-transform.position.x, -transform.position.y);
+        mSize = aGameObject->getTransform().scale;
 
-    mSize = aGameObject->getTransform().scale;
+        mHasGravity = rigidBody->getHasGravity();
+        mIsMoveableByForce = rigidBody->getIsMoveableByForce();
+        mCanRotate = rigidBody->getCanRotate();
+        mDensity = rigidBody->getDensity();
+        mFriction = rigidBody->getFriction();
+        mRestitution = rigidBody->getRestitution();
+        mMass = rigidBody->getMass();
+        mGravityScale = rigidBody->getGravityScale();
+        mLinearDamping = rigidBody->getLinearDamping();
+        mAngularDamping = rigidBody->getAngularDamping();
 
-    mHasGravity = rigidBodies.at(0)->getHasGravity();
-    mIsMoveableByForce = rigidBodies.at(0)->getIsMoveableByForce();
-    mCanRotate = rigidBodies.at(0)->getCanRotate();
-    mDensity = rigidBodies.at(0)->getDensity();
-    mFriction = rigidBodies.at(0)->getFriction();
-    mRestitution = rigidBodies.at(0)->getRestitution();
-    mMass = rigidBodies.at(0)->getMass();
-    mGravityScale = rigidBodies.at(0)->getGravityScale();
-    mLinearDamping = rigidBodies.at(0)->getLinearDamping();
-    mAngularDamping = rigidBodies.at(0)->getAngularDamping();
+        processBodyType();
 
-    // processBodyType();
-    mBodyType = BodyType::DYNAMIC;
+        for (BoxCollider* boxCollider : mBoxColliders) {
+            boxCollider->setWidth(boxCollider->getWidth() / 2);
+            boxCollider->setHeight(boxCollider->getHeight() / 2);
+        }
 
-    for (BoxCollider* boxCollider : mBoxColliders) {
-        boxCollider->setWidth(boxCollider->getWidth() / 2);
-        boxCollider->setHeight(boxCollider->getHeight() / 2);
+    } else {
+        return;
     }
 }
 
