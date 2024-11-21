@@ -66,3 +66,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
 2024-11-19, 9:15, 7.5, worked on game template and fixing tests for tilemapparser and worked on design for validation game
 2024-11-20, 9:45, 6.75, worked on design for validation game and implementing the design
+2024-11-21, 9:15, 7, worked on level creator and level manager and fixed segfault when switching levels
