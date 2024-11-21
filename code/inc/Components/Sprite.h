@@ -12,6 +12,15 @@ public:
     Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect());
     ~Sprite();
 
+    // Rule of Five
+    Sprite(const Sprite& other);                // Copy constructor
+    Sprite& operator=(const Sprite& other);     // Copy assignment operator
+    Sprite(Sprite&& other) noexcept;            // Move constructor
+    Sprite& operator=(Sprite&& other) noexcept; // Move assignment operator
+
+    // Override the clone method
+    std::unique_ptr<Component> clone() const override;
+
     Texture* getTexture();
 
     Transform getRelativePosition();
@@ -42,8 +51,8 @@ private:
     Rect mSourceRect;
 
     std::string mSprite;
-    int mWidth = 0;
-    int mHeight = 0;
+    float mWidth = 0;
+    float mHeight = 0;
     //??? mColor;
     //??? mColor;
     bool mFlipX;

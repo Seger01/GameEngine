@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
+
 #include "Scene.h"
 #include <iostream>
 #include <memory>
@@ -9,9 +11,8 @@ class SceneManager {
 public:
     friend class EngineBravo;
 
-    bool sceneChanged();
+    void update();
 
-    int addScene(const Scene& scene);
     // int addSceneLevel(const Map& map);
     void requestSceneChange(const std::string& sceneName);
     void requestSceneChange(int sceneID);
@@ -22,6 +23,8 @@ public:
     void removeScene(const std::string& sceneName);
 
 private:
+    bool sceneChanged();
+
     void loadScene(int index);
     void loadScene(const std::string& sceneName); // Willen we dit overloaden?
 
@@ -39,3 +42,5 @@ private:
     std::string mNewSceneName;
     int mNewSceneID;
 };
+
+#endif // SCENEMANAGER_H

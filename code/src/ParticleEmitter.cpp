@@ -20,6 +20,8 @@ ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float a
 
 ParticleEmitter::~ParticleEmitter() { mParticles.resize(0); }
 
+std::unique_ptr<Component> ParticleEmitter::clone() const { return std::make_unique<ParticleEmitter>(*this); }
+
 Vector2 ParticleEmitter::generateRandomVelocity(float minSpeed, float maxSpeed, int minAngle, int maxAngle) {
     // Generate a random angle between minAngle and maxAngle
     float angle = (minAngle + (static_cast<float>(rand()) / RAND_MAX * (maxAngle - minAngle))) * (M_PI / 180.0f);
@@ -91,14 +93,16 @@ void ParticleEmitter::spawnParticle() {
 }
 
 void ParticleEmitter::update() {
-    if (mEmitterMode == EmitterMode::Continuous) {
-        static float amountOfParticlesToSpawn;
-        amountOfParticlesToSpawn += mParticlesPerSecond * Time::deltaTime;
-        int i = 0;
-        for (i = 0; i < amountOfParticlesToSpawn; i++) {
-            spawnParticle();
+    if (mActive) {
+        if (mEmitterMode == EmitterMode::Continuous) {
+            static float amountOfParticlesToSpawn;
+            amountOfParticlesToSpawn += mParticlesPerSecond * Time::deltaTime;
+            int i = 0;
+            for (i = 0; i < amountOfParticlesToSpawn; i++) {
+                spawnParticle();
+            }
+            amountOfParticlesToSpawn -= i;
         }
-        amountOfParticlesToSpawn -= i;
     }
 
     for (int i = 0; i < mParticles.size();) { // Note: no increment here
@@ -109,6 +113,15 @@ void ParticleEmitter::update() {
             ++i; // Only increment if no element was erased
         }
     }
+    // for (int i = 0; i < mParticles.size();) {
+    //     mParticles[i].update();
+    //     if (mParticles[i].getLifeTime() <= 0) {
+    //         std::swap(mParticles[i], mParticles.back());
+    //         mParticles.pop_back(); // Removes the last element efficiently
+    //     } else {
+    //         ++i;
+    //     }
+    // }
 }
 
 void ParticleEmitter::burst(int aAmount) {

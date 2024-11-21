@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "Sprite.h"
@@ -11,11 +12,22 @@ public:
     Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false);
     ~Animation();
 
+    // Rule of Five
+    Animation(const Animation& other);                // Copy constructor
+    Animation& operator=(const Animation& other);     // Copy assignment operator
+    Animation(Animation&& other) noexcept;            // Move constructor
+    Animation& operator=(Animation&& other) noexcept; // Move assignment operator
+
+    // Override the clone method
+    std::unique_ptr<Component> clone() const override {
+        return std::make_unique<Animation>(*this); // Uses the copy constructor of Sprite
+    }
+
     Transform getTransform();
     void setTransform(Transform aNewTransform);
 
     Sprite* getFrame(int aFrameIndex);
-    Sprite* getFrameAtTime(long aTime);
+    Sprite* getCurrentFrame();
 
     int getTimeBetweenFrames();
     void setTimeBetweenFrames(int aTimeBetweenFrames);
@@ -36,14 +48,11 @@ public:
 
 private:
     Transform mTransform;
-
     bool mFlipX;
     bool mFlipY;
-
-    std::vector<Sprite*> mAnimationFrames;
+    std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
     int mTimeBetweenFrames;
     bool mIsLooping;
-
     int mLayer = 0;
 };
 

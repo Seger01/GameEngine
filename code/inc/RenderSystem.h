@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "Button.h"
 #include "Particle.h"
 #include "Renderer.h"
 #include "Scene.h"
@@ -19,13 +20,17 @@ public:
     Renderer& getRenderer();
     Window& getWindow();
 
+    bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale);
+
 private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);
     void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
     void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
-    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor);
+    void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale);
 
-    void renderDeubgInfo(Scene* aScene);
+    // void renderButton(Camera& aCurrentCamera, Button* aButton);
+
+    void renderDebugInfo(Scene* aScene);
 
     int getLowestLayer(Scene* aScene);
     int getHighestLayer(Scene* aScene);

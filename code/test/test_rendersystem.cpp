@@ -24,12 +24,7 @@ protected:
         EngineBravo& engineBravo = EngineBravo::getInstance();
         mRenderSystem = &engineBravo.getRenderSystem();
 
-        mRenderSystem->getWindow().showWindow();
-
-        mRenderSystem->getWindow().setFloating();
-        mRenderSystem->getWindow().toggleFullFloating();
-        mRenderSystem->getWindow().setFullScreen();
-
+        //
         engineBravo.getResourceManager().setRenderer(&mRenderSystem->getRenderer());
 
         mScene = engineBravo.getSceneManager().createScene("Test Scene", 1);
@@ -105,7 +100,7 @@ TEST_F(RenderSystemTest, RenderLayer_NoExceptions) {
 TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer) {
     // Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
     ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0)); // Check for exceptions when an invalid layer is
-                                                            // passed
+    //                                                         // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions) {
@@ -114,4 +109,25 @@ TEST_F(RenderSystemTest, Render_NoExceptions) {
 
 TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getRenderer()); }
 
-TEST_F(RenderSystemTest, GetWindow_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getWindow()); }
+TEST_F(RenderSystemTest, GetWindow_NoExceptions) {
+    ASSERT_NO_THROW(mRenderSystem->getWindow());
+    mRenderSystem->getWindow().showWindow();
+
+    mRenderSystem->getWindow().showWindow();
+
+    mRenderSystem->getWindow().setFloating();
+    // mRenderSystem->getWindow().toggleFullFloating();
+}
+
+TEST_F(RenderSystemTest, GetTextSize_CorrectSize) {
+    // Test that the text size is correct
+    int height = 0, width = 0;
+
+    // ASSERT_TRUE(mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1)));
+    bool res = mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1));
+
+    ASSERT_EQ(res, 1);
+
+    std::cout << "Calculated Text size: " << std::endl;
+    std::cout << "Width: " << width << " Height: " << height << std::endl;
+}

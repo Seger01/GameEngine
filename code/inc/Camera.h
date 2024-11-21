@@ -18,6 +18,8 @@ public:
     void setHeight(int aHeight);
     int getHeight();
 
+    Vector2 getOrigin();
+
 private:
     Color mBackgroundColor;
     int mWidth;

@@ -4,12 +4,14 @@
 #include <chrono>
 #include <thread>
 
+#include "slikenet/sleep.h"
+
 #include "IBehaviourScript.h"
 #include "Input.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 
-EngineBravo::EngineBravo() : mFrameRateLimit(1000), mRunning(false) {}
+EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
@@ -18,14 +20,21 @@ EngineBravo& EngineBravo::getInstance() {
     return instance;
 }
 
-void EngineBravo::initizalize() {
+void EngineBravo::initialize() {
     this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-    if (mSceneManager.sceneChanged()) {
-    }
-    startBehaviourScripts();
+    mConfiguration.setConfig("render_colliders", true);
+    mConfiguration.setConfig("render_fps", true);
+
+    mSceneManager.update();
+
+    mNetworkManager.initialize();
 
     Time::initialize();
+
+    mUIManager.init();
+
+    mPhysicsManager.startPhysicsEngine(Vector2(0, 0.0f));
     return;
 }
 
@@ -40,20 +49,22 @@ void EngineBravo::run() {
 
     while (mRunning) {
         Time::update();
-
         mEventManager.handleEvents();
-
-        if (mSceneManager.sceneChanged()) {
-            startBehaviourScripts();
-        }
         input.update();
+
+        mUIManager.update(mSceneManager.getCurrentScene());
+        mSceneManager.update();
+
+        startBehaviourScripts();
 
         runBehaviourScripts();
 
-        mParticleSystem.update(mSceneManager.getCurrentScene());
+        mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
+        mParticleSystem.update(mSceneManager.getCurrentScene());
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
+        mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
     }
 }
@@ -94,9 +105,18 @@ void EngineBravo::limitFrameRate(int aFrameRate) {
 }
 
 SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
+
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
+
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
-SaveGameManager& EngineBravo::getSaveGameManager() { return saveGameManager; }
+SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
+EventManager& EngineBravo::getEventManager() { return mEventManager; }
+UIManager& EngineBravo::getUIManager() { return mUIManager; }
+
+NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
+
+Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts() {
     Scene* currentScene = mSceneManager.getCurrentScene();
@@ -107,7 +127,11 @@ void EngineBravo::startBehaviourScripts() {
     if (currentScene) {
         for (auto& gameObject : currentScene->getGameObjects()) {
             for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>()) {
+                if (behaviourScript->hasScriptStarted()) {
+                    continue;
+                }
                 behaviourScript->onStart();
+                behaviourScript->setScriptStarted(true);
             }
         }
     }
@@ -127,3 +151,5 @@ void EngineBravo::runBehaviourScripts() {
         }
     }
 }
+
+PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }

@@ -16,6 +16,11 @@ Renderer::Renderer(Window& window) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return;
     }
+
+    // if (SDL_RenderSetVSync(mRenderer, 1) != 0) {
+    //     std::cerr << "Warning: V-Sync is not supported or failed to enable!" << std::endl;
+    // }
+
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
         SDL_Log("Unable to initialize SDL_ttf: %s", TTF_GetError());
@@ -24,9 +29,10 @@ Renderer::Renderer(Window& window) {
     }
 
     // Load a font
-    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/SupremeSpike.otf").c_str(), 22); // Specify the
-                                                                                                       // font path and
-                                                                                                       // size
+    TTF_Font* font = TTF_OpenFont(FSConverter().getResourcePath("font/joystixmonospace.otf").c_str(), 22); // Specify
+                                                                                                           // the font
+                                                                                                           // path and
+                                                                                                           // size
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         TTF_Quit();
@@ -37,7 +43,15 @@ Renderer::Renderer(Window& window) {
     mFont = font;
 }
 
-Renderer::~Renderer() { SDL_DestroyRenderer(this->mRenderer); }
+Renderer::~Renderer() {
+    SDL_DestroyRenderer(this->mRenderer);
+
+    // Close the font
+    TTF_CloseFont(mFont);
+
+    // Quit SDL_ttf
+    TTF_Quit();
+}
 
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
                              bool aFlipX, bool aFlipY, float aRotation) {
@@ -52,9 +66,9 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     dstRect.h = aHeight;
 
     // SDL_Rect sourceRect(aSourceRect);
-    SDL_Rect* sourceRect = nullptr;
+    std::unique_ptr<SDL_Rect> sourceRect(nullptr);
     if (aSourceRect.w != 0) {
-        sourceRect = new SDL_Rect(aSourceRect);
+        sourceRect = std::make_unique<SDL_Rect>(aSourceRect);
     }
 
     // Set the flipping mode based on input flags
@@ -68,13 +82,13 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     }
 
     // Render the texture with flipping and rotation
-    SDL_RenderCopyEx(mRenderer,  // The renderer associated with the texture
-                     sdlTexture, // The texture to render
-                     sourceRect, // The source rectangle (nullptr means the entire texture)
-                     &dstRect,   // The destination rectangle
-                     aRotation,  // The angle of rotation (in degrees)
-                     nullptr,    // The point around which to rotate (nullptr means center)
-                     flip        // The flipping mode
+    SDL_RenderCopyEx(mRenderer,        // The renderer associated with the texture
+                     sdlTexture,       // The texture to render
+                     sourceRect.get(), // The source rectangle (nullptr means the entire texture)
+                     &dstRect,         // The destination rectangle
+                     aRotation,        // The angle of rotation (in degrees)
+                     nullptr,          // The point around which to rotate (nullptr means center)
+                     flip              // The flipping mode
     );
 }
 
@@ -181,6 +195,16 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
 }
+
+bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) {
+    if (TTF_SizeText(mFont, text.c_str(), &width, &height) == 0) {
+        return true;
+    } else {
+        std::cerr << "Failed to calculate text size: " << TTF_GetError() << std::endl;
+        return false;
+    }
+}
+
 void Renderer::clear(Color aColor) {
     SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
     SDL_RenderClear(mRenderer);
