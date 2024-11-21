@@ -29,6 +29,9 @@ public:
     Sprite* getFrame(int aFrameIndex);
     Sprite* getCurrentFrame();
 
+    Color getColorFilter();
+    void setColorFilter(Color aColor);
+
     int getTimeBetweenFrames();
     void setTimeBetweenFrames(int aTimeBetweenFrames);
 
@@ -48,9 +51,11 @@ public:
 
 private:
     Transform mTransform;
+
+    std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
+
     bool mFlipX;
     bool mFlipY;
-    std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
     int mTimeBetweenFrames;
     bool mIsLooping;
     int mLayer = 0;

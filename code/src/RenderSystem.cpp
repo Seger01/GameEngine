@@ -26,6 +26,7 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480) {
 }
 
 void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite) {
+
     int spriteWidth = aSprite->getWidth();
     int spriteHeight = aSprite->getHeight();
 
@@ -50,7 +51,8 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     // Render the sprite with adjusted size
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
                              aSprite->getFlipX(), aSprite->getFlipY(),
-                             aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation);
+                             aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
+                             aSprite->getColorFilter());
 }
 
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
