@@ -35,7 +35,7 @@ Date,Time,Duration(in hours),Activity
 2024-10-09, 8:45, 6.25, Architecture and design discussion with team
 2024-10-10, 8:45, 0.5, research multiplayer in unity
 2024-10-10, 9:15, 1.0, Meeting with team about class diagram
-2024-10-10, 10:15, 8.5, POC multiplayer. Trying to implement notcode multiplayer. Messing around with unity
+2024-10-10, 10:15, 8.5, POC multiplayer; Trying to implement notcode multiplayer; Messing around with unity
 2024-10-14, 9:00, 2.15, Attending presentations of other groups, conversation with Bob
 2024-10-16, 10:15, 3.5, Project meeting
 2024-10-22, 09:00, 7, Multiplayer design and discussed fysics design
@@ -55,3 +55,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-14, 8:45, 7.25, Preparing for presentation
 2024-11-15, 9:00, 2, Class with other groups
 2024-11-19, 9:15, 8, Worked on netowrking design; class with other groups; Setup template for game
+2024-11-20, 8:00, 3.25, Worked on networking. Trying to make auto register of INetworkSerializable
+2024-11-20, 19:00, 3, Worked on networking. Still trying to make auto register of INetworkSerializable

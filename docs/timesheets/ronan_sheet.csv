@@ -65,3 +65,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-16, 14:00, 3.25, worked on enemy spawning and spawning bullets
 2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
 2024-11-19, 9:15, 7.5, worked on game template and fixing tests for tilemapparser and worked on design for validation game
+2024-11-20, 9:45, 6.75, worked on design for validation game and implementing the design
