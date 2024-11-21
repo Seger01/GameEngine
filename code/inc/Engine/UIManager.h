@@ -16,14 +16,16 @@ public:
     void init();
     void update(Scene* aScene);
 
-    void handleEvent(const Event& aEvent);
+    void handleMouseDownEvent(const Event& aEvent);
+    void handleMouseUpEvent(const Event& aEvent);
 
 private:
     // std::vector<UIObject&> mClickableButtons;
     UIManager();
     ~UIManager();
 
-    std::vector<Event> mEventQueue;
+    std::vector<Event> mMouseDownEventQueue;
+    std::vector<Event> mMouseUpEventQueue;
 };
 
 #endif // UIMANAGER_H

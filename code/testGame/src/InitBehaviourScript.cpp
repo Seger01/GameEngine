@@ -38,6 +38,10 @@ void InitBehaviourScript::createLevel1() {
 
     GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
+    CircleCollider* circleCollider = new CircleCollider(8);
+    circleCollider->setTransform(Transform(Vector2(8, 0)));
+    defaultPlayerPrefab->addComponent(circleCollider);
+
     scene->addGameObject(defaultPlayerPrefab);
 
     GameObject* gameObject2 = new GameObject;

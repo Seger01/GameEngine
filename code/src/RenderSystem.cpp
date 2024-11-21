@@ -26,6 +26,7 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480) {
 }
 
 void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite) {
+
     int spriteWidth = aSprite->getWidth();
     int spriteHeight = aSprite->getHeight();
 
@@ -50,7 +51,8 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
     // Render the sprite with adjusted size
     mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
                              aSprite->getFlipX(), aSprite->getFlipY(),
-                             aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation);
+                             aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
+                             aSprite->getColorFilter());
 }
 
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation) {
@@ -285,6 +287,37 @@ void RenderSystem::renderDebugInfo(Scene* aScene) {
                     }
 
                     mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
+                }
+            }
+            if (gameObject->hasComponent<CircleCollider>()) {
+                for (auto circleCollider : gameObject->getComponents<CircleCollider>()) {
+                    Camera& aCurrentCamera = aScene->getActiveCamera();
+
+                    int WindowWidth = mWindow->getSize().x;
+                    int WindowHeight = mWindow->getSize().y;
+
+                    Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
+
+                    float circleRadius = circleCollider->getRadius();
+
+                    Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+
+                    Vector2 drawPosition = circlePos - cameraOrigin;
+
+                    drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+                    drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+                    circleRadius = std::ceil(static_cast<int>(
+                        static_cast<float>(circleRadius) *
+                        (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+
+                    Color renderColor = Color(0, 0, 255);
+
+                    if (!circleCollider->isActive()) {
+                        renderColor = Color(252, 3, 252);
+                    }
+
+                    mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
                 }
             }
         }

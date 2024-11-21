@@ -54,9 +54,15 @@ Renderer::~Renderer() {
 }
 
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
-                             bool aFlipX, bool aFlipY, float aRotation) {
+                             bool aFlipX, bool aFlipY, float aRotation, Color aColor) {
     // Get the SDL_Texture from the Texture class
     SDL_Texture* sdlTexture = aTexture.getSDLTexture();
+
+    // Set the alpha modulation for the texture
+    SDL_SetTextureAlphaMod(sdlTexture, aColor.a);
+
+    // Set the color modulation for the texture
+    SDL_SetTextureColorMod(sdlTexture, aColor.r, aColor.g, aColor.b);
 
     // Define the destination rectangle where the texture will be drawn
     SDL_Rect dstRect;
@@ -65,7 +71,7 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
     dstRect.w = aWidth;
     dstRect.h = aHeight;
 
-    // SDL_Rect sourceRect(aSourceRect);
+    // Define the source rectangle if specified
     std::unique_ptr<SDL_Rect> sourceRect(nullptr);
     if (aSourceRect.w != 0) {
         sourceRect = std::make_unique<SDL_Rect>(aSourceRect);
@@ -139,6 +145,49 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aC
         SDL_RenderFillRect(mRenderer, &rect);
     } else {
         SDL_RenderDrawRect(mRenderer, &rect);
+    }
+}
+
+void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill) {
+    // Set the render color
+    SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+
+    if (aFill) {
+        // Draw filled circle
+        for (int w = 0; w < radius * 2; w++) {
+            for (int h = 0; h < radius * 2; h++) {
+                int dx = radius - w; // horizontal offset
+                int dy = radius - h; // vertical offset
+                if ((dx * dx + dy * dy) <= (radius * radius)) {
+                    SDL_RenderDrawPoint(mRenderer, center.x + dx, center.y + dy);
+                }
+            }
+        }
+    } else {
+        // Draw outline circle using the midpoint circle algorithm
+        int x = radius;
+        int y = 0;
+        int decisionOver2 = 1 - x; // Decision criterion divided by 2
+
+        while (x >= y) {
+            // Draw the eight symmetrical points of the circle
+            SDL_RenderDrawPoint(mRenderer, center.x + x, center.y + y);
+            SDL_RenderDrawPoint(mRenderer, center.x + y, center.y + x);
+            SDL_RenderDrawPoint(mRenderer, center.x - x, center.y + y);
+            SDL_RenderDrawPoint(mRenderer, center.x - y, center.y + x);
+            SDL_RenderDrawPoint(mRenderer, center.x - x, center.y - y);
+            SDL_RenderDrawPoint(mRenderer, center.x - y, center.y - x);
+            SDL_RenderDrawPoint(mRenderer, center.x + x, center.y - y);
+            SDL_RenderDrawPoint(mRenderer, center.x + y, center.y - x);
+
+            y++;
+            if (decisionOver2 <= 0) {
+                decisionOver2 += 2 * y + 1; // Change in decision criterion for y -> y+1
+            } else {
+                x--;
+                decisionOver2 += 2 * (y - x) + 1; // Change for y -> y+1, x -> x-1
+            }
+        }
     }
 }
 

@@ -2,7 +2,7 @@
 
 Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect)
     : mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect), mTransform(Transform()),
-      mFlipX(false), mFlipY(false), mLayer(0) {}
+      mFlipX(false), mFlipY(false), mLayer(0), mColorFilter(Color(255, 255, 255, 255)) {}
 
 // Copy constructor
 Sprite::Sprite(const Sprite& other)
@@ -73,5 +73,7 @@ Transform Sprite::getRelativePosition() { return mTransform; }
 void Sprite::setRelativePosition(Transform aNewTransform) { mTransform = aNewTransform; }
 
 Rect Sprite::getSource() { return mSourceRect; }
-
 void Sprite::setSource(Rect aSourceRect) { mSourceRect = aSourceRect; }
+
+Color Sprite::getColorFilter() { return mColorFilter; }
+void Sprite::setColorFilter(Color aColor) { mColorFilter = aColor; }

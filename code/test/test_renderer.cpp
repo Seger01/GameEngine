@@ -51,13 +51,16 @@ TEST_F(RendererTest, RenderTexture) {
         Vector2 location{100, 100};
 
         mRenderer->clear(Color{0, 0, 0, 255});
-        mRenderer->renderTexture(*texture, sourceRect, location, 100, 100, false, false, 0.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, 100, 100, false, false, 0.0f,
+                                 Color(255, 255, 255, 255));
 
         sourceRect = {2000, 2000, -100, -100};
-        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, true, true, 45.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, true, true, 45.0f,
+                                 Color(255, 255, 255, 255));
 
         sourceRect = {-2000, -2000, -100, -100};
-        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, false, true, 45.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, false, true, 45.0f,
+                                 Color(255, 255, 255, 255));
 
         mRenderer->show();
     }()));
@@ -81,6 +84,15 @@ TEST_F(RendererTest, RenderText) {
         mRenderer->renderText("Test Text", Vector2{300, 300}, color, 1.0f, 1.0f);
 
         mRenderer->renderText("Test Text", Vector2{-20000, 200000}, color, -1.0f, -1.0f);
+    }()));
+}
+
+TEST_F(RendererTest, RenderCircle) {
+    ASSERT_NO_THROW(([&]() {
+        mRenderer->drawCircle(Vector2(100, 100), 200, Color(255, 255, 255), false);
+        mRenderer->drawCircle(Vector2(100, 100), 200, Color(255, 255, 255), true);
+
+        mRenderer->drawCircle(Vector2(200000, -100), -200, Color(255, 255, 255), true);
     }()));
 }
 
