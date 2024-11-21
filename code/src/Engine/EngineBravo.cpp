@@ -9,6 +9,7 @@
 #include "Animation.h"
 #include "IBehaviourScript.h"
 #include "Input.h"
+#include "NetworkObject.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
 #include "Sprite.h"
@@ -203,7 +204,10 @@ void EngineBravo::updateAdditions() {
             mParticleSystem.addObject(gameObject);
         }
         // Network manager:
-
+        mNetworkManager.removeObject(gameObject);
+        if (gameObject.hasComponent<NetworkObject>()) {
+            mNetworkManager.addObject(gameObject);
+        }
         // Event manager: does not use a list of game objects
         // Save game manager: does not use a list of game objects
         // Audio manager
@@ -236,7 +240,8 @@ void EngineBravo::updateRemovals() {
         // Resource manager: does not use a list of game objects
         // Particle system
         mParticleSystem.removeObject(*gameObject);
-        // Network manager it seems to (potentially) require all game objects
+        // Network manager:
+        mNetworkManager.removeObject(*gameObject);
         // Event manager: does not use a list of game objects
         // Save game manager: does not use a list of game objects
         // Audio manager

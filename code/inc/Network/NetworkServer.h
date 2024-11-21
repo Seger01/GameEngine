@@ -14,10 +14,10 @@
 
 class NetworkServer {
 public:
-    NetworkServer(int aTickRate);
+    NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
     void receiveGameState();
     void sendGameState();
-    void update(std::vector<GameObject*>& aGameObjects);
+    void update(std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
 
     bool isConnected() const;
 
@@ -41,10 +41,11 @@ private:
     void setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID);
 
 private:
+    std::vector<std::reference_wrapper<GameObject>>& mObjects;
+
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;
     std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
 
-    std::vector<GameObject*>* mGameObjects;
     int mTickRate;
 };
 
