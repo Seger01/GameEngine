@@ -209,7 +209,10 @@ void EngineBravo::updateAdditions() {
         if (gameObject.hasComponent<AudioSource>()) {
             mAudioManager.addObject(gameObject);
         }
-        // UI manager
+        // UI manager:
+        if (typeid(gameObject) == typeid(Button)) {
+            mUIManager.addObject(gameObject);
+        }
         // Physics manager
     }
     mUpdateObjects.clear();
@@ -229,6 +232,7 @@ void EngineBravo::updateRemovals() {
         // Audio manager
         mAudioManager.removeObject(*gameObject);
         // UI manager
+        mUIManager.removeObject(*gameObject);
         // Physics manager
     }
 }
