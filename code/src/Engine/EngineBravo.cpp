@@ -214,6 +214,12 @@ void EngineBravo::updateAdditions() {
             mUIManager.addObject(gameObject);
         }
         // Physics manager
+        if (gameObject.hasComponent<RigidBody>()) {
+            mPhysicsManager.getPhysicsEngine().addObject(gameObject);
+        }
+        if (gameObject.hasComponent<BoxCollider>()) {
+            mPhysicsManager.getPhysicsEngine().addObject(gameObject);
+        }
     }
     mUpdateObjects.clear();
 }
@@ -234,5 +240,6 @@ void EngineBravo::updateRemovals() {
         // UI manager
         mUIManager.removeObject(*gameObject);
         // Physics manager
+        mPhysicsManager.getPhysicsEngine().removeObject(*gameObject);
     }
 }

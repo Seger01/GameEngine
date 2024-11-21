@@ -2,26 +2,22 @@
 
 PhysicsEngine::PhysicsEngine() {}
 
-void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) { mGameObjects = aGameObjects; }
-
 void PhysicsEngine::update() {
     createBodies();
     updateFlags();
 
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
+    for (GameObject& gameObject : mObjects) {
+        if (gameObject.hasComponent<RigidBody>()) {
 
-            RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
+            RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 
-            Transform transform = mGameObjects.at(i)->getTransform();
+            Transform transform = gameObject.getTransform();
 
             transform.position =
-                transform.position + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getTransform().position;
+                transform.position + gameObject.getComponents<BoxCollider>()[0]->getTransform().position;
 
-            transform.position.x =
-                transform.position.x + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth();
-            transform.position.y =
-                transform.position.y + mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight();
+            transform.position.x = transform.position.x + gameObject.getComponents<BoxCollider>()[0]->getWidth();
+            transform.position.y = transform.position.y + gameObject.getComponents<BoxCollider>()[0]->getHeight();
 
             Vector2 newPos = Vector2(-transform.position.x, -transform.position.y);
 
@@ -64,10 +60,10 @@ void PhysicsEngine::update() {
         }
     }
 
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
+    for (GameObject& gameObject : mObjects) {
+        if (gameObject.hasComponent<RigidBody>()) {
 
-            RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
+            RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 
             mWorld.applyLinearForce(rigidBody->getBodyId(), rigidBody->getForcesBuffer());
             rigidBody->clearForcesBuffer();
@@ -82,18 +78,18 @@ void PhysicsEngine::update() {
     executeCollisionScripts(mWorld.getContactEvents());
     executeCollisionScripts(mWorld.getSensorEvents());
 
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
-            RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
+    for (GameObject& gameObject : mObjects) {
+        if (gameObject.hasComponent<RigidBody>()) {
+            RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 
-            if (mGameObjects.at(i)->hasComponent<BoxCollider>()) {
-                BoxCollider* boxCollider = mGameObjects.at(i)->getComponents<BoxCollider>()[0];
+            if (gameObject.hasComponent<BoxCollider>()) {
+                BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
 
                 boxCollider->setWidth(boxCollider->getWidth() * 2);
                 boxCollider->setHeight(boxCollider->getHeight() * 2);
 
                 Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-                Transform transform = mGameObjects.at(i)->getTransform();
+                Transform transform = gameObject.getTransform();
 
                 transform.position = position;
 
@@ -104,7 +100,7 @@ void PhysicsEngine::update() {
 
                 transform.position = transform.position - boxCollider->getTransform().position;
 
-                mGameObjects.at(i)->setTransform(transform);
+                gameObject.setTransform(transform);
             }
         }
     }
@@ -151,14 +147,14 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 }
 
 void PhysicsEngine::createBodies() {
-    for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
+    for (GameObject& gameObject : mObjects) {
 
-        if (mGameObjects.at(gameObjectIndex)->hasComponent<RigidBody>()) {
-            RigidBody* rigidBody = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>()[0];
+        if (gameObject.hasComponent<RigidBody>()) {
+            RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 
             if (rigidBody->getBodyId() == -1) {
 
-                BodyProxy bodyProxy = BodyProxy(mGameObjects.at(gameObjectIndex));
+                BodyProxy bodyProxy = BodyProxy(&gameObject);
 
                 int bodyID = mWorld.createBody(bodyProxy);
                 rigidBody->setBodyId(bodyID);
@@ -176,12 +172,10 @@ void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld.createWorld(aGravity)
 
 World& PhysicsEngine::getWorld() { return mWorld; }
 
-void PhysicsEngine::setgameObjects(std::vector<GameObject*> aGameObjects) { mGameObjects = aGameObjects; }
-
 void PhysicsEngine::reset() {
     mWorld.resetWorld();
-    for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
-        std::vector<RigidBody*> rigidBodies = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>();
+    for (GameObject& gameObject : mObjects) {
+        std::vector<RigidBody*> rigidBodies = gameObject.getComponents<RigidBody>();
         for (int rigidBodyIndex = 0; rigidBodyIndex < rigidBodies.size(); rigidBodyIndex++) {
             rigidBodies.at(rigidBodyIndex)->setBodyId(-1);
         }
@@ -190,12 +184,12 @@ void PhysicsEngine::reset() {
 
 // Checks and returns GameObject if BodyID exists within world
 GameObject* PhysicsEngine::getGameObjectByID(int aID) {
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
-            std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
+    for (GameObject& gameObject : mObjects) {
+        if (gameObject.hasComponent<RigidBody>()) {
+            std::vector<RigidBody*> rigidBodies = gameObject.getComponents<RigidBody>();
             if (!rigidBodies.empty()) {
                 if (rigidBodies[0]->getBodyId() == aID) {
-                    return mGameObjects.at(i);
+                    return &gameObject;
                 }
             }
         }
@@ -209,13 +203,13 @@ void PhysicsEngine::setCollision(int aBodyID, bool aState) {
 }
 
 void PhysicsEngine::updateFlags() {
-    for (int i = 0; i < mGameObjects.size(); i++) {
-        if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
-            int bodyID = mGameObjects.at(i)->getComponents<RigidBody>()[0]->getBodyId();
-            BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
+    for (GameObject& gameObject : mObjects) {
+        if (gameObject.hasComponent<RigidBody>()) {
+            int bodyID = gameObject.getComponents<RigidBody>()[0]->getBodyId();
+            BodyProxy bodyProxy = BodyProxy(&gameObject);
             mWorld.updateBodyFlags(bodyProxy, bodyID);
 
-            mWorld.setBodyActivity(bodyID, mGameObjects.at(i)->getComponents<RigidBody>().at(0)->isActive());
+            mWorld.setBodyActivity(bodyID, gameObject.getComponents<RigidBody>().at(0)->isActive());
         }
     }
 }
@@ -266,4 +260,24 @@ GameObject* PhysicsEngine::convertToBox2D(GameObject* aGameObject) {
     transform.position = Vector2(-transform.position.x, -transform.position.y);
 
     return aGameObject;
+}
+
+void PhysicsEngine::addObject(GameObject& aObject) {
+    auto it =
+        std::find_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& wrapper) {
+            return &wrapper.get() == &aObject; // Compare addresses
+        });
+    if (it == mObjects.end()) {
+        // Object has not been added yet
+        mObjects.push_back(aObject);
+    }
+}
+
+void PhysicsEngine::removeObject(GameObject& aObject) {
+    auto it =
+        std::remove_if(mObjects.begin(), mObjects.end(),
+                       [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+    if (it != mObjects.end()) {
+        mObjects.erase(it, mObjects.end());
+    }
 }
