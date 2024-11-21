@@ -202,18 +202,22 @@ void EngineBravo::updateAdditions() {
         if (gameObject.hasComponent<ParticleEmitter>()) {
             mParticleSystem.addObject(gameObject);
         }
-        // Network manager: it seems to (potentially) require all game objects
+        // Network manager:
+
         // Event manager: does not use a list of game objects
         // Save game manager: does not use a list of game objects
         // Audio manager
+        mAudioManager.removeObject(gameObject);
         if (gameObject.hasComponent<AudioSource>()) {
             mAudioManager.addObject(gameObject);
         }
         // UI manager:
+        mUIManager.removeObject(gameObject);
         if (typeid(gameObject) == typeid(Button)) {
             mUIManager.addObject(gameObject);
         }
         // Physics manager
+        mPhysicsManager.getPhysicsEngine().removeObject(gameObject);
         if (gameObject.hasComponent<RigidBody>()) {
             mPhysicsManager.getPhysicsEngine().addObject(gameObject);
         }
