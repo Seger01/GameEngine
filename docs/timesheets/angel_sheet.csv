@@ -61,3 +61,6 @@ Date,Time,Duration(in hours),Activity
 2024-11-15, 11:30, 0.5, fixed sensor events
 2024-11-14, 13:30, 0.5, fixed enable/disable collide
 2024-11-19, 9:00, 7, Bug hunting in physics.
+2024-11-20, 8:00, 8.5, Fixed translation step physics; finished update flags; started writing tests
+2024-11-20, 20:00, 0.5, continued writing tests
+2024-11-21, 8:00, 5.0, continued writing tests; fixed ids box2d
