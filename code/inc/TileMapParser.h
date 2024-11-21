@@ -42,12 +42,21 @@ struct RoomTrigger {
     std::string roomID;
 };
 
+struct LevelEndTrigger {
+    float x;
+    float y;
+    float mWidth;
+    float mHeight;
+    std::string nextLevel;
+};
+
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
     std::vector<std::string> mLayerNames;
     std::unordered_map<int, TileInfo> mTileInfoMap;
     std::vector<SpawnPoint> mSpawnPoints;
     std::vector<RoomTrigger> mRoomTriggers;
+    std::vector<LevelEndTrigger> mLevelEndTriggers;
 };
 
 class TileMapParser {

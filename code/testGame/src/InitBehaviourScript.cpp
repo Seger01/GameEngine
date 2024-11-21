@@ -109,6 +109,12 @@ void InitBehaviourScript::createLevel1() {
         scene->addGameObject(roomObject);
     }
 
+    for (const auto& levelEndTrigger : tileMapData.mLevelEndTriggers) {
+        std::cout << "LevelEndTrigger at (" << levelEndTrigger.x << ", " << levelEndTrigger.y << ")\n" 
+                    << "with size (" << levelEndTrigger.mWidth << ", " << levelEndTrigger.mHeight << ")\n"
+                    << "Next level: " << levelEndTrigger.nextLevel << std::endl;
+    }
+
     GameObject* canvasObject = new GameObject;
 
     canvasObject->addComponent<CanvasBehaviourScript>();
