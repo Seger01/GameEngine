@@ -29,12 +29,15 @@ void InitBehaviourScript::createLevel1() {
         exit(1);
     }
 
-    int cameraID = scene->addCamera();
-    scene->setActiveCamera(cameraID);
+    Camera* camera = new Camera;
+    camera->setTag("MainCamera");
+    camera->setActive(true);
 
-    scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-    scene->getActiveCamera().setWidth(16 * 30);
-    scene->getActiveCamera().setHeight(9 * 30);
+    camera->setTransform(Transform(Vector2(80, 96)));
+    camera->setWidth(16 * 30);
+    camera->setHeight(9 * 30);
+
+    scene->addGameObject(camera);
 
     GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
@@ -78,9 +81,6 @@ void InitBehaviourScript::createLevel1() {
     TileMapParser tileMapParser(path);
     tileMapParser.parse();
     const TileMapData& tileMapData = tileMapParser.getTileMapData();
-    scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-    scene->getActiveCamera().setWidth(16 * 30);
-    scene->getActiveCamera().setHeight(9 * 30);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
         // Collect enemy spawns for this room
@@ -150,16 +150,6 @@ void InitBehaviourScript::createLevel1() {
     scene->addGameObject(musicObject);
 
     sceneManager.requestSceneChange("Level-1");
-
-    // tileMapParser.printLayers();
-
-    // // print mTileInfoMap
-    // for (const auto& pair : tileMapData.mTileInfoMap) {
-    //     int gID = pair.first;
-    //     const TileInfo& info = pair.second;
-    //     std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-    //               << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-    // }
 
     // Assuming tileMapData is a const reference to TileMapData
     for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
@@ -236,36 +226,7 @@ void InitBehaviourScript::createLevel1() {
     return;
 }
 
-void InitBehaviourScript::onStart() {
-    createLevel1();
-    // std::cout << "InitBehaviourScript::onStart()" << std::endl;
-    // EngineBravo& engine = EngineBravo::getInstance();
-    // SceneManager& sceneManager = engine.getSceneManager();
-
-    // Scene* scene = sceneManager.createScene("Level-1");
-    // if (scene == nullptr)
-    //     exit(1);
-    //
-    // int cameraID = scene->addCamera();
-    // scene->setActiveGamera(cameraID);
-    //
-    // scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
-    // scene->getActiveCamera().setWidth(160);
-    // scene->getActiveCamera().setHeight(90);
-    //
-    // GameObject* gameObject = new GameObject;
-    //
-    // Transform objectTransform;
-    // objectTransform.position.x = 80;
-    // objectTransform.position.y = 0;
-    // gameObject->setTransform(objectTransform);
-    //
-    // gameObject->addComponent<PlayerBehaviourScript>();
-    //
-    // scene->addGameObject(gameObject);
-    //
-    // sceneManager.requestSceneChange("Level-1");
-}
+void InitBehaviourScript::onStart() { createLevel1(); }
 
 void InitBehaviourScript::onUpdate() {}
 

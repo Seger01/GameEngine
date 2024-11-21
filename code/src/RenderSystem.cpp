@@ -105,20 +105,6 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
     mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
 
-// void RenderSystem::renderButton(Camera& aCurrentCamera, Button* aButton) {
-//     float scaleX = mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth());
-//     float scaleY = mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight());
-//
-//     Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-//     Vector2 drawPosition = aButton->getTransform().position - cameraOrigin;
-//
-//     drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
-//     drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
-//
-//     mRenderer->renderSquare(drawPosition, static_cast<int>(aButton->getWidth() * scaleX),
-//                             static_cast<int>(aButton->getHeight() * scaleY), Color(255, 0, 0), false);
-// }
-
 bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
                                Vector2 aScale) {
     if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight)) {
@@ -187,9 +173,7 @@ int RenderSystem::getHighestLayer(Scene* aScene) {
     return highestLayer;
 }
 
-void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
-    Camera& activeCamera = aScene->getActiveCamera();
-
+void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera) {
     for (auto& gameObject : aScene->getGameObjects()) {
         if (gameObject->hasComponent<Animation>()) {
             for (auto animation : gameObject->getComponents<Animation>()) {
@@ -230,18 +214,18 @@ void RenderSystem::render(Scene* aScene) {
     int lowestLayer = getLowestLayer(aScene);
     int highestLayer = getHighestLayer(aScene);
 
-    UIObject uiObject;
+    Camera* activeCamera = aScene->getCameraWithTag("MainCamera");
 
     for (int layer = lowestLayer; layer <= highestLayer; ++layer) {
-        renderLayer(aScene, layer);
+        renderLayer(aScene, layer, *activeCamera);
     }
 
-    renderDebugInfo(aScene);
+    renderDebugInfo(aScene, *activeCamera);
 
     mRenderer->show();
 }
 
-void RenderSystem::renderDebugInfo(Scene* aScene) {
+void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera) {
     if (Time::deltaTime == 0) {
         return;
     }
@@ -259,8 +243,6 @@ void RenderSystem::renderDebugInfo(Scene* aScene) {
         for (auto& gameObject : aScene->getGameObjects()) {
             if (gameObject->hasComponent<BoxCollider>()) {
                 for (auto boxCollider : gameObject->getComponents<BoxCollider>()) {
-                    Camera& aCurrentCamera = aScene->getActiveCamera();
-
                     int spriteWidth = boxCollider->getWidth();
                     int spriteHeight = boxCollider->getHeight();
 
@@ -296,8 +278,6 @@ void RenderSystem::renderDebugInfo(Scene* aScene) {
             }
             if (gameObject->hasComponent<CircleCollider>()) {
                 for (auto circleCollider : gameObject->getComponents<CircleCollider>()) {
-                    Camera& aCurrentCamera = aScene->getActiveCamera();
-
                     int WindowWidth = mWindow->getSize().x;
                     int WindowHeight = mWindow->getSize().y;
 

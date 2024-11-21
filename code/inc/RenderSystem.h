@@ -14,7 +14,7 @@ class RenderSystem {
 public:
     RenderSystem();
 
-    void renderLayer(Scene* aScene, int aLayer);
+    void renderLayer(Scene* aScene, int aLayer, Camera& aCurrentCamera);
     void render(Scene* aScene);
 
     Renderer& getRenderer();
@@ -28,9 +28,7 @@ private:
     void renderParticle(Camera& aCurrentCamera, Particle& aParticle);
     void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale);
 
-    // void renderButton(Camera& aCurrentCamera, Button* aButton);
-
-    void renderDebugInfo(Scene* aScene);
+    void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera);
 
     int getLowestLayer(Scene* aScene);
     int getHighestLayer(Scene* aScene);

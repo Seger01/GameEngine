@@ -208,7 +208,8 @@ void PlayerBehaviourScript::hanldeCameraMovement() {
         }
     }
 
-    Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+    Camera& currentCam =
+        *EngineBravo::getInstance().getSceneManager().getCurrentScene()->getCameraWithTag("MainCamera");
 
     Transform playerTransform = this->mGameObject->getTransform();
 
@@ -225,7 +226,7 @@ void PlayerBehaviourScript::fireBullet() {
     Vector2 mousePositionVector = Vector2(mousePosition.x, mousePosition.y);
 
     // Get the camera
-    Camera& currentCam = sceneManager.getCurrentScene()->getActiveCamera();
+    Camera& currentCam = *sceneManager.getCurrentScene()->getCameraWithTag("MainCamera");
     Vector2 cameraOrigin = currentCam.getOrigin();
 
     // Transform the mouse position to world space

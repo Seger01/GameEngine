@@ -86,46 +86,25 @@ GameObject& Scene::getGameObject(int id) {
 std::string Scene::getName() { return mSceneName; }
 int Scene::getID() { return mSceneID; }
 
-int Scene::addCamera() {
-    mCameras.push_back(std::make_unique<Camera>());
-    return static_cast<int>(mCameras.size() - 1); // Return the index of the newly added camera
-}
-
-void Scene::removeCamera(int id) {
-    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
-        mCameras[id].reset(); // Delete the camera
-        mCameras.erase(mCameras.begin() + id);
-        // Adjust active camera if necessary
-        if (mActiveCameraIndex == id) {
-            mActiveCameraIndex = -1; // No active camera
-        } else if (mActiveCameraIndex > id) {
-            mActiveCameraIndex--;
+std::vector<Camera*> Scene::getCameras() {
+    std::vector<Camera*> cameras;
+    for (const auto& obj : mGameObjects) {
+        Camera* camera = dynamic_cast<Camera*>(obj.get());
+        if (camera) {
+            cameras.push_back(camera);
         }
-    } else {
-        throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
     }
+    return cameras;
 }
 
-Camera& Scene::getCamera(int id) {
-    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
-        return *mCameras[id];
+Camera* Scene::getCameraWithTag(const std::string& tag) {
+    for (const auto& obj : mGameObjects) {
+        Camera* camera = dynamic_cast<Camera*>(obj.get());
+        if (camera && camera->getTag() == tag) {
+            return camera;
+        }
     }
-    throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
-}
-
-void Scene::setActiveCamera(int id) {
-    if (id >= 0 && id < static_cast<int>(mCameras.size())) {
-        mActiveCameraIndex = id;
-    } else {
-        throw std::runtime_error("Camera with ID " + std::to_string(id) + " not found.");
-    }
-}
-
-Camera& Scene::getActiveCamera() {
-    if (mActiveCameraIndex >= 0 && mActiveCameraIndex < static_cast<int>(mCameras.size())) {
-        return *mCameras[mActiveCameraIndex];
-    }
-    throw std::runtime_error("No active camera set.");
+    return nullptr;
 }
 
 void Scene::addPersistentGameObject(GameObject* object) {

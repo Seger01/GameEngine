@@ -28,9 +28,9 @@ void UIManager::update(Scene* aScene) {
         if (dynamic_cast<Button*>(gameObject)) {
             Button* button = dynamic_cast<Button*>(gameObject);
 
-            Camera& currentCamera = aScene->getActiveCamera();
+            Camera* currentCamera = aScene->getCameraWithTag("MainCamera");
 
-            Vector2 cameraOrigin = currentCamera.getOrigin();
+            Vector2 cameraOrigin = currentCamera->getOrigin();
 
             int windowWidth = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().x;
             int windowHeight = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().y;
@@ -41,13 +41,13 @@ void UIManager::update(Scene* aScene) {
             Vector2 buttonPosition = button->getTransform().position;
             Vector2 drawPosition = buttonPosition - cameraOrigin;
 
-            drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
+            drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / currentCamera->getWidth()));
             drawPosition.y =
-                std::round(drawPosition.y * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
+                std::round(drawPosition.y * (static_cast<float>(windowHeight) / currentCamera->getHeight()));
 
-            buttonWidth = std::round(buttonWidth * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
+            buttonWidth = std::round(buttonWidth * (static_cast<float>(windowWidth) / currentCamera->getWidth()));
 
-            buttonHeight = std::round(buttonHeight * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
+            buttonHeight = std::round(buttonHeight * (static_cast<float>(windowHeight) / currentCamera->getHeight()));
 
             for (Event event : mMouseDownEventQueue) {
                 Point mouseScreenPos = event.mouse.position;
