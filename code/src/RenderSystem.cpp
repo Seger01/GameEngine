@@ -300,6 +300,7 @@ void RenderSystem::addObject(GameObject& aObject) {
             return &wrapper.get() == &aObject; // Compare addresses
         });
     if (it == mObjects.end()) {
+        // Object has not been added yet
         mObjects.push_back(aObject);
     }
 }

@@ -80,9 +80,7 @@ private:
     Configuration mConfiguration;
 
     PhysicsManager mPhysicsManager;
-    // SaveGameManager saveGameManager;
     // AnimationManager animationManager;
-    // UIManager uiManager;
 };
 
 #endif // ENGINEBRAVO_H

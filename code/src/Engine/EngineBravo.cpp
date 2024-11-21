@@ -185,7 +185,7 @@ void EngineBravo::updateAdditions() {
         std::cout << "Queue size: " << mUpdateObjects.size() << std::endl;
     }
     for (GameObject& gameObject : mUpdateObjects) {
-        // Scene manager
+        // Scene manager: does not use a list of game objects
         // Render system
         mRenderSystem.removeObject(gameObject);
         if (typeid(gameObject) == typeid(Text)) {
@@ -200,13 +200,35 @@ void EngineBravo::updateAdditions() {
         if (gameObject.hasComponent<ParticleEmitter>()) {
             mRenderSystem.addObject(gameObject);
         }
+        // Resource manager: does not use a list of game objects
+        // Particle system
+        mParticleSystem.removeObject(gameObject);
+        if (gameObject.hasComponent<ParticleEmitter>()) {
+            mParticleSystem.addObject(gameObject);
+        }
+        // Network manager
+        // Event manager
+        // Save game manager
+        // Audio manager
+        // UI manager
+        // Physics manager
     }
     mUpdateObjects.clear();
 }
 
 void EngineBravo::updateRemovals() {
     for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
-        // delete these objects from all managers
+        // Scene manager: does not use a list of game objects
+        // Render system
         mRenderSystem.removeObject(*gameObject);
+        // Resource manager: does not use a list of game objects
+        // Particle system
+        mParticleSystem.removeObject(*gameObject);
+        // Network manager
+        // Event manager
+        // Save game manager
+        // Audio manager
+        // UI manager
+        // Physics manager
     }
 }

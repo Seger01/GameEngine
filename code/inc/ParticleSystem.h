@@ -9,7 +9,12 @@ public:
 
     void update(Scene* aScene);
 
+public:
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
+
 private:
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
 };
 
 #endif // PARTICLESYSTEM_H
