@@ -49,10 +49,13 @@ package Engine {
 
     class UIManager {
         - mClickableButtons : vector<UIObject&>
+        - mObjects : vector<reference_wrapper<GameObject>>
         + ClickableButtonPressed() : bool
         + checkIsClickableButton() : bool
         + addClickableButton((UIObject& aButton)) : void
         + removeClickableButton(std::string ID) : void
+        + addObject(GameObject& aObject) : void
+        + removeObject(GameObject& aObject) : void
         - UIManager()
     }
 
