@@ -1,13 +1,13 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-#include "Scene.h"
+#include "GameObject.h"
 
 class ParticleSystem {
 public:
     ParticleSystem();
 
-    void update(Scene* aScene);
+    void update();
 
 public:
     void addObject(GameObject& aObject);

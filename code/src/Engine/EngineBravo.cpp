@@ -70,7 +70,7 @@ void EngineBravo::run() {
 
         mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
 
-        mParticleSystem.update(mSceneManager.getCurrentScene());
+        mParticleSystem.update();
 
         mRenderSystem.render(mSceneManager.getCurrentScene());
 
@@ -180,10 +180,6 @@ void EngineBravo::addToUpdateObjects(GameObject& aGameObject) {
 
 void EngineBravo::updateAdditions() {
     // Iterate through the objects and update each manager
-
-    if (!mUpdateObjects.empty()) {
-        std::cout << "Queue size: " << mUpdateObjects.size() << std::endl;
-    }
     for (GameObject& gameObject : mUpdateObjects) {
         // Scene manager: does not use a list of game objects
         // Render system

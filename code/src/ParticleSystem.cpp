@@ -1,17 +1,15 @@
 #include "ParticleSystem.h"
-
+#include "GameObject.h"
 #include "ParticleEmitter.h"
 
 ParticleSystem::ParticleSystem() {}
 
-void ParticleSystem::update(Scene* aScene) {
+void ParticleSystem::update() {
     for (GameObject& gameObject : mObjects) {
         if (gameObject.isActive()) {
-            // if (gameObject->hasComponent<ParticleEmitter>()) {
             for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>()) {
                 particleEmitter->update();
             }
-            //}
         }
     }
 }
