@@ -8,7 +8,7 @@ RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties)
 
 RigidBody::RigidBody()
     : mHasGravity(false), mIsMoveableByForce(false), mCanRotate(false), mDensity(0.0f), mFriction(0.0f),
-      mRestitution(0.0f), mLinearDamping(0.0f), mAngularDamping(0.0f), mIsUpdated(false), mBodyId(-1) {}
+      mRestitution(0.0f), mLinearDamping(0.0f), mAngularDamping(0.0f), mIsUpdated(false), mBodyID({-1, 0}) {}
 
 RigidBody::~RigidBody() {}
 
@@ -84,8 +84,8 @@ void RigidBody::setBodyType(BodyType aBodyType) {
 
 BodyType RigidBody::getBodyType() const { return mBodyType; }
 
-int RigidBody::getBodyId() const { return mBodyId; }
-void RigidBody::setBodyId(int aBodyId) { mBodyId = aBodyId; }
+BodyID RigidBody::getBodyId() const { return mBodyID; }
+void RigidBody::setBodyId(BodyID aBodyID) { mBodyID = aBodyID; }
 
 void RigidBody::addForce(Vector2 aForce) { mForcesBuffer.push_back(aForce); }
 std::vector<Vector2> RigidBody::getForcesBuffer() const { return mForcesBuffer; }

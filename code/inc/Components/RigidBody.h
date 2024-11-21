@@ -1,4 +1,5 @@
 #pragma once
+#include "BodyID.h"
 #include "BodyType.h"
 #include "Component.h"
 #include "Structs/BodyFlags.h"
@@ -50,8 +51,8 @@ public:
     void setBodyType(BodyType aBodyType);
     BodyType getBodyType() const;
 
-    int getBodyId() const;
-    void setBodyId(int aBodyId);
+    BodyID getBodyId() const;
+    void setBodyId(BodyID aBodyID);
 
     void addForce(Vector2 aForce);
     std::vector<Vector2> getForcesBuffer() const;
@@ -85,7 +86,7 @@ private:
     float mMass = 0;
     float mGravityScale = 0;
 
-    int mBodyId = -1;
+    BodyID mBodyID;
 
     std::vector<Vector2> mForcesBuffer;
     std::vector<float> mTorqueBuffer;

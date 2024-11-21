@@ -1,21 +1,32 @@
 #include "Physics/World.h"
+#include "PhysicsEngine.h"
+#include "RigidBody.h"
+#include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/collision.h"
 
 World::World() {}
 
-int World::createWorld(Vector2 aGravity) {
+World::World(Vector2 aGravity) {
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = (b2Vec2){aGravity.x, aGravity.y};
     mWorldID = b2CreateWorld(&worldDef);
-    return 0;
+    std::cout << "World is =" << mWorldID.index1 << std::endl;
+}
+
+int World::createWorld(Vector2 aGravity) { return 0; }
+
+World::~World() {
+
+    //   b2DestroyWorld(mWorldID);
 }
 
 void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID, aStep, aSubStep); }
 
 void World::resetWorld() { b2DestroyWorld(mWorldID); }
 
-int World::createBody(BodyProxy& aBodyProxy) {
+BodyID World::createBody(BodyProxy& aBodyProxy) {
+
     b2BodyDef bodyDef = b2DefaultBodyDef();
 
     switch (aBodyProxy.getBodyType()) {
@@ -32,16 +43,16 @@ int World::createBody(BodyProxy& aBodyProxy) {
     bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
     bodyDef.linearDamping = aBodyProxy.getLinearDamping();
     bodyDef.angularDamping = aBodyProxy.getAngularDamping();
-
     b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
+    createShape(aBodyProxy, {bodyID.index1, bodyID.revision, bodyID.world0});
 
-    createShape(aBodyProxy, bodyID.index1);
-
-    return bodyID.index1;
+    BodyID convertedBodyID = {bodyID.index1, bodyID.revision, bodyID.world0};
+    return convertedBodyID;
 }
 
-void World::createShape(BodyProxy& aBodyProxy, int aBodyID) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID) {
+
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
     for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders()) {
         b2Polygon polygon =
@@ -52,38 +63,42 @@ void World::createShape(BodyProxy& aBodyProxy, int aBodyID) {
         shapeDef.friction = aBodyProxy.getFriction();
         shapeDef.restitution = aBodyProxy.getRestitution();
         shapeDef.isSensor = boxCollider->isTrigger();
+        std::cout << "revise: " << aBodyID.revision << std::endl;
 
         b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
     }
 }
 
-void World::applyLinearForce(int aBodyID, std::vector<Vector2> aForce) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
     for (int i = 0; i < aForce.size(); i++) {
         b2Vec2 force = {aForce[i].x, aForce[i].y};
         b2Body_ApplyLinearImpulseToCenter(bodyID, force, true);
     }
 }
 
-void World::applyTorque(int aBodyID, std::vector<float> aTorque) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
     for (int torqueBufferIndex = 0; torqueBufferIndex < aTorque.size(); torqueBufferIndex++) {
         b2Body_ApplyTorque(bodyID, aTorque[torqueBufferIndex], true);
     }
 }
-void World::setPosition(int aBodyID, Vector2 aPosition) {
-    b2BodyId bodyid = {aBodyID, 0, 1};
+void World::setPosition(Vector2 aPosition, BodyID aBodyID) {
+    b2BodyId bodyid = convertToB2BodyID(aBodyID);
     std::cout << "Setting pos: (" << aPosition.x << ", " << aPosition.y << ")" << std::endl;
     b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, {cos(0.0f), 0.0f});
 }
 
-Vector2 World::getPosition(int aBodyID) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+Vector2 World::getPosition(BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
     Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
     return position;
 }
 
-void World::setGravity(Vector2 aGravity) {}
+void World::setGravity(Vector2 aGravity) {
+    mGravity = aGravity;
+    b2World_SetGravity(mWorldID, {aGravity.x, aGravity.y});
+}
 
 Vector2 World::getGravity() { return mGravity; }
 
@@ -98,8 +113,8 @@ std::vector<std::pair<int, int>> World::getContactEvents() {
     return collisionList;
 }
 
-void World::setBodyActivity(int aBodyID, bool aState) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::setBodyActivity(bool aState, BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
     if (aState != b2Body_IsEnabled(bodyID)) {
         if (aState) {
             b2Body_Enable(bodyID);
@@ -109,8 +124,8 @@ void World::setBodyActivity(int aBodyID, bool aState) {
     }
 }
 
-void World::updateBodyProperties(BodyProxy& aBodyProxy, int aBodyID) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
     b2Body_SetFixedRotation(bodyID, !aBodyProxy.getCanRotate());
     b2Body_SetGravityScale(bodyID, aBodyProxy.getGravityScale());
@@ -118,8 +133,8 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, int aBodyID) {
     b2Body_SetAngularDamping(bodyID, aBodyProxy.getAngularDamping());
 }
 
-void World::updateShapeProperties(BodyProxy& aBodyProxy, int aBodyID) {
-    b2BodyId bodyID = {aBodyID, 0, 1};
+void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
     b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
 
@@ -147,4 +162,12 @@ std::vector<std::pair<int, int>> World::getSensorEvents() {
     }
 
     return sensorList;
+}
+
+b2BodyId World::convertToB2BodyID(BodyID aBodyID) {
+    b2BodyId bodyID;
+    bodyID.index1 = aBodyID.bodyID;
+    bodyID.revision = aBodyID.revision;
+    bodyID.world0 = aBodyID.world0;
+    return bodyID;
 }

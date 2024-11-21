@@ -1,5 +1,4 @@
 #include "PhysicsManager.h"
-#include "SceneManager.h"
 
 PhysicsManager::PhysicsManager() {}
 

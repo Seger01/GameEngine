@@ -4,6 +4,7 @@
 
 PhysicsEngine::PhysicsEngine() {}
 
+PhysicsEngine::~PhysicsEngine() {}
 void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) { mGameObjects = aGameObjects; }
 
 void PhysicsEngine::update() {
@@ -29,7 +30,7 @@ void PhysicsEngine::update() {
 
             Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
-            mWorld.setPosition(rigidBody->getBodyId(), newPos);
+            mWorld.setPosition(newPos, rigidBody->getBodyId());
         }
     }
 
@@ -38,7 +39,7 @@ void PhysicsEngine::update() {
 
             RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
 
-            mWorld.applyLinearForce(rigidBody->getBodyId(), rigidBody->getForcesBuffer());
+            mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
             rigidBody->clearForcesBuffer();
         }
     }
@@ -57,11 +58,11 @@ void PhysicsEngine::update() {
     }
 }
 
-void PhysicsEngine::setSubStep(int aSubStep) {}
+void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
 
 float PhysicsEngine::getSubStep() const { return mSubStep; }
 
-void PhysicsEngine::setStep(float aStep) {}
+void PhysicsEngine::setStep(float aStep) { mStep = aStep; }
 
 float PhysicsEngine::getStep() const { return mStep; }
 
@@ -99,35 +100,33 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 
 void PhysicsEngine::createBodies() {
     for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
-
+        std::cout << "Creating body for game object " << gameObjectIndex << std::endl;
         if (mGameObjects.at(gameObjectIndex)->hasComponent<RigidBody>()) {
             RigidBody* rigidBody = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>()[0];
 
-            if (rigidBody->getBodyId() == -1) {
+            if (rigidBody->getBodyId().bodyID == -1) {
 
                 BodyProxy bodyProxy = BodyProxy(mGameObjects.at(gameObjectIndex));
 
-                int bodyID = mWorld.createBody(bodyProxy);
+                BodyID bodyID = mWorld.createBody(bodyProxy);
                 rigidBody->setBodyId(bodyID);
             }
         }
     }
 }
 
-void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld.createWorld(aGravity); }
+void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
 
 World& PhysicsEngine::getWorld() { return mWorld; }
 
-void PhysicsEngine::setgameObjects(std::vector<GameObject*> aGameObjects) { mGameObjects = aGameObjects; }
-
 void PhysicsEngine::reset() {
     mWorld.resetWorld();
-    for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
-        std::vector<RigidBody*> rigidBodies = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>();
-        for (int rigidBodyIndex = 0; rigidBodyIndex < rigidBodies.size(); rigidBodyIndex++) {
-            rigidBodies.at(rigidBodyIndex)->setBodyId(-1);
-        }
-    }
+    // for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
+    //     std::vector<RigidBody*> rigidBodies = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>();
+    //     for (int rigidBodyIndex = 0; rigidBodyIndex < rigidBodies.size(); rigidBodyIndex++) {
+    //         rigidBodies.at(rigidBodyIndex)->setBodyId({-1, 0});
+    //     }
+    // }
 }
 
 // Checks and returns GameObject if BodyID exists within world
@@ -136,7 +135,7 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID) {
         if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
             std::vector<RigidBody*> rigidBodies = mGameObjects.at(i)->getComponents<RigidBody>();
             if (!rigidBodies.empty()) {
-                if (rigidBodies[0]->getBodyId() == aID) {
+                if (rigidBodies[0]->getBodyId().bodyID == aID) {
                     return mGameObjects.at(i);
                 }
             }
@@ -149,7 +148,7 @@ void PhysicsEngine::updateFlags() {
     for (int i = 0; i < mGameObjects.size(); i++) {
         if (mGameObjects.at(i)->hasComponent<RigidBody>()) {
             RigidBody* body = mGameObjects.at(i)->getComponents<RigidBody>()[0];
-            int bodyID = mGameObjects.at(i)->getComponents<RigidBody>()[0]->getBodyId();
+            BodyID bodyID = mGameObjects.at(i)->getComponents<RigidBody>()[0]->getBodyId();
 
             if (body->getIsUpdated()) {
                 BodyProxy bodyProxy = BodyProxy(mGameObjects.at(i));
@@ -158,7 +157,7 @@ void PhysicsEngine::updateFlags() {
 
                 body->setIsUpdated(false);
             }
-            mWorld.setBodyActivity(bodyID, mGameObjects.at(i)->getComponents<RigidBody>().at(0)->isActive());
+            mWorld.setBodyActivity(mGameObjects.at(i)->getComponents<RigidBody>().at(0)->isActive(), bodyID);
         }
     }
 }

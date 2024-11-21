@@ -4,13 +4,15 @@
 #include "GameObject.h"
 #include "IBehaviourScript.h"
 #include "Physics/BodyProxy.h"
-#include "Physics/World.h"
 #include "RigidBody.h"
+#include "World.h"
+#include "WorldID.h"
 #include <vector>
 class PhysicsEngine {
 
 public:
     PhysicsEngine();
+    ~PhysicsEngine();
 
     void createWorld(Vector2 aGravity);
     void reset();
@@ -22,7 +24,6 @@ public:
     void updateFlags();
     void updateForces();
 
-    void setgameObjects(std::vector<GameObject*>);
     void setStep(float);
     void setSubStep(int);
 
@@ -39,6 +40,7 @@ public:
 
 private:
     World mWorld;
+    WorldID mWorldID;
     std::vector<GameObject*> mGameObjects;
 
     float mStep;
