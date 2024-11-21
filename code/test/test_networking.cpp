@@ -136,7 +136,6 @@ TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
     auto& registry = NetworkRegister::Instance();
     // registry.RegisterType<ConcreteNetworkSerializable>();
 
-    std::unique_ptr<INetworkSerializable> obj = registry.Create(TYPE_ID<ConcreteNetworkSerializable>());
+    std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
     ASSERT_NE(obj, nullptr);
-    EXPECT_EQ(obj->GetTypeID(), TYPE_ID<ConcreteNetworkSerializable>());
 }

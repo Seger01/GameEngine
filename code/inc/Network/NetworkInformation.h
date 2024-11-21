@@ -20,13 +20,6 @@ enum NetworkMessage {
 
 enum class WritePermission { ReadOnly, ReadWrite };
 
-template <typename T> struct AutoRegister {
-    AutoRegister() { NetworkRegister::Instance().RegisterType<T>(); }
-};
-
-// Macro for automatic type registration
-#define AUTO_REGISTER_TYPE(Type) static AutoRegister<Type> Type##_registrar;
-
 struct NetworkPacket {
     SLNet::MessageID messageID;
     int networkObjectID;

@@ -15,10 +15,6 @@ public:
 
     void Deserialize(SLNet::BitStream& stream) override;
 
-    uint32_t GetTypeID() const override { return TYPE_ID<ConcreteNetworkSerializable>(); }
-
-    AUTO_REGISTER_TYPE(ConcreteNetworkSerializable)
-
     void setValue(int value) { mValue = value; }
     int getValue() const { return mValue; }
 
