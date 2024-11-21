@@ -1,3 +1,11 @@
+/**
+ * @file INetworkSerializable.h
+ * @brief Interface for network serializable objects.
+ *
+ * This file contains the declaration of the INetworkSerializable interface,
+ * which provides methods for serializing and deserializing objects over a network.
+ */
+
 #ifndef INETWORKSERIALIZABLE_H
 #define INETWORKSERIALIZABLE_H
 
@@ -7,12 +15,25 @@
 #include <cstdint>
 #include <slikenet/BitStream.h>
 
+/**
+ * @class INetworkSerializable
+ * @brief Interface for objects that can be serialized and deserialized over a network.
+ *
+ * The INetworkSerializable interface provides pure virtual methods for serializing
+ * and deserializing
+ *
+ * When implementing this interface, add "REGISTER_NETWORK_SERIALIZABLE([ConcreteNetworkSerializable]);" to the .cpp
+ * file.
+ */
 class INetworkSerializable {
 public:
+    /**
+     * @brief Virtual destructor.
+     */
     virtual ~INetworkSerializable() = default;
 
-    // Virtual methods for serialization/deserialization
     virtual void Serialize(SLNet::BitStream& stream) const = 0;
+
     virtual void Deserialize(SLNet::BitStream& stream) = 0;
 };
 
