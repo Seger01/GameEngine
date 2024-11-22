@@ -58,3 +58,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-20, 8:00, 3.25, Worked on networking. Trying to make auto register of INetworkSerializable
 2024-11-20, 19:00, 3, Worked on networking. Still trying to make auto register of INetworkSerializable
 2024-11-21, 20:00, 2, Worked on networking. Made macro to "auto" register classes
+2024-11-22, 09:00, 6, Tried setting Component parent in constructor. Auto register network variables to INetworkBehaviour.
