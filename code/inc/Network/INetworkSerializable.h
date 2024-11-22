@@ -32,9 +32,9 @@ public:
      */
     virtual ~INetworkSerializable() = default;
 
-    virtual void Serialize(SLNet::BitStream& stream) const = 0;
+    virtual void serialize(SLNet::BitStream& stream) const = 0;
 
-    virtual void Deserialize(SLNet::BitStream& stream) = 0;
+    virtual void deserialize(SLNet::BitStream& stream) = 0;
 };
 
 #endif // INETWORKSERIALIZABLE_H

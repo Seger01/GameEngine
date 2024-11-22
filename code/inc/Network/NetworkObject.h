@@ -2,8 +2,11 @@
 #define NETWORKOBJECT_H
 
 #include "Components/Component.h"
+#include "Network/INetworkBehaviour.h"
 
 #include <slikenet/types.h>
+
+#include <vector>
 
 class NetworkManager;
 
@@ -21,9 +24,12 @@ public:
 
     bool isPlayer() const;
 
+    void addNetworkBehaviour(INetworkBehaviour* aNetworkBehaviour);
+
 private:
     bool mIsOwner;
     SLNet::RakNetGUID mClientID;
+    std::vector<INetworkBehaviour*> mNetworkBehaviours;
 
     friend class NetworkManager;
     bool mIsPlayer;

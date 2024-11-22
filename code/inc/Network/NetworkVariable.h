@@ -19,6 +19,8 @@ public:
         : mValue(std::move(aValue)), mDirty(false) {
         if (aOwner) {
             aOwner->RegisterNetworkVariable(this);
+        } else {
+            throw std::runtime_error("NetworkVariable::NetworkVariable() aOwner is nullptr");
         }
     }
 
@@ -34,9 +36,6 @@ public:
     bool isDirty() const override { return mDirty; }
 
     void setClean() override { mDirty = false; }
-
-    // void serialize(SLNet::BitStream& stream) const;
-    // void deserialize(SLNet::BitStream& stream);
 
 private:
     INetworkSerializableTemplate mValue;

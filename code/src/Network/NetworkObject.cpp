@@ -16,4 +16,9 @@ bool NetworkObject::isOwner() const { return mIsOwner; }
 
 bool NetworkObject::isPlayer() const { return mIsPlayer; }
 
+void NetworkObject::addNetworkBehaviour(INetworkBehaviour* aNetworkBehaviour) {
+    mNetworkBehaviours.push_back(aNetworkBehaviour);
+    aNetworkBehaviour->setOwner(mIsOwner);
+}
+
 void NetworkObject::setPlayer(bool aIsPlayer) { mIsPlayer = aIsPlayer; }

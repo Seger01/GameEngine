@@ -114,7 +114,6 @@ TEST_F(NetworkObjectTest, Clone) {
     EXPECT_TRUE(clonedNo->isOwner());
     EXPECT_EQ(clonedNo->getClientID(), clientID);
 }
-
 class NetworkBehaviourTest : public ::testing::Test {
 protected:
     void SetUp() override {}
@@ -125,6 +124,17 @@ TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
 
     const auto& variables = behaviour.GetNetworkVariables();
     ASSERT_EQ(variables.size(), 1);
+}
+
+TEST_F(NetworkBehaviourTest, AddNetworkObjectAndBehaviour) {
+    GameObject gameObject;
+    gameObject.addComponent<NetworkObject>();
+    EXPECT_NO_THROW({ gameObject.addComponent<ConcreteNetworkBehaviour>(); });
+}
+
+TEST_F(NetworkBehaviourTest, AddBehaviourWithoutNetworkObject) {
+    GameObject gameObject;
+    EXPECT_THROW({ gameObject.addComponent<ConcreteNetworkBehaviour>(); }, std::runtime_error);
 }
 
 class INetworkSerializableTest : public ::testing::Test {
