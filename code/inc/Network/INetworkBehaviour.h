@@ -3,11 +3,12 @@
 
 #include "Components/IBehaviourScript.h"
 #include "Network/NetworkObject.h"
-#include "Network/NetworkVariable.h"
 
 #include <functional>
 #include <stdexcept>
 #include <vector>
+
+class NetworkVariableBase;
 
 class INetworkBehaviour : public IBehaviourScript {
 public:
@@ -23,7 +24,7 @@ protected:
             throw std::runtime_error(
                 "INetworkBehaviour must be attached to a GameObject with a NetworkObject component");
         } else {
-            mGameObject->getComponents<NetworkObject>()[0].addNetworkBehaviour(this);
+            mGameObject->getComponents<NetworkObject>()[0]->addNetworkBehaviour(this);
         }
     }
 

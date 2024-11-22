@@ -11,9 +11,9 @@ public:
 
     bool operator!=(const ConcreteNetworkSerializable& other) const { return !(*this == other); }
 
-    void Serialize(SLNet::BitStream& stream) const override;
+    void serialize(SLNet::BitStream& stream) const override;
 
-    void Deserialize(SLNet::BitStream& stream) override;
+    void deserialize(SLNet::BitStream& stream) override;
 
     void setValue(int value) { mValue = value; }
     int getValue() const { return mValue; }

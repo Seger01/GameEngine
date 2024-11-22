@@ -3,12 +3,12 @@
 // Register the type
 REGISTER_NETWORK_SERIALIZABLE(ConcreteNetworkSerializable);
 
-void ConcreteNetworkSerializable::Serialize(SLNet::BitStream& stream) const {
+void ConcreteNetworkSerializable::serialize(SLNet::BitStream& stream) const {
     stream.Write(mValue);
     stream.Write(mFloat);
 }
 
-void ConcreteNetworkSerializable::Deserialize(SLNet::BitStream& stream) {
+void ConcreteNetworkSerializable::deserialize(SLNet::BitStream& stream) {
     stream.Read(mValue);
     stream.Read(mFloat);
 }

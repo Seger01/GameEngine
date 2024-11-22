@@ -120,9 +120,13 @@ protected:
 };
 
 TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
-    ConcreteNetworkBehaviour behaviour;
+    GameObject gameObject;
+    gameObject.addComponent<NetworkObject>();
+    gameObject.addComponent<ConcreteNetworkBehaviour>();
 
-    const auto& variables = behaviour.GetNetworkVariables();
+    auto& behaviour = gameObject.getComponents<ConcreteNetworkBehaviour>()[0];
+
+    const auto& variables = behaviour->GetNetworkVariables();
     ASSERT_EQ(variables.size(), 1);
 }
 

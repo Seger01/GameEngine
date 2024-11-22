@@ -2,13 +2,13 @@
 #define NETWORKOBJECT_H
 
 #include "Components/Component.h"
-#include "Network/INetworkBehaviour.h"
 
 #include <slikenet/types.h>
 
 #include <vector>
 
 class NetworkManager;
+class INetworkBehaviour;
 
 class NetworkObject : public Component {
 public:
