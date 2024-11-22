@@ -123,6 +123,7 @@ TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
     GameObject gameObject;
     gameObject.addComponent<NetworkObject>();
     gameObject.addComponent<ConcreteNetworkBehaviour>();
+    gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize();
 
     auto& behaviour = gameObject.getComponents<ConcreteNetworkBehaviour>()[0];
 
@@ -133,12 +134,14 @@ TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
 TEST_F(NetworkBehaviourTest, AddNetworkObjectAndBehaviour) {
     GameObject gameObject;
     gameObject.addComponent<NetworkObject>();
-    EXPECT_NO_THROW({ gameObject.addComponent<ConcreteNetworkBehaviour>(); });
+    gameObject.addComponent<ConcreteNetworkBehaviour>();
+    EXPECT_NO_THROW({ gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize(); });
 }
 
 TEST_F(NetworkBehaviourTest, AddBehaviourWithoutNetworkObject) {
     GameObject gameObject;
-    EXPECT_THROW({ gameObject.addComponent<ConcreteNetworkBehaviour>(); }, std::runtime_error);
+    gameObject.addComponent<ConcreteNetworkBehaviour>();
+    EXPECT_THROW({ gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize(); }, std::runtime_error);
 }
 
 class INetworkSerializableTest : public ::testing::Test {

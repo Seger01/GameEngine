@@ -1,8 +1,6 @@
 #include "Components/CircleCollider.h"
 
-CircleCollider::CircleCollider() : mRadius(0.0f) {}
-
-CircleCollider::CircleCollider(float radius) : mRadius(radius) {}
+CircleCollider::CircleCollider(float aRadius, std::string aTag) : Collider{aTag}, mRadius(aRadius) {}
 
 CircleCollider::~CircleCollider() {}
 

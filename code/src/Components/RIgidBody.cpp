@@ -1,12 +1,10 @@
 #include "RigidBody.h"
 #include <iostream>
 
-RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties)
-    : mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),
+RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties, std::string aTag)
+    : Component{aTag}, mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),
       mCanRotate(aBodyFlags.IsMoveableByForce), mDensity(aBodyProperties.Density), mFriction(aBodyProperties.Friction),
       mRestitution(aBodyProperties.Restitution) {}
-
-RigidBody::RigidBody() {}
 
 RigidBody::~RigidBody() {}
 

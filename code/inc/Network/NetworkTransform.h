@@ -5,8 +5,8 @@
 
 class NetworkTransform : public Component {
 public:
-    NetworkTransform();
-    NetworkTransform(bool aSendPositionX, bool aSendPositionY, bool aSendRotation, bool aSendScaleX, bool aSendScaleY);
+    NetworkTransform(bool aSendPositionX = false, bool aSendPositionY = false, bool aSendRotation = false,
+                     bool aSendScaleX = false, bool aSendScaleY = false, std::string aTag = "defaultNetworkTransform");
 
     std::unique_ptr<Component> clone() const override;
 

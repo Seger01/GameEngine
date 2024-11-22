@@ -12,7 +12,8 @@ class INetworkBehaviour;
 
 class NetworkObject : public Component {
 public:
-    NetworkObject();
+    NetworkObject(std::string aTag = "defaultNetworkObject");
+    ~NetworkObject() = default;
 
     std::unique_ptr<Component> clone() const override;
 

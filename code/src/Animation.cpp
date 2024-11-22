@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "Time.h"
 
-Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping)
-    : mTimeBetweenFrames(aTimeBetweenFrames), mIsLooping(aIsLooping), mFlipX(false), mFlipY(false) {
+Animation::Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping, std::string aTag)
+    : Component{aTag}, mTimeBetweenFrames(aTimeBetweenFrames), mIsLooping(aIsLooping), mFlipX(false), mFlipY(false) {
     // Transfer each raw pointer to a unique_ptr and store in mAnimationFrames
     for (Sprite* sprite : aAnimationFrames) {
         mAnimationFrames.push_back(std::unique_ptr<Sprite>(sprite));

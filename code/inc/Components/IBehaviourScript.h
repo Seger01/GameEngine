@@ -6,6 +6,7 @@
 
 class IBehaviourScript : public Component {
 public:
+    IBehaviourScript(std::string aTag = "defaultBehaviourScript") : Component(aTag) {}
     virtual ~IBehaviourScript() = default;
     virtual void onStart() = 0;
     virtual void onUpdate() = 0;

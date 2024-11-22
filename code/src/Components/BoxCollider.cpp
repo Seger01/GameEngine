@@ -1,6 +1,6 @@
 #include "BoxCollider.h"
 
-BoxCollider::BoxCollider() : mWidth(0.0f), mHeight(0.0f), mRotation(0.0f) {
+BoxCollider::BoxCollider(std::string aTag) : Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mRotation(0.0f) {
     // Constructor implementation
 }
 

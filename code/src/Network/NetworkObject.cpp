@@ -1,7 +1,8 @@
 #include "Network/NetworkObject.h"
 #include "Network/INetworkBehaviour.h"
 
-NetworkObject::NetworkObject() : mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false) {
+NetworkObject::NetworkObject(std::string aTag)
+    : Component{aTag}, mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false) {
     this->setTag("DefaultNetworkObject");
 }
 
