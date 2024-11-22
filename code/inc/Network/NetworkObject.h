@@ -15,6 +15,12 @@ public:
     NetworkObject(std::string aTag = "defaultNetworkObject");
     ~NetworkObject() = default;
 
+    NetworkObject(const NetworkObject& other);
+    NetworkObject& operator=(const NetworkObject& other);
+
+    NetworkObject(NetworkObject&& other) noexcept;
+    NetworkObject& operator=(NetworkObject&& other) noexcept;
+
     std::unique_ptr<Component> clone() const override;
 
     void setClientID(SLNet::RakNetGUID aClientID);
