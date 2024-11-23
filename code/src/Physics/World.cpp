@@ -11,7 +11,6 @@ World::World(Vector2 aGravity) {
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = (b2Vec2){aGravity.x, aGravity.y};
     mWorldID = b2CreateWorld(&worldDef);
-    std::cout << "World is =" << mWorldID.index1 << std::endl;
 }
 
 int World::createWorld(Vector2 aGravity) { return 0; }
@@ -63,7 +62,6 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID) {
         shapeDef.friction = aBodyProxy.getFriction();
         shapeDef.restitution = aBodyProxy.getRestitution();
         shapeDef.isSensor = boxCollider->isTrigger();
-        std::cout << "revise: " << aBodyID.revision << std::endl;
 
         b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
     }
@@ -85,7 +83,6 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID) {
 }
 void World::setPosition(Vector2 aPosition, BodyID aBodyID) {
     b2BodyId bodyid = convertToB2BodyID(aBodyID);
-    std::cout << "Setting pos: (" << aPosition.x << ", " << aPosition.y << ")" << std::endl;
     b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, {cos(0.0f), 0.0f});
 }
 

@@ -20,7 +20,6 @@ public:
     void processBodyType();
 
     Vector2 getPosition() const;
-    Vector2 getSize() const;
 
     bool getHasGravity() const;
     bool getIsMoveableByForce() const;
@@ -44,7 +43,6 @@ public:
 
 private:
     Vector2 mPosition;
-    Vector2 mSize;
 
     bool mHasGravity;
     bool mIsMoveableByForce;

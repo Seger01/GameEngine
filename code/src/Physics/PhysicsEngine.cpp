@@ -40,7 +40,9 @@ void PhysicsEngine::update() {
             RigidBody* rigidBody = mGameObjects.at(i)->getComponents<RigidBody>()[0];
 
             mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
+            mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
             rigidBody->clearForcesBuffer();
+            rigidBody->clearTorqueBuffer();
         }
     }
 
@@ -100,7 +102,6 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 
 void PhysicsEngine::createBodies() {
     for (int gameObjectIndex = 0; gameObjectIndex < mGameObjects.size(); gameObjectIndex++) {
-        std::cout << "Creating body for game object " << gameObjectIndex << std::endl;
         if (mGameObjects.at(gameObjectIndex)->hasComponent<RigidBody>()) {
             RigidBody* rigidBody = mGameObjects.at(gameObjectIndex)->getComponents<RigidBody>()[0];
 

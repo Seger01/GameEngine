@@ -7,8 +7,6 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
 
         mPosition = aGameObject->getTransform().position;
 
-        mSize = aGameObject->getTransform().scale;
-
         mHasGravity = rigidBody->getHasGravity();
         mIsMoveableByForce = rigidBody->getIsMoveableByForce();
         mCanRotate = rigidBody->getCanRotate();
@@ -54,6 +52,5 @@ float BodyProxy::getMass() const { return mMass; }
 float BodyProxy::getGravityScale() const { return mGravityScale; }
 
 Vector2 BodyProxy::getPosition() const { return mPosition; }
-Vector2 BodyProxy::getSize() const { return mSize; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
