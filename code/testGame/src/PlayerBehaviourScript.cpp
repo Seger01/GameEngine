@@ -25,6 +25,19 @@ std::string PlayerBehaviourScript::currentActiveAnimationTag() {
     return "";
 }
 
+bool PlayerBehaviourScript::flipX() {
+    if (mGameObject->hasComponent<Animation>()) {
+        for (auto animation : mGameObject->getComponents<Animation>()) {
+            return animation->getFlipX();
+        }
+    } else if (mGameObject->hasComponent<Sprite>()) {
+        for (auto sprite : mGameObject->getComponents<Sprite>()) {
+            return sprite->getFlipX();
+        }
+    }
+    return false;
+}
+
 void PlayerBehaviourScript::setFlipX(bool aState) {
     if (mGameObject->hasComponent<Animation>()) {
         for (auto animation : mGameObject->getComponents<Animation>()) {
@@ -79,8 +92,8 @@ void PlayerBehaviourScript::handleAnimations() {
     static Transform previousTransform = this->mGameObject->getTransform();
     Transform currentTransform = this->mGameObject->getTransform();
 
-    if (abs(previousTransform.position.x - currentTransform.position.x) < 0.1 &&
-        abs(previousTransform.position.y - currentTransform.position.y) < 0.1) {
+    if (abs(previousTransform.position.x - currentTransform.position.x) < 0.5 &&
+        abs(previousTransform.position.y - currentTransform.position.y) < 0.5) {
         if ((currentActiveAnimationTag() == "playerIdleFront") || (currentActiveAnimationTag() == "playerIdleBack") ||
             (currentActiveAnimationTag() == "playerIdleSide")) {
         } else {
@@ -100,36 +113,40 @@ void PlayerBehaviourScript::handleAnimations() {
                 deactivateAllAnimations();
                 setAnimationActive("playerIdleBack", true);
             }
+
+            setFlipX(!flipX());
         }
 
-        if (previousTransform.position.x > currentTransform.position.x) {
-            setFlipX(true);
-        } else if (currentTransform.position.x > previousTransform.position.x) {
-            setFlipX(false);
+        if (abs(previousTransform.position.x - currentTransform.position.x) > 0.3) {
+            if (previousTransform.position.x > currentTransform.position.x) {
+                setFlipX(true);
+            } else if (currentTransform.position.x > previousTransform.position.x) {
+                setFlipX(false);
+            }
         }
 
     } else {
         if (currentTransform.position.y < previousTransform.position.y) {
-            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.5) {
                 deactivateAllAnimations();
                 setAnimationActive("playerWalkingBackSide", true);
-            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.5) {
                 deactivateAllAnimations();
                 setAnimationActive("playerWalkingBack", true);
             }
         } else {
-            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.1) {
+            if (abs(currentTransform.position.x - previousTransform.position.x) > 0.5) {
                 deactivateAllAnimations();
                 setAnimationActive("playerWalkingFrontSide", true);
-            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.1) {
+            } else if (abs(currentTransform.position.x - previousTransform.position.x) < 0.5) {
                 deactivateAllAnimations();
                 setAnimationActive("playerWalkingFront", true);
             }
         }
 
-        if ((currentTransform.position.x - previousTransform.position.x) < -0.1) {
+        if ((currentTransform.position.x - previousTransform.position.x) < -0.5) {
             setFlipX(false);
-        } else if ((currentTransform.position.x - previousTransform.position.x) > 0.1) {
+        } else if ((currentTransform.position.x - previousTransform.position.x) > 0.5) {
             setFlipX(true);
         }
     }
