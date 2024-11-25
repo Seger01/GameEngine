@@ -68,3 +68,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-20, 9:45, 6.75, worked on design for validation game and implementing the design
 2024-11-21, 9:15, 7, worked on level creator and level manager and fixed segfault when switching levels
 2024-11-22, 11:30, 3, worked on levelcreator and level mechanics
+2024-11-25, 14:00, 2, worked on fixing shooting and created coin prefabs
