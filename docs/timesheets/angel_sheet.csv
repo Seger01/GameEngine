@@ -64,3 +64,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-20, 8:00, 8.5, Fixed translation step physics; finished update flags; started writing tests
 2024-11-20, 20:00, 0.5, continued writing tests
 2024-11-21, 8:00, 5.0, continued writing tests; fixed ids box2d
+2024-11-21, 13:00, 2.0, continued physics tests;
+2024-11-23, 10:00, 3.0, finished physics tests; start at implementing circlecollider; writing fix for translate step offset when using colliders of different sizes
