@@ -1,10 +1,11 @@
 #pragma once
 
+#include "AudioSource.h"
 #include "IAudioFacade.h"
 #include <memory>
 #include <vector>
 
-class AudioSource;
+class GameObject;
 
 class AudioManager
 {
