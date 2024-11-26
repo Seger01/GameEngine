@@ -1,16 +1,18 @@
 Minutes 26-11-24
 
 What was discussed:
+How a validation app demo may be shown
+- Create a room for every feature, to conveniently show off the engine.
 
 What has been done:
-- Siem: 
+- Siem: Finish update queue, apply code standard to audio.
 - Angel: Finished tests for physics. Ran into issue with translation step.
 - Ronan: Level manager implementation finished. Level mechanics: enemies are now killable. Added coin objects
 - Sean: Networking: implemented serializable class. Created network behaviour, to contain network variables.
 - Seger: Finished button functionality.
 
 What is going to be done:
-- Siem:
+- Siem: Check how unity differentiates a single and multiplayer game, how this can be done in the validation app.
 - Angel: Use delete queue provided by engine for physics.
 - Ronan: Updating code to follow code standard. Adding menu for selecting multiplayer in validation app.
 - Sean: Testing multiplayer. Adding functionality to network manager.
