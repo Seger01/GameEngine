@@ -59,14 +59,11 @@ void EngineBravo::run() {
 
         mUIManager.update(mSceneManager.getCurrentScene());
 
-        mSceneManager.update(); // can remove objects
+        mSceneManager.update();
 
         startBehaviourScripts();
-
-        runBehaviourScripts(); // can add and remove
-
-        // Update managers (changed components and new objects)
-        // To make sure that the physics, rendering etc. have access to the changes caused in the behaviourscripts.
+        runBehaviourScripts();
+        
         updateAdditions();
 
         mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
@@ -78,8 +75,6 @@ void EngineBravo::run() {
         mNetworkManager.update();
         limitFrameRate(mFrameRateLimit);
 
-        // Update managers (removed objects)
-        // Must be done after physics update, because physics system requires the deletion queue from the current scene.
         updateRemovals();
     }
 }
