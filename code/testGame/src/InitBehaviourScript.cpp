@@ -15,6 +15,7 @@
 #include "SceneManager.h"
 #include "Text.h"
 #include "TileMapParser.h"
+#include "MapToGraph.h"
 
 SpriteDef textBackgroundDef = {"UI/ui_images.png", Rect{0, 96, 48, 32}, 48, 32};
 
@@ -233,7 +234,11 @@ void InitBehaviourScript::createLevel1() {
             }
         }
     }
-
+    MapToGraph mapToGraph(tileMapData);
+    mapToGraph.convertToGraph();
+    const std::unordered_map<int, std::vector<int>>& adjacencyList = mapToGraph.getAdjacencyList();
+    mapToGraph.printGraph();
+    
     return;
 }
 
