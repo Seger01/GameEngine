@@ -164,6 +164,7 @@ TEST_F(AudioTest, playOnWake) {
     AudioSource* audio{new AudioSource(path, false)};
     audio->setPlayOnWake(true);
     gameObject->addComponent(audio);
+    audioManager->addObject(*gameObject);
 
     // Verify that the sound is not playing
     ASSERT_FALSE(audioManager->getFacade().isPlaying(path));

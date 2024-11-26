@@ -10,8 +10,6 @@ void PhysicsManager::startPhysicsEngine(Vector2 aGravity) {
     mPhysicsEngine.setSubStep(6);
 }
 
-void PhysicsManager::updatePhysicsEngine(Scene* aScene) {
-    mPhysicsEngine.updateReferences(aScene->getGameObjects());
+void PhysicsManager::updatePhysicsEngine(Scene* aScene) { mPhysicsEngine.update(); }
 
-    mPhysicsEngine.update();
-}
+PhysicsEngine& PhysicsManager::getPhysicsEngine() { return mPhysicsEngine; }

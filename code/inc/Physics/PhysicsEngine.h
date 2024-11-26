@@ -12,7 +12,6 @@ class PhysicsEngine {
 public:
     PhysicsEngine();
 
-    void updateReferences(std::vector<GameObject*>&);
     void update();
     void updateFlags();
     void updateForces();
@@ -41,9 +40,13 @@ public:
     GameObject* convertFromBox2D(GameObject* aGameObject);
     GameObject* convertToBox2D(GameObject* aGameObject);
 
+public:
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
+
 private:
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
     World mWorld;
-    std::vector<GameObject*> mGameObjects;
 
     float mStep;
     int mSubStep;
