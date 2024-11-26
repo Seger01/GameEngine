@@ -20,31 +20,16 @@
 
 class PhysicsTest : public ::testing::Test {
 protected:
-    // You can initialize common resources here
     PhysicsEngine* mPhysicsEngine;
 
     void SetUp() override {
-        // Initialize the RenderSystem and necessary components
         mPhysicsEngine = new PhysicsEngine();
         mPhysicsEngine->createWorld(Vector2(0, 0));
     }
-    void TearDown() override {
-        // Clean up
-        delete mPhysicsEngine;
-    }
+    void TearDown() override { delete mPhysicsEngine; }
 };
 
-// TEST_F(PhysicsTest, WorldCreate) {
-//     // Create a new world
-//     ASSERT_NO_THROW(mPhysicsEngine->createWorld(Vector2(0, 0)));
-//     ASSERT_EQ(mPhysicsEngine->getWorld().getGravity(), Vector2(0, 0));
-//     mPhysicsEngine->reset();
-// }
-
 TEST_F(PhysicsTest, WorldStep) {
-    // Create a new world
-    // Step the world
-    // mPhysicsEngine->createWorld(Vector2(0, 0));
     ASSERT_NO_THROW(mPhysicsEngine->setSubStep(4));
     ASSERT_NO_THROW(mPhysicsEngine->setStep(1.0f / 60.0f));
 
@@ -53,16 +38,9 @@ TEST_F(PhysicsTest, WorldStep) {
 
     mPhysicsEngine->getWorld().setGravity(Vector2(0, 0));
     ASSERT_EQ(mPhysicsEngine->getWorld().getGravity(), Vector2(0, 0));
-    //  mPhysicsEngine->reset();
 }
 
-TEST_F(PhysicsTest, WorldDestroy) {
-    // Create a new world
-    // Destroy the world
-    mPhysicsEngine->reset();
-
-    // ASSERT_NO_THROW(mPhysicsEngine->getWorld().resetWorld());
-}
+TEST_F(PhysicsTest, WorldDestroy) { mPhysicsEngine->reset(); }
 
 TEST_F(PhysicsTest, BodyProxy) {
     std::vector<GameObject*> gameObjects;
@@ -160,7 +138,7 @@ TEST_F(PhysicsTest, CreateBodiesWithBody) {
     gameObjects.push_back(gameObject2);
 
     gameObject->addComponent(boxCollider);
-    mPhysicsEngine->convertToBox2D(gameObject);
+    //// mPhysicsEngine->convertToBox2D(gameObject);
 
     BodyProxy proxy = BodyProxy(gameObject);
 

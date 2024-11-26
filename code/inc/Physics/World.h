@@ -27,6 +27,8 @@ public:
     BodyID createBody(BodyProxy& aBodyProxy);
     void createShape(BodyProxy& aBodyProxy, BodyID aBodyID);
 
+    void deleteBody(BodyID aBodyID);
+
     void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
     void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
 

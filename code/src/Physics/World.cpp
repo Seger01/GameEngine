@@ -9,7 +9,8 @@ World::World() {}
 
 World::World(Vector2 aGravity) {
     b2WorldDef worldDef = b2DefaultWorldDef();
-    worldDef.gravity = (b2Vec2){aGravity.x, aGravity.y};
+    mGravity = aGravity;
+    worldDef.gravity = (b2Vec2){mGravity.x, mGravity.y};
     mWorldID = b2CreateWorld(&worldDef);
 }
 
@@ -22,7 +23,12 @@ World::~World() {
 
 void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID, aStep, aSubStep); }
 
-void World::resetWorld() { b2DestroyWorld(mWorldID); }
+void World::resetWorld() {
+    b2DestroyWorld(mWorldID);
+    b2WorldDef worldDef = b2DefaultWorldDef();
+    worldDef.gravity = (b2Vec2){mGravity.x, mGravity.y};
+    mWorldID = b2CreateWorld(&worldDef);
+}
 
 BodyID World::createBody(BodyProxy& aBodyProxy) {
 
@@ -65,6 +71,11 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID) {
 
         b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
     }
+}
+
+void World::deleteBody(BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
+    b2DestroyBody(bodyID);
 }
 
 void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID) {

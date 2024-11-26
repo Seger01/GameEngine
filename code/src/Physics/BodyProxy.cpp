@@ -1,12 +1,18 @@
 #include "Physics/BodyProxy.h"
+#include "BoxCollider.h"
 
 BodyProxy::BodyProxy(GameObject* aGameObject) {
     if (aGameObject->hasComponent<RigidBody>()) {
         RigidBody* rigidBody = aGameObject->getComponents<RigidBody>().at(0);
-        mBoxColliders = aGameObject->getComponents<BoxCollider>();
+
+        if (aGameObject->hasComponent<BoxCollider>()) {
+            mBoxColliders = aGameObject->getComponents<BoxCollider>();
+        }
+        // if (aGameObject->hasComponent<CircleCollider>()) {
+        //     mCircleColliders = aGameObject->getComponents<CircleCollider>();
+        // }
 
         mPosition = aGameObject->getTransform().position;
-
         mHasGravity = rigidBody->getHasGravity();
         mIsMoveableByForce = rigidBody->getIsMoveableByForce();
         mCanRotate = rigidBody->getCanRotate();

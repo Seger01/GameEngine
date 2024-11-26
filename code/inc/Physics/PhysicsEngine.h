@@ -18,6 +18,7 @@ public:
     void reset();
 
     void createBodies();
+    void deleteBodies();
 
     void updateReferences(std::vector<GameObject*>&);
     void update();
@@ -35,8 +36,8 @@ public:
 
     void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
-    void convertFromBox2D(GameObject* aGameObject);
-    void convertToBox2D(GameObject* aGameObject);
+    void convertFromBox2D(std::vector<GameObject*>& aGameObjects);
+    void convertToBox2D(std::vector<GameObject*>& aGameObjects);
 
 private:
     World mWorld;

@@ -1,4 +1,5 @@
 #include "Physics/PhysicsEngine.h"
+#include "BoxCollider.h"
 #include "GameObject.h"
 #include "RigidBody.h"
 
@@ -8,11 +9,8 @@ PhysicsEngine::~PhysicsEngine() {}
 void PhysicsEngine::updateReferences(std::vector<GameObject*>& aGameObjects) { mGameObjects = aGameObjects; }
 
 void PhysicsEngine::update() {
-    for (GameObject* gameObject : mGameObjects) {
-        if (gameObject->hasComponent<RigidBody>()) {
-            convertToBox2D(gameObject);
-        }
-    }
+    convertToBox2D(mGameObjects);
+
     createBodies();
     updateFlags();
 
@@ -23,10 +21,26 @@ void PhysicsEngine::update() {
 
             Transform transform = mGameObjects.at(i)->getTransform();
 
-            transform.position.x =
-                transform.position.x - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth();
-            transform.position.y =
-                transform.position.y - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight();
+            float x = 0;
+            float y = 0;
+            int j = 0;
+
+            for (BoxCollider* boxCollider : mGameObjects.at(i)->getComponents<BoxCollider>()) {
+                x += boxCollider->getWidth();
+                y += boxCollider->getHeight();
+                j++;
+            }
+
+            x = x / j;
+            y = y / j;
+
+            transform.position.x = (transform.position.x - x);
+            transform.position.y = (transform.position.y - y);
+
+            // transform.position.x =
+            //     transform.position.x - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth();
+            // transform.position.y =
+            //     transform.position.y - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight();
 
             Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
@@ -53,11 +67,7 @@ void PhysicsEngine::update() {
 
     executeCollisionScripts(mWorld.getContactEvents());
     executeCollisionScripts(mWorld.getSensorEvents());
-    for (GameObject* gameObject : mGameObjects) {
-        if (gameObject->hasComponent<RigidBody>()) {
-            convertFromBox2D(gameObject);
-        }
-    }
+    convertFromBox2D(mGameObjects);
 }
 
 void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
@@ -116,6 +126,11 @@ void PhysicsEngine::createBodies() {
     }
 }
 
+void PhysicsEngine::deleteBodies() {
+
+    // mWorld.deleteBody(1);'
+}
+
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
 
 World& PhysicsEngine::getWorld() { return mWorld; }
@@ -163,42 +178,71 @@ void PhysicsEngine::updateFlags() {
     }
 }
 
-void PhysicsEngine::convertFromBox2D(GameObject* aGameObject) {
-    RigidBody* rigidBody = aGameObject->getComponents<RigidBody>()[0];
+void PhysicsEngine::convertFromBox2D(std::vector<GameObject*>& aGameObjects) {
+    for (GameObject* gameObject : aGameObjects) {
+        if (gameObject->hasComponent<RigidBody>()) {
+            RigidBody* rigidBody = gameObject->getComponents<RigidBody>()[0];
 
-    if (aGameObject->hasComponent<BoxCollider>()) {
-        BoxCollider* boxCollider = aGameObject->getComponents<BoxCollider>()[0];
+            if (gameObject->hasComponent<BoxCollider>()) {
+                Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+                Transform transform = gameObject->getTransform();
 
-        Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-        Transform transform = aGameObject->getTransform();
+                transform.position = position;
 
-        transform.position = position;
+                transform = Transform(Vector2(position.x, position.y));
 
-        transform = Transform(Vector2(position.x, position.y));
+                float x = 0;
+                float y = 0;
+                int i = 0;
+                for (BoxCollider* boxCollider : gameObject->getComponents<BoxCollider>()) {
+                    x += boxCollider->getWidth();
+                    y += boxCollider->getHeight();
+                    i++;
+                }
 
-        transform.position.x = transform.position.x - boxCollider->getWidth();
-        transform.position.y = transform.position.y - boxCollider->getHeight();
+                x = x / i;
+                y = y / i;
 
-        for (BoxCollider* boxCollider : aGameObject->getComponents<BoxCollider>()) {
-            boxCollider->setWidth(boxCollider->getWidth() * 2);
-            boxCollider->setHeight(boxCollider->getHeight() * 2);
+                transform.position.x = (transform.position.x - x);
+                transform.position.y = (transform.position.y - y);
+
+                for (BoxCollider* boxCollider : gameObject->getComponents<BoxCollider>()) {
+                    boxCollider->setWidth(boxCollider->getWidth() * 2);
+                    boxCollider->setHeight(boxCollider->getHeight() * 2);
+                }
+
+                gameObject->setTransform(transform);
+            }
         }
-
-        aGameObject->setTransform(transform);
     }
 }
 
-void PhysicsEngine::convertToBox2D(GameObject* aGameObject) {
+void PhysicsEngine::convertToBox2D(std::vector<GameObject*>& aGameObjects) {
 
-    Transform transform = aGameObject->getTransform();
-    std::vector<BoxCollider*> mBoxColliders = aGameObject->getComponents<BoxCollider>();
+    for (GameObject* gameObject : aGameObjects) {
+        if (gameObject->hasComponent<RigidBody>()) {
+            Transform transform = gameObject->getTransform();
+            float x = 0;
+            float y = 0;
+            int i = 0;
+            for (BoxCollider* boxCollider : gameObject->getComponents<BoxCollider>()) {
+                x += boxCollider->getWidth();
+                y += boxCollider->getHeight();
+                i++;
+            }
 
-    transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth();
-    transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight();
-    for (BoxCollider* boxCollider : mBoxColliders) {
-        boxCollider->setWidth(boxCollider->getWidth() / 2);
-        boxCollider->setHeight(boxCollider->getHeight() / 2);
+            x = x / i;
+            y = y / i;
+
+            transform.position.x = (transform.position.x + x);
+            transform.position.y = (transform.position.y + y);
+
+            for (BoxCollider* boxCollider : gameObject->getComponents<BoxCollider>()) {
+                boxCollider->setWidth(boxCollider->getWidth() / 2);
+                boxCollider->setHeight(boxCollider->getHeight() / 2);
+            }
+
+            gameObject->setTransform(transform);
+        }
     }
-
-    aGameObject->setTransform(Vector2(transform.position.x, transform.position.y));
 }
