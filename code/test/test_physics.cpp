@@ -16,6 +16,7 @@
 #include "Text.h"
 #include "Vector2.h"
 #include "Window.h"
+#include <functional>
 #include <gtest/gtest.h>
 
 class PhysicsTest : public ::testing::Test {
@@ -43,7 +44,7 @@ TEST_F(PhysicsTest, WorldStep) {
 TEST_F(PhysicsTest, WorldDestroy) { mPhysicsEngine->reset(); }
 
 TEST_F(PhysicsTest, BodyProxy) {
-    std::vector<GameObject*> gameObjects;
+    std::vector<std::reference_wrapper<GameObject>> gameObjects;
     GameObject* gameObject = new GameObject();
 
     RigidBody* rigidBody = new RigidBody();
@@ -69,8 +70,8 @@ TEST_F(PhysicsTest, BodyProxy) {
     boxCollider->setTransform(transform);
 
     gameObject->addComponent(boxCollider);
-    gameObjects.push_back(gameObject);
-    BodyProxy* proxy = new BodyProxy(gameObject);
+    gameObjects.push_back(*gameObject);
+    BodyProxy* proxy = new BodyProxy(*gameObject);
 
     ASSERT_EQ(proxy->getHasGravity(), false);
     ASSERT_EQ(proxy->getCanRotate(), false);
@@ -140,11 +141,9 @@ TEST_F(PhysicsTest, CreateBodiesWithBody) {
     gameObject->addComponent(boxCollider);
     //// mPhysicsEngine->convertToBox2D(gameObject);
 
-    BodyProxy proxy = BodyProxy(gameObject);
+    BodyProxy proxy = BodyProxy(*gameObject);
 
     mPhysicsEngine->getWorld().createBody(proxy);
-
-    ASSERT_NO_THROW(mPhysicsEngine->updateReferences(gameObjects));
 
     ASSERT_NO_THROW(mPhysicsEngine->createBodies());
     ASSERT_NO_THROW(mPhysicsEngine->createBodies());
@@ -223,11 +222,8 @@ TEST_F(PhysicsTest, updateloop) {
     gameObjects.push_back(gameObject);
     gameObjects.push_back(gameObject2);
 
-    mPhysicsEngine->updateReferences(gameObjects);
-
     ASSERT_NO_THROW(mPhysicsEngine->update());
     gameObjects.at(1)->getComponents<BoxCollider>().at(0)->setTrigger(true);
-    mPhysicsEngine->updateReferences(gameObjects);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
 }
@@ -306,8 +302,6 @@ TEST_F(PhysicsTest, testcollide) {
     gameObject2->addComponent(rigidBody2);
 
     gameObjects.push_back(gameObject2);
-
-    mPhysicsEngine->updateReferences(gameObjects);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
 
@@ -391,14 +385,10 @@ TEST_F(PhysicsTest, properties) {
 
     gameObjects.push_back(gameObject);
 
-    mPhysicsEngine->updateReferences(gameObjects);
-
     ASSERT_NO_THROW(mPhysicsEngine->update());
     rigidBody->setActive(true);
     boxCollider->setTrigger(false);
     ASSERT_EQ(boxCollider->isTrigger(), false);
-
-    mPhysicsEngine->updateReferences(gameObjects);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
 }

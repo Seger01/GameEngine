@@ -79,7 +79,7 @@ TEST_F(SceneTest, RequestGameObjectRemovalByPointer) {
     scene->addGameObject(obj1);
     scene->requestGameObjectRemoval(obj1);
 
-    EXPECT_EQ(scene->getGameObjectsToBeRemove().size(), 1);
+    EXPECT_EQ(scene->getGameObjectsToBeRemoved().size(), 1);
 }
 
 // Test requesting GameObject removal by ID
@@ -90,7 +90,7 @@ TEST_F(SceneTest, RequestGameObjectRemovalByID) {
     scene->addGameObject(obj1);
     scene->requestGameObjectRemoval(1);
 
-    EXPECT_EQ(scene->getGameObjectsToBeRemove().size(), 1);
+    EXPECT_EQ(scene->getGameObjectsToBeRemoved().size(), 1);
 }
 
 // Test adding and removing cameras

@@ -14,7 +14,7 @@
 
 class BodyProxy {
 public:
-    BodyProxy(GameObject* aGameObject);
+    BodyProxy(const std::reference_wrapper<GameObject>& aGameObject);
     ~BodyProxy();
 
     void processBodyType();

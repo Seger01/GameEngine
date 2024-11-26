@@ -4,8 +4,7 @@
 #include "Engine/EngineBravo.h"
 #include "Engine/SceneManager.h"
 
-NetworkManager::NetworkManager()
-    : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false), mGameObjects(nullptr) {}
+NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
 
 void NetworkManager::startNetwork() {
     if (mRole == NetworkRole::SERVER) {
@@ -22,14 +21,10 @@ void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shut
 void NetworkManager::initialize() { startNetwork(); }
 
 void NetworkManager::update() {
-    mGameObjects = &EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
-    if (mGameObjects == nullptr) {
-        throw std::runtime_error("Game objects is nullptr");
-    }
     if (mRole == NetworkRole::SERVER && mServer) {
-        mServer->update(*mGameObjects);
+        mServer->update(mObjects);
     } else if (mRole == NetworkRole::CLIENT && mClient) {
-        mClient->update(*mGameObjects);
+        mClient->update(mObjects);
     } else if (mRole == NetworkRole::HOST && mHost) {
         throw std::runtime_error("NetworkManager::update() isHost not implemented");
         // mHost->update();
@@ -141,7 +136,7 @@ void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
 
 NetworkRole NetworkManager::getRole() const { return mRole; }
 
-std::vector<GameObject*>& NetworkManager::getGameObjects() { return *mGameObjects; }
+std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getGameObjects() { return mObjects; }
 
 void NetworkManager::startServer() {
     if (mClient || mHost) {
@@ -150,7 +145,7 @@ void NetworkManager::startServer() {
     if (mServer) {
         throw std::runtime_error("Server is already running");
     }
-    mServer = std::make_unique<NetworkServer>(mTickRate);
+    mServer = std::make_unique<NetworkServer>(mObjects, mTickRate);
 }
 
 void NetworkManager::startClient() {
@@ -160,7 +155,7 @@ void NetworkManager::startClient() {
     if (mClient) {
         throw std::runtime_error("Client is already running");
     }
-    mClient = std::make_unique<NetworkClient>(mTickRate);
+    mClient = std::make_unique<NetworkClient>(mObjects, mTickRate);
 }
 
 void NetworkManager::startHost() {
@@ -171,4 +166,24 @@ void NetworkManager::startHost() {
         throw std::runtime_error("Host is already running");
     }
     mHost = std::make_unique<NetworkHost>();
+}
+
+void NetworkManager::addObject(GameObject& aObject) {
+    auto it =
+        std::find_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& wrapper) {
+            return &wrapper.get() == &aObject; // Compare addresses
+        });
+    if (it == mObjects.end()) {
+        // Object has not been added yet
+        mObjects.push_back(aObject);
+    }
+}
+
+void NetworkManager::removeObject(GameObject& aObject) {
+    auto it =
+        std::remove_if(mObjects.begin(), mObjects.end(),
+                       [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+    if (it != mObjects.end()) {
+        mObjects.erase(it, mObjects.end());
+    }
 }

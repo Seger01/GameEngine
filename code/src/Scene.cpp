@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include "EngineBravo.h"
+
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -52,6 +54,7 @@ void Scene::addGameObject(GameObject* object) {
     if (object) {
         mGameObjects.push_back(std::unique_ptr<GameObject>(object));
     }
+    EngineBravo::getInstance().addToUpdateObjects(*object);
 }
 
 void Scene::requestGameObjectRemoval(int id) {
@@ -168,4 +171,4 @@ void Scene::releasePersistentGameObjects() {
     }
 }
 
-std::vector<GameObject*> Scene::getGameObjectsToBeRemove() { return mGameObjectsToRemove; }
+std::vector<GameObject*> Scene::getGameObjectsToBeRemoved() { return mGameObjectsToRemove; }

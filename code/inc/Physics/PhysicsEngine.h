@@ -7,6 +7,7 @@
 #include "RigidBody.h"
 #include "World.h"
 #include "WorldID.h"
+#include <functional>
 #include <vector>
 class PhysicsEngine {
 
@@ -20,7 +21,6 @@ public:
     void createBodies();
     void deleteBodies();
 
-    void updateReferences(std::vector<GameObject*>&);
     void update();
     void updateFlags();
     void updateForces();
@@ -36,13 +36,16 @@ public:
 
     void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
-    void convertFromBox2D(std::vector<GameObject*>& aGameObjects);
-    void convertToBox2D(std::vector<GameObject*>& aGameObjects);
+    void convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+    void convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+
+public:
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
 
 private:
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
     World mWorld;
-    WorldID mWorldID;
-    std::vector<GameObject*> mGameObjects;
 
     float mStep;
     int mSubStep;
