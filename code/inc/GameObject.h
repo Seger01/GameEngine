@@ -78,15 +78,8 @@ public:
 
     // Templated addComponent function
     template <typename T, typename... Args> T* addComponent(Args&&... args) {
-        // auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
-        // T* rawPtr = newComponent.get();
         T* rawPtr = new T(std::forward<Args>(args)...);
         addComponent(rawPtr);
-        // newComponent->setGameObjectParent(this);
-
-        // T* rawPtr = newComponent.get();
-        // mComponents.push_back(std::move(newComponent));
-
         return rawPtr;
     }
 
