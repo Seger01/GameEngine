@@ -23,7 +23,7 @@ public:
     void setTrigger(bool isTrigger);
 
 private:
-    bool mIsTrigger = false;
+    bool mIsTrigger;
     float mWidth;
     float mHeight;
     float mRotation;

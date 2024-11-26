@@ -11,7 +11,7 @@ SpriteDef firstFramePlayerIdleBack = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleBackPosition.x, playerIdleBackPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
 
-const Point playerIdleSidePosition = {21, 66};
+Point playerIdleSidePosition = {21, 66};
 SpriteDef firstFramePlayerIdleSize = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleSidePosition.x, playerIdleSidePosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
@@ -20,28 +20,6 @@ const Point playerIdleFrontPosition = {21, 37};
 SpriteDef firstFramePlayerIdleFront = {
     "enter_the_gungeon_spritesheet.png",
     Rect{playerIdleFrontPosition.x, playerIdleFrontPosition.y, spriteWidth, spriteHeight}, spriteWidth, spriteHeight};
-
-const Point playerWalkingFrontPosition = {22, 187};
-SpriteDef firstFramePlayerWalkingFront = {
-    "enter_the_gungeon_spritesheet.png",
-    Rect{playerWalkingFrontPosition.x, playerWalkingFrontPosition.y, spriteWidth, spriteHeight}, spriteWidth,
-    spriteHeight};
-
-const Point playerWalkingBackPosition = {20, 251};
-SpriteDef firstFramePlayerWalkingBack = {
-    "enter_the_gungeon_spritesheet.png",
-    Rect{playerWalkingBackPosition.x, playerWalkingBackPosition.y, spriteWidth, spriteHeight}, spriteWidth,
-    spriteHeight};
-
-const Point playerWalkingBackSidePosition = {158, 187};
-SpriteDef firstFramePlayerWalkingBackSide = {
-    "enter_the_gungeon_spritesheet.png", Rect{playerWalkingBackSidePosition.x, playerWalkingBackSidePosition.y, 17, 27},
-    17, 27};
-
-const Point playerWalkingFrontSidePosition = {160, 220};
-SpriteDef firstFramePlayerWalkingFrontSide = {
-    "enter_the_gungeon_spritesheet.png",
-    Rect{playerWalkingFrontSidePosition.x, playerWalkingFrontSidePosition.y, 17, 27}, 17, 27};
 
 GameObject* PlayerPrefabFactory::createPlayerPrefab() {
     GameObject* defaultPlayerPrefab = new GameObject;
@@ -82,11 +60,6 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
     Animation* playerIdleSideAnimation = nullptr;
     Animation* playerIdleBackAnimation = nullptr;
 
-    Animation* playerWalkingFrontAnimation = nullptr;
-    Animation* playerWalkingBackAnimation = nullptr;
-    Animation* playerWalkingBackSideAnimation = nullptr;
-    Animation* playerWalkingFrontSideAnimation = nullptr;
-
     {
         std::vector<SpriteDef> playerIdleBackAnimationFrames =
             SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleBack, 3);
@@ -98,6 +71,7 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
         playerIdleBackAnimation =
             EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationIdleBack, 200, true);
     }
+
     {
         std::vector<SpriteDef> playerIdleSideAnimationFrames =
             SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerIdleSize, 3);
@@ -121,64 +95,17 @@ void PlayerPrefabFactory::addAnimations(GameObject* gameObject) {
             EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimaionIdleFront, 200, true);
     }
 
-    {
-        std::vector<SpriteDef> playerWalkingBackAnimationFrames =
-            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingBack, 6);
-
-        std::vector<SpriteDef> playerAnimationWalkingBack = playerWalkingBackAnimationFrames;
-
-        playerWalkingBackAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBack, 100, true);
-    }
-    {
-        std::vector<SpriteDef> playerWalkingFrontAnimationFrames =
-            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingFront, 6);
-
-        std::vector<SpriteDef> playerAnimationWalkingFront = playerWalkingFrontAnimationFrames;
-
-        playerWalkingFrontAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFront, 100, true);
-    }
-    {
-        std::vector<SpriteDef> playerWalkingBackSideAnimationFrames =
-            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingBackSide, 6);
-
-        std::vector<SpriteDef> playerAnimationWalkingBackSide = playerWalkingBackSideAnimationFrames;
-
-        playerWalkingBackSideAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingBackSide, 100, true);
-    }
-    {
-        std::vector<SpriteDef> playerWalkingFrontSideAnimationFrames =
-            SpriteDefUtil::extrapolateSpriteDef(firstFramePlayerWalkingFrontSide, 6);
-
-        std::vector<SpriteDef> playerAnimationWalkingFrontSide = playerWalkingFrontSideAnimationFrames;
-
-        playerWalkingFrontSideAnimation =
-            EngineBravo::getInstance().getResourceManager().loadAnimation(playerAnimationWalkingFrontSide, 100, true);
-    }
-
     playerIdleBackAnimation->setTag("playerIdleBack");
     playerIdleSideAnimation->setTag("playerIdleSide");
     playerIdleFrontAnimation->setTag("playerIdleFront");
-
-    playerWalkingFrontAnimation->setTag("playerWalkingFront");
-    playerWalkingBackAnimation->setTag("playerWalkingBack");
-    playerWalkingBackSideAnimation->setTag("playerWalkingBackSide");
-    playerWalkingFrontSideAnimation->setTag("playerWalkingFrontSide");
 
     gameObject->addComponent(playerIdleFrontAnimation);
     gameObject->addComponent(playerIdleSideAnimation);
     gameObject->addComponent(playerIdleBackAnimation);
 
-    gameObject->addComponent(playerWalkingFrontAnimation);
-    gameObject->addComponent(playerWalkingBackAnimation);
-    gameObject->addComponent(playerWalkingBackSideAnimation);
-    gameObject->addComponent(playerWalkingFrontSideAnimation);
-
     for (auto animation : gameObject->getComponents<Animation>()) {
         animation->setActive(false);
-        animation->setLayer(4);
+        animation->setLayer(3);
     }
 
     playerIdleFrontAnimation->setActive(true);
@@ -227,33 +154,21 @@ void PlayerPrefabFactory::addRigidBody(GameObject* gameObject) {
 }
 
 void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
-    std::cout << firstFramePlayerIdleFront.width << " " << firstFramePlayerIdleFront.height << std::endl;
     Transform transform;
-    transform.position = {0.0f, 0.0f};
+    transform.position = {firstFramePlayerIdleFront.width / 2, 10.0f};
     BoxCollider* boxCollider = new BoxCollider();
-    boxCollider->setWidth(10); // 16
-    boxCollider->setHeight(5); // 25
+    boxCollider->setWidth(firstFramePlayerIdleFront.width);
+    boxCollider->setHeight(firstFramePlayerIdleFront.height / 2);
     boxCollider->setTransform(transform);
-
     Transform transform2;
-    transform2.position = {10.0, 0.0f};
+    transform.position = {firstFramePlayerIdleFront.width / 2, -firstFramePlayerIdleFront.height / 2};
 
     BoxCollider* boxCollider2 = new BoxCollider();
-    boxCollider2->setWidth(10);
-    boxCollider2->setHeight(firstFramePlayerIdleFront.height);
+    boxCollider2->setWidth(firstFramePlayerIdleFront.width);
+    boxCollider2->setHeight(firstFramePlayerIdleFront.height / 2);
     boxCollider2->setTransform(transform2);
 
-    Transform transform3;
-    transform3.position = {20.0, 0.0f};
-
-    BoxCollider* boxCollider3 = new BoxCollider();
-    boxCollider3->setWidth(20);
-    boxCollider3->setHeight(firstFramePlayerIdleFront.height);
-    boxCollider3->setTransform(transform3);
-
     gameObject->addComponent(boxCollider);
-    gameObject->addComponent(boxCollider2);
-    gameObject->addComponent(boxCollider3);
 }
 
 void PlayerPrefabFactory::addSound(GameObject* gameObject) {

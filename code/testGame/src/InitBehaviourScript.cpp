@@ -48,6 +48,7 @@ void InitBehaviourScript::createLevel1() {
     Transform objectTransform2;
     objectTransform2.position.x = 50;
     objectTransform2.position.y = 80;
+
     gameObject2->setTransform(objectTransform2);
 
     Sprite* guySprite = engine.getResourceManager().createSprite(guyFrameDef);
