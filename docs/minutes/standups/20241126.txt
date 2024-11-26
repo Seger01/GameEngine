@@ -1,0 +1,24 @@
+Minutes 26-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: 
+- Angel: Finished tests for physics. Ran into issue with translation step.
+- Ronan: Level manager implementation finished. Level mechanics: enemies are now killable. Added coin objects
+- Sean: Networking: implemented serializable class. Created network behaviour, to contain network variables.
+- Seger: Finished button functionality.
+
+What is going to be done:
+- Siem:
+- Angel: Use delete queue provided by engine for physics.
+- Ronan: Updating code to follow code standard. Adding menu for selecting multiplayer in validation app.
+- Sean: Testing multiplayer. Adding functionality to network manager.
+- Seger: Review various prs, help Angel with physics issues, help Ronan with game implementation.
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: Issue with physics not deleting colliders.
+- Sean: -
+- Seger: -
