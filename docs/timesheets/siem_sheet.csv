@@ -83,3 +83,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-21, 9:15, 3.5, Update queue implementation.
 2024-11-21, 19:00, 2, Proceed with queue implementation.
 2024-11-22, 20:00, 0.5, Fix audio source files to follow code standard
+2024-11-26, 9:15, 6.5, Investigate physics issues related to update queue and attended project class
+2024-11-26, 20:00, 1.5, Investigate physics issues related to update queue
