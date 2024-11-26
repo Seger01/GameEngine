@@ -190,34 +190,29 @@ int RenderSystem::getHighestLayer(Scene* aScene) {
 void RenderSystem::renderLayer(Scene* aScene, int aLayer) {
     Camera& activeCamera = aScene->getActiveCamera();
 
-    for (auto& gameObject : aScene->getGameObjects()) {
-        if (gameObject->hasComponent<Animation>()) {
-            for (auto animation : gameObject->getComponents<Animation>()) {
-                if (animation->isActive() && animation->getLayer() == aLayer) {
-                    renderAnimation(activeCamera, gameObject, animation);
-                }
+    for (GameObject& gameObject : mObjects) {
+        for (auto animation : gameObject.getComponents<Animation>()) {
+            if (animation->isActive() && animation->getLayer() == aLayer) {
+                renderAnimation(activeCamera, &gameObject, animation);
             }
-        } else if (gameObject->hasComponent<Sprite>()) {
-            for (auto sprite : gameObject->getComponents<Sprite>()) {
-                if (sprite->isActive() && sprite->getLayer() == aLayer) {
-                    renderSprite(activeCamera, gameObject, sprite);
+        }
+        for (auto sprite : gameObject.getComponents<Sprite>()) {
+            if (sprite->isActive() && sprite->getLayer() == aLayer) {
+                renderSprite(activeCamera, &gameObject, sprite);
+            }
+        }
+        for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>()) {
+            if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer) {
+                for (auto& particle : particleEmitter->getParticles()) {
+                    renderParticle(activeCamera, particle);
                 }
             }
         }
-        if (gameObject->hasComponent<ParticleEmitter>()) {
-            for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>()) {
-                if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer) {
-                    for (auto& particle : particleEmitter->getParticles()) {
-                        renderParticle(activeCamera, particle);
-                    }
-                }
-            }
-        }
-        if (dynamic_cast<Text*>(gameObject)) {
-            Text* text = dynamic_cast<Text*>(gameObject);
-            if (text->isActive() && text->getLayer() == aLayer) {
-                renderText(activeCamera, text->getText(), text->getTransform().position, text->getColor(),
-                           text->getScale());
+        if (typeid(gameObject) == typeid(Text)) {
+            Text& text = dynamic_cast<Text&>(gameObject);
+            if (text.isActive() && text.getLayer() == aLayer) {
+                renderText(activeCamera, text.getText(), text.getTransform().position, text.getColor(),
+                           text.getScale());
             }
         }
     }
@@ -331,3 +326,23 @@ void RenderSystem::renderDebugInfo(Scene* aScene) {
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }
 Window& RenderSystem::getWindow() { return *mWindow; }
+
+void RenderSystem::addObject(GameObject& aObject) {
+    auto it =
+        std::find_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& wrapper) {
+            return &wrapper.get() == &aObject; // Compare addresses
+        });
+    if (it == mObjects.end()) {
+        // Object has not been added yet
+        mObjects.push_back(aObject);
+    }
+}
+
+void RenderSystem::removeObject(GameObject& aObject) {
+    auto it =
+        std::remove_if(mObjects.begin(), mObjects.end(),
+                       [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+    if (it != mObjects.end()) {
+        mObjects.erase(it, mObjects.end());
+    }
+}

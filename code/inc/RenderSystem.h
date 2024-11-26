@@ -22,6 +22,10 @@ public:
 
     bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale);
 
+public:
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
+
 private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);
     void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation);
@@ -36,6 +40,7 @@ private:
     int getHighestLayer(Scene* aScene);
 
 private:
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
     std::unique_ptr<Renderer> mRenderer;
     std::unique_ptr<Window> mWindow;
 

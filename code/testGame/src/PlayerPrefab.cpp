@@ -237,9 +237,13 @@ void PlayerPrefabFactory::addRigidBody(GameObject* gameObject)
 
 void PlayerPrefabFactory::addCollider(GameObject* gameObject)
 {
+	std::cout << firstFramePlayerIdleFront.width << " " << firstFramePlayerIdleFront.height << std::endl;
+	Transform transform;
+	transform.position = {0.0f, 0.0f};
 	BoxCollider* boxCollider = new BoxCollider();
-	boxCollider->setWidth(firstFramePlayerIdleFront.width);
-	boxCollider->setHeight(firstFramePlayerIdleFront.height);
+	boxCollider->setWidth(16);	// 16
+	boxCollider->setHeight(25); // 25
+	boxCollider->setTransform(transform);
 
 	gameObject->addComponent(boxCollider);
 }

@@ -58,15 +58,11 @@ void AudioManager::stop(const AudioSource& aSource)
  */
 void AudioManager::wake()
 {
-	// Get the current scene
-	EngineBravo& engine = EngineBravo::getInstance();
-	Scene* currScene = engine.getSceneManager().getCurrentScene();
-
-	// Iterate through all objects in the scene
-	for (auto& gameObject : currScene->getGameObjects())
+	// Iterate through all objects with audio components
+	for (GameObject& gameObject : mObjects)
 	{
 		// Iterate through all audio sources in the object
-		for (AudioSource* component : gameObject->getComponents<AudioSource>())
+		for (AudioSource* component : gameObject.getComponents<AudioSource>())
 		{
 			if (component->getPlayOnWake())
 			{
@@ -93,4 +89,29 @@ void AudioManager::loadSound(const AudioSource& aAudio)
 	}
 }
 
-void AudioManager::clearSounds() { mFacade->unloadAll(); }
+void AudioManager::clearSounds() { getFacade().unloadAll(); }
+
+void AudioManager::addObject(GameObject& aObject)
+{
+	auto it = std::find_if(mObjects.begin(), mObjects.end(),
+						   [&aObject](const std::reference_wrapper<GameObject>& wrapper)
+						   {
+							   return &wrapper.get() == &aObject; // Compare addresses
+						   });
+	if (it == mObjects.end())
+	{
+		// Object has not been added yet
+		mObjects.push_back(aObject);
+	}
+}
+
+void AudioManager::removeObject(GameObject& aObject)
+{
+	auto it =
+		std::remove_if(mObjects.begin(), mObjects.end(),
+					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	if (it != mObjects.end())
+	{
+		mObjects.erase(it, mObjects.end());
+	}
+}

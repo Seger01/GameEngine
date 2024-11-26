@@ -1,6 +1,6 @@
 #include "BoxCollider.h"
 
-BoxCollider::BoxCollider() : mWidth(0.0f), mHeight(0.0f), mRotation(0.0f) {
+BoxCollider::BoxCollider() : mWidth(0.0f), mHeight(0.0f), mRotation(0.0f), mIsTrigger(false) {
     // Constructor implementation
 }
 

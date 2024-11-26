@@ -6,7 +6,8 @@
 
 class AudioSource;
 
-class AudioManager {
+class AudioManager
+{
 public:
 	AudioManager();
 
@@ -21,7 +22,10 @@ public:
 public:
 	void loadSound(const AudioSource& aAudio);
 	void clearSounds();
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
 
 private:
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
 	std::unique_ptr<IAudioFacade> mFacade;
 };

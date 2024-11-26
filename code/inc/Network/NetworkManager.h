@@ -42,7 +42,10 @@ public:
     void setRole(NetworkRole aRole);
     NetworkRole getRole() const;
 
-    std::vector<GameObject*>& getGameObjects();
+    std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
+
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
 
 private:
     void startServer();
@@ -54,7 +57,7 @@ private:
     int mTickRate;
     std::unique_ptr<GameObject> mDefaultPlayerPrefab;
     bool mEnableSceneManagement;
-    std::vector<GameObject*>* mGameObjects;
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
 
     std::unique_ptr<NetworkServer> mServer;
     std::unique_ptr<NetworkClient> mClient;

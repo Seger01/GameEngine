@@ -1,21 +1,19 @@
 #include "Physics/BodyProxy.h"
+#include "BoxCollider.h"
+#include <functional>
 
-BodyProxy::BodyProxy(GameObject* aGameObject) {
-    if (aGameObject->hasComponent<RigidBody>()) {
-        RigidBody* rigidBody = aGameObject->getComponents<RigidBody>().at(0);
-        mBoxColliders = aGameObject->getComponents<BoxCollider>();
+BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject) {
+    if (aGameObject.get().hasComponent<RigidBody>()) {
+        RigidBody* rigidBody = aGameObject.get().getComponents<RigidBody>().at(0);
 
-        Transform transform = aGameObject->getTransform();
+        if (aGameObject.get().hasComponent<BoxCollider>()) {
+            mBoxColliders = aGameObject.get().getComponents<BoxCollider>();
+        }
+        // if (aGameObject->hasComponent<CircleCollider>()) {
+        //     mCircleColliders = aGameObject->getComponents<CircleCollider>();
+        // }
 
-        transform.position = transform.position + mBoxColliders[0]->getTransform().position;
-
-        transform.position.x = transform.position.x + mBoxColliders.at(0)->getWidth() / 2;
-        transform.position.y = transform.position.y + mBoxColliders.at(0)->getHeight() / 2;
-
-        mPosition = Vector2(-transform.position.x, -transform.position.y);
-
-        mSize = aGameObject->getTransform().scale;
-
+        mPosition = aGameObject.get().getTransform().position;
         mHasGravity = rigidBody->getHasGravity();
         mIsMoveableByForce = rigidBody->getIsMoveableByForce();
         mCanRotate = rigidBody->getCanRotate();
@@ -28,11 +26,6 @@ BodyProxy::BodyProxy(GameObject* aGameObject) {
         mAngularDamping = rigidBody->getAngularDamping();
 
         processBodyType();
-
-        for (BoxCollider* boxCollider : mBoxColliders) {
-            boxCollider->setWidth(boxCollider->getWidth() / 2);
-            boxCollider->setHeight(boxCollider->getHeight() / 2);
-        }
 
     } else {
         return;
@@ -66,6 +59,5 @@ float BodyProxy::getMass() const { return mMass; }
 float BodyProxy::getGravityScale() const { return mGravityScale; }
 
 Vector2 BodyProxy::getPosition() const { return mPosition; }
-Vector2 BodyProxy::getSize() const { return mSize; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }

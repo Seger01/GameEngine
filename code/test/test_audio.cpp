@@ -6,18 +6,21 @@
 #include "MixerFacade.h"
 #include <gtest/gtest.h>
 
-class AudioTest : public ::testing::Test {
+class AudioTest : public ::testing::Test
+{
 protected:
 	EngineBravo* engine;
 	AudioManager* audioManager;
 
-	void SetUp() override {
+	void SetUp() override
+	{
 		engine = &EngineBravo::getInstance();
 		audioManager = &engine->getAudioManager();
 	}
 };
 
-TEST_F(AudioTest, AddSound) {
+TEST_F(AudioTest, AddSound)
+{
 	// Add a sound to the audio manager
 	AudioSource audio("Audio/gun1.wav", false);
 
@@ -31,7 +34,8 @@ TEST_F(AudioTest, AddSound) {
 	ASSERT_TRUE(audioManager->getFacade().audioIsLoaded("Audio/gun1.wav"));
 }
 
-TEST_F(AudioTest, AddMusic) {
+TEST_F(AudioTest, AddMusic)
+{
 	// Add a music file to the audio manager
 	AudioSource audio("Audio/music.wav", true);
 
@@ -45,7 +49,8 @@ TEST_F(AudioTest, AddMusic) {
 	ASSERT_TRUE(audioManager->getFacade().musicIsLoaded());
 }
 
-TEST_F(AudioTest, PlaySound) {
+TEST_F(AudioTest, PlaySound)
+{
 	// Add a sound to the audio manager
 	std::string path = "Audio/gun1.wav";
 	AudioSource audio(path, false);
@@ -58,7 +63,8 @@ TEST_F(AudioTest, PlaySound) {
 	ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
 }
 
-TEST_F(AudioTest, PlayMusic) {
+TEST_F(AudioTest, PlayMusic)
+{
 	// Add a music file to the audio manager
 	std::string path = "Audio/music.wav";
 	AudioSource audio(path, true);
@@ -71,7 +77,8 @@ TEST_F(AudioTest, PlayMusic) {
 	ASSERT_TRUE(audioManager->getFacade().isMusicPlaying());
 }
 
-TEST_F(AudioTest, unloadSounds) {
+TEST_F(AudioTest, unloadSounds)
+{
 	audioManager->clearSounds();
 	// Add a sound to the audio manager
 	std::string path1 = "Audio/gun1.wav";
@@ -90,7 +97,8 @@ TEST_F(AudioTest, unloadSounds) {
 	ASSERT_FALSE(audioManager->getFacade().audioIsLoaded(path2));
 }
 
-TEST_F(AudioTest, stopMusic) {
+TEST_F(AudioTest, stopMusic)
+{
 	// Add a music file to the audio manager
 	std::string path = "Audio/music.wav";
 	AudioSource audio(path, true);
@@ -107,7 +115,8 @@ TEST_F(AudioTest, stopMusic) {
 	ASSERT_FALSE(audioManager->getFacade().isMusicPlaying());
 }
 
-TEST_F(AudioTest, stopSound) {
+TEST_F(AudioTest, stopSound)
+{
 	// Add a sound to the audio manager
 	std::string path = "Audio/gun1.wav";
 	AudioSource audio(path, false);
@@ -121,7 +130,8 @@ TEST_F(AudioTest, stopSound) {
 	ASSERT_THROW(audioManager->stop(audio), std::logic_error);
 }
 
-TEST_F(AudioTest, playUnloadedSound) {
+TEST_F(AudioTest, playUnloadedSound)
+{
 	audioManager->clearSounds();
 	// Add a sound to the audio manager
 	std::string path = "Audio/gun1.wav";
@@ -137,7 +147,8 @@ TEST_F(AudioTest, playUnloadedSound) {
 	ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
 }
 
-TEST_F(AudioTest, playUnloadedMusci) {
+TEST_F(AudioTest, playUnloadedMusci)
+{
 	audioManager->clearSounds();
 	// Add a music file to the audio manager
 	std::string path = "Audio/music.wav";
@@ -153,7 +164,8 @@ TEST_F(AudioTest, playUnloadedMusci) {
 	ASSERT_TRUE(audioManager->getFacade().isMusicPlaying());
 }
 
-TEST_F(AudioTest, playOnWake) {
+TEST_F(AudioTest, playOnWake)
+{
 	// create a scene
 	engine->getSceneManager().createScene("testScene");
 	GameObject* gameObject = new GameObject();
@@ -165,6 +177,7 @@ TEST_F(AudioTest, playOnWake) {
 	AudioSource* audio{new AudioSource(path, false)};
 	audio->setPlayOnWake(true);
 	gameObject->addComponent(audio);
+	audioManager->addObject(*gameObject);
 
 	// Verify that the sound is not playing
 	ASSERT_FALSE(audioManager->getFacade().isPlaying(path));
@@ -176,26 +189,31 @@ TEST_F(AudioTest, playOnWake) {
 	ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
 }
 
-TEST_F(AudioTest, containerLoadNonExistent) {
+TEST_F(AudioTest, containerLoadNonExistent)
+{
 	MixerContainer container;
 	ASSERT_EQ(container.getSound("nonexistent"), nullptr);
 }
 
-TEST_F(AudioTest, MixerFacadeLoadInvalid) {
+TEST_F(AudioTest, MixerFacadeLoadInvalid)
+{
 	MixerFacade mixer;
 	ASSERT_THROW(mixer.loadSound("nonexistent"), std::runtime_error);
 }
 
-TEST_F(AudioTest, MixerFacadeLoadInvalidMusic) {
+TEST_F(AudioTest, MixerFacadeLoadInvalidMusic)
+{
 	MixerFacade mixer;
 	ASSERT_THROW(mixer.loadMusic("nonexistent"), std::runtime_error);
 }
 
-TEST_F(AudioTest, FloodMixerChannels) {
+TEST_F(AudioTest, FloodMixerChannels)
+{
 	std::string fullPath = FSConverter().getResourcePath("Audio/gun1.wav");
 	// Test if, when playing a sound on each channel, the next sound is played on the last played channel
 	MixerFacade mixer;
-	for (int i = 0; i < MIX_CHANNELS; ++i) {
+	for (int i = 0; i < MIX_CHANNELS; ++i)
+	{
 		mixer.loadSound(fullPath);
 		mixer.playSound(fullPath, false, 100, 0);
 	}
@@ -204,7 +222,8 @@ TEST_F(AudioTest, FloodMixerChannels) {
 	ASSERT_EQ(mixer.findAvailableChannel(), 1); // The channel should increment, because channel 0 is assumed used.
 }
 
-TEST_F(AudioTest, PlayComponent) {
+TEST_F(AudioTest, PlayComponent)
+{
 	// Add a sound to the audio manager
 	std::string path = "Audio/gun1.wav";
 	AudioSource audio(path, false);
@@ -221,7 +240,8 @@ TEST_F(AudioTest, PlayComponent) {
 	ASSERT_TRUE(audioManager->getFacade().isPlaying(path));
 }
 
-TEST_F(AudioTest, StopComponent) {
+TEST_F(AudioTest, StopComponent)
+{
 	// Add a sound to the audio manager
 	std::string path = "Audio/gun1.wav";
 	AudioSource audio(path, false);
@@ -241,7 +261,8 @@ TEST_F(AudioTest, StopComponent) {
 	ASSERT_THROW(audioComponent->stop(), std::logic_error);
 }
 
-TEST_F(AudioTest, componentVolume) {
+TEST_F(AudioTest, componentVolume)
+{
 	AudioSource audio("Audio/gun1.wav", false);
 	audio.setVolume(50);
 	ASSERT_EQ(audio.getVolume(), 50);
@@ -253,7 +274,8 @@ TEST_F(AudioTest, componentVolume) {
 	ASSERT_EQ(audio.getVolume(), 100);
 }
 
-TEST_F(AudioTest, componentDirection) {
+TEST_F(AudioTest, componentDirection)
+{
 	AudioSource audio("Audio/gun1.wav", false);
 	audio.setXDirection(-1);
 	ASSERT_EQ(audio.getXDirection(), -1);
@@ -267,7 +289,8 @@ TEST_F(AudioTest, componentDirection) {
 	ASSERT_EQ(audio.getXDirection(), -100);
 }
 
-TEST_F(AudioTest, componentClone) {
+TEST_F(AudioTest, componentClone)
+{
 	AudioSource audio("Audio/gun1.wav", false);
 	AudioSource* clone = dynamic_cast<AudioSource*>(audio.clone().get());
 	ASSERT_EQ(clone->getFileName(), audio.getFileName());

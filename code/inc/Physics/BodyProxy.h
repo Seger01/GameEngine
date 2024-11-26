@@ -5,21 +5,21 @@
 #include "Components/BoxCollider.h"
 #include "Components/CircleCollider.h"
 #include "Components/Collider.h"
+
 #include "GameObject.h"
-#include "Point.h"
 #include "RigidBody.h"
 #include "Vector2.h"
 #include <iostream>
 #include <vector>
+
 class BodyProxy {
 public:
-    BodyProxy(GameObject* aGameObject);
+    BodyProxy(const std::reference_wrapper<GameObject>& aGameObject);
     ~BodyProxy();
 
     void processBodyType();
 
     Vector2 getPosition() const;
-    Vector2 getSize() const;
 
     bool getHasGravity() const;
     bool getIsMoveableByForce() const;
@@ -43,7 +43,6 @@ public:
 
 private:
     Vector2 mPosition;
-    Vector2 mSize;
 
     bool mHasGravity;
     bool mIsMoveableByForce;

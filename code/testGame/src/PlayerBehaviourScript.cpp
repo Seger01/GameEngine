@@ -183,16 +183,16 @@ void PlayerBehaviourScript::handleMovement() {
     }
 
     if (input.GetKey(Key::Key_W)) {
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 200));
-    }
-    if (input.GetKey(Key::Key_A)) {
-        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(200, 0));
-    }
-    if (input.GetKey(Key::Key_S)) {
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, -200));
     }
-    if (input.GetKey(Key::Key_D)) {
+    if (input.GetKey(Key::Key_A)) {
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(-200, 0));
+    }
+    if (input.GetKey(Key::Key_S)) {
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 200));
+    }
+    if (input.GetKey(Key::Key_D)) {
+        mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(200, 0));
     }
     this->mGameObject->setTransform(parentTransform);
 }
