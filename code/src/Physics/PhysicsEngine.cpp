@@ -263,7 +263,10 @@ void PhysicsEngine::removeObject(GameObject& aObject) {
     auto it =
         std::remove_if(mObjects.begin(), mObjects.end(),
                        [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+    mWorld.deleteBody(aObject.getComponents<RigidBody>()[0]->getBodyId());
+
     if (it != mObjects.end()) {
+
         mObjects.erase(it, mObjects.end());
     }
 }

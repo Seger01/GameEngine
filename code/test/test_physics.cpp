@@ -301,7 +301,8 @@ TEST_F(PhysicsTest, testcollide) {
 
     gameObject2->addComponent(rigidBody2);
 
-    gameObjects.push_back(gameObject2);
+    mPhysicsEngine->addObject(*gameObject);
+    mPhysicsEngine->addObject(*gameObject2);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
 
@@ -383,7 +384,7 @@ TEST_F(PhysicsTest, properties) {
 
     gameObject->setTransform(objectTransform);
 
-    gameObjects.push_back(gameObject);
+    mPhysicsEngine->addObject(*gameObject);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
     rigidBody->setActive(true);
@@ -391,4 +392,97 @@ TEST_F(PhysicsTest, properties) {
     ASSERT_EQ(boxCollider->isTrigger(), false);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());
+}
+
+TEST_F(PhysicsTest, remove) {
+
+    std::vector<GameObject*> gameObjects;
+
+    GameObject* gameObject = new GameObject();
+
+    Transform objectTransform;
+    objectTransform.position.x = 100;
+    objectTransform.position.y = 100;
+
+    gameObject->setTransform(objectTransform);
+
+    RigidBody* rigidBody = new RigidBody();
+
+    rigidBody->setCanRotate(false);
+    rigidBody->setHasGravity(false);
+    rigidBody->setIsMoveableByForce(true);
+    rigidBody->setDensity(1.0f);
+    rigidBody->setFriction(0.6f);
+    rigidBody->setRestitution(0.0f);
+    rigidBody->setGravityScale(0.0f);
+    rigidBody->setMass(5.0f);
+    rigidBody->setLinearDamping(0.5f);
+    rigidBody->setAngularDamping(0.5f);
+
+    gameObject->addComponent(rigidBody);
+
+    Transform transform;
+    transform.position = {0.0f, 0.0f};
+    gameObject->addComponent<BoxCollider>();
+    BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
+    boxCollider->setWidth(8);   // 16
+    boxCollider->setHeight(25); // 25
+    boxCollider->setTransform(transform);
+    gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
+    gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
+    gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
+
+    gameObjects.push_back(gameObject);
+
+    Transform transform2;
+    transform2.position = {0.0f, 0.0f};
+    Transform objectTransform2;
+    objectTransform2.position.x = 100;
+    objectTransform2.position.y = 120;
+
+    gameObject->setTransform(objectTransform);
+
+    GameObject* gameObject2 = new GameObject();
+
+    gameObject2->addComponent<BoxCollider>();
+
+    BoxCollider* boxCollider2 = gameObject2->getComponents<BoxCollider>()[0];
+    boxCollider2->setWidth(8);
+    boxCollider2->setHeight(25);
+    boxCollider2->setTransform(transform2);
+
+    RigidBody* rigidBody2 = new RigidBody();
+
+    rigidBody2->setCanRotate(false);
+    rigidBody2->setHasGravity(false);
+    rigidBody2->setIsMoveableByForce(true);
+    rigidBody2->setDensity(1.0f);
+    rigidBody2->setFriction(0.6f);
+    rigidBody2->setRestitution(0.0f);
+    rigidBody2->setGravityScale(0.0f);
+    rigidBody2->setMass(5.0f);
+    rigidBody2->setLinearDamping(0.5f);
+    rigidBody2->setAngularDamping(0.5f);
+    rigidBody2->setActive(false);
+
+    gameObject2->addComponent(rigidBody2);
+
+    mPhysicsEngine->addObject(*gameObject);
+    mPhysicsEngine->addObject(*gameObject2);
+
+    ASSERT_NO_THROW(mPhysicsEngine->update());
+
+    std::vector<std::pair<int, int>> bodyIDs;
+    std::pair<int, int> collide;
+    collide.first = 1;
+    collide.second = 2;
+
+    bodyIDs.push_back(collide);
+
+    mPhysicsEngine->executeCollisionScripts(bodyIDs);
+
+    mPhysicsEngine->removeObject(*gameObject);
+    mPhysicsEngine->removeObject(*gameObject2);
+
+    mPhysicsEngine->executeCollisionScripts(bodyIDs);
 }
