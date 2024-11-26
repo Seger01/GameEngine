@@ -231,29 +231,11 @@ void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
     Transform transform;
     transform.position = {0.0f, 0.0f};
     BoxCollider* boxCollider = new BoxCollider();
-    boxCollider->setWidth(10); // 16
-    boxCollider->setHeight(5); // 25
+    boxCollider->setWidth(16);  // 16
+    boxCollider->setHeight(25); // 25
     boxCollider->setTransform(transform);
 
-    Transform transform2;
-    transform2.position = {10.0, 0.0f};
-
-    BoxCollider* boxCollider2 = new BoxCollider();
-    boxCollider2->setWidth(10);
-    boxCollider2->setHeight(firstFramePlayerIdleFront.height);
-    boxCollider2->setTransform(transform2);
-
-    Transform transform3;
-    transform3.position = {20.0, 0.0f};
-
-    BoxCollider* boxCollider3 = new BoxCollider();
-    boxCollider3->setWidth(20);
-    boxCollider3->setHeight(firstFramePlayerIdleFront.height);
-    boxCollider3->setTransform(transform3);
-
     gameObject->addComponent(boxCollider);
-    gameObject->addComponent(boxCollider2);
-    gameObject->addComponent(boxCollider3);
 }
 
 void PlayerPrefabFactory::addSound(GameObject* gameObject) {
