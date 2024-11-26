@@ -183,27 +183,15 @@ void PlayerBehaviourScript::handleMovement() {
     }
 
     if (input.GetKey(Key::Key_W)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleBack", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, -200));
     }
     if (input.GetKey(Key::Key_A)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleSide", true);
-        setFlipX(true);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(-200, 0));
     }
     if (input.GetKey(Key::Key_S)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleFront", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(0, 200));
     }
     if (input.GetKey(Key::Key_D)) {
-        deactivateAllAnimations();
-        setAnimationActive("playerIdleSide", true);
-        setFlipX(false);
         mGameObject->getComponents<RigidBody>()[0]->addForce(Vector2(200, 0));
     }
     this->mGameObject->setTransform(parentTransform);
