@@ -17,7 +17,14 @@ void NetworkSharedFunctions::makeBitStream(SLNet::BitStream& aBitStream) {
 
 NetworkPacket NetworkSharedFunctions::getBitStreamData(SLNet::BitStream& aBitStream) {
     NetworkPacket networkPacket;
-    aBitStream.Read(networkPacket);
+    aBitStream.Read(networkPacket.messageID);
+    aBitStream.Read(networkPacket.networkObjectID);
+    aBitStream.Read(networkPacket.prefabID);
+    aBitStream.Read(networkPacket.timestamp);
+    aBitStream.Read(networkPacket.clientGUID);
+    aBitStream.Read(networkPacket.ISerializableID);
+    aBitStream.Read(networkPacket.networkBehaviourID);
+    aBitStream.Read(networkPacket.networkVariableID);
     return networkPacket;
 }
 

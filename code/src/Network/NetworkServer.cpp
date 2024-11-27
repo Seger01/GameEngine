@@ -55,11 +55,9 @@ void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
 void NetworkServer::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {
-        std::cout << "Server: " << std::endl;
         switch (packet->data[0]) {
         case ID_NEW_INCOMING_CONNECTION:
             std::cout << "A connection is incoming.\n";
-            std::cout << "Server guid according to server: " << mServer->GetMyGUID().ToString() << std::endl;
             break;
         case ID_NO_FREE_INCOMING_CONNECTIONS:
             std::cout << "The server is full.\n";

@@ -100,14 +100,12 @@ void NetworkClient::requestPlayerInstantiation() {
 void NetworkClient::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
-        std::cout << "Client: " << std::endl;
         switch (packet->data[0]) {
         case ID_CONNECTION_REQUEST_ACCEPTED:
             std::cout << "Connected to server.\n";
             mIsConnected = true;
             mIsConnecting = false;
             mServerGUID = packet->guid;
-            std::cout << "server guid according to client: " << mServerGUID.ToString() << std::endl;
             requestPlayerInstantiation();
             break;
         case ID_CONNECTION_ATTEMPT_FAILED:
@@ -257,6 +255,8 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     } else {
         networkObjects[0]->setOwner(false); // This client does not own the player object
     }
+    std::cout << "mClient GUID: " << mClient->GetMyGUID().ToString() << std::endl;
+    std::cout << "Player GUID: " << playerID.ToString() << std::endl;
 }
 
 void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
@@ -267,7 +267,5 @@ void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
 }
 
 void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {
-    std::cout << "Sending to server\n";
-    std::cout << "GUID where to send: " << mServerGUID.ToString() << std::endl;
     mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
 }
