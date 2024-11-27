@@ -63,7 +63,8 @@ void RoomBehaviourScript::spawnEnemies() {
             rigidBody->setGravityScale(10.0f);
             rigidBody->setCanRotate(false);
             enemy->setTransform(transform);
-            enemy->addComponent(new EnemyBehaviourScript());
+            EnemyBehaviourScript* enemyBehaviour = new EnemyBehaviourScript(mPathfinding, mMapWidth);
+            enemy->addComponent(enemyBehaviour);
             // std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;
             sceneManager.getCurrentScene()->addGameObject(enemy);
 
@@ -125,6 +126,6 @@ void RoomBehaviourScript::onCollide(GameObject* aGameObject) {
         spawnEnemies();
         closeDoors();
     } else {
-        openDoors();
+        //openDoors();
     }
 }

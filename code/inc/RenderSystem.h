@@ -25,6 +25,7 @@ public:
 public:
     void addObject(GameObject& aObject);
     void removeObject(GameObject& aObject);
+    void renderPath(Camera& aCurrentCamera, std::vector<int> aPath, int aMapWidth, Color aColor);
 
 private:
     void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite);

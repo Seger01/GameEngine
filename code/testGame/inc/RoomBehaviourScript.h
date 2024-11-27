@@ -6,11 +6,13 @@
 #include <vector>
 #include "TileMapParser.h"
 #include "SpriteDef.h"
+#include "Pathfinding.h"
+
 
 class RoomBehaviourScript : public IBehaviourScript {
 public:
-    RoomBehaviourScript(const std::string& roomID, const std::vector<SpawnPoint>& enemySpawns)
-        : mRoomID(roomID), mEnemySpawns(enemySpawns) {}
+    RoomBehaviourScript(const std::string& roomID, const std::vector<SpawnPoint>& enemySpawns, std::shared_ptr<Pathfinding> pathfinding, int mapWidth)
+        : mRoomID(roomID), mEnemySpawns(enemySpawns), mPathfinding(pathfinding), mMapWidth(mapWidth) {}
 
     void onStart() override;
     void onUpdate() override;
@@ -29,5 +31,7 @@ private:
     SpriteDef mClosedDoorSpriteDef;
     SpriteDef mOpenDoorSpriteDef;
     SpriteDef mEnemyFrameDef;
+    std::shared_ptr<Pathfinding> mPathfinding;
+    int mMapWidth;
     bool mDoorsOpen = true;
 };
