@@ -184,7 +184,9 @@ void EngineBravo::updateAdditions() {
     for (GameObject& gameObject : mUpdateObjects) {
         // Scene manager: does not use a list of game objects
         // Render system
-        mRenderSystem.removeObject(gameObject);
+        // mRenderSystem.removeObject(gameObject);
+        // // std::cout << "EngineBravo::updateAdditions(): name: " << gameObject.getTag() << typeid(gameObject).name()
+        // //           << std::endl;
         if (typeid(gameObject) == typeid(Text)) {
             mRenderSystem.addObject(gameObject);
         }
