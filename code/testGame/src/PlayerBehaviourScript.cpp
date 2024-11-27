@@ -283,12 +283,12 @@ void PlayerBehaviourScript::hanldeCameraMovement()
 		}
 	}
 
-	// Camera& currentCam =
-	//     *EngineBravo::getInstance().getSceneManager().getCurrentScene()->getCameraWithTag("MainCamera");
-	//
-	// Transform playerTransform = this->mGameObject->getTransform();
-	//
-	// currentCam.setTransform(playerTransform);
+	Camera& currentCam =
+		*EngineBravo::getInstance().getSceneManager().getCurrentScene()->getCameraWithTag("MainCamera");
+
+	Transform playerTransform = this->mGameObject->getTransform();
+
+	currentCam.setTransform(playerTransform);
 }
 
 void PlayerBehaviourScript::fireBullet()

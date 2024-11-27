@@ -78,6 +78,10 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 	// Adjust draw position and size to the viewport
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+
+	// drawPosition.x += aScreenViewPort.x;
+	// drawPosition.y += aScreenViewPort.y;
+
 	int spriteWidth = std::round(aSprite->getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 	int spriteHeight = std::round(aSprite->getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
@@ -107,6 +111,9 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 
 	drawPosition.x = drawPosition.x * (static_cast<float>(aScreenViewPort.w) / aCurrentCamera.getWidth());
 	drawPosition.y = drawPosition.y * (static_cast<float>(aScreenViewPort.h) / aCurrentCamera.getHeight());
+
+	// drawPosition.x += aScreenViewPort.x;
+	// drawPosition.y += aScreenViewPort.y;
 
 	particleWidth =
 		static_cast<int>(static_cast<float>(particleWidth) *
@@ -139,6 +146,9 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 	drawPosition.x = drawPosition.x * (static_cast<float>(aScreenViewPort.w) / aCurrentCamera.getWidth());
 	drawPosition.y = drawPosition.y * (static_cast<float>(aScreenViewPort.h) / aCurrentCamera.getHeight());
 
+	// drawPosition.x += aScreenViewPort.x;
+	// drawPosition.y += aScreenViewPort.y;
+
 	mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
 
@@ -159,19 +169,28 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
-
+	// std::cout << "Original screen pos: " << screenPos.x << " " << screenPos.y << std::endl;
 	FRect viewport = aCurrentCamera.getViewport();
 
 	Rect screenViewPort =
 		Rect{static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
 			 static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
 
+	screenPos.x = screenPos.x - screenViewPort.x;
+	screenPos.y = screenPos.y - screenViewPort.y;
+
+	// std::cout << "Screen pos: " << screenPos.x << " " << screenPos.y << std::endl;
+
 	Vector2 worldPos;
 	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
 	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
 
+	// std::cout << "World pos: " << worldPos.x << " " << worldPos.y << std::endl;
+
 	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
 	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
+
+	// std::cout << "World pos: " << worldPos.x << " " << worldPos.y << std::endl;
 
 	return worldPos;
 }
@@ -306,9 +325,17 @@ void RenderSystem::render(Scene* aScene)
 
 		FRect viewport = camera->getViewport();
 
+		std::cout << "Window size: " << mWindow->getSize().x << " " << mWindow->getSize().y << std::endl;
+
+		std::cout << "viewport: " << viewport.x << " " << viewport.y << " " << viewport.w << " " << viewport.h
+				  << std::endl;
+
 		Rect screenViewPort = Rect{
 			static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
 			static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
+
+		std::cout << "screenViewPort: " << screenViewPort.x << " " << screenViewPort.y << " " << screenViewPort.w << " "
+				  << screenViewPort.h << std::endl;
 
 		SDL_Rect sdlViewport = (SDL_Rect)screenViewPort;
 		// Set the viewport for the current camera
@@ -333,6 +360,7 @@ void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenVi
 
 	renderDebugInfo(aScene, camera);
 }
+
 void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
 {
 	if (Time::deltaTime == 0)

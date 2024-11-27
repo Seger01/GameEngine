@@ -40,9 +40,21 @@ void InitBehaviourScript::createLevel1()
 	camera->setWidth(16 * 30);
 	camera->setHeight(9 * 30);
 
-	camera->setViewport(FRect{0, 0, 0.8, 0.8});
+	camera->setViewport(FRect{0, 0, 1, 1});
 
 	scene->addGameObject(camera);
+
+	Camera* miniMapCamera = new Camera;
+	miniMapCamera->setTag("MiniMapCamera");
+	miniMapCamera->setActive(true);
+
+	miniMapCamera->setTransform(Transform(Vector2(80, 96)));
+	miniMapCamera->setWidth(16 * 60);
+	miniMapCamera->setHeight(9 * 60);
+
+	miniMapCamera->setViewport(FRect{0.5, 0.5, 0.5, 0.5});
+
+	scene->addGameObject(miniMapCamera);
 
 	GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
