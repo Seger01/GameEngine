@@ -278,8 +278,7 @@ void PhysicsEngine::removeObject(GameObject& aObject) {
     if (it != mObjects.end()) {
         BodyID bodyID = it->get().getComponents<RigidBody>()[0]->getBodyId();
         std::cout << "remove object: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
-        // mWorld.deleteBody(it->get().getComponents<RigidBody>().at(0)->getBodyId());
-        //  mWorld.deleteBody(it->get().getComponents<RigidBody>()[0]->getBodyId());
+        mWorld.deleteBody(it->get().getComponents<RigidBody>().at(0)->getBodyId());
 
         mObjects.erase(it, mObjects.end());
     }
