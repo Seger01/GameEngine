@@ -16,6 +16,8 @@ public:
 private:
     std::string currentActiveAnimationTag();
 
+    bool flipX();
+
     void setFlipX(bool aState);
     void setFlipY(bool aState);
 

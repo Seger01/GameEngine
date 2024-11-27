@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "Color.h"
 #include "Component.h"
 #include "Rect.h"
 #include "Texture.h"
@@ -29,6 +30,9 @@ public:
     Rect getSource();
     void setSource(Rect aSourceRect);
 
+    Color getColorFilter();
+    void setColorFilter(Color aColor);
+
     void setFlipX(bool state) { mFlipX = state; }
     bool getFlipX() { return mFlipX; }
 
@@ -45,16 +49,15 @@ public:
     int getLayer() { return mLayer; }
 
 private:
-    Texture* mTexture = nullptr;
     Transform mTransform;
 
+    Texture* mTexture = nullptr;
     Rect mSourceRect;
+    Color mColorFilter;
 
     std::string mSprite;
     float mWidth = 0;
     float mHeight = 0;
-    //??? mColor;
-    //??? mColor;
     bool mFlipX;
     bool mFlipY;
 

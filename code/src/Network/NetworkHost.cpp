@@ -1,17 +1,21 @@
 #include "Network/NetworkHost.h"
 
-NetworkHost::NetworkHost(int aTickRate) {
-    mServer = std::make_unique<NetworkServer>(aTickRate);
-    mClient = std::make_unique<NetworkClient>(aTickRate);
+NetworkHost::NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate)
+{
+	mServer = std::make_unique<NetworkServer>(aObjects, aTickRate);
+	mClient = std::make_unique<NetworkClient>(aObjects, aTickRate);
 }
 
-void NetworkHost::update(std::vector<GameObject*>& aGameObjects) {
-    if (mServer) {
-        mServer->update(aGameObjects);
-    }
-    if (mClient) {
-        mClient->update(aGameObjects);
-    }
-    mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
+void NetworkHost::update()
+{
+	if (mServer)
+	{
+		mServer->update();
+	}
+	if (mClient)
+	{
+		mClient->update();
+	}
+	mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
     mClient->connectToServer();
 }

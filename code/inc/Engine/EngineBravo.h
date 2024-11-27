@@ -2,79 +2,85 @@
 #define ENGINEBRAVO_H
 
 #include "AnimationManager.h"
-#include "Network/NetworkManager.h"
 #include "AudioManager.h"
 #include "Configuration.h"
+#include "Engine/ResourceManager.h"
+#include "Engine/SaveGameManager.h"
 #include "EventManager.h"
+#include "Network/NetworkManager.h"
 #include "ParticleSystem.h"
 #include "PhysicsManager.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
-#include "Engine/ResourceManager.h"
-#include "Engine/SaveGameManager.h"
 #include "SceneManager.h"
 #include "Time.h"
 #include "UIManager.h"
+#include <queue>
 
-class EngineBravo {
+class EngineBravo
+{
 public:
-    // Get the single instance of EngineBravo
-    static EngineBravo& getInstance();
+	// Get the single instance of EngineBravo
+	static EngineBravo& getInstance();
 
-    void initialize();
-    void run();
+	void initialize();
+	void run();
 
-    void setFrameRateLimit(int aFrameRate);
+	void setFrameRateLimit(int aFrameRate);
 
-    SceneManager& getSceneManager();
-    RenderSystem& getRenderSystem();
-    ResourceManager& getResourceManager();
-    NetworkManager& getNetworkManager();
-    SaveGameManager& getSaveGameManager();
-    AudioManager& getAudioManager();
-    EventManager& getEventManager();
-    UIManager& getUIManager();
+	SceneManager& getSceneManager();
+	RenderSystem& getRenderSystem();
+	ResourceManager& getResourceManager();
+	NetworkManager& getNetworkManager();
+	SaveGameManager& getSaveGameManager();
+	AudioManager& getAudioManager();
+	EventManager& getEventManager();
+	UIManager& getUIManager();
 
-    Configuration& getConfiguration();
-    // UIManager& getUIManager();
-    PhysicsManager& getPhysicsManager();
+	Configuration& getConfiguration();
+	// UIManager& getUIManager();
+	PhysicsManager& getPhysicsManager();
 
-private:
-    // Private constructor and destructor
-    EngineBravo();
-    ~EngineBravo();
-
-    // Deleted copy constructor and assignment operator to prevent copying
-    EngineBravo(const EngineBravo&) = delete;
-    EngineBravo& operator=(const EngineBravo&) = delete;
-
-    void runBehaviourScripts();
-    void startBehaviourScripts();
-
-    void limitFrameRate(int aFrameRate);
-
-    void handleEvent(const Event& aEvent);
+	void addToUpdateObjects(GameObject& aGameObject);
+	void clearUpdateObjects();
+	void updateAdditions();
+	void updateRemovals();
 
 private:
-    int mFrameRateLimit;
-    bool mRunning;
+	// Private constructor and destructor
+	EngineBravo();
+	~EngineBravo();
 
-    SceneManager mSceneManager;
-    RenderSystem mRenderSystem;
-    ResourceManager mResourceManager;
-    ParticleSystem mParticleSystem;
-    NetworkManager mNetworkManager;
-    EventManager mEventManager;
-    SaveGameManager mSaveGameManager;
-    AudioManager mAudioManager;
-    UIManager mUIManager;
+	// Deleted copy constructor and assignment operator to prevent copying
+	EngineBravo(const EngineBravo&) = delete;
+	EngineBravo& operator=(const EngineBravo&) = delete;
 
-    Configuration mConfiguration;
+	void runBehaviourScripts();
+	void startBehaviourScripts();
 
-    PhysicsManager mPhysicsManager;
-    // SaveGameManager saveGameManager;
-    // AnimationManager animationManager;
-    // UIManager uiManager;
+	void limitFrameRate(int aFrameRate);
+
+	void handleEvent(const Event& aEvent);
+
+private:
+	std::vector<std::reference_wrapper<GameObject>> mUpdateObjects;
+	int mFrameRateLimit;
+	bool mRunning;
+
+	SceneManager mSceneManager;
+	RenderSystem mRenderSystem;
+	ResourceManager mResourceManager;
+	ParticleSystem mParticleSystem;
+	NetworkManager mNetworkManager;
+	EventManager mEventManager;
+	SaveGameManager mSaveGameManager;
+	AudioManager mAudioManager;
+	UIManager mUIManager;
+
+	Configuration mConfiguration;
+
+	PhysicsManager mPhysicsManager;
+	// AnimationManager animationManager;
 };
 
 #endif // ENGINEBRAVO_H

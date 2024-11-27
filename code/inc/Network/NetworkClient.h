@@ -9,11 +9,11 @@
 
 class NetworkClient {
 public:
-    NetworkClient(int aTickRate);
+    NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
     ~NetworkClient();
     void connectToServer();
-    void update(std::vector<GameObject*>& aGameObjects);
-    void discoverServers();
+	void update();
+	void discoverServers();
     std::vector<std::string>& getServerAddresses();
     void setServerAddress(std::string aServerAddress);
     bool isConnected() const;
@@ -36,7 +36,7 @@ private:
     std::string mServerAddress;
     SLNet::RakNetGUID mServerGUID;
 
-    std::vector<GameObject*>* mGameObjects;
+    std::vector<std::reference_wrapper<GameObject>>& mObjects;
     int mTickRate;
     std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
 };

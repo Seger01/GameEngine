@@ -1,6 +1,6 @@
 #include "BoxCollider.h"
 
-BoxCollider::BoxCollider(std::string aTag) : Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mRotation(0.0f) {
+BoxCollider::BoxCollider(std::string aTag) : Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mRotation(0.0f), mIsTrigger(false) {
     // Constructor implementation
 }
 
@@ -25,3 +25,11 @@ void BoxCollider::setRotation(float rotation) { mRotation = rotation; }
 bool BoxCollider::isTrigger() const { return mIsTrigger; }
 
 void BoxCollider::setTrigger(bool isTrigger) { mIsTrigger = isTrigger; }
+
+filterCategory BoxCollider::getFilterCategory() const { return mFilterCategory; }
+
+void BoxCollider::setFilterCategory(filterCategory category) { mFilterCategory = category; }
+
+std::vector<filterCategory> BoxCollider::getCollideWith() const { return mCollideWith; }
+
+void BoxCollider::setCollideWith(std::vector<filterCategory> aCollideWith) { mCollideWith = aCollideWith; }

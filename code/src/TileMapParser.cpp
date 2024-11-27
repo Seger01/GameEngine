@@ -77,7 +77,7 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
         throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
     }
     for (const auto& object : layer["objects"]) {
-        if (object.contains("properties")) {
+        if(object.contains("properties")) {
             for (const auto& property : object["properties"]) {
                 if (property["name"] == "isPlayerSpawn" && property["type"] == "bool" && property["value"] == true) {
                     SpawnPoint spawnPoint;
@@ -87,7 +87,8 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
                     spawnPoint.height = object["height"];
                     spawnPoint.isPlayerSpawn = true;
                     mTileMapData.mSpawnPoints.push_back(spawnPoint);
-                } else if (property["name"] == "isEnemySpawn" && property["type"] == "bool" && property["value"] == true) {
+                } 
+                else if (property["name"] == "isEnemySpawn" && property["type"] == "bool" && property["value"] == true) {
                     SpawnPoint spawnPoint;
                     spawnPoint.x = object["x"];
                     spawnPoint.y = object["y"];
@@ -100,7 +101,9 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
                         }
                     }
                     mTileMapData.mSpawnPoints.push_back(spawnPoint);
-                } else if (property["name"] == "roomID" && property["type"] == "string") {
+                } 
+            
+                else if (property["name"] == "roomID" && property["type"] == "string") {
                     RoomTrigger roomTrigger;
                     roomTrigger.x = object["x"];
                     roomTrigger.y = object["y"];
@@ -113,8 +116,22 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
                 }
             }
         }
-        else {
-            throw std::runtime_error("Object layer 'objects' is missing 'properties' key in JSON: " + mFilePath);
+    }
+    if (layer.contains("name") && layer["name"] == "LevelEndTriggers") {
+        for (const auto& object : layer["objects"]) {
+            LevelEndTrigger levelEndTrigger;
+            levelEndTrigger.x = object["x"];
+            levelEndTrigger.y = object["y"];
+            levelEndTrigger.mWidth = object["width"];
+            levelEndTrigger.mHeight = object["height"];
+            if (object.contains("properties")) {
+                for (const auto& prop : object["properties"]) {
+                    if (prop["name"] == "NextLevel" && prop["type"] == "string") {
+                        levelEndTrigger.nextLevel = prop["value"];
+                    }
+                }
+            }   
+            mTileMapData.mLevelEndTriggers.push_back(levelEndTrigger);
         }
     }
 }

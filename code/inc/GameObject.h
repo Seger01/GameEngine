@@ -1,15 +1,14 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "Component.h"
+#include "Transform.h"
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
 #include <vector>
-
-#include "Component.h"
-#include "Transform.h"
 
 class GameObject {
 public:
@@ -79,12 +78,8 @@ public:
 
     // Templated addComponent function
     template <typename T, typename... Args> T* addComponent(Args&&... args) {
-        auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
-        newComponent->setGameObjectParent(this);
-
-        T* rawPtr = newComponent.get();
-        mComponents.push_back(std::move(newComponent));
-
+        T* rawPtr = new T(std::forward<Args>(args)...);
+        addComponent(rawPtr);
         return rawPtr;
     }
 

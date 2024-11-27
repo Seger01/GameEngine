@@ -50,7 +50,7 @@ TEST_F(UIManagerTest, HandleEvent_AddsEventToQueue) {
     mUIManager->update(mScene);
 
     // Check that the event was handled without exceptions
-    ASSERT_NO_THROW(mUIManager->handleEvent(mouseClickEvent));
+    ASSERT_NO_THROW(mUIManager->handleMouseDownEvent(mouseClickEvent));
 }
 
 TEST_F(UIManagerTest, Update_InteractsWithButton) {
@@ -92,7 +92,7 @@ TEST_F(UIManagerTest, Update_OutsideButtonBounds_NoInteraction) {
 
     // Create a mouse click event outside button bounds
     Event mouseClickEvent{EventType::MouseButtonDown, {100, 150}};
-    mUIManager->handleEvent(mouseClickEvent);
+    mUIManager->handleMouseDownEvent(mouseClickEvent);
 
     // Update UIManager to process the event
     mUIManager->update(mScene);

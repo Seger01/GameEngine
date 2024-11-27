@@ -14,9 +14,9 @@
 #include <slikenet/peerinterface.h>
 #include <stdexcept>
 
-NetworkClient::NetworkClient(int aTickRate = 60)
+NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
     : mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
-      mIsConnecting(false), mServerAddress("0.0.0.0"), mGameObjects(nullptr), mTickRate(aTickRate),
+      mIsConnecting(false), mServerAddress("0.0.0.0"), mObjects(aObjects), mTickRate(aTickRate),
       mLastSendPacketsTime(std::chrono::steady_clock::now()) {
     SLNet::SocketDescriptor sd(CLIENT_PORT, 0);
     sd.socketFamily = AF_INET;
@@ -47,12 +47,13 @@ void NetworkClient::connectToServer() {
     }
 }
 
-void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
-    mGameObjects = &aGameObjects;
-    if (!mClient->IsActive()) {
-        throw std::runtime_error("Client is not running");
-    }
-    handleIncomingPackets();
+void NetworkClient::update()
+{
+	if (!mClient->IsActive())
+	{
+		throw std::runtime_error("Client is not running");
+	}
+	handleIncomingPackets();
     sendPackets();
 }
 
@@ -150,21 +151,18 @@ void NetworkClient::handleIncomingPackets() {
 }
 
 void NetworkClient::sendTransform() {
-    std::vector<GameObject*>* networkObjects = &EngineBravo::getInstance().getNetworkManager().getGameObjects();
-    if (!networkObjects) {
-        throw std::runtime_error("Game objects not set");
-    }
-    for (auto gameObject : *networkObjects) {
-        if (!gameObject->hasComponent<NetworkObject>()) {
+
+    for (GameObject& gameObject : mObjects) {
+        if (!gameObject.hasComponent<NetworkObject>()) {
             continue;
         }
-        NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
+        NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
         if (!networkObject->isOwner()) {
             continue;
         }
-        if (gameObject->hasComponent<NetworkTransform>()) {
-            Transform transform = gameObject->getTransform();
-            NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
+        if (gameObject.hasComponent<NetworkTransform>()) {
+            Transform transform = gameObject.getTransform();
+            NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
             SLNet::BitStream bs;
             NetworkSharedFunctions::makeBitStream(bs);
             NetworkPacket networkPacket;
@@ -192,45 +190,49 @@ void NetworkClient::sendTransform() {
 }
 
 void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
-    std::vector<GameObject*> networkObjects = EngineBravo::getInstance().getNetworkManager().getGameObjects();
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 
     SLNet::RakNetGUID clientGuid;
     NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
     clientGuid = networkPacket.clientGUID;
 
-    for (auto gameObject : networkObjects) {
-        if (!gameObject->hasComponent<NetworkObject>()) {
+	for (auto gameObject : mObjects)
+	{
+		NetworkObject* networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		if (networkObject->isOwner())
+		{
+			continue;
+		}
+		if (networkObject->getClientID() != clientGuid) {
             continue;
         }
-        NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
-        if (networkObject->isOwner()) {
-            continue;
-        }
-        if (networkObject->getClientID() != clientGuid) {
-            continue;
-        }
-        if (gameObject->hasComponent<NetworkTransform>()) {
-            Transform transform = gameObject->getTransform();
-            NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
-            if (networkTransform->getSendPositionX()) {
-                bs.Read(transform.position.x);
-            }
-            if (networkTransform->getSendPositionY()) {
-                bs.Read(transform.position.y);
-            }
-            if (networkTransform->getSendRotation()) {
-                bs.Read(transform.rotation);
-            }
-            if (networkTransform->getSendScaleX()) {
-                bs.Read(transform.scale.x);
-            }
-            if (networkTransform->getSendScaleY()) {
-                bs.Read(transform.scale.y);
-            }
-            gameObject->setTransform(transform);
-        }
-    }
+		if (gameObject.get().hasComponent<NetworkTransform>())
+		{
+			Transform transform = gameObject.get().getTransform();
+			NetworkTransform* networkTransform = gameObject.get().getComponents<NetworkTransform>()[0];
+			if (networkTransform->getSendPositionX())
+			{
+				bs.Read(transform.position.x);
+			}
+			if (networkTransform->getSendPositionY())
+			{
+				bs.Read(transform.position.y);
+			}
+			if (networkTransform->getSendRotation())
+			{
+				bs.Read(transform.rotation);
+			}
+			if (networkTransform->getSendScaleX())
+			{
+				bs.Read(transform.scale.x);
+			}
+			if (networkTransform->getSendScaleY())
+			{
+				bs.Read(transform.scale.y);
+			}
+			gameObject.get().setTransform(transform);
+		}
+	}
 }
 
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {

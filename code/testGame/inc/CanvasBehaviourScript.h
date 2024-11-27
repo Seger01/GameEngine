@@ -9,6 +9,9 @@ public:
     void onUpdate() override;
     void onCollide(GameObject* aGameObject) override;
 
+    void onTestButtonClick();
+    void onTestButtonRelease();
+
     std::unique_ptr<Component> clone() const override { return std::make_unique<CanvasBehaviourScript>(*this); }
 };
 

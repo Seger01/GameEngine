@@ -51,13 +51,16 @@ TEST_F(RendererTest, RenderTexture) {
         Vector2 location{100, 100};
 
         mRenderer->clear(Color{0, 0, 0, 255});
-        mRenderer->renderTexture(*texture, sourceRect, location, 100, 100, false, false, 0.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, 100, 100, false, false, 0.0f,
+                                 Color(255, 255, 255, 255));
 
         sourceRect = {2000, 2000, -100, -100};
-        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, true, true, 45.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, true, true, 45.0f,
+                                 Color(255, 255, 255, 255));
 
         sourceRect = {-2000, -2000, -100, -100};
-        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, false, true, 45.0f);
+        mRenderer->renderTexture(*texture, sourceRect, location, -100, -100, false, true, 45.0f,
+                                 Color(255, 255, 255, 255));
 
         mRenderer->show();
     }()));

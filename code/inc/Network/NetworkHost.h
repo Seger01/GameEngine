@@ -10,8 +10,8 @@
 class GameObject;
 class NetworkHost {
 public:
-    NetworkHost(int aTickRate);
-    void update(std::vector<GameObject*>& aGameObjects);
+	NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	void update();
 
 private:
     std::unique_ptr<NetworkServer> mServer;

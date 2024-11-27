@@ -108,6 +108,22 @@ Sprite* Animation::getCurrentFrame() {
     return getFrame(frameIndex);
 }
 
+Color Animation::getColorFilter() {
+    for (auto& frame : mAnimationFrames) {
+        if (frame) {
+            return frame->getColorFilter();
+        }
+    }
+    return Color(255, 255, 255, 255);
+}
+void Animation::setColorFilter(Color aColor) {
+    for (auto& frame : mAnimationFrames) {
+        if (frame) {
+            frame->setColorFilter(aColor);
+        }
+    }
+}
+
 int Animation::getTimeBetweenFrames() { return mTimeBetweenFrames; }
 void Animation::setTimeBetweenFrames(int aTimeBetweenFrames) { mTimeBetweenFrames = aTimeBetweenFrames; }
 

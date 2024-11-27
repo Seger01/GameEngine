@@ -9,7 +9,10 @@
 
 #include "Network/NetworkObject.h"
 
-SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{0, 287, 64, 16}, 64, 16};
+SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{145, 81, 46, 14}, 46, 14};
+
+void CanvasBehaviourScript::onTestButtonClick() { std::cout << "Test Button clicked!" << std::endl; }
+void CanvasBehaviourScript::onTestButtonRelease() { std::cout << "Test Button released!" << std::endl; }
 
 void CanvasBehaviourScript::onStart() {
     EngineBravo& engine = EngineBravo::getInstance();
@@ -20,15 +23,26 @@ void CanvasBehaviourScript::onStart() {
     Button* buttonObject = new Button;
     buttonObject->setTransform(Transform(Vector2(10, 50)));
     buttonObject->addComponent<HelloWorldButtonBehaviour>();
-
-    Text* buttonText = new Text("Button1", "werkt niet", Color(15, 110, 47), Vector2(0, 0), Vector2(0.5, 0.5));
-    buttonText->setParent(buttonObject);
-    buttonObject->setWidth(40);
-    buttonObject->setHeight(10);
+    buttonObject->setOnClickCallback(std::bind(&CanvasBehaviourScript::onTestButtonClick, this));
+    buttonObject->setOnReleaseCallback(std::bind(&CanvasBehaviourScript::onTestButtonRelease, this));
     buttonObject->setParent(mGameObject);
+    Text* buttonText = new Text("Button1", "werkt niet", Color(255, 255, 255), Vector2(0, 0), Vector2(0.5, 0.5));
+    buttonText->setParent(buttonObject);
 
-    GameObject* textObject = new Text("Canvas", "undefined", Color(15, 110, 47), Vector2(10, 10), Vector2(1, 1));
-    textObject->setParent(mGameObject);
+    Sprite* buttonSprite = engine.getResourceManager().createSprite(buttonSpriteDef);
+    buttonObject->addComponent(buttonSprite);
+    int width = 0;
+    int height = 0;
+    engine.getRenderSystem().getTextSize(buttonText->getFont(), buttonText->getText(), width, height,
+                                         buttonText->getScale());
+    width += 2;
+    height += 2;
+    buttonSprite->setWidth(width);
+    buttonSprite->setHeight(height);
+    buttonSprite->setRelativePosition(Transform(Vector2(-1, -1)));
+
+    buttonObject->setWidth(width);
+    buttonObject->setHeight(height);
 
     GameObject* playerStats = new GameObject;
     playerStats->addComponent<PlayerStatsBehaviourScript>();
@@ -36,7 +50,6 @@ void CanvasBehaviourScript::onStart() {
     playerStats->setParent(mGameObject);
 
     scene->addGameObject(playerStats);
-    scene->addGameObject(textObject);
     scene->addGameObject(buttonObject);
     scene->addGameObject(buttonText);
 
