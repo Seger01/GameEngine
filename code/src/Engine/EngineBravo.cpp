@@ -184,9 +184,7 @@ void EngineBravo::updateAdditions() {
     for (GameObject& gameObject : mUpdateObjects) {
         // Scene manager: does not use a list of game objects
         // Render system
-        // mRenderSystem.removeObject(gameObject);
-        // // std::cout << "EngineBravo::updateAdditions(): name: " << gameObject.getTag() << typeid(gameObject).name()
-        // //           << std::endl;
+        mRenderSystem.removeObject(gameObject);
         if (typeid(gameObject) == typeid(Text)) {
             mRenderSystem.addObject(gameObject);
         }
@@ -236,11 +234,6 @@ void EngineBravo::updateAdditions() {
 
 void EngineBravo::updateRemovals() {
     for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
-        if (gameObject->hasComponent<RigidBody>()) {
-            BodyID bodyIDA = gameObject->getComponents<RigidBody>()[0]->getBodyId();
-            std::cout << "EngineBravo::updateRemovals(): removing " << bodyIDA.world0 << bodyIDA.bodyID
-                      << bodyIDA.revision << std::endl;
-        }
         // Scene manager: does not use a list of game objects
         // Render system
         mRenderSystem.removeObject(*gameObject);
