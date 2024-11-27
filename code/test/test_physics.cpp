@@ -150,13 +150,9 @@ TEST_F(PhysicsTest, CreateBodiesWithBody) {
     mPhysicsEngine->reset();
 }
 
-// TEST_F(PhysicsTest, CreateBodiesWithoutBody) {
-//     mPhysicsEngine->createWorld(Vector2(0, 0));
-//
-//     ASSERT_NO_THROW(mPhysicsEngine->createBodies());
-// }
-
 TEST_F(PhysicsTest, updateloop) {
+    PhysicsManager* physicsManager = new PhysicsManager();
+    physicsManager->startPhysicsEngine({0.0f, 0.0f});
 
     std::vector<GameObject*> gameObjects;
 
@@ -222,7 +218,6 @@ TEST_F(PhysicsTest, updateloop) {
     gameObjects.push_back(gameObject);
     gameObjects.push_back(gameObject2);
 
-    ASSERT_NO_THROW(mPhysicsEngine->update());
     gameObjects.at(1)->getComponents<BoxCollider>().at(0)->setTrigger(true);
 
     ASSERT_NO_THROW(mPhysicsEngine->update());

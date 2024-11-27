@@ -124,9 +124,13 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID) {
 }
 void World::setPosition(Vector2 aPosition, BodyID aBodyID) {
     b2BodyId bodyid = convertToB2BodyID(aBodyID);
+    if (bodyid.index1 == 1) {
+        std::cout << "box2d pos is: (" << b2Body_GetPosition(bodyid).x << ", " << b2Body_GetPosition(bodyid).y << ")"
+                  << std::endl;
+    }
 
     std::cout << "Setting pos at id: " << bodyid.world0 << bodyid.index1 << bodyid.revision << std::endl;
-    b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, {cos(0.0f), 0.0f});
+    b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
 }
 
 Vector2 World::getPosition(BodyID aBodyID) {
