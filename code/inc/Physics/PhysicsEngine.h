@@ -9,46 +9,48 @@
 #include "WorldID.h"
 #include <functional>
 #include <vector>
-class PhysicsEngine {
+class PhysicsEngine
+{
 
 public:
-    PhysicsEngine();
-    ~PhysicsEngine();
+	PhysicsEngine();
+	~PhysicsEngine();
 
-    void createWorld(Vector2 aGravity);
-    void reset();
+	void createWorld(Vector2 aGravity);
+	void reset();
 
-    void createBodies();
-    void deleteBodies();
+	void createBodies();
+	void deleteBodies();
 
-    void update();
-    void updateFlags();
-    void updateForces();
+	void update();
+	void updateFlags();
+	void updateForces();
 
-    void setStep(float);
-    void setSubStep(int);
+	void setStep(float);
+	void setSubStep(int);
 
-    std::vector<GameObject*> getgameObjects() const;
-    float getStep() const;
-    float getSubStep() const;
-    World& getWorld();
-    GameObject* getGameObjectByID(int aID);
+	std::vector<GameObject*> getgameObjects() const;
+	float getStep() const;
+	float getSubStep() const;
+	World& getWorld();
+	GameObject* getGameObjectByID(int aID);
 
-    void executeCollisionScripts(std::vector<std::pair<int, int>>);
+	void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
-    void convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
-    void convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+	void convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+	void convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
 
 public:
-    void addObject(GameObject& aObject);
-    void removeObject(GameObject& aObject);
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 
 private:
-    std::vector<std::reference_wrapper<GameObject>> mObjects;
-    World mWorld;
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	World mWorld;
 
-    float mStep;
-    int mSubStep;
+	float mStep;
+	int mSubStep;
 };
 
 #endif // PHYSICSENGINE_H

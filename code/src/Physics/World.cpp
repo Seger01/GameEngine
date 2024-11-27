@@ -45,7 +45,6 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
 	switch (aBodyProxy.getBodyType())
 	{
 	case BodyType::STATIC:
-		std::cout << "made static" << std::endl;
 		bodyDef.type = b2_staticBody;
 		break;
 	case BodyType::DYNAMIC:
@@ -59,7 +58,6 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
 	bodyDef.linearDamping = aBodyProxy.getLinearDamping();
 	bodyDef.angularDamping = aBodyProxy.getAngularDamping();
 	b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
-	std::cout << "BodyID: " << bodyID.world0 << bodyID.index1 << bodyID.revision << std::endl;
 	createShape(aBodyProxy, {bodyID.index1, bodyID.revision, bodyID.world0});
 
 	BodyID convertedBodyID = {bodyID.index1, bodyID.revision, bodyID.world0};
@@ -144,13 +142,6 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 void World::setPosition(Vector2 aPosition, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);
-	if (bodyid.index1 == 1)
-	{
-		std::cout << "box2d pos is: (" << b2Body_GetPosition(bodyid).x << ", " << b2Body_GetPosition(bodyid).y << ")"
-				  << "Rotation: " << b2Body_GetRotation(bodyid).s << " " << b2Body_GetRotation(bodyid).c << std::endl;
-	}
-
-	// std::cout << "Setting pos at id: " << bodyid.world0 << bodyid.index1 << bodyid.revision << std::endl;
 	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
 }
 

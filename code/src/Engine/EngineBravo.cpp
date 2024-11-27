@@ -202,6 +202,8 @@ void EngineBravo::addToUpdateObjects(GameObject& aGameObject)
 	}
 }
 
+void EngineBravo::clearUpdateObjects() { mUpdateObjects.clear(); }
+
 void EngineBravo::updateAdditions()
 {
 	// Iterate through the objects and update each manager
