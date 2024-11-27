@@ -9,28 +9,30 @@
 #include "Scene.h"
 #include "UIObject.h"
 
-class UIManager {
+class UIManager
+{
 public:
-    friend class EngineBravo;
+	friend class EngineBravo;
 
-    void init();
-    void update(Scene* aScene);
+	void init();
+	void update(Scene* aScene);
 
-    void handleMouseDownEvent(const Event& aEvent);
-    void handleMouseUpEvent(const Event& aEvent);
+	void handleMouseDownEvent(const Event& aEvent);
+	void handleMouseUpEvent(const Event& aEvent);
 
 public:
-    void addObject(GameObject& aObject);
-    void removeObject(GameObject& aObject);
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 
 private:
-    std::vector<std::reference_wrapper<GameObject>> mObjects;
-    // std::vector<UIObject&> mClickableButtons;
-    UIManager();
-    ~UIManager();
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	// std::vector<UIObject&> mClickableButtons;
+	UIManager();
+	~UIManager();
 
-    std::vector<Event> mMouseDownEventQueue;
-    std::vector<Event> mMouseUpEventQueue;
+	std::vector<Event> mMouseDownEventQueue;
+	std::vector<Event> mMouseUpEventQueue;
 };
 
 #endif // UIMANAGER_H

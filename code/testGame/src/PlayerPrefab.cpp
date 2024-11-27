@@ -221,7 +221,7 @@ void PlayerPrefabFactory::addRigidBody(GameObject* gameObject)
 {
 	RigidBody* rigidBody = new RigidBody();
 
-	rigidBody->setCanRotate(false);
+	rigidBody->setCanRotate(true);
 	rigidBody->setHasGravity(false);
 	rigidBody->setIsMoveableByForce(true);
 	rigidBody->setDensity(1.0f);
@@ -237,14 +237,13 @@ void PlayerPrefabFactory::addRigidBody(GameObject* gameObject)
 
 void PlayerPrefabFactory::addCollider(GameObject* gameObject)
 {
-	std::cout << firstFramePlayerIdleFront.width << " " << firstFramePlayerIdleFront.height << std::endl;
 	Transform transform;
 	transform.position = {0.0f, 0.0f};
 	BoxCollider* boxCollider = new BoxCollider();
 	boxCollider->setWidth(16);	// 16
 	boxCollider->setHeight(25); // 25
 	boxCollider->setTransform(transform);
-
+	// boxCollider->setFilterCategory(-1);
 	gameObject->addComponent(boxCollider);
 }
 
