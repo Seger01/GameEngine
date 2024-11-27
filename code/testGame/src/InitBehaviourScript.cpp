@@ -174,6 +174,7 @@ void InitBehaviourScript::createLevel1() {
     // Assuming tileMapData is a const reference to TileMapData
     for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
         bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
+        bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
         // Access rows within the layer by index
         for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
             // Access each tile in the row by index
@@ -196,13 +197,14 @@ void InitBehaviourScript::createLevel1() {
                         objectTransform.position.y = static_cast<int>(rowIndex * 16);
                         gameObject->setTransform(objectTransform);
 
-                        // Add a Sprite component to the GameObject
-                        Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+                        if (!isGraphLayer) {
+                            // Add a Sprite component to the GameObject
+                            Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
 
-                        sprite->setLayer(layerIndex);
+                            sprite->setLayer(layerIndex);
 
-                        gameObject->addComponent(sprite);
-
+                            gameObject->addComponent(sprite);
+                        }
                         // Add BoxCollider components to the GameObject
                         for (const auto& collider : tileInfo.mColliders) {
                             BoxCollider* boxCollider = new BoxCollider();

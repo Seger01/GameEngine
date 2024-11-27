@@ -18,9 +18,9 @@ void MapToGraph::preprocessWalkableTiles() {
 
 // Find the first non-empty layer
 const std::vector<std::vector<int>>* MapToGraph::findFloorLayer() const {
-    for (const auto& layer : mTileMapData.mLayers) {
-        if (!layer.empty() && !layer[0].empty()) {
-            return &layer;
+    for (size_t i = 0; i < mTileMapData.mLayers.size(); ++i) {
+        if (mTileMapData.mLayerNames[i] == "Graph") {
+            return &mTileMapData.mLayers[i];
         }
     }
     return nullptr;
