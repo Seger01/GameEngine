@@ -52,14 +52,15 @@ std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag) {
 
 void Scene::addGameObject(GameObject* object) {
     if (object) {
+        EngineBravo::getInstance().addToUpdateObjects(*object);
         mGameObjects.push_back(std::unique_ptr<GameObject>(object));
     }
-    EngineBravo::getInstance().addToUpdateObjects(*object);
 }
 
 void Scene::requestGameObjectRemoval(int id) {
     for (const auto& obj : mGameObjects) {
         if (obj->getID() == id) {
+            // EngineBravo::getInstance().addToUpdateObjects(*obj);
             mGameObjectsToRemove.push_back(obj.get());
             return;
         }
@@ -70,6 +71,7 @@ void Scene::requestGameObjectRemoval(int id) {
 void Scene::requestGameObjectRemoval(GameObject* object) {
     for (const auto& obj : mGameObjects) {
         if (obj.get() == object) {
+            // EngineBravo::getInstance().addToUpdateObjects(*obj);
             mGameObjectsToRemove.push_back(obj.get());
             return;
         }

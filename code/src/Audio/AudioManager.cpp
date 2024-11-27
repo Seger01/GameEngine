@@ -115,3 +115,7 @@ void AudioManager::removeObject(GameObject& aObject)
 		mObjects.erase(it, mObjects.end());
 	}
 }
+
+const std::vector<std::reference_wrapper<GameObject>>& AudioManager::getObjects() const { return mObjects; }
+
+void AudioManager::clearObjects() { mObjects.clear(); }

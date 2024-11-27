@@ -26,6 +26,7 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480)
 	return;
 }
 
+<<<<<<< HEAD
 // void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite)
 // {
 //
@@ -122,6 +123,68 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 		static_cast<int>(static_cast<float>(particleHeight) *
 						 (static_cast<float>(aScreenViewPort.h) / static_cast<float>(aCurrentCamera.getHeight())));
 
+=======
+void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite)
+{
+
+	int spriteWidth = aSprite->getWidth();
+	int spriteHeight = aSprite->getHeight();
+
+	int windowWidth = mWindow->getSize().x;
+	int windowHeight = mWindow->getSize().y;
+
+	Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
+
+	// Calculate the camera's origin and position the sprite relative to it
+	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+
+	Vector2 drawPosition = texturePosition - cameraOrigin;
+
+	// Snap position to integer to avoid subpixel offsets
+	drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth()));
+	drawPosition.y = std::round(drawPosition.y * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight()));
+
+	// Adjust the width and height slightly to cover gaps
+	spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1;
+	spriteHeight = std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1;
+
+	// Render the sprite with adjusted size
+	mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
+							 aSprite->getFlipX(), aSprite->getFlipY(),
+							 aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
+							 aSprite->getColorFilter());
+}
+
+void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation)
+{
+	Sprite* currentFrame = aAnimation->getCurrentFrame();
+	// Sprite* currentFrame = aAnimation->getFrame(0);
+
+	renderSprite(aCurrentCamera, aGameObject, currentFrame);
+}
+
+void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle)
+{
+	float particleWidth = aParticle.getSize().x;
+	float particleHeight = aParticle.getSize().y;
+
+	int WindowWidth = mWindow->getSize().x;
+	int WindowHeight = mWindow->getSize().y;
+
+	Vector2 particlePosition = aParticle.getPosition();
+	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+	Vector2 drawPosition = particlePosition - cameraOrigin;
+
+	drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+	drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+	particleWidth = static_cast<int>(static_cast<float>(particleWidth) *
+									 (static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth())));
+	particleHeight =
+		static_cast<int>(static_cast<float>(particleHeight) *
+						 (static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight())));
+
+>>>>>>> development
 	if (aParticle.getRotation() == 0)
 	{
 		mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
@@ -135,20 +198,33 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 }
 
 void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
+<<<<<<< HEAD
 							  Vector2 aScale, Rect aScreenViewPort)
 {
 	float scaleX = aScale.x * (aScreenViewPort.w / static_cast<float>(aCurrentCamera.getWidth()));
 	float scaleY = aScale.y * (aScreenViewPort.h / static_cast<float>(aCurrentCamera.getHeight()));
+=======
+							  Vector2 aScale)
+{
+	float scaleX = aScale.x * (mWindow->getSize().x / static_cast<float>(aCurrentCamera.getWidth()));
+	float scaleY = aScale.y * (mWindow->getSize().y / static_cast<float>(aCurrentCamera.getHeight()));
+>>>>>>> development
 
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = aLocation - cameraOrigin;
 
+<<<<<<< HEAD
 	drawPosition.x = drawPosition.x * (static_cast<float>(aScreenViewPort.w) / aCurrentCamera.getWidth());
 	drawPosition.y = drawPosition.y * (static_cast<float>(aScreenViewPort.h) / aCurrentCamera.getHeight());
 
 	// drawPosition.x += aScreenViewPort.x;
 	// drawPosition.y += aScreenViewPort.y;
 
+=======
+	drawPosition.x = drawPosition.x * (static_cast<float>(mWindow->getSize().x) / aCurrentCamera.getWidth());
+	drawPosition.y = drawPosition.y * (static_cast<float>(mWindow->getSize().y) / aCurrentCamera.getHeight());
+
+>>>>>>> development
 	mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
 
@@ -166,6 +242,7 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 	return true;
 }
 
+<<<<<<< HEAD
 Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
@@ -195,6 +272,10 @@ Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 	return worldPos;
 }
 
+int RenderSystem::getLowestLayer(Scene* aScene)
+{
+	int lowestLayer = 0;
+=======
 int RenderSystem::getLowestLayer(Scene* aScene)
 {
 	int lowestLayer = 0;
@@ -231,6 +312,65 @@ int RenderSystem::getLowestLayer(Scene* aScene)
 			}
 		}
 	}
+	return lowestLayer;
+}
+
+int RenderSystem::getHighestLayer(Scene* aScene)
+{
+	int highestLayer = 0;
+>>>>>>> development
+	for (auto& gameObject : aScene->getGameObjects())
+	{
+		if (gameObject->hasComponent<Sprite>())
+		{
+			for (auto sprite : gameObject->getComponents<Sprite>())
+			{
+<<<<<<< HEAD
+				if (sprite->getLayer() < lowestLayer)
+				{
+					lowestLayer = sprite->getLayer();
+=======
+				if (sprite->getLayer() > highestLayer)
+				{
+					highestLayer = sprite->getLayer();
+>>>>>>> development
+				}
+			}
+		}
+		if (gameObject->hasComponent<Animation>())
+		{
+			for (auto animation : gameObject->getComponents<Animation>())
+			{
+<<<<<<< HEAD
+				if (animation->getLayer() < lowestLayer)
+				{
+					lowestLayer = animation->getLayer();
+=======
+				if (animation->getLayer() > highestLayer)
+				{
+					highestLayer = animation->getLayer();
+>>>>>>> development
+				}
+			}
+		}
+		if (gameObject->hasComponent<ParticleEmitter>())
+		{
+			for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>())
+			{
+<<<<<<< HEAD
+				if (particleEmitter->getLayer() < lowestLayer)
+				{
+					lowestLayer = particleEmitter->getLayer();
+=======
+				if (particleEmitter->getLayer() > highestLayer)
+				{
+					highestLayer = particleEmitter->getLayer();
+>>>>>>> development
+				}
+			}
+		}
+	}
+<<<<<<< HEAD
 	return lowestLayer;
 }
 
@@ -448,6 +588,165 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
 						renderColor = Color(252, 3, 252);
 					}
 
+=======
+	return highestLayer;
+}
+
+void RenderSystem::renderLayer(Scene* aScene, int aLayer)
+{
+	Camera& activeCamera = aScene->getActiveCamera();
+
+	for (GameObject& gameObject : mObjects)
+	{
+		for (auto animation : gameObject.getComponents<Animation>())
+		{
+			if (animation->isActive() && animation->getLayer() == aLayer)
+			{
+				renderAnimation(activeCamera, &gameObject, animation);
+			}
+		}
+		for (auto sprite : gameObject.getComponents<Sprite>())
+		{
+			if (sprite->isActive() && sprite->getLayer() == aLayer)
+			{
+				renderSprite(activeCamera, &gameObject, sprite);
+			}
+		}
+		for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
+		{
+			if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer)
+			{
+				for (auto& particle : particleEmitter->getParticles())
+				{
+					renderParticle(activeCamera, particle);
+				}
+			}
+		}
+		if (typeid(gameObject) == typeid(Text))
+		{
+			Text& text = dynamic_cast<Text&>(gameObject);
+			if (text.isActive() && text.getLayer() == aLayer)
+			{
+				renderText(activeCamera, text.getText(), text.getTransform().position, text.getColor(),
+						   text.getScale());
+			}
+		}
+	}
+}
+
+void RenderSystem::render(Scene* aScene)
+{
+	// ScopedTimer scopedTimer("RenderSystem::render");
+	mRenderer->clear(mBackgroundColor);
+
+	int lowestLayer = getLowestLayer(aScene);
+	int highestLayer = getHighestLayer(aScene);
+
+	UIObject uiObject;
+
+	for (int layer = lowestLayer; layer <= highestLayer; ++layer)
+	{
+		renderLayer(aScene, layer);
+	}
+
+	renderDebugInfo(aScene);
+
+	mRenderer->show();
+}
+
+void RenderSystem::renderDebugInfo(Scene* aScene)
+{
+	if (Time::deltaTime == 0)
+	{
+		return;
+	}
+
+	Configuration& config = EngineBravo::getInstance().getConfiguration();
+
+	if (config.getConfig(SHOW_FPS))
+	{
+		int fps = 1.0f / Time::deltaTime;
+
+		// Render FPS counter in the top left corner of the screen with black text color (0, 0, 0)
+		mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
+	}
+
+	if (config.getConfig(SHOW_COLLIDERS))
+	{
+		for (auto& gameObject : aScene->getGameObjects())
+		{
+			if (gameObject->hasComponent<BoxCollider>())
+			{
+				for (auto boxCollider : gameObject->getComponents<BoxCollider>())
+				{
+					Camera& aCurrentCamera = aScene->getActiveCamera();
+
+					int spriteWidth = boxCollider->getWidth();
+					int spriteHeight = boxCollider->getHeight();
+
+					int WindowWidth = mWindow->getSize().x;
+					int WindowHeight = mWindow->getSize().y;
+
+					Vector2 texturePosition =
+						gameObject->getTransform().position + boxCollider->getTransform().position;
+
+					Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+										   Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+
+					Vector2 drawPosition = texturePosition - cameraOrigin;
+
+					drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+					drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+					spriteWidth = std::ceil(static_cast<int>(
+						static_cast<float>(spriteWidth) *
+						(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+					spriteHeight = std::ceil(static_cast<int>(
+						static_cast<float>(spriteHeight) *
+						(static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
+
+					Color renderColor = Color(0, 0, 255);
+
+					if (!boxCollider->isActive())
+					{
+						renderColor = Color(252, 3, 252);
+					}
+
+					mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
+				}
+			}
+			if (gameObject->hasComponent<CircleCollider>())
+			{
+				for (auto circleCollider : gameObject->getComponents<CircleCollider>())
+				{
+					Camera& aCurrentCamera = aScene->getActiveCamera();
+
+					int WindowWidth = mWindow->getSize().x;
+					int WindowHeight = mWindow->getSize().y;
+
+					Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
+
+					float circleRadius = circleCollider->getRadius();
+
+					Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+
+					Vector2 drawPosition = circlePos - cameraOrigin;
+
+					drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+					drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+
+					circleRadius = std::ceil(static_cast<int>(
+						static_cast<float>(circleRadius) *
+						(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+
+					Color renderColor = Color(0, 0, 255);
+
+					if (!circleCollider->isActive())
+					{
+						renderColor = Color(252, 3, 252);
+					}
+
+>>>>>>> development
 					mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
 				}
 			}
@@ -474,10 +773,18 @@ void RenderSystem::addObject(GameObject& aObject)
 
 void RenderSystem::removeObject(GameObject& aObject)
 {
+<<<<<<< HEAD
 	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
 							 { return &obj.get() == &aObject; });
+=======
+	auto it =
+		std::remove_if(mObjects.begin(), mObjects.end(),
+					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+>>>>>>> development
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
 	}
 }
+
+const std::vector<std::reference_wrapper<GameObject>>& RenderSystem::getObjects() const { return mObjects; }
