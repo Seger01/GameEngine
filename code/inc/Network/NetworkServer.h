@@ -15,8 +15,6 @@
 class NetworkServer {
 public:
     NetworkServer(int aTickRate);
-    void receiveGameState();
-    void sendGameState();
     void update(std::vector<GameObject*>& aGameObjects);
 
     bool isConnected() const;
@@ -28,10 +26,12 @@ private:
     void handleIncomingPackets();
     void sendTransform();
     void handleTransform(SLNet::Packet* aPacket);
+    void handleCustomSerialize(SLNet::Packet* aPacket);
     void spawnNewPlayer(SLNet::Packet* aPacket);
     void onClientDisconnected(SLNet::RakNetGUID aClientID);
     void sendToAllClients(SLNet::BitStream& aBitStream);
     void sendPackets();
+    void sendCustomSerialize();
 
 private:
     std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;

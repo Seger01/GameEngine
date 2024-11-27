@@ -94,7 +94,11 @@ void NetworkClient::sendPackets() {
 
 void NetworkClient::requestPlayerInstantiation() {
     SLNet::BitStream bs;
-    NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT);
+    NetworkSharedFunctions::makeBitStream(bs);
+    NetworkPacket networkPacket;
+    networkPacket.messageID = NetworkMessage::ID_PLAYER_INIT;
+    networkPacket.clientGUID = mClient->GetMyGUID();
+    NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 
     sendToServer(bs);
 }
@@ -168,7 +172,11 @@ void NetworkClient::sendTransform() {
             Transform transform = gameObject->getTransform();
             NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
             SLNet::BitStream bs;
-            NetworkSharedFunctions::makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
+            NetworkSharedFunctions::makeBitStream(bs);
+            NetworkPacket networkPacket;
+            networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
+            networkPacket.networkObjectID = networkObject->getNetworkObjectID();
+            NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
             if (networkTransform->getSendPositionX()) {
                 bs.Write(transform.position.x);
             }
@@ -194,8 +202,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 
     SLNet::RakNetGUID clientGuid;
-    NetworkPacket networkPacket;
-    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
+    NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
     clientGuid = networkPacket.clientGUID;
 
     for (auto gameObject : networkObjects) {
@@ -235,8 +242,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID playerID;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkPacket networkPacket;
-    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
+    NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
     playerID = networkPacket.clientGUID;
 
     GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
@@ -258,13 +264,10 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
 }
 
 void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
-    SLNet::RakNetGUID playerID;
-    NetworkPacket networkPacket;
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkSharedFunctions::getBitStreamData(bs, networkPacket);
-    playerID = networkPacket.clientGUID;
+    NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 
-    EngineBravo::getInstance().getNetworkManager().destroyPlayer(playerID);
+    EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
 }
 
 void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {

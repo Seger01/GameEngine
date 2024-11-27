@@ -1,9 +1,13 @@
 #include "Network/NetworkObject.h"
 #include "Network/INetworkBehaviour.h"
 
+int NetworkObject::networkObjectIDCounter = 0;
+
 NetworkObject::NetworkObject(std::string aTag)
     : Component{aTag}, mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
-      mNetworkBehaviours{} {}
+      mNetworkBehaviours{} {
+    mNetworkObjectID = networkObjectIDCounter++;
+}
 
 NetworkObject::NetworkObject(const NetworkObject& other)
     : Component{other}, mIsOwner(other.mIsOwner), mClientID(other.mClientID), mIsPlayer(other.mIsPlayer),
@@ -55,9 +59,13 @@ bool NetworkObject::isOwner() const { return mIsOwner; }
 
 bool NetworkObject::isPlayer() const { return mIsPlayer; }
 
+int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
+
 void NetworkObject::addNetworkBehaviour(INetworkBehaviour* aNetworkBehaviour) {
     mNetworkBehaviours.push_back(aNetworkBehaviour);
     aNetworkBehaviour->setOwner(mIsOwner);
 }
+
+std::vector<INetworkBehaviour*> NetworkObject::getNetworkBehaviours() const { return mNetworkBehaviours; }
 
 void NetworkObject::setPlayer(bool aIsPlayer) { mIsPlayer = aIsPlayer; }

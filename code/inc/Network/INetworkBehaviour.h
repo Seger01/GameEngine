@@ -3,6 +3,7 @@
 
 #include "Components/IBehaviourScript.h"
 #include "Network/NetworkObject.h"
+#include "Network/NetworkVariable.h"
 
 #include <functional>
 #include <stdexcept>
@@ -20,23 +21,25 @@ public:
                 "INetworkBehaviour must be attached to a GameObject with a NetworkObject component");
         } else {
             mGameObject->getComponents<NetworkObject>()[0]->addNetworkBehaviour(this);
+            mNetworkBehaviourID = mGameObject->getComponents<NetworkObject>()[0]->getNetworkBehaviours().size() - 1;
         }
     }
     virtual void serverRpc() { throw std::runtime_error("INetworkBehaviour::serverRpc() not implemented"); }
     virtual void clientRpc() { throw std::runtime_error("INetworkBehaviour::clientRpc() not implemented"); }
     virtual void OnNetworkSpawn() { throw std::runtime_error("INetworkBehaviour::OnNetworkSpawn() not implemented"); }
-    void RegisterNetworkVariable(NetworkVariableBase* variable) { mNetworkVariables.emplace_back(variable); }
+    void RegisterNetworkVariable(NetworkVariableBase* variable) {
+        mNetworkVariables.emplace_back(variable);
+        variable->setNetworkVariableID(mNetworkVariables.size() - 1);
+    }
     std::vector<NetworkVariableBase*> GetNetworkVariables() { return mNetworkVariables; }
 
-protected:
+private:
     bool mIsOwner;
+    int mNetworkBehaviourID;
+    std::vector<NetworkVariableBase*> mNetworkVariables;
 
 private:
-    friend class NetworkManager;
-    friend class NetworkServer;
-    friend class NetworkClient;
     friend class NetworkObject;
-    std::vector<NetworkVariableBase*> mNetworkVariables;
     void setOwner(bool aIsOwner) { mIsOwner = aIsOwner; }
 };
 

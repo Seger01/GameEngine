@@ -13,11 +13,10 @@ private:
     friend class NetworkClient;
 
 private:
-    static void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
+    static void makeBitStream(SLNet::BitStream& aBitStream);
 
-    static void getBitStreamData(SLNet::BitStream& aBitStream);
-    static void getBitStreamData(SLNet::BitStream& aBitStream, NetworkPacket& aNetworkPacket);
-    static void setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID);
+    static NetworkPacket getBitStreamData(SLNet::BitStream& aBitStream);
+    static void setBitStreamNetworkPacket(SLNet::BitStream& aBitStream, const NetworkPacket& aNetworkPacket);
 };
 
 #endif // NETWORKSHAREDFUNCTIONS_H

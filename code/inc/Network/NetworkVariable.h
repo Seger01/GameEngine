@@ -1,22 +1,37 @@
 #ifndef NETWORKVARIABLE_H
 #define NETWORKVARIABLE_H
 
+#include "Network/INetworkBehaviour.h"
 #include "Network/NetworkInformation.h"
 
-class INetworkBehaviour;
+#include <stdexcept>
+
 class NetworkVariableBase {
 public:
+    NetworkVariableBase() : mDirty(false), mNetworkVariableID(-1) {}
     virtual ~NetworkVariableBase() = default;
 
-    virtual bool isDirty() const = 0;
-    virtual void setClean() = 0;
+    virtual void serialize(SLNet::BitStream& stream) const = 0;
+    virtual void deserialize(SLNet::BitStream& stream) = 0;
+
+    bool isDirty() const { return mDirty; }
+    void setClean() { mDirty = false; }
+
+    virtual int getTypeId() const = 0;
+
+    void setNetworkVariableID(int aNetworkVariableID) { mNetworkVariableID = aNetworkVariableID; }
+    int getNetworkVariableID() const { return mNetworkVariableID; }
+
+protected:
+    bool mDirty;
+    int mNetworkVariableID;
 };
 
 template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase {
 public:
     // NetworkVariable(WritePermission aWritePermission);
     NetworkVariable(INetworkBehaviour* aOwner, INetworkSerializableTemplate aValue = INetworkSerializableTemplate())
-        : mValue(std::move(aValue)), mDirty(false) {
+        : mValue(std::move(aValue)) {
         if (aOwner) {
             aOwner->RegisterNetworkVariable(this);
         } else {
@@ -33,13 +48,14 @@ public:
         }
     }
 
-    bool isDirty() const override { return mDirty; }
+    void serialize(SLNet::BitStream& stream) const override { mValue.serialize(stream); }
 
-    void setClean() override { mDirty = false; }
+    void deserialize(SLNet::BitStream& stream) override { mValue.deserialize(stream); }
+
+    int getTypeId() const override { return GetTypeId<INetworkSerializableTemplate>(); }
 
 private:
     INetworkSerializableTemplate mValue;
-    bool mDirty;
 };
 
 #endif // NETWORKVARIABLE_H
