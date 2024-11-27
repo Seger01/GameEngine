@@ -63,7 +63,7 @@ void EngineBravo::run() {
 
         startBehaviourScripts();
         runBehaviourScripts();
-        
+
         updateAdditions();
 
         mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
@@ -170,6 +170,11 @@ void EngineBravo::addToUpdateObjects(GameObject& aGameObject) {
                                return &wrapper.get() == &aGameObject; // Compare addresses
                            });
     if (it == mUpdateObjects.end()) {
+        if (aGameObject.hasComponent<RigidBody>()) {
+            BodyID bodyIDA = aGameObject.getComponents<RigidBody>()[0]->getBodyId();
+            std::cout << "EngineBravo::addToUpdateObjects(): adding " << bodyIDA.world0 << bodyIDA.bodyID
+                      << bodyIDA.revision << std::endl;
+        }
         mUpdateObjects.push_back(aGameObject);
     }
 }
@@ -229,6 +234,11 @@ void EngineBravo::updateAdditions() {
 
 void EngineBravo::updateRemovals() {
     for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved()) {
+        if (gameObject->hasComponent<RigidBody>()) {
+            BodyID bodyIDA = gameObject->getComponents<RigidBody>()[0]->getBodyId();
+            std::cout << "EngineBravo::updateRemovals(): removing " << bodyIDA.world0 << bodyIDA.bodyID
+                      << bodyIDA.revision << std::endl;
+        }
         // Scene manager: does not use a list of game objects
         // Render system
         mRenderSystem.removeObject(*gameObject);

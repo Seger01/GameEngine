@@ -129,7 +129,7 @@ void World::setPosition(Vector2 aPosition, BodyID aBodyID) {
                   << std::endl;
     }
 
-    std::cout << "Setting pos at id: " << bodyid.world0 << bodyid.index1 << bodyid.revision << std::endl;
+    // std::cout << "Setting pos at id: " << bodyid.world0 << bodyid.index1 << bodyid.revision << std::endl;
     b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
 }
 

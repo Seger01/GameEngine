@@ -72,6 +72,7 @@ void Scene::requestGameObjectRemoval(int id) {
 void Scene::requestGameObjectRemoval(GameObject* object) {
     for (const auto& obj : mGameObjects) {
         if (obj.get() == object) {
+            EngineBravo::getInstance().addToUpdateObjects(*obj);
             mGameObjectsToRemove.push_back(obj.get());
             return;
         }

@@ -88,11 +88,15 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
         GameObject* gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
         GameObject* gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
 
+        BodyID bodyIDA = gameObjectA->getComponents<RigidBody>()[0]->getBodyId();
+        BodyID bodyIDB = gameObjectB->getComponents<RigidBody>()[0]->getBodyId();
+        std::cout << "Colliding: " << bodyIDA.world0 << bodyIDA.bodyID << bodyIDA.revision << " and " << bodyIDB.world0
+                  << bodyIDB.bodyID << bodyIDB.revision << std::endl;
+
         if (gameObjectA != nullptr) {
 
             if (gameObjectA->hasComponent<IBehaviourScript>()) {
                 std::vector<IBehaviourScript*> behaviourScript = gameObjectA->getComponents<IBehaviourScript>();
-
                 for (int i = 0; i < behaviourScript.size(); i++) {
                     behaviourScript.at(i)->onCollide(gameObjectB);
                 }
@@ -104,7 +108,6 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
             if (gameObjectB->hasComponent<IBehaviourScript>()) {
                 if (gameObjectB->hasComponent<IBehaviourScript>()) {
                     std::vector<IBehaviourScript*> behaviourScript = gameObjectB->getComponents<IBehaviourScript>();
-
                     for (int i = 0; i < behaviourScript.size(); i++) {
                         behaviourScript.at(i)->onCollide(gameObjectA);
                     }
@@ -125,6 +128,7 @@ void PhysicsEngine::createBodies() {
                 BodyProxy bodyProxy = BodyProxy(gameObject);
 
                 BodyID bodyID = mWorld.createBody(bodyProxy);
+                std::cout << "create body: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
                 rigidBody->setBodyId(bodyID);
             }
         }
@@ -271,15 +275,13 @@ void PhysicsEngine::addObject(GameObject& aObject) {
 }
 
 void PhysicsEngine::removeObject(GameObject& aObject) {
-    auto it =
-        std::remove_if(mObjects.begin(), mObjects.end(),
-                       [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
-
-    if (it != mObjects.end()) {
-        BodyID bodyID = it->get().getComponents<RigidBody>()[0]->getBodyId();
-        std::cout << "remove object: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
-        mWorld.deleteBody(it->get().getComponents<RigidBody>().at(0)->getBodyId());
-
-        mObjects.erase(it, mObjects.end());
+    for (auto it = mObjects.begin(); it != mObjects.end(); ++it) {
+        if (&it->get() == &aObject) {
+            BodyID bodyID = it->get().getComponents<RigidBody>()[0]->getBodyId();
+            std::cout << "remove object: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
+            mWorld.deleteBody(it->get().getComponents<RigidBody>().at(0)->getBodyId());
+            mObjects.erase(it);
+            break;
+        }
     }
 }
