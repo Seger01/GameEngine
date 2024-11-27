@@ -70,11 +70,6 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
         GameObject* gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
         GameObject* gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
 
-        BodyID bodyIDA = gameObjectA->getComponents<RigidBody>()[0]->getBodyId();
-        BodyID bodyIDB = gameObjectB->getComponents<RigidBody>()[0]->getBodyId();
-        std::cout << "Colliding: " << bodyIDA.world0 << bodyIDA.bodyID << bodyIDA.revision << " and " << bodyIDB.world0
-                  << bodyIDB.bodyID << bodyIDB.revision << std::endl;
-
         if (gameObjectA != nullptr) {
 
             if (gameObjectA->hasComponent<IBehaviourScript>()) {
@@ -241,7 +236,6 @@ void PhysicsEngine::removeObject(GameObject& aObject) {
     for (auto it = mObjects.begin(); it != mObjects.end(); ++it) {
         if (&it->get() == &aObject) {
             BodyID bodyID = it->get().getComponents<RigidBody>()[0]->getBodyId();
-            std::cout << "remove object: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
             mWorld.deleteBody(it->get().getComponents<RigidBody>().at(0)->getBodyId());
             mObjects.erase(it);
             break;
