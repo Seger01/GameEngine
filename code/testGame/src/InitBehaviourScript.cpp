@@ -38,9 +38,9 @@ void InitBehaviourScript::createLevel1() {
 
     GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
-    CircleCollider* circleCollider = new CircleCollider(8);
-    circleCollider->setTransform(Transform(Vector2(8, 0)));
-    defaultPlayerPrefab->addComponent(circleCollider);
+    // CircleCollider* circleCollider = new CircleCollider(8);
+    // circleCollider->setTransform(Transform(Vector2(8, 0)));
+    // defaultPlayerPrefab->addComponent(circleCollider);
 
     scene->addGameObject(defaultPlayerPrefab);
 
@@ -59,6 +59,8 @@ void InitBehaviourScript::createLevel1() {
 
     gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
     gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+    gameObject2->getComponents<BoxCollider>().at(0)->setCollideCategory(3);
+    gameObject2->getComponents<BoxCollider>().at(0)->setCollideWithCategory({1, 2});
     gameObject2->addComponent<RigidBody>();
     RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
     rigidBody->setHasGravity(true);
@@ -203,6 +205,8 @@ void InitBehaviourScript::createLevel1() {
                             boxCollider->setTransform(transform);
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
+                            // boxCollider->setCollideCategory(4);
+                            // boxCollider->setCollideWithCategory({4});
 
                             if (isDoorsLayer) {
                                 boxCollider->setActive(false);

@@ -22,26 +22,8 @@ void PhysicsEngine::update() {
 
             Transform transform = gameObject.getTransform();
 
-            float x = 0;
-            float y = 0;
-            int j = 0;
-
-            for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>()) {
-                x += boxCollider->getWidth();
-                y += boxCollider->getHeight();
-                j++;
-            }
-
-            x = x / j;
-            y = y / j;
-
-            transform.position.x = (transform.position.x - x);
-            transform.position.y = (transform.position.y - y);
-
-            // transform.position.x =
-            //     transform.position.x - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getWidth();
-            // transform.position.y =
-            //     transform.position.y - mGameObjects.at(i)->getComponents<BoxCollider>()[0]->getHeight();
+            transform.position.x = transform.position.x - gameObject.getComponents<BoxCollider>()[0]->getWidth();
+            transform.position.y = transform.position.y - gameObject.getComponents<BoxCollider>()[0]->getHeight();
 
             Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
@@ -191,26 +173,17 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 
             if (gameObject.hasComponent<BoxCollider>()) {
                 Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+                float rotation = mWorld.getRotation(rigidBody->getBodyId());
                 Transform transform = gameObject.getTransform();
+                BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
 
                 transform.position = position;
 
                 transform = Transform(Vector2(position.x, position.y));
 
-                float x = 0;
-                float y = 0;
-                int i = 0;
-                for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>()) {
-                    x += boxCollider->getWidth();
-                    y += boxCollider->getHeight();
-                    i++;
-                }
-
-                x = x / i;
-                y = y / i;
-
-                transform.position.x = (transform.position.x - x);
-                transform.position.y = (transform.position.y - y);
+                transform.position.x = (transform.position.x - boxCollider->getWidth());
+                transform.position.y = (transform.position.y - boxCollider->getHeight());
+                transform.rotation = rotation;
 
                 for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>()) {
                     boxCollider->setWidth(boxCollider->getWidth() * 2);
@@ -232,20 +205,10 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
     for (GameObject& gameObject : aGameObjects) {
         if (gameObject.hasComponent<RigidBody>()) {
             Transform transform = gameObject.getTransform();
-            float x = 0;
-            float y = 0;
-            int i = 0;
-            for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>()) {
-                x += boxCollider->getWidth();
-                y += boxCollider->getHeight();
-                i++;
-            }
-
-            x = x / i;
-            y = y / i;
-
-            transform.position.x = (transform.position.x + x);
-            transform.position.y = (transform.position.y + y);
+            BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
+            transform.position.x = (transform.position.x + boxCollider->getWidth());
+            transform.position.y = (transform.position.y + boxCollider->getHeight());
+            transform.rotation = transform.rotation;
 
             for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>()) {
                 boxCollider->setWidth(boxCollider->getWidth() / 2);

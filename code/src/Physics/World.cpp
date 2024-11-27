@@ -6,6 +6,8 @@
 #include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/collision.h"
+#include <cmath>
+#include <math.h>
 
 World::World() {}
 
@@ -72,13 +74,15 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID) {
         shapeDef.friction = aBodyProxy.getFriction();
         shapeDef.restitution = aBodyProxy.getRestitution();
         shapeDef.isSensor = boxCollider->isTrigger();
+        std::cout << "box collider: " << boxCollider->getCollideCategory() << std::endl;
 
-        shapeDef.filter.groupIndex = boxCollider->getFilterCategory();
-
-        for (filterCategory category : boxCollider->getCollideWith()) {
-            shapeDef.filter.categoryBits |= category;
+        uint16_t maskBits = 0;
+        for (int category : boxCollider->getCollideWithCategory()) {
+            maskBits |= (1 << category); // Generate the bitmask
         }
-        std::cout << "setting filter category: " << boxCollider->getFilterCategory() << std::endl;
+        shapeDef.filter.categoryBits = (1 << boxCollider->getCollideCategory());
+
+        shapeDef.filter.maskBits = maskBits;
         b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
     }
 
@@ -126,7 +130,7 @@ void World::setPosition(Vector2 aPosition, BodyID aBodyID) {
     b2BodyId bodyid = convertToB2BodyID(aBodyID);
     if (bodyid.index1 == 1) {
         std::cout << "box2d pos is: (" << b2Body_GetPosition(bodyid).x << ", " << b2Body_GetPosition(bodyid).y << ")"
-                  << std::endl;
+                  << "Rotation: " << b2Body_GetRotation(bodyid).s << " " << b2Body_GetRotation(bodyid).c << std::endl;
     }
 
     // std::cout << "Setting pos at id: " << bodyid.world0 << bodyid.index1 << bodyid.revision << std::endl;
@@ -137,6 +141,12 @@ Vector2 World::getPosition(BodyID aBodyID) {
     b2BodyId bodyID = convertToB2BodyID(aBodyID);
     Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
     return position;
+}
+
+float World::getRotation(BodyID aBodyID) {
+    b2BodyId bodyID = convertToB2BodyID(aBodyID);
+    float radians = atan2(b2Body_GetRotation(bodyID).s, b2Body_GetRotation(bodyID).c);
+    return radians * (180.0f / M_PI);
 }
 
 void World::setGravity(Vector2 aGravity) {
