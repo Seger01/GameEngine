@@ -143,7 +143,7 @@ void PhysicsEngine::createBodies()
 				BodyProxy bodyProxy = BodyProxy(gameObject);
 
 				BodyID bodyID = mWorld.createBody(bodyProxy);
-				std::cout << "create body: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
+				// std::cout << "create body: " << bodyID.world0 << bodyID.bodyID << bodyID.revision << std::endl;
 				rigidBody->setBodyId(bodyID);
 			}
 		}
