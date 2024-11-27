@@ -1,0 +1,7 @@
+enum filterCategory {
+    PLAYER = 0x00000002,
+    MONSTER = 0x00000004,
+    WALLACTIVE = 0x00000008,
+    WALLINACTIVE = 0x00000010,
+    BULLET = 0x00000020,
+};

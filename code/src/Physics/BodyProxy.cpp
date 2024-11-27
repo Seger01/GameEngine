@@ -9,9 +9,9 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject) {
         if (aGameObject.get().hasComponent<BoxCollider>()) {
             mBoxColliders = aGameObject.get().getComponents<BoxCollider>();
         }
-        // if (aGameObject->hasComponent<CircleCollider>()) {
-        //     mCircleColliders = aGameObject->getComponents<CircleCollider>();
-        // }
+        if (aGameObject.get().hasComponent<CircleCollider>()) {
+            mCircleColliders = aGameObject.get().getComponents<CircleCollider>();
+        }
 
         mPosition = aGameObject.get().getTransform().position;
         mHasGravity = rigidBody->getHasGravity();

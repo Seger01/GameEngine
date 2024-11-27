@@ -25,3 +25,11 @@ void BoxCollider::setRotation(float rotation) { mRotation = rotation; }
 bool BoxCollider::isTrigger() const { return mIsTrigger; }
 
 void BoxCollider::setTrigger(bool isTrigger) { mIsTrigger = isTrigger; }
+
+filterCategory BoxCollider::getFilterCategory() const { return mFilterCategory; }
+
+void BoxCollider::setFilterCategory(filterCategory category) { mFilterCategory = category; }
+
+std::vector<filterCategory> BoxCollider::getCollideWith() const { return mCollideWith; }
+
+void BoxCollider::setCollideWith(std::vector<filterCategory> aCollideWith) { mCollideWith = aCollideWith; }

@@ -234,7 +234,7 @@ void PlayerPrefabFactory::addCollider(GameObject* gameObject) {
     boxCollider->setWidth(16);  // 16
     boxCollider->setHeight(25); // 25
     boxCollider->setTransform(transform);
-
+    // boxCollider->setFilterCategory(-1);
     gameObject->addComponent(boxCollider);
 }
 
