@@ -3,28 +3,34 @@
 
 #include "Collider.h"
 
-class CircleCollider : public Collider {
+class CircleCollider : public Collider
+{
 public:
-    CircleCollider();
-    CircleCollider(float radius);
-    ~CircleCollider();
+	CircleCollider();
+	CircleCollider(float radius);
+	~CircleCollider();
 
-    float getRadius() const;
-    void setRadius(float radius);
+	float getRadius() const;
+	void setRadius(float radius);
 
-    int getCollideCategory() const;
-    void setCollideCategory(int category);
+	bool getIsTrigger() const;
+	void setIsTrigger(bool isTrigger);
 
-    std::vector<int> getCollideWithCategory() const;
-    void setCollideWithCategory(std::vector<int> aCollideWith);
+	int getCollideCategory() const;
+	void setCollideCategory(int category);
 
-    std::unique_ptr<Component> clone() const override;
+	std::vector<int> getCollideWithCategory() const;
+	void setCollideWithCategory(std::vector<int> aCollideWith);
+
+	std::unique_ptr<Component> clone() const override;
 
 private:
-    std::vector<int> mCollideWithCategory;
-    int mCollideCategory;
+	std::vector<int> mCollideWithCategory;
+	int mCollideCategory;
 
-    float mRadius;
+	bool mIsTrigger;
+
+	float mRadius;
 };
 
 #endif // CIRCLE_COLLIDER_H
