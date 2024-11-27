@@ -9,59 +9,61 @@
 #include <memory>
 #include <stdexcept>
 
-class NetworkManager {
+class NetworkManager
+{
 public:
-    NetworkManager();
+	NetworkManager();
 
-    void startNetwork();
-    void shutdown();
+	void startNetwork();
+	void shutdown();
 
-    void initialize();
-    void update();
+	void initialize();
+	void update();
 
-    NetworkServer& getServer() const;
-    NetworkClient& getClient() const;
-    NetworkHost& getHost() const;
+	NetworkServer& getServer() const;
+	NetworkClient& getClient() const;
+	NetworkHost& getHost() const;
 
-    bool isServer() const;
-    bool isClient() const;
-    bool isHost() const;
-    bool isConnected() const;
+	bool isServer() const;
+	bool isClient() const;
+	bool isHost() const;
+	bool isConnected() const;
 
-    void setTickRate(int aTickRate);
-    int getTickRate() const;
+	void setTickRate(int aTickRate);
+	int getTickRate() const;
 
-    void setEnableSceneManagement(bool aEnableSceneManagement);
-    bool getEnableSceneManagement() const;
+	void setEnableSceneManagement(bool aEnableSceneManagement);
+	bool getEnableSceneManagement() const;
 
-    void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
-    GameObject& getDefaultPlayerPrefab() const;
-    GameObject* instantiatePlayer(SLNet::RakNetGUID playerID);
-    void destroyPlayer(SLNet::RakNetGUID playerID);
+	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
+	GameObject& getDefaultPlayerPrefab() const;
+	GameObject* instantiatePlayer(SLNet::RakNetGUID playerID);
+	void destroyPlayer(SLNet::RakNetGUID playerID);
 
-    void setRole(NetworkRole aRole);
-    NetworkRole getRole() const;
+	void setRole(NetworkRole aRole);
+	NetworkRole getRole() const;
 
-    std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
+	std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
 
-    void addObject(GameObject& aObject);
-    void removeObject(GameObject& aObject);
-
-private:
-    void startServer();
-    void startClient();
-    void startHost();
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 
 private:
-    NetworkRole mRole;
-    int mTickRate;
-    std::unique_ptr<GameObject> mDefaultPlayerPrefab;
-    bool mEnableSceneManagement;
-    std::vector<std::reference_wrapper<GameObject>> mObjects;
+	void startServer();
+	void startClient();
+	void startHost();
 
-    std::unique_ptr<NetworkServer> mServer;
-    std::unique_ptr<NetworkClient> mClient;
-    std::unique_ptr<NetworkHost> mHost;
+private:
+	NetworkRole mRole;
+	int mTickRate;
+	std::unique_ptr<GameObject> mDefaultPlayerPrefab;
+	bool mEnableSceneManagement;
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+
+	std::unique_ptr<NetworkServer> mServer;
+	std::unique_ptr<NetworkClient> mClient;
+	std::unique_ptr<NetworkHost> mHost;
 };
 
 #endif // NETWORKMANAGER_H

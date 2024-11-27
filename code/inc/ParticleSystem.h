@@ -3,18 +3,20 @@
 
 #include "GameObject.h"
 
-class ParticleSystem {
+class ParticleSystem
+{
 public:
-    ParticleSystem();
+	ParticleSystem();
 
-    void update();
+	void update();
 
 public:
-    void addObject(GameObject& aObject);
-    void removeObject(GameObject& aObject);
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 
 private:
-    std::vector<std::reference_wrapper<GameObject>> mObjects;
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
 };
 
 #endif // PARTICLESYSTEM_H
