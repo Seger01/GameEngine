@@ -47,12 +47,6 @@ void NetworkClient::connectToServer() {
     }
 }
 
-void NetworkClient::sendGameState() { throw std::runtime_error("NetworkClient::sendGameState() not implemented"); }
-
-void NetworkClient::receiveGameState() {
-    throw std::runtime_error("NetworkClient::receiveGameState() not implemented");
-}
-
 void NetworkClient::update(std::vector<GameObject*>& aGameObjects) {
     mGameObjects = &aGameObjects;
     if (!mClient->IsActive()) {
@@ -106,13 +100,14 @@ void NetworkClient::requestPlayerInstantiation() {
 void NetworkClient::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mClient->Receive(); packet; mClient->DeallocatePacket(packet), packet = mClient->Receive()) {
-        SLNet::BitStream bs(packet->data, packet->length, false);
+        std::cout << "Client: " << std::endl;
         switch (packet->data[0]) {
         case ID_CONNECTION_REQUEST_ACCEPTED:
             std::cout << "Connected to server.\n";
             mIsConnected = true;
             mIsConnecting = false;
             mServerGUID = packet->guid;
+            std::cout << "server guid according to client: " << mServerGUID.ToString() << std::endl;
             requestPlayerInstantiation();
             break;
         case ID_CONNECTION_ATTEMPT_FAILED:
@@ -126,6 +121,7 @@ void NetworkClient::handleIncomingPackets() {
             break;
         case ID_UNCONNECTED_PONG: {
             std::cout << "Got pong from " << packet->systemAddress.ToString() << std::endl;
+            SLNet::BitStream bs(packet->data, packet->length, false);
             NetworkSharedFunctions::getBitStreamData(bs);
             std::string serverIp;
             serverIp = packet->systemAddress.ToString(false);
@@ -149,7 +145,7 @@ void NetworkClient::handleIncomingPackets() {
             std::cout << "Received player destroy packet\n";
             break;
         default:
-            std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
+            std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
             break;
         }
     }
@@ -271,5 +267,7 @@ void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
 }
 
 void NetworkClient::sendToServer(SLNet::BitStream& aBitStream) {
+    std::cout << "Sending to server\n";
+    std::cout << "GUID where to send: " << mServerGUID.ToString() << std::endl;
     mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
 }

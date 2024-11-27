@@ -12,8 +12,6 @@ public:
     NetworkClient(int aTickRate);
     ~NetworkClient();
     void connectToServer();
-    void sendGameState();
-    void receiveGameState();
     void update(std::vector<GameObject*>& aGameObjects);
     void discoverServers();
     std::vector<std::string>& getServerAddresses();

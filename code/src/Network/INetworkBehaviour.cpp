@@ -22,6 +22,7 @@ void INetworkBehaviour::RegisterNetworkVariable(NetworkVariableBase* variable) {
 std::vector<NetworkVariableBase*> INetworkBehaviour::GetNetworkVariables() { return mNetworkVariables; }
 
 bool INetworkBehaviour::isOwner() {
+    return mGameObject->getComponents<NetworkObject>()[0]->isOwner();
     if (mIsOwnerSet) {
         return mIsOwner;
     } else {

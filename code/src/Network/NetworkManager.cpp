@@ -31,8 +31,7 @@ void NetworkManager::update() {
     } else if (mRole == NetworkRole::CLIENT && mClient) {
         mClient->update(*mGameObjects);
     } else if (mRole == NetworkRole::HOST && mHost) {
-        throw std::runtime_error("NetworkManager::update() isHost not implemented");
-        // mHost->update();
+        mHost->update(*mGameObjects);
     }
 }
 

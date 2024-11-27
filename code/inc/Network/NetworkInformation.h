@@ -32,8 +32,8 @@ struct NetworkPacket {
     uint8_t networkVariableID;
 
     NetworkPacket()
-        : messageID(-1), networkObjectID(-1), prefabID(-1), ISerializableID(-1), timestamp(0),
-          clientGUID(SLNet::UNASSIGNED_RAKNET_GUID) {}
+        : messageID(0), networkObjectID(-1), prefabID(-1), timestamp(0), clientGUID(SLNet::UNASSIGNED_RAKNET_GUID),
+          ISerializableID(-1), networkBehaviourID(-1), networkVariableID(-1) {}
     void SetTimeStampNow() {
         auto now = std::chrono::steady_clock::now().time_since_epoch();
         timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now).count();

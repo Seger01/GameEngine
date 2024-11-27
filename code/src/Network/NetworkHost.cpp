@@ -12,4 +12,6 @@ void NetworkHost::update(std::vector<GameObject*>& aGameObjects) {
     if (mClient) {
         mClient->update(aGameObjects);
     }
+    mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
+    mClient->connectToServer();
 }

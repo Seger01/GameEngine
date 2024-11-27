@@ -39,7 +39,6 @@ private:
 
 private:
     friend class NetworkObject;
-    void setOwner(bool aIsOwner);
 };
 
 #endif // NETWORKBEHAVIOUR_H

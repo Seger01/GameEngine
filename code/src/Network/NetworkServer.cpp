@@ -55,12 +55,11 @@ void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
 void NetworkServer::handleIncomingPackets() {
     SLNet::Packet* packet;
     for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {
+        std::cout << "Server: " << std::endl;
         switch (packet->data[0]) {
         case ID_NEW_INCOMING_CONNECTION:
             std::cout << "A connection is incoming.\n";
-            break;
-        case ID_CONNECTION_REQUEST_ACCEPTED:
-            std::cout << "Our connection request has been accepted.\n";
+            std::cout << "Server guid according to server: " << mServer->GetMyGUID().ToString() << std::endl;
             break;
         case ID_NO_FREE_INCOMING_CONNECTIONS:
             std::cout << "The server is full.\n";
@@ -80,7 +79,7 @@ void NetworkServer::handleIncomingPackets() {
             spawnNewPlayer(packet);
             break;
         default:
-            std::cout << "Message with identifier " << packet->data[0] << " has arrived.\n";
+            std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
             break;
         }
     }
@@ -192,20 +191,12 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
 
 void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID clientID = aPacket->guid;
-    // Instantiate player on the server for this client
-    std::vector<GameObject*> persistantObjects =
-        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-    for (auto object : persistantObjects) {
-        if (object->hasComponent<NetworkObject>()) {
-            NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-            if (networkObject->isPlayer() && !(networkObject->getClientID() == clientID)) {
-                sendPlayerInstantiation(networkObject->getClientID());
-            }
-        }
+    if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST) {
+        EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
+                                                                                    // instantiation
     }
-    EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
-                                                                                // instantiation
-    sendPlayerInstantiation(clientID);
+
+    sendPlayerInstantiation(clientID); // Send instantiation message to all clients
 }
 
 void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {
