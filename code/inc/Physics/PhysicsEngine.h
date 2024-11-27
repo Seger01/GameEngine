@@ -4,46 +4,48 @@
 #include "GameObject.h"
 #include "IBehaviourScript.h"
 #include "Physics/BodyProxy.h"
-#include "Physics/World.h"
 #include "RigidBody.h"
+#include "World.h"
+#include "WorldID.h"
+#include <functional>
 #include <vector>
 class PhysicsEngine {
 
 public:
     PhysicsEngine();
+    ~PhysicsEngine();
 
-    void updateReferences(std::vector<GameObject*>&);
+    void createWorld(Vector2 aGravity);
+    void reset();
+
+    void createBodies();
+    void deleteBodies();
+
     void update();
     void updateFlags();
     void updateForces();
 
-    void setSubStep(int);
-    float getSubStep() const;
     void setStep(float);
-    float getStep() const;
-    void setgameObjects(std::vector<GameObject*>);
+    void setSubStep(int);
+
     std::vector<GameObject*> getgameObjects() const;
+    float getStep() const;
+    float getSubStep() const;
+    World& getWorld();
+    GameObject* getGameObjectByID(int aID);
 
     void executeCollisionScripts(std::vector<std::pair<int, int>>);
 
-    void createBodies();
+    void convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+    void convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
 
-    void createWorld(Vector2 aGravity);
-
-    World& getWorld();
-
-    void reset();
-
-    GameObject* getGameObjectByID(int aID);
-
-    void setCollision(int aBodyID, bool aState);
-
-    GameObject* convertFromBox2D(GameObject* aGameObject);
-    GameObject* convertToBox2D(GameObject* aGameObject);
+public:
+    void addObject(GameObject& aObject);
+    void removeObject(GameObject& aObject);
 
 private:
+    std::vector<std::reference_wrapper<GameObject>> mObjects;
     World mWorld;
-    std::vector<GameObject*> mGameObjects;
 
     float mStep;
     int mSubStep;

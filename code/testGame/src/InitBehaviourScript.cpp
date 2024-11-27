@@ -6,6 +6,7 @@
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
+#include "FRect.h"
 #include "FSConverter.h"
 #include "GameObject.h"
 #include "PlayerPrefab.h"
@@ -20,210 +21,231 @@ SpriteDef textBackgroundDef = {"UI/ui_images.png", Rect{0, 96, 48, 32}, 48, 32};
 
 SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
 
-void InitBehaviourScript::createLevel1() {
-    EngineBravo& engine = EngineBravo::getInstance();
-    SceneManager& sceneManager = engine.getSceneManager();
+void InitBehaviourScript::createLevel1()
+{
+	EngineBravo& engine = EngineBravo::getInstance();
+	SceneManager& sceneManager = engine.getSceneManager();
 
-    Scene* scene = sceneManager.createScene("Level-1");
-    if (scene == nullptr) {
-        exit(1);
-    }
+	Scene* scene = sceneManager.createScene("Level-1");
+	if (scene == nullptr)
+	{
+		exit(1);
+	}
 
-    Camera* camera = new Camera;
-    camera->setTag("MainCamera");
-    camera->setActive(true);
+	Camera* camera = new Camera;
+	camera->setTag("MainCamera");
+	camera->setActive(true);
 
-    camera->setTransform(Transform(Vector2(80, 96)));
-    camera->setWidth(16 * 30);
-    camera->setHeight(9 * 30);
+	camera->setTransform(Transform(Vector2(80, 96)));
+	camera->setWidth(16 * 30);
+	camera->setHeight(9 * 30);
 
-    scene->addGameObject(camera);
+	camera->setViewport(FRect{0, 0, 0.8, 0.8});
 
-    GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+	scene->addGameObject(camera);
 
-    CircleCollider* circleCollider = new CircleCollider(8);
-    circleCollider->setTransform(Transform(Vector2(8, 0)));
-    defaultPlayerPrefab->addComponent(circleCollider);
+	GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
-    scene->addGameObject(defaultPlayerPrefab);
+	CircleCollider* circleCollider = new CircleCollider(8);
+	circleCollider->setTransform(Transform(Vector2(8, 0)));
+	defaultPlayerPrefab->addComponent(circleCollider);
 
-    GameObject* gameObject2 = new GameObject;
-    Transform objectTransform2;
-    objectTransform2.position.x = 50;
-    objectTransform2.position.y = 80;
-    gameObject2->setTransform(objectTransform2);
+	scene->addGameObject(defaultPlayerPrefab);
 
-    Sprite* guySprite = engine.getResourceManager().createSprite(guyFrameDef);
-    guySprite->setLayer(3);
-    gameObject2->addComponent(guySprite);
+	GameObject* gameObject2 = new GameObject;
+	Transform objectTransform2;
+	objectTransform2.position.x = 50;
+	objectTransform2.position.y = 80;
 
-    gameObject2->addComponent<BoxCollider>();
+	gameObject2->setTransform(objectTransform2);
 
-    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
-    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+	Sprite* guySprite = engine.getResourceManager().createSprite(guyFrameDef);
+	guySprite->setLayer(3);
+	gameObject2->addComponent(guySprite);
 
-    gameObject2->addComponent<RigidBody>();
-    RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
-    rigidBody->setHasGravity(true);
-    rigidBody->setDensity(1.0f);
-    rigidBody->setFriction(0.3f);
-    rigidBody->setRestitution(0.2f);
-    rigidBody->setMass(1.0f);
-    rigidBody->setGravityScale(10.0f);
-    rigidBody->setCanRotate(false);
-    gameObject2->setName("Guy");
+	gameObject2->addComponent<BoxCollider>();
 
-    scene->addGameObject(gameObject2);
+	gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+	gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
 
-    FSConverter fsConverter;
-    std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
+	gameObject2->addComponent<RigidBody>();
+	RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+	rigidBody->setHasGravity(true);
+	rigidBody->setDensity(1.0f);
+	rigidBody->setFriction(0.3f);
+	rigidBody->setRestitution(0.2f);
+	rigidBody->setMass(1.0f);
+	rigidBody->setGravityScale(10.0f);
+	rigidBody->setCanRotate(false);
+	gameObject2->setName("Guy");
 
-    TileMapParser tileMapParser(path);
-    tileMapParser.parse();
-    const TileMapData& tileMapData = tileMapParser.getTileMapData();
+	scene->addGameObject(gameObject2);
 
-    for (const auto& roomTrigger : tileMapData.mRoomTriggers) {
-        // Collect enemy spawns for this room
-        std::vector<SpawnPoint> enemySpawns;
-        for (const auto& spawnPoint : tileMapData.mSpawnPoints) {
-            if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID) {
-                enemySpawns.push_back(spawnPoint);
-            }
-        }
+	FSConverter fsConverter;
+	std::string path = fsConverter.getResourcePath("LevelDefs/levelwithcollision.json");
 
-        GameObject* roomObject = new GameObject;
-        roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
-        BoxCollider* boxCollider = new BoxCollider();
-        Transform transform;
-        transform.position.x = roomTrigger.x;
-        transform.position.y = roomTrigger.y;
-        boxCollider->setTransform(transform);
-        boxCollider->setWidth(roomTrigger.mWidth);
-        boxCollider->setHeight(roomTrigger.mHeight);
-        boxCollider->setTrigger(true);
-        roomObject->addComponent(boxCollider);
-        RigidBody* rigidBody = new RigidBody();
-        rigidBody->setTransform(transform);
-        roomObject->addComponent(rigidBody);
-        roomObject->setName("Roomtrigger");
-        scene->addGameObject(roomObject);
-    }
+	TileMapParser tileMapParser(path);
+	tileMapParser.parse();
+	const TileMapData& tileMapData = tileMapParser.getTileMapData();
 
-    GameObject* canvasObject = new GameObject;
+	for (const auto& roomTrigger : tileMapData.mRoomTriggers)
+	{
+		// Collect enemy spawns for this room
+		std::vector<SpawnPoint> enemySpawns;
+		for (const auto& spawnPoint : tileMapData.mSpawnPoints)
+		{
+			if (spawnPoint.isEnemySpawn && spawnPoint.roomID == roomTrigger.roomID)
+			{
+				enemySpawns.push_back(spawnPoint);
+			}
+		}
 
-    canvasObject->addComponent<CanvasBehaviourScript>();
+		GameObject* roomObject = new GameObject;
+		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
+		BoxCollider* boxCollider = new BoxCollider();
+		Transform transform;
+		transform.position.x = roomTrigger.x;
+		transform.position.y = roomTrigger.y;
+		boxCollider->setTransform(transform);
+		boxCollider->setWidth(roomTrigger.mWidth);
+		boxCollider->setHeight(roomTrigger.mHeight);
+		boxCollider->setTrigger(true);
+		roomObject->addComponent(boxCollider);
+		RigidBody* rigidBody = new RigidBody();
+		rigidBody->setTransform(transform);
+		roomObject->addComponent(rigidBody);
+		roomObject->setName("Roomtrigger");
+		scene->addGameObject(roomObject);
+	}
 
-    scene->addGameObject(canvasObject);
+	GameObject* canvasObject = new GameObject;
 
-    GameObject* textObject =
-        new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, -30), Vector2(1, 1));
-    Text* text = dynamic_cast<Text*>(textObject);
-    text->setLayer(5);
+	canvasObject->addComponent<CanvasBehaviourScript>();
 
-    text->addComponent<FPSCounterBehaviourScript>();
+	scene->addGameObject(canvasObject);
 
-    int textWidth = 0;
-    int textHeight = 0;
-    if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
-                                              text->getScale())) {
-        std::cout << "Failed to get text size for FPS counter.\n";
-    }
+	GameObject* textObject =
+		new Text("FPS: ", "font/SupremeSpike.otf", Color(86, 140, 100), Vector2(0, -30), Vector2(1, 1));
+	Text* text = dynamic_cast<Text*>(textObject);
+	text->setLayer(5);
 
-    Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
-    textBackground->setLayer(3);
-    textBackground->setWidth(10);
-    textBackground->setHeight(10);
+	text->addComponent<FPSCounterBehaviourScript>();
 
-    text->addComponent(textBackground);
+	int textWidth = 0;
+	int textHeight = 0;
+	if (!engine.getRenderSystem().getTextSize(text->getFont(), text->getText(), textWidth, textHeight,
+											  text->getScale()))
+	{
+		std::cout << "Failed to get text size for FPS counter.\n";
+	}
 
-    scene->addGameObject(text);
+	Sprite* textBackground = engine.getResourceManager().createSprite(textBackgroundDef);
+	textBackground->setLayer(3);
+	textBackground->setWidth(10);
+	textBackground->setHeight(10);
 
-    GameObject* musicObject = new GameObject;
+	text->addComponent(textBackground);
 
-    // Add music
-    AudioSource* music = new AudioSource("Audio/music.wav", true);
-    music->setPlayOnWake(true);
-    music->setVolume(10);
-    music->setXDirection(0);
-    musicObject->addComponent(music);
+	scene->addGameObject(text);
 
-    scene->addGameObject(musicObject);
+	GameObject* musicObject = new GameObject;
 
-    sceneManager.requestSceneChange("Level-1");
+	// Add music
+	AudioSource* music = new AudioSource("Audio/music.wav", true);
+	music->setPlayOnWake(true);
+	music->setVolume(10);
+	music->setXDirection(0);
+	musicObject->addComponent(music);
 
-    // Assuming tileMapData is a const reference to TileMapData
-    for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex) {
-        bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
-        // Access rows within the layer by index
-        for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex) {
-            // Access each tile in the row by index
-            for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex) {
-                int tile = tileMapData.mLayers[layerIndex][rowIndex][colIndex];
-                if (tile != 0) {
-                    // Check if the tile exists in mTileInfoMap (read-only)
-                    auto it = tileMapData.mTileInfoMap.find(tile);
-                    if (it != tileMapData.mTileInfoMap.end()) {
-                        const TileInfo& tileInfo = it->second; // Access as const
+	scene->addGameObject(musicObject);
 
-                        SpriteDef spriteDef = {tileInfo.mTilesetName,
-                                               Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16},
-                                               16, 16};
+	sceneManager.requestSceneChange("Level-1");
 
-                        GameObject* gameObject = new GameObject;
+	// Assuming tileMapData is a const reference to TileMapData
+	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
+	{
+		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
+		// Access rows within the layer by index
+		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
+		{
+			// Access each tile in the row by index
+			for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex)
+			{
+				int tile = tileMapData.mLayers[layerIndex][rowIndex][colIndex];
+				if (tile != 0)
+				{
+					// Check if the tile exists in mTileInfoMap (read-only)
+					auto it = tileMapData.mTileInfoMap.find(tile);
+					if (it != tileMapData.mTileInfoMap.end())
+					{
+						const TileInfo& tileInfo = it->second; // Access as const
 
-                        Transform objectTransform;
-                        objectTransform.position.x = static_cast<int>(colIndex * 16);
-                        objectTransform.position.y = static_cast<int>(rowIndex * 16);
-                        gameObject->setTransform(objectTransform);
+						SpriteDef spriteDef = {tileInfo.mTilesetName,
+											   Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16},
+											   16, 16};
 
-                        // Add a Sprite component to the GameObject
-                        Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+						GameObject* gameObject = new GameObject;
 
-                        sprite->setLayer(layerIndex);
+						Transform objectTransform;
+						objectTransform.position.x = static_cast<int>(colIndex * 16);
+						objectTransform.position.y = static_cast<int>(rowIndex * 16);
+						gameObject->setTransform(objectTransform);
 
-                        gameObject->addComponent(sprite);
+						// Add a Sprite component to the GameObject
+						Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
 
-                        // Add BoxCollider components to the GameObject
-                        for (const auto& collider : tileInfo.mColliders) {
-                            BoxCollider* boxCollider = new BoxCollider();
-                            Transform transform;
-                            transform.position.x = collider.x;
-                            transform.position.y = collider.y;
-                            boxCollider->setTransform(transform);
-                            boxCollider->setWidth(collider.mWidth);
-                            boxCollider->setHeight(collider.mHeight);
-                            if (isDoorsLayer) {
-                                boxCollider->setActive(false);
-                            }
-                            gameObject->addComponent(boxCollider);
-                        }
+						sprite->setLayer(layerIndex);
 
-                        if (!tileInfo.mColliders.empty()) {
-                            RigidBody* rigidBody = new RigidBody();
-                            rigidBody->setTransform(objectTransform);
-                            if (isDoorsLayer) {
-                                if (rigidBody != nullptr) {
-                                    rigidBody->setActive(false);
-                                }
-                            }
-                            gameObject->addComponent(rigidBody);
-                            gameObject->setName("Tile");
-                        }
-                        if (isDoorsLayer) {
-                            gameObject->setTag("Door");
-                        }
-                        scene->addGameObject(gameObject);
+						gameObject->addComponent(sprite);
 
-                    } else {
-                        // Handle the case where tileId does not exist in the map
-                        std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
-                    }
-                }
-            }
-        }
-    }
+						// Add BoxCollider components to the GameObject
+						for (const auto& collider : tileInfo.mColliders)
+						{
+							BoxCollider* boxCollider = new BoxCollider();
+							Transform transform;
+							transform.position.x = collider.x;
+							transform.position.y = collider.y;
+							boxCollider->setTransform(transform);
+							boxCollider->setWidth(collider.mWidth);
+							boxCollider->setHeight(collider.mHeight);
+							if (isDoorsLayer)
+							{
+								boxCollider->setActive(false);
+							}
+							gameObject->addComponent(boxCollider);
+						}
 
-    return;
+						if (!tileInfo.mColliders.empty())
+						{
+							RigidBody* rigidBody = new RigidBody();
+							rigidBody->setTransform(objectTransform);
+							if (isDoorsLayer)
+							{
+								if (rigidBody != nullptr)
+								{
+									rigidBody->setActive(false);
+								}
+							}
+							gameObject->addComponent(rigidBody);
+							gameObject->setName("Tile");
+						}
+						if (isDoorsLayer)
+						{
+							gameObject->setTag("Door");
+						}
+						scene->addGameObject(gameObject);
+					}
+					else
+					{
+						// Handle the case where tileId does not exist in the map
+						std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
+					}
+				}
+			}
+		}
+	}
+
+	return;
 }
 
 void InitBehaviourScript::onStart() { createLevel1(); }

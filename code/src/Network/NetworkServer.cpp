@@ -14,9 +14,9 @@
 #include <stdexcept>
 #include <string>
 
-NetworkServer::NetworkServer(int aTickRate = 60)
+NetworkServer::NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
     : mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
-      mLastSendPacketsTime(std::chrono::steady_clock::now()), mGameObjects(nullptr), mTickRate(aTickRate) {
+      mLastSendPacketsTime(std::chrono::steady_clock::now()), mObjects(aObjects), mTickRate(aTickRate) {
     SLNet::SocketDescriptor sd(SERVER_PORT, 0);
     sd.socketFamily = AF_INET;
     SLNet::StartupResult result = mServer->Startup(10, &sd, 1);
@@ -32,8 +32,8 @@ void NetworkServer::receiveGameState() {
 
 void NetworkServer::sendGameState() { throw std::runtime_error("NetworkServer::sendGameState() not implemented"); }
 
-void NetworkServer::update(std::vector<GameObject*>& aGameObjects) {
-    mGameObjects = &aGameObjects;
+void NetworkServer::update(std::vector<std::reference_wrapper<GameObject>>& aGameObjects) {
+    mObjects = aGameObjects;
     if (!mServer->IsActive()) {
         throw std::runtime_error("Server is not running");
     }
@@ -87,20 +87,16 @@ void NetworkServer::handleIncomingPackets() {
 }
 
 void NetworkServer::sendTransform() {
-    if (!mGameObjects) {
-        throw std::runtime_error("Game objects not set");
-    }
-
-    for (auto gameObject : *mGameObjects) {
-        if (!gameObject->hasComponent<NetworkTransform>()) {
+    for (GameObject& gameObject : mObjects) {
+        if (!gameObject.hasComponent<NetworkTransform>()) {
             continue;
         }
 
-        Transform transform = gameObject->getTransform();
-        NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
+        Transform transform = gameObject.getTransform();
+        NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
         SLNet::BitStream bs;
         makeBitStream(bs, (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET);
-        NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
+        NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
         setBitStreamGUID(bs, networkObject->getClientID());
 
         if (networkTransform->getSendPositionX()) {
@@ -124,23 +120,20 @@ void NetworkServer::sendTransform() {
 }
 
 void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
-    if (!mGameObjects) {
-        throw std::runtime_error("Game objects not set");
-    }
     SLNet::BitStream bs(aPacket->data, aPacket->length, false);
     getBitStreamData(bs);
 
-    for (auto gameObject : *mGameObjects) {
-        if (!gameObject->hasComponent<NetworkObject>()) {
+    for (GameObject& gameObject : mObjects) {
+        if (!gameObject.hasComponent<NetworkObject>()) {
             continue;
         }
-        NetworkObject* networkObject = gameObject->getComponents<NetworkObject>()[0];
+        NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
         if (networkObject->getClientID() != aPacket->guid) {
             continue;
         }
-        if (gameObject->hasComponent<NetworkTransform>()) {
-            Transform transform = gameObject->getTransform();
-            NetworkTransform* networkTransform = gameObject->getComponents<NetworkTransform>()[0];
+        if (gameObject.hasComponent<NetworkTransform>()) {
+            Transform transform = gameObject.getTransform();
+            NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
             if (networkTransform->getSendPositionX()) {
                 bs.Read(transform.position.x);
             }
@@ -156,7 +149,7 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
             if (networkTransform->getSendScaleY()) {
                 bs.Read(transform.scale.y);
             }
-            gameObject->setTransform(transform);
+            gameObject.setTransform(transform);
         }
     }
 }
