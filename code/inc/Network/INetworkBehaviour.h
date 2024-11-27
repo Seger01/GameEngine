@@ -2,6 +2,7 @@
 #define NETWORKBEHAVIOUR_H
 
 #include "Components/IBehaviourScript.h"
+#include "EngineBravo.h"
 #include "Network/NetworkObject.h"
 #include "Network/NetworkVariable.h"
 
@@ -13,34 +14,32 @@ class NetworkVariableBase;
 
 class INetworkBehaviour : public IBehaviourScript {
 public:
-    INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour") : IBehaviourScript(aTag) {}
+    INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
     virtual ~INetworkBehaviour() = default;
-    void initialize() {
-        if (!mGameObject->hasComponent<NetworkObject>()) {
-            throw std::runtime_error(
-                "INetworkBehaviour must be attached to a GameObject with a NetworkObject component");
-        } else {
-            mGameObject->getComponents<NetworkObject>()[0]->addNetworkBehaviour(this);
-            mNetworkBehaviourID = mGameObject->getComponents<NetworkObject>()[0]->getNetworkBehaviours().size() - 1;
-        }
-    }
-    virtual void serverRpc() { throw std::runtime_error("INetworkBehaviour::serverRpc() not implemented"); }
-    virtual void clientRpc() { throw std::runtime_error("INetworkBehaviour::clientRpc() not implemented"); }
-    virtual void OnNetworkSpawn() { throw std::runtime_error("INetworkBehaviour::OnNetworkSpawn() not implemented"); }
-    void RegisterNetworkVariable(NetworkVariableBase* variable) {
-        mNetworkVariables.emplace_back(variable);
-        variable->setNetworkVariableID(mNetworkVariables.size() - 1);
-    }
-    std::vector<NetworkVariableBase*> GetNetworkVariables() { return mNetworkVariables; }
+
+    virtual void serverRpc();
+    virtual void clientRpc();
+    virtual void OnNetworkSpawn();
+
+    void RegisterNetworkVariable(NetworkVariableBase* variable);
+
+    std::vector<NetworkVariableBase*> GetNetworkVariables();
+
+    bool isOwner();
+
+    void destroy();
+    int getNetworkBehaviourID() const;
 
 private:
     bool mIsOwner;
+    bool mIsOwnerSet;
     int mNetworkBehaviourID;
+    static int networkBehaviourIDCounter;
     std::vector<NetworkVariableBase*> mNetworkVariables;
 
 private:
     friend class NetworkObject;
-    void setOwner(bool aIsOwner) { mIsOwner = aIsOwner; }
+    void setOwner(bool aIsOwner);
 };
 
 #endif // NETWORKBEHAVIOUR_H

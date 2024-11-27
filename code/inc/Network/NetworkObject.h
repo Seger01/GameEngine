@@ -32,14 +32,10 @@ public:
     bool isPlayer() const;
     int getNetworkObjectID() const;
 
-    void addNetworkBehaviour(INetworkBehaviour* aNetworkBehaviour);
-    std::vector<INetworkBehaviour*> getNetworkBehaviours() const;
-
 private:
     bool mIsOwner;
     int mNetworkObjectID;
     SLNet::RakNetGUID mClientID;
-    std::vector<INetworkBehaviour*> mNetworkBehaviours;
 
     friend class NetworkManager;
     bool mIsPlayer;

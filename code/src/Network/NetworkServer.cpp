@@ -92,6 +92,9 @@ void NetworkServer::sendTransform() {
     }
 
     for (auto gameObject : *mGameObjects) {
+        if (!gameObject->hasComponent<NetworkObject>()) {
+            continue;
+        }
         if (!gameObject->hasComponent<NetworkTransform>()) {
             continue;
         }
@@ -173,15 +176,16 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
         if (networkPacket.networkObjectID != networkObject->getNetworkObjectID()) { // check network object ID
             continue;
         }
-        auto networkBehaviours = networkObject->getNetworkBehaviours();
-        if (networkBehaviours.size() <= networkPacket.networkBehaviourID) { // check network behaviour ID
-            continue;
-        }
-        INetworkBehaviour* networkBehaviour = networkBehaviours.at(networkPacket.networkBehaviourID);
-        if (networkBehaviour->GetNetworkVariables().size() > networkPacket.networkVariableID) { // check network
-                                                                                                // variable ID
-            auto networkVariable = networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID);
-            networkVariable->deserialize(bs);
+        for (auto networkBehaviour : gameObject->getComponents<INetworkBehaviour>()) {
+            if (networkBehaviour->getNetworkBehaviourID() != networkPacket.networkBehaviourID) { // check network
+                                                                                                 // behaviour ID
+                continue;
+            }
+            if (networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID)->getTypeId() !=
+                networkPacket.ISerializableID) { // check network variable ID
+                continue;
+            }
+            networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID)->deserialize(bs);
         }
     }
 }

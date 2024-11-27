@@ -170,5 +170,5 @@ void NetworkManager::startHost() {
     if (mHost) {
         throw std::runtime_error("Host is already running");
     }
-    mHost = std::make_unique<NetworkHost>();
+    mHost = std::make_unique<NetworkHost>(mTickRate);
 }

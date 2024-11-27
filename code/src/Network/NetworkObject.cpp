@@ -4,14 +4,12 @@
 int NetworkObject::networkObjectIDCounter = 0;
 
 NetworkObject::NetworkObject(std::string aTag)
-    : Component{aTag}, mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
-      mNetworkBehaviours{} {
+    : Component{aTag}, mIsOwner(false), mClientID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false) {
     mNetworkObjectID = networkObjectIDCounter++;
 }
 
 NetworkObject::NetworkObject(const NetworkObject& other)
-    : Component{other}, mIsOwner(other.mIsOwner), mClientID(other.mClientID), mIsPlayer(other.mIsPlayer),
-      mNetworkBehaviours(other.mNetworkBehaviours) {}
+    : Component{other}, mIsOwner(other.mIsOwner), mClientID(other.mClientID), mIsPlayer(other.mIsPlayer) {}
 
 NetworkObject& NetworkObject::operator=(const NetworkObject& other) {
     if (this != &other) {
@@ -19,14 +17,12 @@ NetworkObject& NetworkObject::operator=(const NetworkObject& other) {
         mIsOwner = other.mIsOwner;
         mClientID = other.mClientID;
         mIsPlayer = other.mIsPlayer;
-        mNetworkBehaviours = other.mNetworkBehaviours;
     }
     return *this;
 }
 
 NetworkObject::NetworkObject(NetworkObject&& other) noexcept
-    : Component{std::move(other)}, mIsOwner(other.mIsOwner), mClientID(other.mClientID), mIsPlayer(other.mIsPlayer),
-      mNetworkBehaviours(std::move(other.mNetworkBehaviours)) {
+    : Component{std::move(other)}, mIsOwner(other.mIsOwner), mClientID(other.mClientID), mIsPlayer(other.mIsPlayer) {
     other.mIsOwner = false;
     other.mClientID = SLNet::UNASSIGNED_RAKNET_GUID;
     other.mIsPlayer = false;
@@ -38,7 +34,6 @@ NetworkObject& NetworkObject::operator=(NetworkObject&& other) noexcept {
         mIsOwner = other.mIsOwner;
         mClientID = other.mClientID;
         mIsPlayer = other.mIsPlayer;
-        mNetworkBehaviours = std::move(other.mNetworkBehaviours);
 
         other.mIsOwner = false;
         other.mClientID = SLNet::UNASSIGNED_RAKNET_GUID;
@@ -60,12 +55,5 @@ bool NetworkObject::isOwner() const { return mIsOwner; }
 bool NetworkObject::isPlayer() const { return mIsPlayer; }
 
 int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
-
-void NetworkObject::addNetworkBehaviour(INetworkBehaviour* aNetworkBehaviour) {
-    mNetworkBehaviours.push_back(aNetworkBehaviour);
-    aNetworkBehaviour->setOwner(mIsOwner);
-}
-
-std::vector<INetworkBehaviour*> NetworkObject::getNetworkBehaviours() const { return mNetworkBehaviours; }
 
 void NetworkObject::setPlayer(bool aIsPlayer) { mIsPlayer = aIsPlayer; }

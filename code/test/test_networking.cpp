@@ -119,24 +119,10 @@ protected:
     void SetUp() override {}
 };
 
-TEST_F(NetworkBehaviourTest, AddNetworkObjectAndBehaviour) {
-    GameObject gameObject;
-    gameObject.addComponent<NetworkObject>();
-    gameObject.addComponent<ConcreteNetworkBehaviour>();
-    EXPECT_NO_THROW({ gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize(); });
-}
-
-TEST_F(NetworkBehaviourTest, AddBehaviourWithoutNetworkObject) {
-    GameObject gameObject;
-    gameObject.addComponent<ConcreteNetworkBehaviour>();
-    EXPECT_THROW({ gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize(); }, std::runtime_error);
-}
-
 TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
     GameObject gameObject;
     gameObject.addComponent<NetworkObject>();
     gameObject.addComponent<ConcreteNetworkBehaviour>();
-    gameObject.getComponents<ConcreteNetworkBehaviour>()[0]->initialize();
 
     INetworkBehaviour* behaviour = gameObject.getComponents<INetworkBehaviour>()[0];
 
