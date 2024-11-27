@@ -182,6 +182,11 @@ void SceneManager::loadScene(const std::string& sceneName)
 		// Add the object to the update list
 		EngineBravo::getInstance().addToUpdateObjects(*object);
 	}
+	for (GameObject* object : currentScene->getGameObjects())
+	{
+		EngineBravo::getInstance().addToUpdateObjects(*object);
+	}
+	EngineBravo::getInstance().updateAdditions();
 }
 
 Scene* SceneManager::getCurrentScene()
