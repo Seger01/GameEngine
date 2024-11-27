@@ -409,3 +409,5 @@ void RenderSystem::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& RenderSystem::getObjects() const { return mObjects; }
+
+void RenderSystem::clearObjects() { mObjects.clear(); }
