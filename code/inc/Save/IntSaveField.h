@@ -2,18 +2,16 @@
 
 #include <string>
 
-class IntSaveField {
+class IntSaveField
+{
 public:
-    IntSaveField(std::string aName);
-    IntSaveField(std::string aName, int aValue);
+	IntSaveField(const std::string& aName, int aValue = 0);
 
-    std::string getName() const;
-
-    void setValue(int aValue);
-
-    int getValue() const;
+	std::string getName() const;
+	void setValue(int aValue);
+	int getValue() const;
 
 private:
-    std::string mName;
-    int mValue;
+	std::string mName;
+	int mValue;
 };

@@ -12,6 +12,6 @@ public:
 	float getValue() const;
 
 private:
-	const std::string mName;
+	std::string mName;
 	float mValue;
 };

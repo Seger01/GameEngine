@@ -2,18 +2,16 @@
 
 #include <string>
 
-class StringSaveField {
+class StringSaveField
+{
 public:
-    StringSaveField(std::string aName);
-    StringSaveField(std::string aName, std::string aValue);
+	StringSaveField(const std::string& aName, const std::string& aValue = "");
 
-    std::string getName() const;
-
-    void setValue(std::string aValue);
-
-    std::string getValue() const;
+	std::string getName() const;
+	void setValue(const std::string& aValue);
+	std::string getValue() const;
 
 private:
-    std::string mName;
-    std::string mValue;
+	std::string mName;
+	std::string mValue;
 };
