@@ -1,98 +1,111 @@
 #include "MapToGraph.h"
 #include <iostream>
 
-// Constructor
-MapToGraph::MapToGraph(const TileMapData& tileMapData) 
-    : mTileMapData(tileMapData) {
-    preprocessWalkableTiles();
+MapToGraph::MapToGraph(const TileMapData& aTileMapData)
+	: mTileMapData(aTileMapData), mDirections{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+{
+	preprocessWalkableTiles();
 }
+
 
 // Preprocess walkable tiles
-void MapToGraph::preprocessWalkableTiles() {
-    for (const auto& [tileID, tileInfo] : mTileMapData.mTileInfoMap) {
-        if (tileInfo.mColliders.empty()) {
-            mWalkableTiles.insert(tileID);
-        }
-    }
+void MapToGraph::preprocessWalkableTiles()
+{
+	for (const auto& [tileID, tileInfo] : mTileMapData.mTileInfoMap)
+	{
+		if (tileInfo.mColliders.empty())
+		{
+			mWalkableTiles.insert(tileID);
+		}
+	}
 }
 
-// Find the first non-empty layer
-const std::vector<std::vector<int>>* MapToGraph::findFloorLayer() const {
-    for (size_t i = 0; i < mTileMapData.mLayers.size(); ++i) {
-        if (mTileMapData.mLayerNames[i] == "Graph") {
-            return &mTileMapData.mLayers[i];
-        }
-    }
-    return nullptr;
+
+// Find the Graph layer
+const std::vector<std::vector<int>>* MapToGraph::findGraphLayer() const
+{
+	for (size_t i = 0; i < mTileMapData.mLayers.size(); ++i)
+	{
+		if (mTileMapData.mLayerNames[i] == "Graph")
+		{
+			return &mTileMapData.mLayers[i];
+		}
+	}
+	return nullptr;
 }
+
 
 // Convert tilemap to graph
-void MapToGraph::convertToGraph() {
-    const auto* floorLayer = findFloorLayer();
-    if (!floorLayer) {
-        std::cerr << "Floor layer not found!" << std::endl;
-        return;
-    }
+void MapToGraph::convertToGraph()
+{
+	const auto* graphLayer = findGraphLayer();
+	if (!graphLayer)
+	{
+		std::cerr << "Floor layer not found!" << std::endl;
+		return;
+	}
 
-    for (size_t row = 0; row < floorLayer->size(); ++row) {
-        for (size_t col = 0; col < (*floorLayer)[row].size(); ++col) {
-            int currentTileID = (*floorLayer)[row][col];
-           // if (isWalkableTile(currentTileID)) {
-                int currentNode = calculateNodeIndex(row, col, floorLayer->at(row).size());
-                connectAdjacentNodes(currentNode, row, col, *floorLayer);
-
-                std::cout << "Processing Tile at (" << row << ", " << col << "), ID: " 
-                << currentTileID << ", Node Index: " << currentNode << std::endl;
-          //  }
-        }
-    }
+	for (size_t row = 0; row < graphLayer->size(); ++row)
+	{
+		for (size_t col = 0; col < (*graphLayer)[row].size(); ++col)
+		{
+			int currentTileID = (*graphLayer)[row][col];
+			int currentNode = calculateNodeIndex(row, col, graphLayer->at(row).size());
+			connectAdjacentNodes(currentNode, row, col, *graphLayer);
+		}
+	}
 }
+
 
 // Calculate unique node index
-int MapToGraph::calculateNodeIndex(size_t row, size_t col, size_t width) const {
-    return row * width + col;
-}
+int MapToGraph::calculateNodeIndex(size_t aRow, size_t aCol, size_t aWidth) const { return aRow * aWidth + aCol; }
+
 
 // Connect adjacent walkable nodes
-void MapToGraph::connectAdjacentNodes(int currentNode, size_t row, size_t col, const std::vector<std::vector<int>>& layer) {
-    for (const auto& [dx, dy] : mDirections) {
-        size_t newRow = row + dx;
-        size_t newCol = col + dy;
+void MapToGraph::connectAdjacentNodes(int aCurrentNode, size_t aRow, size_t aCol,
+									  const std::vector<std::vector<int>>& aLayer)
+{
+	for (const auto& [dx, dy] : mDirections)
+	{
+		size_t newRow = aRow + dx;
+		size_t newCol = aCol + dy;
 
-        // Bounds and walkability check
-        if (newRow < layer.size() && 
-            newCol < layer[newRow].size() && 
-            isWalkableTile(layer[newRow][newCol])) {
-            
-            int adjacentNode = calculateNodeIndex(newRow, newCol, layer[newRow].size());
-            addEdge(currentNode, adjacentNode);
-        }
-    }
+		// Bounds and walkability check
+		if (newRow < aLayer.size() && newCol < aLayer[newRow].size() && isWalkableTile(aLayer[newRow][newCol]))
+		{
+			int adjacentNode = calculateNodeIndex(newRow, newCol, aLayer[newRow].size());
+			addEdge(aCurrentNode, adjacentNode);
+		}
+	}
 }
+
 
 // Check if a tile is walkable
-bool MapToGraph::isWalkableTile(int tileID) const {
-    return tileID != 0 && mWalkableTiles.count(tileID) > 0;
-}
+bool MapToGraph::isWalkableTile(int aTileID) const { return aTileID != 0 && mWalkableTiles.count(aTileID) > 0; }
+
 
 // Add an edge between nodes
-void MapToGraph::addEdge(int from, int to) {
-    mAdjacencyList[from].push_back(to);
-    mAdjacencyList[to].push_back(from);
+void MapToGraph::addEdge(int aFrom, int aTo)
+{
+	mAdjacencyList[aFrom].push_back(aTo);
+	mAdjacencyList[aTo].push_back(aFrom);
 }
+
 
 // Get the adjacency list
-const std::unordered_map<int, std::vector<int>>& MapToGraph::getAdjacencyList() const {
-    return mAdjacencyList;
-}
+const std::unordered_map<int, std::vector<int>>& MapToGraph::getAdjacencyList() const { return mAdjacencyList; }
+
 
 // Print the graph for debugging
-void MapToGraph::printGraph() const {
-    for (const auto& pair : mAdjacencyList) {
-        std::cout << "Node " << pair.first << ": ";
-        for (int neighbor : pair.second) {
-            std::cout << neighbor << " ";
-        }
-        std::cout << std::endl;
-    }
+void MapToGraph::printGraph() const
+{
+	for (const auto& pair : mAdjacencyList)
+	{
+		std::cout << "Node " << pair.first << ": ";
+		for (int neighbor : pair.second)
+		{
+			std::cout << neighbor << " ";
+		}
+		std::cout << std::endl;
+	}
 }
