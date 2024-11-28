@@ -109,7 +109,7 @@ void RoomBehaviourScript::updateDoors(const SpriteDef& spriteDef) {
                 sprite->setSource(sourceRect);
             }
         }
-        std::vector<RigidBody*> bodies = doorPart->getComponents<RigidBody>();
+        std::vector<BoxCollider*> bodies = doorPart->getComponents<BoxCollider>();
         if (!bodies.empty()) {
             bodies.at(0)->setActive(mDoorsOpen);
         }

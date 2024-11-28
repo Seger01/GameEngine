@@ -1,31 +1,34 @@
 #pragma once
 
 #include "AudioSource.h"
-#include "GameObject.h"
 #include "IAudioFacade.h"
-#include <functional>
 #include <memory>
 #include <vector>
 
-class AudioManager {
+class GameObject;
+
+class AudioManager
+{
 public:
-    AudioManager();
+	AudioManager();
 
 public:
-    void play(const AudioSource& aAudio);
-    void stop(const AudioSource& aAudio);
-    void wake();
+	void play(const AudioSource& aAudio);
+	void stop(const AudioSource& aAudio);
+	void wake();
 
 public:
-    IAudioFacade& getFacade();
+	IAudioFacade& getFacade();
 
 public:
-    void loadSound(const AudioSource& aAudio);
-    void clearSounds();
-    void addObject(GameObject& aObject);
-    void removeObject(GameObject& aObject);
+	void loadSound(const AudioSource& aAudio);
+	void clearSounds();
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
+	void clearObjects();
 
 private:
-    std::vector<std::reference_wrapper<GameObject>> mObjects;
-    std::unique_ptr<IAudioFacade> mFacade;
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	std::unique_ptr<IAudioFacade> mFacade;
 };

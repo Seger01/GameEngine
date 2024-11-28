@@ -22,9 +22,17 @@ public:
     bool isTrigger() const;
     void setTrigger(bool isTrigger);
 
+    filterCategory getFilterCategory() const;
+    void setFilterCategory(filterCategory category);
+
+    std::vector<filterCategory> getCollideWith() const;
+    void setCollideWith(std::vector<filterCategory> aCollideWith);
+
 private:
     bool mIsTrigger;
     float mWidth;
     float mHeight;
     float mRotation;
+    std::vector<filterCategory> mCollideWith;
+    filterCategory mFilterCategory;
 };

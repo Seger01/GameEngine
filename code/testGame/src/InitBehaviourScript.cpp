@@ -60,7 +60,6 @@ void InitBehaviourScript::createLevel1() {
 
     gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
     gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
-
     gameObject2->addComponent<RigidBody>();
     RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
     rigidBody->setHasGravity(true);
@@ -208,12 +207,14 @@ void InitBehaviourScript::createLevel1() {
                         // Add BoxCollider components to the GameObject
                         for (const auto& collider : tileInfo.mColliders) {
                             BoxCollider* boxCollider = new BoxCollider();
+                            // boxCollider->setFilterCategory(1);
                             Transform transform;
                             transform.position.x = collider.x;
                             transform.position.y = collider.y;
                             boxCollider->setTransform(transform);
                             boxCollider->setWidth(collider.mWidth);
                             boxCollider->setHeight(collider.mHeight);
+
                             if (isDoorsLayer) {
                                 boxCollider->setActive(false);
                             }

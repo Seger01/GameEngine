@@ -33,16 +33,18 @@ public:
     void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
 
     void setPosition(Vector2 aPosition, BodyID aBodyID);
+    void setRotation(float aRotation, BodyID aBodyID);
     void setGravity(Vector2 aGravity);
-    std::vector<std::pair<int, int>> getContactEvents();
-    std::vector<std::pair<int, int>> getSensorEvents();
 
     Vector2 getPosition(BodyID aBodyID);
+    float getRotation(BodyID aBodyID);
     Vector2 getGravity();
 
     void setBodyActivity(bool aState, BodyID aBodyID);
 
     b2BodyId convertToB2BodyID(BodyID aBodyID);
+    std::vector<std::pair<int, int>> getContactEvents();
+    std::vector<std::pair<int, int>> getSensorEvents();
 
 private:
     b2WorldId mWorldID;
