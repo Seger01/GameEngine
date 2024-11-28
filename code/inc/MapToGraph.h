@@ -5,6 +5,14 @@
 #include <unordered_set>
 #include <vector>
 
+/**
+ * @brief 
+ * Responsible for converting a tilemap graph layer to a graph.
+ * Use convertToGraph() to convert the graph layer to a graph.
+ * The graph is represented as an adjacency list.
+ * @param 
+ * aTileMapData: A const reference to a TileMapData object.
+ */
 class MapToGraph
 {
 public:

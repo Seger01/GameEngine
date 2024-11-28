@@ -4,6 +4,16 @@
 #include <unordered_map>
 #include <vector>
 
+/**
+ * @brief 
+ * Responsible for finding the shortest path between two nodes in a graph using the A* algorithm.
+ * The graph is represented as an adjacency list.
+ * use findPath() to find the shortest path between two nodes.
+ * @param 
+ * aAdjacencyList: A const reference to an adjacency list representing the graph.
+ * aMapWidth: The width of the map.
+ * aMapHeight: The height of the map.
+ */
 class Pathfinding
 {
 public:

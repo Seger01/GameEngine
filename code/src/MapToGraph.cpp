@@ -26,7 +26,7 @@ const std::vector<std::vector<int>>* MapToGraph::findGraphLayer() const
 {
 	for (size_t i = 0; i < mTileMapData.mLayers.size(); ++i)
 	{
-		if (mTileMapData.mLayerNames[i] == "Graph")
+		if (mTileMapData.mLayerNames[i] == "Graph")std::cerr << "Floor layer not found!" << std::endl;
 		{
 			return &mTileMapData.mLayers[i];
 		}
@@ -41,7 +41,7 @@ void MapToGraph::convertToGraph()
 	const auto* graphLayer = findGraphLayer();
 	if (!graphLayer)
 	{
-		std::cerr << "Floor layer not found!" << std::endl;
+		std::runtime_error("Graph layer not found in map! (MapToGraph::convertToGraph)");
 		return;
 	}
 
