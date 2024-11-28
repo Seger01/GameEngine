@@ -1,3 +1,8 @@
+/**
+ * @file SaveArray.h
+ *
+ * Contains the declaration of the SaveArray class.
+ */
 #pragma once
 
 #include "FloatSaveField.h"
@@ -8,6 +13,12 @@
 #include <string>
 #include <vector>
 
+/**
+ * @class SaveArray
+ *
+ * @brief A class representing an array of fields in a save game. Contains a name and three vectors (one of each save
+ * field type).
+ */
 class SaveArray
 {
 public:

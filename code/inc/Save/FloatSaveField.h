@@ -1,7 +1,17 @@
+/**
+ * @file FloatSaveField.h
+ *
+ * Contains the declaration of the FloatSaveField class.
+ */
 #pragma once
 
 #include <string>
 
+/**
+ * @class FloatSaveField
+ *
+ * @brief A class representing a float field in a save game. Contains a name and a value.
+ */
 class FloatSaveField
 {
 public:

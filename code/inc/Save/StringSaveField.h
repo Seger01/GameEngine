@@ -1,7 +1,17 @@
+/**
+ * @file StringSaveField.h
+ *
+ * Contains the declaration of the StringSaveField class.
+ */
 #pragma once
 
 #include <string>
 
+/**
+ * @class StringSaveField
+ *
+ * @brief A class representing a string field in a save game. Contains a name and a value.
+ */
 class StringSaveField
 {
 public:
