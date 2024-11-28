@@ -2,18 +2,16 @@
 
 #include <string>
 
-class FloatSaveField {
+class FloatSaveField
+{
 public:
-    FloatSaveField(std::string aName);
-    FloatSaveField(std::string aName, float aValue);
+	FloatSaveField(const std::string& aName, float aValue = 0);
 
-    std::string getName() const;
-
-    void setValue(float aValue);
-
-    float getValue() const;
+	std::string getName() const;
+	void setValue(float aValue);
+	float getValue() const;
 
 private:
-    std::string mName;
-    float mValue;
+	const std::string mName;
+	float mValue;
 };
