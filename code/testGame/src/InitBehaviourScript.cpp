@@ -88,7 +88,7 @@ void InitBehaviourScript::createLevel1() {
     int mapHeight = 50; 
     std::shared_ptr<MapToGraph> mapToGraph = std::make_shared<MapToGraph>(tileMapData);
     mapToGraph->convertToGraph();
-    mapToGraph->printGraph();
+    //mapToGraph->printGraph();
     std::shared_ptr<Pathfinding> pathfinding = std::make_shared<Pathfinding>(mapToGraph->getAdjacencyList(), mapWidth, mapHeight);
 
     for (const auto& roomTrigger : tileMapData.mRoomTriggers) {

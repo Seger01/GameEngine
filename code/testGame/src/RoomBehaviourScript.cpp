@@ -81,8 +81,8 @@ void RoomBehaviourScript::openDoors() {
 }
 
 void RoomBehaviourScript::closeDoors() {
-    updateDoors(mClosedDoorSpriteDef);
     mDoorsOpen = false;
+    updateDoors(mClosedDoorSpriteDef);
     // std::cout << "Doors closed" << std::endl;
 }
 

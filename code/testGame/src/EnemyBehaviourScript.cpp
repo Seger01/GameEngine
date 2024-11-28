@@ -28,17 +28,8 @@ void EnemyBehaviourScript::move() {
 
         Transform enemyTransform = mGameObject->getTransform();
 
-        // Debug prints
-        std::cout << "Current Path Index: " << mPathIndex << std::endl;
-        std::cout << "Target Node: " << targetNode << std::endl;
-        std::cout << "Target X: " << targetX << " Target Y: " << targetY << std::endl;
-        std::cout << "Current Position: (" << enemyTransform.position.x << ", " << enemyTransform.position.y << ")"
-                  << std::endl;
-
         int currentTileX = static_cast<int>(enemyTransform.position.x / 16);
         int currentTileY = static_cast<int>(enemyTransform.position.y / 16);
-
-        std::cout << "Current Tile X: " << currentTileX << " Current Tile Y: " << currentTileY << std::endl;
 
         // Determine movement direction
         int moveX = (targetX > currentTileX) ? 1 : (targetX < currentTileX) ? -1 : 0;
@@ -49,14 +40,9 @@ void EnemyBehaviourScript::move() {
         enemyTransform.position.y += moveY;
 
         mGameObject->setTransform(enemyTransform);
-
-        std::cout << "Moving enemy to (" << enemyTransform.position.x << ", " << enemyTransform.position.y << ")"
-                  << std::endl;
-
         // Check if reached the target tile
         if (currentTileX == targetX && currentTileY == targetY) {
             mPathIndex++;
-            std::cout << "Reached target tile. Moving to next path index." << std::endl;
         }
     }
 }
