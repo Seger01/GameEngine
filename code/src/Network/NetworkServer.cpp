@@ -197,12 +197,13 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
 
 void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID clientID = aPacket->guid;
-    if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST) {
-        EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
+	if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST)
+	{																				// if host don't add
+		EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
                                                                                     // instantiation
-    }
+	}
 
-    sendPlayerInstantiation(clientID); // Send instantiation message to all clients
+	sendPlayerInstantiation(clientID); // Send instantiation message to all clients
 }
 
 void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {

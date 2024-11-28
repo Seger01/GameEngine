@@ -4,6 +4,8 @@ NetworkHost::NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjec
 {
 	mServer = std::make_unique<NetworkServer>(aObjects, aTickRate);
 	mClient = std::make_unique<NetworkClient>(aObjects, aTickRate);
+	mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
+	mClient->connectToServer();
 }
 
 void NetworkHost::update()
@@ -16,6 +18,4 @@ void NetworkHost::update()
 	{
 		mClient->update();
 	}
-	mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
-    mClient->connectToServer();
 }

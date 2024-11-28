@@ -195,8 +195,6 @@ void EngineBravo::addToUpdateObjects(GameObject& aGameObject)
 		if (aGameObject.hasComponent<RigidBody>())
 		{
 			BodyID bodyIDA = aGameObject.getComponents<RigidBody>()[0]->getBodyId();
-			std::cout << "EngineBravo::addToUpdateObjects(): adding " << bodyIDA.world0 << bodyIDA.bodyID
-					  << bodyIDA.revision << std::endl;
 		}
 		mUpdateObjects.push_back(aGameObject);
 	}
