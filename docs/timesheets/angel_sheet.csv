@@ -68,3 +68,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-23, 10:00, 3.0, finished physics tests; start at implementing circlecollider; writing fix for translate step offset when using colliders of different sizes
 2024-11-26, 8:30, 8.5, Added box2d remove function; project class with bob
 2024-11-27, 8:00, 8.75, helped Siem debug updatequeue; added collision filtering; addded rotational force to box2d body; finished circle colliders
+2024-11-28, 13:00, 2.0, Re wrote some tests; added temporary fix for translate step
