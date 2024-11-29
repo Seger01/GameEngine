@@ -73,7 +73,8 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 	{
 		b2Polygon polygon =
 			b2MakeOffsetBox(boxCollider->getWidth(), boxCollider->getHeight(),
-							{boxCollider->getTransform().position.x, boxCollider->getTransform().position.y}, 0.0f);
+							{boxCollider->getTransform().position.x, boxCollider->getTransform().position.y},
+							boxCollider->getRotation());
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = aBodyProxy.getDensity();
 		shapeDef.friction = aBodyProxy.getFriction();
@@ -90,29 +91,6 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 		shapeDef.filter.maskBits = maskBits;
 		b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
 	}
-
-	// for (CircleCollider* circleCollider : aBodyProxy.getCircleColliders())
-	// {
-	// 	b2Circle circleShape;
-	//
-	// 	circleShape.radius = circleCollider->getRadius();
-	// 	circleShape.center = {circleCollider->getTransform().position.x, circleCollider->getTransform().position.y};
-	// 	b2ShapeDef shapeDef = b2DefaultShapeDef();
-	// 	shapeDef.density = aBodyProxy.getDensity();
-	// 	shapeDef.friction = aBodyProxy.getFriction();
-	// 	shapeDef.restitution = aBodyProxy.getRestitution();
-	//
-	// 	uint16_t maskBits = 0;
-	// 	for (int category : circleCollider->getCollideWithCategory())
-	// 	{
-	// 		maskBits |= (1 << category); // Generate the bitmask
-	// 	}
-	// 	shapeDef.filter.categoryBits = (1 << circleCollider->getCollideCategory());
-	//
-	// 	shapeDef.filter.maskBits = maskBits;
-	// 	shapeDef.isSensor = circleCollider->getTrigger();
-	// 	b2CreateCircleShape(bodyID, &shapeDef, &circleShape);
-	// }
 }
 
 void World::deleteBody(BodyID aBodyID)

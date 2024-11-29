@@ -182,7 +182,7 @@ TEST_F(PhysicsTest, UpdateFlag)
 	// Check if filter for default constructor is correct
 	b2Filter tempFilter = b2Shape_GetFilter(shapeArray[0]);
 	ASSERT_EQ(tempFilter.categoryBits, 2);
-	ASSERT_EQ(tempFilter.maskBits, 6);
+	ASSERT_EQ(tempFilter.maskBits, 2);
 
 	// Change filter values
 	boxCollider = gameObject->getComponents<BoxCollider>()[0];

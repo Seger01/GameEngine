@@ -58,16 +58,16 @@ GameObject* PlayerPrefabFactory::createPlayerPrefab()
 	GameObject* defaultPlayerPrefab = new GameObject;
 	defaultPlayerPrefab->setName("Player");
 
-    setTransform(defaultPlayerPrefab);
-    addNetworkObject(defaultPlayerPrefab);
-    addPlayerBehaviourScript(defaultPlayerPrefab);
-    setTag(defaultPlayerPrefab);
-    addNetworkTransform(defaultPlayerPrefab);
-    addAnimations(defaultPlayerPrefab);
-    addParticleEmitter(defaultPlayerPrefab);
-    addRigidBody(defaultPlayerPrefab);
-    addCollider(defaultPlayerPrefab);
-    addSound(defaultPlayerPrefab);
+	setTransform(defaultPlayerPrefab);
+	addNetworkObject(defaultPlayerPrefab);
+	addPlayerBehaviourScript(defaultPlayerPrefab);
+	setTag(defaultPlayerPrefab);
+	addNetworkTransform(defaultPlayerPrefab);
+	addAnimations(defaultPlayerPrefab);
+	addParticleEmitter(defaultPlayerPrefab);
+	addRigidBody(defaultPlayerPrefab);
+	addCollider(defaultPlayerPrefab);
+	addSound(defaultPlayerPrefab);
 
 	return defaultPlayerPrefab;
 }
@@ -253,11 +253,12 @@ void PlayerPrefabFactory::addCollider(GameObject* gameObject)
 	boxCollider->setWidth(16);	// 16
 	boxCollider->setHeight(25); // 25
 	boxCollider->setTransform(transform);
-	boxCollider->setCollideCategory(2);
-	boxCollider->setCollideWithCategory({1, 2, 3});
+	// boxCollider->setCollideCategory(2);
+	// boxCollider->setCollideWithCategory({1, 2, 3});
 
 	gameObject->addComponent(boxCollider);
 }
+
 void PlayerPrefabFactory::addSound(GameObject* gameObject)
 {
 	AudioManager& audioManager = EngineBravo::getInstance().getAudioManager();
