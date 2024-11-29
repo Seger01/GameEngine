@@ -16,12 +16,7 @@ void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 						   });
 	if (it == mUpdateObjects.end())
 	{
-		if (aGameObject.hasComponent<RigidBody>())
-		{
-			BodyID bodyIDA = aGameObject.getComponents<RigidBody>()[0]->getBodyId();
-			std::cout << "UpdateQueue::addToUpdateObjects(): adding " << bodyIDA.world0 << bodyIDA.bodyID
-					  << bodyIDA.revision << std::endl;
-		}
+		// Object is not in the list, add it
 		mUpdateObjects.push_back(aGameObject);
 	}
 }
