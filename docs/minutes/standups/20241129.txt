@@ -1,0 +1,24 @@
+Minutes 29-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: 
+- Angel: Finished filter system for physics. Write tests for physics, these are now almost finished. Debug physics update queue.
+- Ronan: Implementing graph functionality. Graph now seems to work. A* can be applied to the graph.
+- Sean: Debugging networking. Wrote untested networking game impla.
+- Seger: Finished camera functionality and wrote tests.
+
+What is going to be done:
+- Siem:
+- Angel: Update translatino step between box2d and physics system.
+- Ronan: Write tests + code standard for graph functionality. Code standard for tilemapparser
+- Sean: Write networking game impla.
+- Seger: Write implementation for engine demo.
+
+Roadblocks:
+- Siem:
+- Angel: -
+- Ronan: -
+- Sean: Wait for other required code to be available on development.
+- Seger: -

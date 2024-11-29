@@ -5,17 +5,18 @@
 partition "gameloop" {
     "Handle Input" --> "Run Behaviour scripts"
     "Run Behaviour scripts" --> "Update particles"
+    "Update particles" --> "Update managers (components)"
     if "Physics requires update"
     --> [true] "Update Physics"
             if "Physics behind render" then
         --> [true] "Update Physics"
         else
-        --> [false] "Check Delete Queue"
+        --> [false] "Update managers (delete queue)"
         endif
     else
-    --> [false] "Check Delete Queue"
+    --> [false] "Update managers (delete queue)"
     endif
-    "Check Delete Queue" --> "Render" 
+    "Update managers (delete queue)" --> "Render" 
     "Render" --> "Handle Input"
 
 }

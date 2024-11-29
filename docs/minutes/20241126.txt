@@ -1,0 +1,21 @@
+Notes class 26 November
+Group Crepe:
+- Engine is largely finished, only incidental small changes remain
+- Do not have a very concrete planning
+- Tests: have a few unit tests, for the managers and utilities. Used to avoid writing subs, because systems are proven to work
+- Integration tests: for verifying ECS system and its dependencies
+- No code coverage tests, because of potentially misleading results.
+- Similarly to us, validation app is purely for demonstrating that the customers' requirements are met.
+- No static code checks
+
+Group Alpha:
+- Very slightly behind schedule, but not significantly
+- Use GitHub for keeping track of finished tasks
+
+
+Question Bob:
+AI: There has to be 'something related to AI' present in-engine
+- Definitely recommends making a graph available for usage in shortest path
+
+Multiplayer: is customer happy with current multiplayer implementation?
+'Ja. Is prima.'
