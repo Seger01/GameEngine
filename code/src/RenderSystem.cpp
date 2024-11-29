@@ -176,14 +176,6 @@ int RenderSystem::getLowestLayer(Scene* aScene)
 				}
 			}
 		}
-		if (typeid(*gameObject) == typeid(Text))
-		{
-			Text& text = dynamic_cast<Text&>(*gameObject);
-			if (text.getLayer() < lowestLayer)
-			{
-				lowestLayer = text.getLayer();
-			}
-		}
 	}
 	return lowestLayer;
 }
@@ -221,14 +213,6 @@ int RenderSystem::getHighestLayer(Scene* aScene)
 				{
 					highestLayer = particleEmitter->getLayer();
 				}
-			}
-		}
-		if (typeid(*gameObject) == typeid(Text))
-		{
-			Text& text = dynamic_cast<Text&>(*gameObject);
-			if (text.getLayer() > highestLayer)
-			{
-				highestLayer = text.getLayer();
 			}
 		}
 	}
@@ -425,5 +409,3 @@ void RenderSystem::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& RenderSystem::getObjects() const { return mObjects; }
-
-void RenderSystem::clearObjects() { mObjects.clear(); }

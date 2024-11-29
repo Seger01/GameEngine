@@ -165,5 +165,3 @@ void UIManager::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& UIManager::getObjects() const { return mObjects; }
-
-void UIManager::clearObjects() { mObjects.clear(); }

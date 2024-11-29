@@ -44,7 +44,6 @@ public:
 	void addObject(GameObject& aObject);
 	void removeObject(GameObject& aObject);
 	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
-	void clearObjects();
 
 private:
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
