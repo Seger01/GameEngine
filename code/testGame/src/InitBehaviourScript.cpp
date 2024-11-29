@@ -204,8 +204,6 @@ void InitBehaviourScript::createLevel1()
 
 						gameObject->addComponent(sprite);
 
-<<<<<<< HEAD
-						// Add BoxCollider components to the GameObject
 						for (const auto& collider : tileInfo.mColliders)
 						{
 							BoxCollider* boxCollider = new BoxCollider();
@@ -216,21 +214,6 @@ void InitBehaviourScript::createLevel1()
 							boxCollider->setTransform(transform);
 							boxCollider->setWidth(collider.mWidth);
 							boxCollider->setHeight(collider.mHeight);
-							// boxCollider->setCollideCategory(4);
-							// boxCollider->setCollideWithCategory({4});
-=======
-						// Add BoxCollider components to the GameObject
-						for (const auto& collider : tileInfo.mColliders)
-						{
-							BoxCollider* boxCollider = new BoxCollider();
-							// boxCollider->setFilterCategory(1);
-							Transform transform;
-							transform.position.x = collider.x;
-							transform.position.y = collider.y;
-							boxCollider->setTransform(transform);
-							boxCollider->setWidth(collider.mWidth);
-							boxCollider->setHeight(collider.mHeight);
->>>>>>> development
 
 							if (isDoorsLayer)
 							{
