@@ -15,6 +15,7 @@
 #include "SceneManager.h"
 #include "Time.h"
 #include "UIManager.h"
+#include "UpdateQueue.h"
 #include <queue>
 
 class EngineBravo
@@ -31,6 +32,7 @@ public:
 	SceneManager& getSceneManager();
 	RenderSystem& getRenderSystem();
 	ResourceManager& getResourceManager();
+	ParticleSystem& getParticleSystem();
 	NetworkManager& getNetworkManager();
 	SaveGameManager& getSaveGameManager();
 	AudioManager& getAudioManager();
@@ -41,11 +43,7 @@ public:
 	// UIManager& getUIManager();
 	PhysicsManager& getPhysicsManager();
 
-	void addToUpdateObjects(GameObject& aGameObject);
-	void clearUpdateObjects();
-	void updateAdditions();
-	void updateRemovals();
-	void clearManagerObjects();
+	UpdateQueue& getUpdateQueue();
 
 private:
 	// Private constructor and destructor
@@ -64,7 +62,6 @@ private:
 	void handleEvent(const Event& aEvent);
 
 private:
-	std::vector<std::reference_wrapper<GameObject>> mUpdateObjects;
 	int mFrameRateLimit;
 	bool mRunning;
 
@@ -82,6 +79,8 @@ private:
 
 	PhysicsManager mPhysicsManager;
 	// AnimationManager animationManager;
+
+	UpdateQueue mUpdateQueue;
 };
 
 #endif // ENGINEBRAVO_H
