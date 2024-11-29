@@ -236,5 +236,3 @@ void NetworkManager::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getObjects() const { return mObjects; }
-
-void NetworkManager::clearObjects() { mObjects.clear(); }

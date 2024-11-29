@@ -44,5 +44,3 @@ void ParticleSystem::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& ParticleSystem::getObjects() const { return mObjects; }
-
-void ParticleSystem::clearObjects() { mObjects.clear(); }
