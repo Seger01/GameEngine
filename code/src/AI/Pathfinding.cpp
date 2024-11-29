@@ -12,7 +12,7 @@
  * @param aMapHeight 
  */
 Pathfinding::Pathfinding(const std::unordered_map<int, std::vector<int>>& aAdjacencyList, int aMapWidth, int aMapHeight)
-	: mAdjacencyList(aAdjacencyList), mMapWidth(aMapWidth), mMapHeight(aMapHeight)
+    : mAdjacencyList(aAdjacencyList), mMapWidth(aMapWidth), mMapHeight(aMapHeight)
 {
 }
 
@@ -25,52 +25,43 @@ Pathfinding::Pathfinding(const std::unordered_map<int, std::vector<int>>& aAdjac
  */
 std::vector<int> Pathfinding::findPath(int aStart, int aGoal) const
 {
-	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> openSet;
-	openSet.emplace(0.0, aStart);
-	std::unordered_map<int, int> cameFrom;
-	std::unordered_map<int, double> g;
-	g[aStart] = 0.0;
-	std::unordered_map<int, double> f;
-	f[aStart] = distance(aStart, aGoal);
-	std::unordered_set<int> openSetHash;
-	openSetHash.insert(aStart);
+    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> openSet;
+    openSet.emplace(0.0, aStart);
+    std::unordered_map<int, int> cameFrom;
+    std::unordered_map<int, double> g;
+    g[aStart] = 0.0;
+    std::unordered_map<int, double> f;
+    f[aStart] = distance(aStart, aGoal);
 
-	while (!openSet.empty())
-	{
-		int current = openSet.top().second;
-		openSet.pop();
-		openSetHash.erase(current);
+    while (!openSet.empty())
+    {
+        int current = openSet.top().second;
+        openSet.pop();
 
-		if (current == aGoal)
-		{
-			return reconstructPath(cameFrom, current);
-		}
+        if (current == aGoal)
+        {
+            return reconstructPath(cameFrom, current);
+        }
 
-		for (int neighbor : mAdjacencyList.at(current))
-		{
-			double tentative_g = g[current] + distance(current, neighbor);
+        for (int neighbor : mAdjacencyList.at(current))
+        {
+            double tentative_g = g[current] + distance(current, neighbor);
 
-			if (g.find(neighbor) == g.end() || tentative_g < g[neighbor])
-			{
-				cameFrom[neighbor] = current;
-				g[neighbor] = tentative_g;
-				f[neighbor] = g[neighbor] + distance(neighbor, aGoal);
+            if (g.find(neighbor) == g.end() || tentative_g < g[neighbor])
+            {
+                cameFrom[neighbor] = current;
+                g[neighbor] = tentative_g;
+                f[neighbor] = g[neighbor] + distance(neighbor, aGoal);
+                openSet.emplace(f[neighbor], neighbor);
+            }
+        }
+    }
 
-				if (openSetHash.find(neighbor) == openSetHash.end())
-				{
-					openSet.emplace(f[neighbor], neighbor);
-					openSetHash.insert(neighbor);
-				}
-			}
-		}
-	}
-
-	return {};
+    return {};
 }
 
-
 /**
- * @brief Find the distance between two nodes using the Manhattan distance
+ * @brief Calculates the Manhattan distance between two nodes
  * 
  * @param aNodeA 
  * @param aNodeB 
@@ -78,16 +69,15 @@ std::vector<int> Pathfinding::findPath(int aStart, int aGoal) const
  */
 double Pathfinding::distance(int aNodeA, int aNodeB) const
 {
-	int xA = aNodeA % mMapWidth;
-	int yA = aNodeA / mMapWidth;
-	int xB = aNodeB % mMapWidth;
-	int yB = aNodeB / mMapWidth;
-	return std::abs(xA - xB) + std::abs(yA - yB);
+    int xA = aNodeA % mMapWidth;
+    int yA = aNodeA / mMapWidth;
+    int xB = aNodeB % mMapWidth;
+    int yB = aNodeB / mMapWidth;
+    return std::abs(xA - xB) + std::abs(yA - yB);
 }
 
-
 /**
- * @brief Reconstruct the path
+ * @brief Reconstructs the path from the cameFrom map
  * 
  * @param aCameFrom 
  * @param aCurrent 
@@ -95,13 +85,13 @@ double Pathfinding::distance(int aNodeA, int aNodeB) const
  */
 std::vector<int> Pathfinding::reconstructPath(const std::unordered_map<int, int>& aCameFrom, int aCurrent) const
 {
-	std::vector<int> path;
-	while (aCameFrom.find(aCurrent) != aCameFrom.end())
-	{
-		path.push_back(aCurrent);
-		aCurrent = aCameFrom.at(aCurrent);
-	}
-	path.push_back(aCurrent);
-	std::reverse(path.begin(), path.end());
-	return path;
+    std::vector<int> path;
+    while (aCameFrom.find(aCurrent) != aCameFrom.end())
+    {
+        path.push_back(aCurrent);
+        aCurrent = aCameFrom.at(aCurrent);
+    }
+    path.push_back(aCurrent);
+    std::reverse(path.begin(), path.end());
+    return path;
 }

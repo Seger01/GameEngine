@@ -57,18 +57,10 @@ void MapToGraph::convertToGraph()
 		throw std::runtime_error("Graph layer not found in map! (MapToGraph::convertToGraph)");
 	}
 
-	for (int tile : mWalkableTiles)
-	{
-		std::cerr << tile << " ";
-	}
-	std::cerr << std::endl;
-
 	for (size_t row = 0; row < graphLayer->size(); ++row)
 	{
 		for (size_t col = 0; col < (*graphLayer)[row].size(); ++col)
 		{
-			int currentTileID = (*graphLayer)[row][col];
-
 			int currentNode = calculateNodeIndex(row, col, (*graphLayer)[row].size());
 			connectAdjacentNodes(currentNode, row, col, graphLayer);
 		}
