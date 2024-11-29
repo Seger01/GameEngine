@@ -4,12 +4,25 @@
 #include <iostream>
 #include <unordered_set>
 
+/**
+ * @brief Construct a new Pathfinding object
+ * 
+ * @param aAdjacencyList 
+ * @param aMapWidth 
+ * @param aMapHeight 
+ */
 Pathfinding::Pathfinding(const std::unordered_map<int, std::vector<int>>& aAdjacencyList, int aMapWidth, int aMapHeight)
 	: mAdjacencyList(aAdjacencyList), mMapWidth(aMapWidth), mMapHeight(aMapHeight)
 {
 }
 
-// Find the path from the start node to the goal node using A*
+/**
+ * @brief Finds the shortest path between two nodes using the A* algorithm
+ * 
+ * @param aStart 
+ * @param aGoal 
+ * @return std::vector<int> 
+ */
 std::vector<int> Pathfinding::findPath(int aStart, int aGoal) const
 {
 	std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> openSet;
@@ -55,7 +68,14 @@ std::vector<int> Pathfinding::findPath(int aStart, int aGoal) const
 	return {};
 }
 
-// Find the Manhattan distance between two nodes
+
+/**
+ * @brief Find the distance between two nodes using the Manhattan distance
+ * 
+ * @param aNodeA 
+ * @param aNodeB 
+ * @return double 
+ */
 double Pathfinding::distance(int aNodeA, int aNodeB) const
 {
 	int xA = aNodeA % mMapWidth;
@@ -65,7 +85,14 @@ double Pathfinding::distance(int aNodeA, int aNodeB) const
 	return std::abs(xA - xB) + std::abs(yA - yB);
 }
 
-// Reconstruct the path from the cameFrom map
+
+/**
+ * @brief Reconstruct the path
+ * 
+ * @param aCameFrom 
+ * @param aCurrent 
+ * @return std::vector<int> 
+ */
 std::vector<int> Pathfinding::reconstructPath(const std::unordered_map<int, int>& aCameFrom, int aCurrent) const
 {
 	std::vector<int> path;
