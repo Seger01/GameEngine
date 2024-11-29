@@ -5,7 +5,6 @@ BoxCollider::BoxCollider(std::string aTag)
 	: Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mIsTrigger(false), mRotation(0.0f), mCollideWithCategory({1}),
 	  mCollideCategory(1)
 {
-	std::cout << "BoxCollider constructor" << std::endl;
 	// Constructor implementation
 }
 
