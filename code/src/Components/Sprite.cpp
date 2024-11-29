@@ -1,8 +1,10 @@
 #include "Components/Sprite.h"
 
-Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect)
-    : mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect), mTransform(Transform()),
-      mFlipX(false), mFlipY(false), mLayer(0), mColorFilter(Color(255, 255, 255, 255)) {}
+Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect, std::string aTag)
+	: Component{aTag}, mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect),
+	  mTransform(Transform()), mFlipX(false), mFlipY(false), mLayer(0), mColorFilter(Color(255, 255, 255, 255))
+{
+}
 
 // Copy constructor
 Sprite::Sprite(const Sprite& other)

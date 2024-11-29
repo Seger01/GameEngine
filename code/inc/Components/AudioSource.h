@@ -7,7 +7,7 @@
 
 class AudioSource : public Component {
 public:
-    AudioSource(std::string aPath, bool aIsMusic = false);
+    AudioSource(std::string aPath, bool aIsMusic = false, std::string aTag = "defaultAudioSource");
     void play(bool aLooping = false);
     void stop();
 

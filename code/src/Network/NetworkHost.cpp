@@ -1,12 +1,21 @@
-#include "NetworkHost.h"
-#include <stdexcept>
+#include "Network/NetworkHost.h"
 
-void NetworkHost::actAsClient()
+NetworkHost::NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate)
 {
-    throw std::runtime_error("NetworkHost::actAsClient() not implemented");
+	mServer = std::make_unique<NetworkServer>(aObjects, aTickRate);
+	mClient = std::make_unique<NetworkClient>(aObjects, aTickRate);
 }
 
-void NetworkHost::actAsServer()
+void NetworkHost::update()
 {
-    throw std::runtime_error("NetworkHost::actAsServer() not implemented");
+	if (mServer)
+	{
+		mServer->update();
+	}
+	if (mClient)
+	{
+		mClient->update();
+	}
+	mClient->setServerAddress("127.0.0.1"); // Automatically connect to local server
+    mClient->connectToServer();
 }

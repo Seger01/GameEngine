@@ -4,9 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
-AudioSource::AudioSource(std::string aPath, bool aIsMusic)
-    : Component("defaultAudioScource"), mPlayOnAwake{false}, mLoop{false},
-      mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0} {
+AudioSource::AudioSource(std::string aPath, bool aIsMusic, std::string aTag)
+    : Component(aTag), mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0} {
     mFileName = FSConverter().getResourcePath(aPath);
 }
 

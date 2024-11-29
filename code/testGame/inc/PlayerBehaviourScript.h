@@ -2,10 +2,10 @@
 #define PLAYERBEHAVIOURSCRIPT_H
 
 #include "Animation.h"
-#include "Components/IBehaviourScript.h"
 #include "GameObject.h"
+#include "Network/INetworkBehaviour.h"
 
-class PlayerBehaviourScript : public IBehaviourScript {
+class PlayerBehaviourScript : public INetworkBehaviour {
 public:
     void onStart() override;
     void onUpdate() override;

@@ -6,7 +6,8 @@
 
 class IBehaviourScript : public Component {
 public:
-    virtual ~IBehaviourScript() {}
+    IBehaviourScript(std::string aTag = "defaultBehaviourScript") : Component(aTag) {}
+    virtual ~IBehaviourScript() = default;
     virtual void onStart() = 0;
     virtual void onUpdate() = 0;
     virtual void onCollide(GameObject* aGameObject) {}
