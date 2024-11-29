@@ -1,0 +1,164 @@
+        -:    0:Source:/home/angel/projectMinor/Bullet_Bravo/code/external/Engine-Bravo/code/external/BehaviorTree/include/behaviortree_cpp/utils/strcat.hpp
+        -:    0:Graph:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcno
+        -:    0:Data:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#ifndef STRCAT_HPP
+        -:    2:#define STRCAT_HPP
+        -:    3:
+        -:    4:#include <string_view>
+        -:    5:#include <string>
+        -:    6:
+        -:    7:namespace BT
+        -:    8:{
+        -:    9:
+        -:   10:// -----------------------------------------------------------------------------
+        -:   11:// StrCat()
+        -:   12:// -----------------------------------------------------------------------------
+        -:   13://
+        -:   14:// Merges given strings, using no delimiter(s).
+        -:   15://
+        -:   16:// `StrCat()` is designed to be the fastest possible way to construct a string
+        -:   17:// out of a mix of raw C strings, string_views, strings.
+        -:   18:
+        -:   19:namespace strings_internal
+        -:   20:{
+        -:   21:
+function BT::strings_internal::AppendPieces(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::initializer_list<std::basic_string_view<char, std::char_traits<char> > >) called 0 returned 0% blocks executed 0%
+    #####:   22:inline void AppendPieces(std::string* dest,
+        -:   23:                         std::initializer_list<std::string_view> pieces)
+        -:   24:{
+    #####:   25:  size_t size = 0;
+    #####:   26:  for(const auto& piece : pieces)
+    %%%%%:   26-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:   26-block  1
+branch  2 never executed
+branch  3 never executed (fallthrough)
+        -:   27:  {
+    #####:   28:    size += piece.size();
+    %%%%%:   28-block  0
+call    0 never executed
+        -:   29:  }
+    #####:   30:  dest->reserve(dest->size() + size);
+    %%%%%:   30-block  0
+call    0 never executed
+call    1 never executed
+    #####:   31:  for(const auto& piece : pieces)
+call    0 never executed
+call    1 never executed
+    %%%%%:   31-block  0
+branch  2 never executed
+branch  3 never executed (fallthrough)
+        -:   32:  {
+    #####:   33:    dest->append(piece.data(), piece.size());
+    %%%%%:   33-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+        -:   34:  }
+    #####:   35:}
+        -:   36:
+function BT::strings_internal::CatPieces[abi:cxx11](std::initializer_list<std::basic_string_view<char, std::char_traits<char> > >) called 0 returned 0% blocks executed 0%
+    #####:   37:inline std::string CatPieces(std::initializer_list<std::string_view> pieces)
+        -:   38:{
+    #####:   39:  std::string out;
+    %%%%%:   39-block  0
+call    0 never executed
+    #####:   40:  AppendPieces(&out, std::move(pieces));
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    #####:   41:  return out;
+    %%%%%:   41-block  0
+    %%%%%:   41-block  1
+    =====:   42:}
+    $$$$$:   42-block  0
+call    0 never executed
+        -:   43:
+        -:   44:}  // namespace strings_internal
+        -:   45:
+        -:   46:inline std::string StrCat()
+        -:   47:{
+        -:   48:  return std::string();
+        -:   49:}
+        -:   50:
+function BT::StrCat[abi:cxx11](std::basic_string_view<char, std::char_traits<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   51:inline std::string StrCat(const std::string_view& a)
+    %%%%%:   51-block  0
+        -:   52:{
+    #####:   53:  return std::string(a.data(), a.size());
+    %%%%%:   53-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%:   53-block  1
+    %%%%%:   53-block  2
+        -:   54:}
+        -:   55:
+        -:   56:inline std::string StrCat(const std::string_view& a, const std::string_view& b)
+        -:   57:{
+        -:   58:  return strings_internal::CatPieces({ a, b });
+        -:   59:}
+        -:   60:
+        -:   61:inline std::string StrCat(const std::string_view& a, const std::string_view& b,
+        -:   62:                          const std::string_view& c)
+        -:   63:{
+        -:   64:  return strings_internal::CatPieces({ a, b, c });
+        -:   65:}
+        -:   66:
+        -:   67:// Support 4 or more arguments
+        -:   68:template <typename... AV>
+function std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > BT::StrCat<char [18], std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char [2]>(std::basic_string_view<char, std::char_traits<char> > const&, std::basic_string_view<char, std::char_traits<char> > const&, std::basic_string_view<char, std::char_traits<char> > const&, std::basic_string_view<char, std::char_traits<char> > const&, char const (&) [18], std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const (&) [2]) called 0 returned 0% blocks executed 0%
+    #####:   69:inline std::string StrCat(const std::string_view& a, const std::string_view& b,
+        -:   70:                          const std::string_view& c, const std::string_view& d,
+        -:   71:                          const AV&... args)
+        -:   72:{
+        -:   73:  return strings_internal::CatPieces(
+    #####:   74:      { a, b, c, d, static_cast<const std::string_view&>(args)... });
+    %%%%%:   74-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   74-block  1
+    %%%%%:   74-block  2
+        -:   75:}
+        -:   76:
+        -:   77://-----------------------------------------------
+        -:   78:
+        -:   79:inline void StrAppend(std::string* destination, const std::string_view& a)
+        -:   80:{
+        -:   81:  destination->append(a.data(), a.size());
+        -:   82:}
+        -:   83:
+        -:   84:inline void StrAppend(std::string* destination, const std::string_view& a,
+        -:   85:                      const std::string_view& b)
+        -:   86:{
+        -:   87:  strings_internal::AppendPieces(destination, { a, b });
+        -:   88:}
+        -:   89:
+        -:   90:inline void StrAppend(std::string* destination, const std::string_view& a,
+        -:   91:                      const std::string_view& b, const std::string_view& c)
+        -:   92:{
+        -:   93:  strings_internal::AppendPieces(destination, { a, b, c });
+        -:   94:}
+        -:   95:
+        -:   96:// Support 4 or more arguments
+        -:   97:template <typename... AV>
+        -:   98:inline void StrAppend(std::string* destination, const std::string_view& a,
+        -:   99:                      const std::string_view& b, const std::string_view& c,
+        -:  100:                      const std::string_view& d, const AV&... args)
+        -:  101:{
+        -:  102:  strings_internal::AppendPieces(
+        -:  103:      destination, { a, b, c, d, static_cast<const std::string_view&>(args)... });
+        -:  104:}
+        -:  105:
+        -:  106:}  // namespace BT
+        -:  107:
+        -:  108:#endif  // STRCAT_HPP

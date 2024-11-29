@@ -1,0 +1,115 @@
+        -:    0:Source:/home/angel/projectMinor/Bullet_Bravo/code/external/Engine-Bravo/code/external/BehaviorTree/include/behaviortree_cpp/exceptions.h
+        -:    0:Graph:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcno
+        -:    0:Data:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/* Copyright (C) 2015-2018 Michele Colledanchise -  All Rights Reserved
+        -:    2: * Copyright (C) 2018-2020 Davide Faconti, Eurecat -  All Rights Reserved
+        -:    3:*
+        -:    4:*   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+        -:    5:*   to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+        -:    6:*   and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        -:    7:*   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        -:    8:*
+        -:    9:*   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        -:   10:*   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+        -:   11:*   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        -:   12:*/
+        -:   13:
+        -:   14:#ifndef BT_EXCEPTIONS_H
+        -:   15:#define BT_EXCEPTIONS_H
+        -:   16:
+        -:   17:#include <string>
+        -:   18:#include <stdexcept>
+        -:   19:#include "utils/strcat.hpp"
+        -:   20:
+        -:   21:namespace BT
+        -:   22:{
+        -:   23:class BehaviorTreeException : public std::exception
+        -:   24:{
+        -:   25:public:
+        -:   26:  BehaviorTreeException(std::string_view message)
+        -:   27:    : message_(static_cast<std::string>(message))
+        -:   28:  {}
+        -:   29:
+        -:   30:  template <typename... SV>
+    #####:   31:  BehaviorTreeException(const SV&... args) : message_(StrCat(args...))
+    #####:   32:  {}
+------------------
+BT::BehaviorTreeException::BehaviorTreeException<char [26]>(char const (&) [26]):
+function BT::BehaviorTreeException::BehaviorTreeException<char [26]>(char const (&) [26]) called 0 returned 0% blocks executed 0%
+    #####:   31:  BehaviorTreeException(const SV&... args) : message_(StrCat(args...))
+    %%%%%:   31-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    $$$$$:   31-block  1
+    #####:   32:  {}
+    %%%%%:   32-block  0
+    $$$$$:   32-block  1
+call    0 never executed
+------------------
+BT::BehaviorTreeException::BehaviorTreeException<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&):
+function BT::BehaviorTreeException::BehaviorTreeException<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   31:  BehaviorTreeException(const SV&... args) : message_(StrCat(args...))
+    %%%%%:   31-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    $$$$$:   31-block  1
+    #####:   32:  {}
+    %%%%%:   32-block  0
+    $$$$$:   32-block  1
+call    0 never executed
+------------------
+        -:   33:
+function BT::BehaviorTreeException::what() const called 0 returned 0% blocks executed 0%
+    #####:   34:  const char* what() const noexcept
+        -:   35:  {
+    #####:   36:    return message_.c_str();
+    %%%%%:   36-block  0
+call    0 never executed
+        -:   37:  }
+        -:   38:
+        -:   39:private:
+        -:   40:  std::string message_;
+        -:   41:};
+        -:   42:
+        -:   43:// This errors are usually related to problems which "probably" require code refactoring
+        -:   44:// to be fixed.
+        -:   45:class LogicError : public BehaviorTreeException
+        -:   46:{
+        -:   47:public:
+        -:   48:  LogicError(std::string_view message) : BehaviorTreeException(message)
+        -:   49:  {}
+        -:   50:
+        -:   51:  template <typename... SV>
+function BT::LogicError::LogicError<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   52:  LogicError(const SV&... args) : BehaviorTreeException(args...)
+    %%%%%:   52-block  0
+call    0 never executed
+    #####:   53:  {}
+        -:   54:};
+        -:   55:
+        -:   56:// This errors are usually related to problems that are relted to data or conditions
+        -:   57:// that happen only at run-time
+        -:   58:class RuntimeError : public BehaviorTreeException
+        -:   59:{
+        -:   60:public:
+        -:   61:  RuntimeError(std::string_view message) : BehaviorTreeException(message)
+        -:   62:  {}
+        -:   63:
+        -:   64:  template <typename... SV>
+function BT::RuntimeError::RuntimeError<char [26]>(char const (&) [26]) called 0 returned 0% blocks executed 0%
+    #####:   65:  RuntimeError(const SV&... args) : BehaviorTreeException(args...)
+    %%%%%:   65-block  0
+call    0 never executed
+    #####:   66:  {}
+        -:   67:};
+        -:   68:
+        -:   69:}  // namespace BT
+        -:   70:
+        -:   71:#endif

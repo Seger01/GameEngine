@@ -1,0 +1,1259 @@
+        -:    0:Source:/home/angel/projectMinor/Bullet_Bravo/code/external/Engine-Bravo/code/external/BehaviorTree/src/blackboard.cpp
+        -:    0:Graph:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcno
+        -:    0:Data:build/external/BehaviorTree/CMakeFiles/behaviortree_cpp.dir/src/blackboard.cpp.gcda
+        -:    0:Runs:1
+        -:    1:#include "behaviortree_cpp/blackboard.h"
+        -:    2:#include <unordered_set>
+        -:    3:#include "behaviortree_cpp/json_export.h"
+        -:    4:
+        -:    5:namespace BT
+        -:    6:{
+        -:    7:
+function BT::IsPrivateKey(std::basic_string_view<char, std::char_traits<char> >) called 0 returned 0% blocks executed 0%
+    #####:    8:bool IsPrivateKey(StringView str)
+        -:    9:{
+    #####:   10:  return str.size() >= 1 && str.data()[0] == '_';
+    %%%%%:   10-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:   10-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+    %%%%%:   10-block  2
+    %%%%%:   10-block  3
+    %%%%%:   10-block  4
+        -:   11:}
+        -:   12:
+function BT::Blackboard::enableAutoRemapping(bool) called 0 returned 0% blocks executed 0%
+    #####:   13:void Blackboard::enableAutoRemapping(bool remapping)
+        -:   14:{
+    #####:   15:  autoremapping_ = remapping;
+    #####:   16:}
+        -:   17:
+function BT::Blackboard::getAnyLocked(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   18:AnyPtrLocked Blackboard::getAnyLocked(const std::string& key)
+        -:   19:{
+    #####:   20:  if(auto entry = getEntry(key))
+    %%%%%:   20-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   20-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+        -:   21:  {
+    #####:   22:    return AnyPtrLocked(&entry->value, &entry->entry_mutex);
+    %%%%%:   22-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%:   22-block  1
+    #####:   23:  }
+    %%%%%:   23-block  0
+    %%%%%:   23-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    $$$$$:   23-block  2
+call    3 never executed
+    #####:   24:  return {};
+    %%%%%:   24-block  0
+call    0 never executed
+        -:   25:}
+        -:   26:
+function BT::Blackboard::getAnyLocked(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const called 0 returned 0% blocks executed 0%
+    #####:   27:AnyPtrLocked Blackboard::getAnyLocked(const std::string& key) const
+        -:   28:{
+    #####:   29:  if(auto entry = getEntry(key))
+    %%%%%:   29-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   29-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+        -:   30:  {
+    #####:   31:    return AnyPtrLocked(&entry->value, const_cast<std::mutex*>(&entry->entry_mutex));
+    %%%%%:   31-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    %%%%%:   31-block  1
+    #####:   32:  }
+    %%%%%:   32-block  0
+    %%%%%:   32-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    $$$$$:   32-block  2
+call    3 never executed
+    #####:   33:  return {};
+    %%%%%:   33-block  0
+call    0 never executed
+        -:   34:}
+        -:   35:
+function BT::Blackboard::getAny(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const called 0 returned 0% blocks executed 0%
+    #####:   36:const Any* Blackboard::getAny(const std::string& key) const
+        -:   37:{
+    #####:   38:  return getAnyLocked(key).get();
+    %%%%%:   38-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   38-block  1
+call    3 never executed
+call    4 never executed
+    %%%%%:   38-block  2
+        -:   39:}
+        -:   40:
+function BT::Blackboard::getAny(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   41:Any* Blackboard::getAny(const std::string& key)
+        -:   42:{
+    #####:   43:  return const_cast<Any*>(getAnyLocked(key).get());
+    %%%%%:   43-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   43-block  1
+call    3 never executed
+call    4 never executed
+    %%%%%:   43-block  2
+        -:   44:}
+        -:   45:
+        -:   46:const std::shared_ptr<Blackboard::Entry>
+function BT::Blackboard::getEntry(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const called 0 returned 0% blocks executed 0%
+    #####:   47:Blackboard::getEntry(const std::string& key) const
+        -:   48:{
+        -:   49:  // special syntax: "@" will always refer to the root BB
+    #####:   50:  if(StartWith(key, '@'))
+    %%%%%:   50-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   50-block  1
+branch  4 never executed (fallthrough)
+branch  5 never executed
+        -:   51:  {
+    #####:   52:    return rootBlackboard()->getEntry(key.substr(1, key.size() - 1));
+    %%%%%:   52-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   52-block  1
+call    3 never executed
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:   52-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:   52-block  3
+call   10 never executed
+    $$$$$:   52-block  4
+call   11 never executed
+    $$$$$:   52-block  5
+        -:   53:  }
+        -:   54:
+    #####:   55:  std::unique_lock<std::mutex> lock(mutex_);
+    %%%%%:   55-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   56:  auto it = storage_.find(key);
+    %%%%%:   56-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   57:  if(it != storage_.end())
+    %%%%%:   57-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:   58:  {
+    #####:   59:    return it->second;
+    %%%%%:   59-block  0
+call    0 never executed
+call    1 never executed
+        -:   60:  }
+        -:   61:  // not found. Try autoremapping
+    #####:   62:  if(auto parent = parent_bb_.lock())
+    %%%%%:   62-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:   63:  {
+    #####:   64:    auto remap_it = internal_to_external_.find(key);
+    %%%%%:   64-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   65:    if(remap_it != internal_to_external_.cend())
+    %%%%%:   65-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:   66:    {
+    #####:   67:      auto const& new_key = remap_it->second;
+    %%%%%:   67-block  0
+call    0 never executed
+    #####:   68:      return parent->getEntry(new_key);
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   68-block  0
+        -:   69:    }
+    #####:   70:    if(autoremapping_ && !IsPrivateKey(key))
+    %%%%%:   70-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:   70-block  1
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:   70-block  2
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:   70-block  3
+    %%%%%:   70-block  4
+    %%%%%:   70-block  5
+branch  8 never executed (fallthrough)
+branch  9 never executed
+        -:   71:    {
+    #####:   72:      return parent->getEntry(key);
+    %%%%%:   72-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+        -:   73:    }
+    #####:   74:  }
+    %%%%%:   74-block  0
+    %%%%%:   74-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    $$$$$:   74-block  2
+call    3 never executed
+    #####:   75:  return {};
+    %%%%%:   75-block  0
+call    0 never executed
+    #####:   76:}
+    %%%%%:   76-block  0
+call    0 never executed
+    $$$$$:   76-block  1
+call    1 never executed
+        -:   77:
+function BT::Blackboard::getEntry(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   78:std::shared_ptr<Blackboard::Entry> Blackboard::getEntry(const std::string& key)
+        -:   79:{
+    #####:   80:  return static_cast<const Blackboard&>(*this).getEntry(key);
+    %%%%%:   80-block  0
+call    0 never executed
+        -:   81:}
+        -:   82:
+function BT::Blackboard::entryInfo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) called 0 returned 0% blocks executed 0%
+    #####:   83:const TypeInfo* Blackboard::entryInfo(const std::string& key)
+        -:   84:{
+    #####:   85:  auto entry = getEntry(key);
+    %%%%%:   85-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:   86:  return (!entry) ? nullptr : &(entry->info);
+    %%%%%:   86-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    %%%%%:   86-block  1
+call    3 never executed
+    %%%%%:   86-block  2
+    %%%%%:   86-block  3
+    %%%%%:   86-block  4
+    #####:   87:}
+    %%%%%:   87-block  0
+call    0 never executed
+        -:   88:
+function BT::Blackboard::addSubtreeRemapping(std::basic_string_view<char, std::char_traits<char> >, std::basic_string_view<char, std::char_traits<char> >) called 0 returned 0% blocks executed 0%
+    #####:   89:void Blackboard::addSubtreeRemapping(StringView internal, StringView external)
+        -:   90:{
+    #####:   91:  internal_to_external_.insert(
+    %%%%%:   91-block  0
+    %%%%%:   91-block  1
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:   91-block  2
+call    4 never executed
+    $$$$$:   91-block  3
+call    5 never executed
+    #####:   92:      { static_cast<std::string>(internal), static_cast<std::string>(external) });
+    %%%%%:   92-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:   92-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+call    6 never executed
+    %%%%%:   92-block  2
+call    7 never executed
+    $$$$$:   92-block  3
+call    8 never executed
+    $$$$$:   92-block  4
+    $$$$$:   92-block  5
+    $$$$$:   92-block  6
+call    9 never executed
+    $$$$$:   92-block  7
+    $$$$$:   92-block  8
+    #####:   93:}
+    %%%%%:   93-block  0
+        -:   94:
+function BT::Blackboard::debugMessage() const called 0 returned 0% blocks executed 0%
+    #####:   95:void Blackboard::debugMessage() const
+        -:   96:{
+    #####:   97:  for(const auto& [key, entry] : storage_)
+    %%%%%:   97-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:   97-block  1
+call    2 never executed
+call    3 never executed
+call    4 never executed
+    %%%%%:   97-block  2
+call    5 never executed
+branch  6 never executed
+branch  7 never executed (fallthrough)
+        -:   98:  {
+    #####:   99:    auto port_type = entry->info.type();
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    #####:  100:    if(port_type == typeid(void))
+    %%%%%:  100-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  101:    {
+    #####:  102:      port_type = entry->value.type();
+    %%%%%:  102-block  0
+call    0 never executed
+call    1 never executed
+        -:  103:    }
+        -:  104:
+    #####:  105:    std::cout << key << " (" << BT::demangle(port_type) << ")" << std::endl;
+    %%%%%:  105-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  105-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  105-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  105-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  105-block  4
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed (throw)
+    %%%%%:  105-block  5
+call   15 never executed
+branch 16 never executed (fallthrough)
+branch 17 never executed (throw)
+    %%%%%:  105-block  6
+call   18 never executed
+call   19 never executed
+    $$$$$:  105-block  7
+call   20 never executed
+    $$$$$:  105-block  8
+        -:  106:  }
+        -:  107:
+    #####:  108:  for(const auto& [from, to] : internal_to_external_)
+    %%%%%:  108-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  108-block  1
+call    2 never executed
+call    3 never executed
+call    4 never executed
+    %%%%%:  108-block  2
+call    5 never executed
+    %%%%%:  108-block  3
+call    6 never executed
+branch  7 never executed
+branch  8 never executed (fallthrough)
+        -:  109:  {
+    #####:  110:    std::cout << "[" << from << "] remapped to port of parent tree [" << to << "]"
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  110-block  0
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  110-block  1
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  110-block  2
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  110-block  3
+call   12 never executed
+branch 13 never executed (fallthrough)
+branch 14 never executed (throw)
+    #####:  111:              << std::endl;
+    %%%%%:  111-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  112:    continue;
+    #####:  113:  }
+    %%%%%:  113-block  0
+    #####:  114:}
+    %%%%%:  114-block  0
+        -:  115:
+function BT::Blackboard::getKeys() const called 0 returned 0% blocks executed 0%
+    #####:  116:std::vector<StringView> Blackboard::getKeys() const
+        -:  117:{
+    #####:  118:  if(storage_.empty())
+    %%%%%:  118-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+        -:  119:  {
+    #####:  120:    return {};
+    %%%%%:  120-block  0
+call    0 never executed
+        -:  121:  }
+    #####:  122:  std::vector<StringView> out;
+    #####:  123:  out.reserve(storage_.size());
+    %%%%%:  123-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    #####:  124:  for(const auto& entry_it : storage_)
+    %%%%%:  124-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  124-block  1
+call    2 never executed
+    %%%%%:  124-block  2
+call    3 never executed
+branch  4 never executed
+branch  5 never executed (fallthrough)
+        -:  125:  {
+    #####:  126:    out.push_back(entry_it.first);
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  126-block  0
+call    4 never executed
+    $$$$$:  126-block  1
+        -:  127:  }
+    #####:  128:  return out;
+    %%%%%:  128-block  0
+call    0 never executed
+    #####:  129:}
+call    0 never executed
+    $$$$$:  129-block  0
+call    1 never executed
+        -:  130:
+function BT::Blackboard::clear() called 0 returned 0% blocks executed 0%
+    #####:  131:void Blackboard::clear()
+        -:  132:{
+    #####:  133:  std::unique_lock<std::mutex> lock(mutex_);
+    %%%%%:  133-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  134:  storage_.clear();
+    %%%%%:  134-block  0
+call    0 never executed
+    #####:  135:}
+call    0 never executed
+        -:  136:
+function BT::Blackboard::entryMutex() const called 0 returned 0% blocks executed 0%
+    #####:  137:std::recursive_mutex& Blackboard::entryMutex() const
+        -:  138:{
+    #####:  139:  return entry_mutex_;
+    %%%%%:  139-block  0
+        -:  140:}
+        -:  141:
+function BT::Blackboard::createEntry(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, BT::TypeInfo const&) called 0 returned 0% blocks executed 0%
+    #####:  142:void Blackboard::createEntry(const std::string& key, const TypeInfo& info)
+        -:  143:{
+    #####:  144:  if(StartWith(key, '@'))
+    %%%%%:  144-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  145:  {
+    #####:  146:    rootBlackboard()->createEntryImpl(key.substr(1, key.size() - 1), info);
+    %%%%%:  146-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  146-block  1
+call    3 never executed
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    %%%%%:  146-block  2
+call    7 never executed
+branch  8 never executed (fallthrough)
+branch  9 never executed (throw)
+    %%%%%:  146-block  3
+call   10 never executed
+call   11 never executed
+    $$$$$:  146-block  4
+call   12 never executed
+    $$$$$:  146-block  5
+    $$$$$:  146-block  6
+call   13 never executed
+        -:  147:  }
+        -:  148:  else
+        -:  149:  {
+    #####:  150:    createEntryImpl(key, info);
+    %%%%%:  150-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  150-block  1
+call    3 never executed
+        -:  151:  }
+    #####:  152:}
+    %%%%%:  152-block  0
+        -:  153:
+function BT::Blackboard::cloneInto(BT::Blackboard&) const called 0 returned 0% blocks executed 0%
+    #####:  154:void Blackboard::cloneInto(Blackboard& dst) const
+        -:  155:{
+    #####:  156:  std::unique_lock lk1(mutex_);
+    %%%%%:  156-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  157:  std::unique_lock lk2(dst.mutex_);
+    %%%%%:  157-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  158:
+        -:  159:  // keys that are not updated must be removed.
+    #####:  160:  std::unordered_set<std::string> keys_to_remove;
+    %%%%%:  160-block  0
+call    0 never executed
+    #####:  161:  auto& dst_storage = dst.storage_;
+    #####:  162:  for(const auto& [key, _] : dst_storage)
+call    0 never executed
+call    1 never executed
+    %%%%%:  162-block  0
+call    2 never executed
+call    3 never executed
+call    4 never executed
+    %%%%%:  162-block  1
+call    5 never executed
+    %%%%%:  162-block  2
+call    6 never executed
+branch  7 never executed
+branch  8 never executed (fallthrough)
+        -:  163:  {
+    #####:  164:    keys_to_remove.insert(key);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  165:  }
+        -:  166:
+        -:  167:  // update or create entries in dst_storage
+    #####:  168:  for(const auto& [src_key, src_entry] : storage_)
+    %%%%%:  168-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  168-block  1
+call    2 never executed
+call    3 never executed
+call    4 never executed
+    %%%%%:  168-block  2
+call    5 never executed
+    %%%%%:  168-block  3
+call    6 never executed
+branch  7 never executed
+branch  8 never executed (fallthrough)
+        -:  169:  {
+    #####:  170:    keys_to_remove.erase(src_key);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  171:
+    #####:  172:    auto it = dst_storage.find(src_key);
+    %%%%%:  172-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  173:    if(it != dst_storage.end())
+    %%%%%:  173-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  174:    {
+        -:  175:      // overwite
+    #####:  176:      auto& dst_entry = it->second;
+    %%%%%:  176-block  0
+call    0 never executed
+    #####:  177:      dst_entry->string_converter = src_entry->string_converter;
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:  178:      dst_entry->value = src_entry->value;
+    %%%%%:  178-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:  179:      dst_entry->info = src_entry->info;
+    %%%%%:  179-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:  180:      dst_entry->sequence_id++;
+    %%%%%:  180-block  0
+call    0 never executed
+    #####:  181:      dst_entry->stamp = std::chrono::steady_clock::now().time_since_epoch();
+call    0 never executed
+call    1 never executed
+call    2 never executed
+        -:  182:    }
+        -:  183:    else
+        -:  184:    {
+        -:  185:      // create new
+    #####:  186:      auto new_entry = std::make_shared<Entry>(src_entry->info);
+    %%%%%:  186-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    #####:  187:      new_entry->value = src_entry->value;
+    %%%%%:  187-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:  188:      new_entry->string_converter = src_entry->string_converter;
+    %%%%%:  188-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+branch  3 never executed (fallthrough)
+branch  4 never executed (throw)
+    #####:  189:      dst_storage.insert({ src_key, new_entry });
+    %%%%%:  189-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  189-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  189-block  2
+call    6 never executed
+    $$$$$:  189-block  3
+call    7 never executed
+    $$$$$:  189-block  4
+    #####:  190:    }
+call    0 never executed
+    $$$$$:  190-block  0
+call    1 never executed
+        -:  191:  }
+        -:  192:
+    #####:  193:  for(const auto& key : keys_to_remove)
+    %%%%%:  193-block  0
+call    0 never executed
+call    1 never executed
+    %%%%%:  193-block  1
+call    2 never executed
+    %%%%%:  193-block  2
+call    3 never executed
+    %%%%%:  193-block  3
+call    4 never executed
+branch  5 never executed
+branch  6 never executed (fallthrough)
+        -:  194:  {
+    #####:  195:    dst_storage.erase(key);
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  196:  }
+    #####:  197:}
+    %%%%%:  197-block  0
+call    0 never executed
+call    1 never executed
+call    2 never executed
+    $$$$$:  197-block  1
+call    3 never executed
+    $$$$$:  197-block  2
+call    4 never executed
+    $$$$$:  197-block  3
+call    5 never executed
+        -:  198:
+function BT::Blackboard::parent() called 0 returned 0% blocks executed 0%
+    #####:  199:Blackboard::Ptr Blackboard::parent()
+        -:  200:{
+    #####:  201:  if(auto parent = parent_bb_.lock())
+    %%%%%:  201-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  202:  {
+    #####:  203:    return parent;
+    %%%%%:  203-block  0
+call    0 never executed
+    #####:  204:  }
+    %%%%%:  204-block  0
+    %%%%%:  204-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    #####:  205:  return {};
+    %%%%%:  205-block  0
+call    0 never executed
+        -:  206:}
+        -:  207:
+function BT::Blackboard::createEntryImpl(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, BT::TypeInfo const&) called 0 returned 0% blocks executed 0%
+    #####:  208:std::shared_ptr<Blackboard::Entry> Blackboard::createEntryImpl(const std::string& key,
+        -:  209:                                                               const TypeInfo& info)
+        -:  210:{
+    #####:  211:  std::unique_lock<std::mutex> lock(mutex_);
+    %%%%%:  211-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  212:  // This function might be called recursively, when we do remapping, because we move
+        -:  213:  // to the top scope to find already existing  entries
+        -:  214:
+        -:  215:  // search if exists already
+    #####:  216:  auto storage_it = storage_.find(key);
+    %%%%%:  216-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  217:  if(storage_it != storage_.end())
+    %%%%%:  217-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  218:  {
+    #####:  219:    const auto& prev_info = storage_it->second->info;
+    %%%%%:  219-block  0
+call    0 never executed
+call    1 never executed
+    #####:  220:    if(prev_info.type() != info.type() && prev_info.isStronglyTyped() &&
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  220-block  0
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  220-block  1
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed
+    %%%%%:  220-block  2
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed
+branch 12 never executed (fallthrough)
+branch 13 never executed
+    %%%%%:  220-block  3
+    %%%%%:  220-block  4
+    %%%%%:  220-block  5
+branch 14 never executed (fallthrough)
+branch 15 never executed
+    #####:  221:       info.isStronglyTyped())
+    %%%%%:  221-block  0
+call    0 never executed
+        -:  222:    {
+    #####:  223:      auto msg = StrCat("Blackboard entry [", key,
+    %%%%%:  223-block  0
+call    0 never executed
+call    1 never executed
+    $$$$$:  223-block  1
+    $$$$$:  223-block  2
+        -:  224:                        "]: once declared, the type of a port"
+        -:  225:                        " shall not change. Previously declared type [",
+    #####:  226:                        BT::demangle(prev_info.type()), "], current type [",
+    %%%%%:  226-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  226-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    $$$$$:  226-block  2
+call    6 never executed
+    $$$$$:  226-block  3
+    #####:  227:                        BT::demangle(info.type()), "]");
+    %%%%%:  227-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  227-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+call    6 never executed
+call    7 never executed
+call    8 never executed
+branch  9 never executed (fallthrough)
+branch 10 never executed (throw)
+    %%%%%:  227-block  2
+call   11 never executed
+call   12 never executed
+    $$$$$:  227-block  3
+    $$$$$:  227-block  4
+    $$$$$:  227-block  5
+call   13 never executed
+    $$$$$:  227-block  6
+        -:  228:
+    #####:  229:      throw LogicError(msg);
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  229-block  0
+call    4 never executed
+    $$$$$:  229-block  1
+call    5 never executed
+    =====:  230:    }
+    $$$$$:  230-block  0
+call    0 never executed
+    #####:  231:    return storage_it->second;
+    %%%%%:  231-block  0
+call    0 never executed
+call    1 never executed
+        -:  232:  }
+        -:  233:
+        -:  234:  // manual remapping first
+    #####:  235:  auto remapping_it = internal_to_external_.find(key);
+    %%%%%:  235-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    #####:  236:  if(remapping_it != internal_to_external_.end())
+    %%%%%:  236-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  237:  {
+    #####:  238:    const auto& remapped_key = remapping_it->second;
+    %%%%%:  238-block  0
+call    0 never executed
+    #####:  239:    if(auto parent = parent_bb_.lock())
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  240:    {
+    #####:  241:      return parent->createEntryImpl(remapped_key, info);
+    %%%%%:  241-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  241-block  1
+    #####:  242:    }
+    %%%%%:  242-block  0
+    %%%%%:  242-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    $$$$$:  242-block  2
+call    3 never executed
+    #####:  243:    throw RuntimeError("Missing parent blackboard");
+    %%%%%:  243-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  243-block  1
+call    4 never executed
+    $$$$$:  243-block  2
+call    5 never executed
+        -:  244:  }
+        -:  245:  // autoremapping second (excluding private keys)
+    #####:  246:  if(autoremapping_ && !IsPrivateKey(key))
+    %%%%%:  246-block  0
+branch  0 never executed (fallthrough)
+branch  1 never executed
+    %%%%%:  246-block  1
+call    2 never executed
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  246-block  2
+branch  6 never executed (fallthrough)
+branch  7 never executed
+    %%%%%:  246-block  3
+    %%%%%:  246-block  4
+    %%%%%:  246-block  5
+branch  8 never executed (fallthrough)
+branch  9 never executed
+        -:  247:  {
+    #####:  248:    if(auto parent = parent_bb_.lock())
+    %%%%%:  248-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed
+        -:  249:    {
+    #####:  250:      return parent->createEntryImpl(key, info);
+    %%%%%:  250-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  250-block  1
+    #####:  251:    }
+    %%%%%:  251-block  0
+    %%%%%:  251-block  1
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+    $$$$$:  251-block  2
+call    3 never executed
+    #####:  252:    throw RuntimeError("Missing parent blackboard");
+    %%%%%:  252-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  252-block  1
+call    4 never executed
+    $$$$$:  252-block  2
+call    5 never executed
+        -:  253:  }
+        -:  254:  // not remapped, not found. Create locally.
+        -:  255:
+    #####:  256:  auto entry = std::make_shared<Entry>(info);
+    %%%%%:  256-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+        -:  257:  // even if empty, let's assign to it a default type
+    #####:  258:  entry->value = Any(info.type());
+    %%%%%:  258-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  258-block  1
+call    3 never executed
+call    4 never executed
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%:  258-block  2
+call    8 never executed
+    $$$$$:  258-block  3
+call    9 never executed
+    $$$$$:  258-block  4
+    #####:  259:  storage_.insert({ key, entry });
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  259-block  0
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  259-block  1
+call    6 never executed
+    $$$$$:  259-block  2
+call    7 never executed
+    $$$$$:  259-block  3
+    #####:  260:  return entry;
+call    0 never executed
+    #####:  261:}
+call    0 never executed
+    %%%%%:  261-block  0
+call    1 never executed
+    $$$$$:  261-block  1
+call    2 never executed
+    $$$$$:  261-block  2
+call    3 never executed
+        -:  262:
+function BT::ExportBlackboardToJSON[abi:cxx11](BT::Blackboard const&) called 0 returned 0% blocks executed 0%
+    #####:  263:nlohmann::json ExportBlackboardToJSON(const Blackboard& blackboard)
+        -:  264:{
+    #####:  265:  nlohmann::json dest;
+    %%%%%:  265-block  0
+call    0 never executed
+    #####:  266:  for(auto entry_name : blackboard.getKeys())
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  266-block  0
+call    3 never executed
+call    4 never executed
+    %%%%%:  266-block  1
+call    5 never executed
+call    6 never executed
+    %%%%%:  266-block  2
+call    7 never executed
+branch  8 never executed
+branch  9 never executed (fallthrough)
+        -:  267:  {
+    #####:  268:    std::string name(entry_name);
+    %%%%%:  268-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    $$$$$:  268-block  1
+    #####:  269:    if(auto any_ref = blackboard.getAnyLocked(name))
+    %%%%%:  269-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  269-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed
+        -:  270:    {
+    #####:  271:      if(auto any_ptr = any_ref.get())
+    %%%%%:  271-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+        -:  272:      {
+    #####:  273:        JsonExporter::get().toJson(*any_ptr, dest[name]);
+    %%%%%:  273-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  273-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  273-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  273-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed (throw)
+    %%%%%:  273-block  4
+call   12 never executed
+    $$$$$:  273-block  5
+call   13 never executed
+    $$$$$:  273-block  6
+        -:  274:      }
+    #####:  275:    }
+    %%%%%:  275-block  0
+call    0 never executed
+    $$$$$:  275-block  1
+call    1 never executed
+    #####:  276:  }
+call    0 never executed
+    %%%%%:  276-block  0
+call    1 never executed
+    $$$$$:  276-block  1
+call    2 never executed
+    $$$$$:  276-block  2
+call    3 never executed
+    #####:  277:  return dest;
+    %%%%%:  277-block  0
+    =====:  278:}
+    $$$$$:  278-block  0
+call    0 never executed
+        -:  279:
+function BT::ImportBlackboardFromJSON(nlohmann::json_abi_v3_11_3::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::json_abi_v3_11_3::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char> >, void> const&, BT::Blackboard&) called 0 returned 0% blocks executed 0%
+    #####:  280:void ImportBlackboardFromJSON(const nlohmann::json& json, Blackboard& blackboard)
+        -:  281:{
+    #####:  282:  for(auto it = json.begin(); it != json.end(); ++it)
+    %%%%%:  282-block  0
+call    0 never executed
+call    1 never executed
+branch  2 never executed (fallthrough)
+branch  3 never executed (throw)
+    %%%%%:  282-block  1
+call    4 never executed
+call    5 never executed
+branch  6 never executed (fallthrough)
+branch  7 never executed (throw)
+    %%%%%:  282-block  2
+branch  8 never executed
+branch  9 never executed (fallthrough)
+    $$$$$:  282-block  3
+        -:  283:  {
+    #####:  284:    if(auto res = JsonExporter::get().fromJson(it.value()))
+    %%%%%:  284-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  284-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  284-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    %%%%%:  284-block  3
+call    9 never executed
+branch 10 never executed (fallthrough)
+branch 11 never executed
+        -:  285:    {
+    #####:  286:      auto entry = blackboard.getEntry(it.key());
+    %%%%%:  286-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  286-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    #####:  287:      if(!entry)
+    %%%%%:  287-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed
+        -:  288:      {
+    #####:  289:        blackboard.createEntry(it.key(), res->second);
+    %%%%%:  289-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  289-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  289-block  2
+call    6 never executed
+branch  7 never executed (fallthrough)
+branch  8 never executed (throw)
+    #####:  290:        entry = blackboard.getEntry(it.key());
+    %%%%%:  290-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  290-block  1
+call    3 never executed
+branch  4 never executed (fallthrough)
+branch  5 never executed (throw)
+    %%%%%:  290-block  2
+call    6 never executed
+call    7 never executed
+    $$$$$:  290-block  3
+        -:  291:      }
+    #####:  292:      entry->value = res->first;
+    %%%%%:  292-block  0
+call    0 never executed
+branch  1 never executed (fallthrough)
+branch  2 never executed (throw)
+    %%%%%:  292-block  1
+call    3 never executed
+call    4 never executed
+branch  5 never executed (fallthrough)
+branch  6 never executed (throw)
+    #####:  293:    }
+    %%%%%:  293-block  0
+call    0 never executed
+    %%%%%:  293-block  1
+call    1 never executed
+    $$$$$:  293-block  2
+call    2 never executed
+    $$$$$:  293-block  3
+call    3 never executed
+        -:  294:  }
+    #####:  295:}
+    %%%%%:  295-block  0
+        -:  296:
+function BT::Blackboard::Entry::operator=(BT::Blackboard::Entry const&) called 0 returned 0% blocks executed 0%
+    #####:  297:Blackboard::Entry& Blackboard::Entry::operator=(const Entry& other)
+        -:  298:{
+    #####:  299:  value = other.value;
+    %%%%%:  299-block  0
+call    0 never executed
+    #####:  300:  info = other.info;
+call    0 never executed
+    #####:  301:  string_converter = other.string_converter;
+call    0 never executed
+    #####:  302:  sequence_id = other.sequence_id;
+    #####:  303:  stamp = other.stamp;
+    #####:  304:  return *this;
+        -:  305:}
+        -:  306:
+function BT::Blackboard::rootBlackboard() called 0 returned 0% blocks executed 0%
+    #####:  307:Blackboard* BT::Blackboard::rootBlackboard()
+        -:  308:{
+    #####:  309:  auto bb = static_cast<const Blackboard&>(*this).rootBlackboard();
+    %%%%%:  309-block  0
+call    0 never executed
+    #####:  310:  return const_cast<Blackboard*>(bb);
+        -:  311:}
+        -:  312:
+function BT::Blackboard::rootBlackboard() const called 0 returned 0% blocks executed 0%
+    #####:  313:const Blackboard* BT::Blackboard::rootBlackboard() const
+        -:  314:{
+    #####:  315:  const Blackboard* bb = this;
+    #####:  316:  Blackboard::Ptr prev = parent_bb_.lock();
+    %%%%%:  316-block  0
+call    0 never executed
+    #####:  317:  while(prev)
+    %%%%%:  317-block  0
+call    0 never executed
+branch  1 never executed
+branch  2 never executed (fallthrough)
+        -:  318:  {
+    #####:  319:    bb = prev.get();
+    %%%%%:  319-block  0
+call    0 never executed
+    #####:  320:    prev = bb->parent_bb_.lock();
+call    0 never executed
+call    1 never executed
+call    2 never executed
+        -:  321:  }
+    #####:  322:  return bb;
+    #####:  323:}
+    %%%%%:  323-block  0
+call    0 never executed
+        -:  324:
+        -:  325:}  // namespace BT
