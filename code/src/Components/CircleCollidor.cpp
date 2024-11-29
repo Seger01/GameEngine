@@ -1,8 +1,9 @@
 #include "Components/CircleCollider.h"
 
-CircleCollider::CircleCollider() : mRadius(0.0f), mIsTrigger(false), mCollideCategory(1), mCollideWithCategory({1}) {}
-
-CircleCollider::CircleCollider(float radius) : mRadius(radius) {}
+CircleCollider::CircleCollider(float aRadius, std::string aTag)
+	: Collider{aTag}, mRadius(aRadius), mIsTrigger(false), mCollideCategory(1), mCollideWithCategory({1})
+{
+}
 
 CircleCollider::~CircleCollider() {}
 

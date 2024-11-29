@@ -17,9 +17,9 @@ public:
     NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
     void receiveGameState();
     void sendGameState();
-    void update(std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+	void update();
 
-    bool isConnected() const;
+	bool isConnected() const;
 
     void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
     void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
@@ -28,17 +28,12 @@ private:
     void handleIncomingPackets();
     void sendTransform();
     void handleTransform(SLNet::Packet* aPacket);
+    void handleCustomSerialize(SLNet::Packet* aPacket);
     void spawnNewPlayer(SLNet::Packet* aPacket);
     void onClientDisconnected(SLNet::RakNetGUID aClientID);
     void sendToAllClients(SLNet::BitStream& aBitStream);
     void sendPackets();
-    void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
-    void getBitStreamData(SLNet::BitStream& aBitStream);
-    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp);
-    void getBitStreamData(SLNet::BitStream& aBitStream, SLNet::RakNetGUID& aGUID);
-    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp,
-                          SLNet::RakNetGUID& aGUID);
-    void setBitStreamGUID(SLNet::BitStream& aBitStream, SLNet::RakNetGUID aGUID);
+    void sendCustomSerialize();
 
 private:
     std::vector<std::reference_wrapper<GameObject>>& mObjects;

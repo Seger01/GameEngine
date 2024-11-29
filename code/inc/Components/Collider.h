@@ -7,7 +7,7 @@
 
 class Collider : public Component {
 public:
-    Collider();
+    Collider(std::string aTag = "defaultCollider");
     virtual ~Collider();
 
     virtual std::unique_ptr<Component> clone() const override;

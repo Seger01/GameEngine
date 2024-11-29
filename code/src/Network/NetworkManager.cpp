@@ -30,16 +30,15 @@ void NetworkManager::update()
 {
 	if (mRole == NetworkRole::SERVER && mServer)
 	{
-		mServer->update(mObjects);
+		mServer->update();
 	}
 	else if (mRole == NetworkRole::CLIENT && mClient)
 	{
-		mClient->update(mObjects);
+		mClient->update();
 	}
 	else if (mRole == NetworkRole::HOST && mHost)
 	{
-		throw std::runtime_error("NetworkManager::update() isHost not implemented");
-		// mHost->update();
+		mHost->update();
 	}
 }
 
@@ -201,17 +200,14 @@ void NetworkManager::startClient()
 	mClient = std::make_unique<NetworkClient>(mObjects, mTickRate);
 }
 
-void NetworkManager::startHost()
-{
-	if (mServer || mClient)
-	{
-		throw std::runtime_error("Cannot start host when server or client is already running");
-	}
-	if (mHost)
-	{
-		throw std::runtime_error("Host is already running");
-	}
-	mHost = std::make_unique<NetworkHost>();
+void NetworkManager::startHost() {
+    if (mServer || mClient) {
+        throw std::runtime_error("Cannot start host when server or client is already running");
+    }
+    if (mHost) {
+        throw std::runtime_error("Host is already running");
+    }
+	mHost = std::make_unique<NetworkHost>(mObjects, mTickRate);
 }
 
 void NetworkManager::addObject(GameObject& aObject)

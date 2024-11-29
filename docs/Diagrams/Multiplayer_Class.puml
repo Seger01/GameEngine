@@ -17,39 +17,44 @@ class NetworkManager {
     - mEnableSceneManagement : bool
 }
 
-class NetworkObject {
-    + spawn() : void
-    + despawn() : void
+class NetworkObject implements Component {
     + getNetworkID(): int
 
     - mIsOwner: bool
     - mNetworkID: int
 }
 
-class NetworkBehaviour {
+interface Component {}
+
+interface INetworkBehaviour implements IBehaviourScript {
     +void serverRpc()
     +void clientRpc()
     + {abstract} void OnNetworkSpawn()
     
 }
 
+interface IBehaviourScript {}
+
 ' Template class for network variables
-class NetworkVariable{
-    + networkVariable(WritePermission)
-    + T Value
+class NetworkVariable implements NetworkVariableBase{
+    + setValue(T value) : void
+    + getValue() : T
+
+    - T mValue
+    - bool mDirty
     
 }
 
-class MonoBehavior{}
+interface NetworkVariableBase {
+    + {abstract} isDirty() : bool
+    + {abstract} setClean() : void
+}
 
-' Maybe not needed
 class NetworkTransform {
     + UpdateTransform()
     + SyncPosition()
     + Interpolate()
 }
-
-class Transform{}
 
 class NetworkClient {
     + ConnectToServer()
@@ -104,17 +109,18 @@ class NetworkSceneManager {
 '     - mObjectAuthority: string
 ' }
 
-class INetworkSerializable {
-    + {abstract} NetworkSerialize()
-    ' + Deserialize()
+interface INetworkSerializable {
+    + serialize()
+    + deserialize()
 }
 
-interface GamePacket {
-    + Serialize()
-    + Deserialize()
-}
+class NetworkInformation {}
 
-class 
+class NetworkRegister {
+    + instance() : NetworkRegister
+    + RegisterType<T>() : void
+    + CreateInstance(int) : T
+}
 
 NetworkManager *-- "0..1"NetworkClient
 NetworkManager *-- "0..1"NetworkServer
@@ -123,14 +129,11 @@ NetworkManager *-- "0..1"NetworkSceneManager
 NetworkManager *-- "0..*" NetworkObject
 ' NetworkManager <-- AuthorityManager
 
-NetworkObject *-- "*" NetworkBehaviour
+NetworkObject *-- "0..*" INetworkBehaviour
 NetworkObject -- NetworkTransform
 
-NetworkBehaviour --|> MonoBehavior
-NetworkBehaviour <-- NetworkVariable
-NetworkBehaviour <-- INetworkSerializable
+INetworkBehaviour *-- "0..*" NetworkVariableBase
 
-NetworkTransform --|> Transform
 
 ' NetworkClient --> NetworkInputManager
 ' NetworkClient --> NetworkMessage
@@ -145,5 +148,10 @@ NetworkHost *-- "0..1"NetworkClient
 
 ' AuthorityManager <-- NetworkObject
 NetworkSceneManager *-- "*" NetworkObject
+
+NetworkRegister o-- "0..*" INetworkSerializable
+NetworkRegister --> NetworkManager
+INetworkSerializable --> NetworkVariable
+
 
 @enduml

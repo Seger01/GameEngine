@@ -5,7 +5,7 @@
 class BoxCollider : public Collider
 {
 public:
-	BoxCollider();
+	BoxCollider(std::string aTag = "defaultBoxCollider");
 	virtual ~BoxCollider();
 
 	std::unique_ptr<Component> clone() const override;

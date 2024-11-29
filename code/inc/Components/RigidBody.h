@@ -11,8 +11,8 @@
 
 class RigidBody : public Component {
 public:
-    RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties);
-    RigidBody();
+    RigidBody(BodyFlags aBodyFlags = {0, 0, 0}, BodyProperties aBodyProperties = {0, 0, 0, 0, 0},
+              std::string aTag = "defaultRigidBody");
     ~RigidBody();
     std::unique_ptr<Component> clone() const override;
     Transform getTransform() const;

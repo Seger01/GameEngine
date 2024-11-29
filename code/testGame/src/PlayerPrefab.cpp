@@ -1,8 +1,17 @@
 #include "PlayerPrefab.h"
 
+#include "Animation.h"
 #include "AudioBehaviourScript.h"
 #include "AudioSource.h"
+#include "EngineBravo.h"
 #include "GameObject.h"
+#include "NetworkObject.h"
+#include "NetworkTransform.h"
+#include "ParticleEmitter.h"
+#include "PlayerBehaviourScript.h"
+#include "SpriteDefUtil.h"
+#include "Transform.h"
+#include <iostream>
 
 const int spriteWidth = 16;	 // Width of each sprite
 const int spriteHeight = 25; // Height of each sprite
@@ -49,15 +58,16 @@ GameObject* PlayerPrefabFactory::createPlayerPrefab()
 	GameObject* defaultPlayerPrefab = new GameObject;
 	defaultPlayerPrefab->setName("Player");
 
-	setTransform(defaultPlayerPrefab);
-	addPlayerBehaviourScript(defaultPlayerPrefab);
-	setTag(defaultPlayerPrefab);
-	addNetworkTransform(defaultPlayerPrefab);
-	addAnimations(defaultPlayerPrefab);
-	addParticleEmitter(defaultPlayerPrefab);
-	addRigidBody(defaultPlayerPrefab);
-	addCollider(defaultPlayerPrefab);
-	addSound(defaultPlayerPrefab);
+    setTransform(defaultPlayerPrefab);
+    addNetworkObject(defaultPlayerPrefab);
+    addPlayerBehaviourScript(defaultPlayerPrefab);
+    setTag(defaultPlayerPrefab);
+    addNetworkTransform(defaultPlayerPrefab);
+    addAnimations(defaultPlayerPrefab);
+    addParticleEmitter(defaultPlayerPrefab);
+    addRigidBody(defaultPlayerPrefab);
+    addCollider(defaultPlayerPrefab);
+    addSound(defaultPlayerPrefab);
 
 	return defaultPlayerPrefab;
 }
@@ -269,3 +279,5 @@ void PlayerPrefabFactory::addSound(GameObject* gameObject)
 	gameObject->addComponent<AudioBehaviourScript>();
 	audioManager.loadSound(*step);
 }
+
+void PlayerPrefabFactory::addNetworkObject(GameObject* gameObject) { gameObject->addComponent<NetworkObject>(); }

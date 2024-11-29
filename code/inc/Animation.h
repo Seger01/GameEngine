@@ -9,7 +9,8 @@
 
 class Animation : public Component {
 public:
-    Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false);
+    Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false,
+              std::string aTag = "defaultAnimation");
     ~Animation();
 
     // Rule of Five

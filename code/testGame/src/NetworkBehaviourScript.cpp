@@ -75,7 +75,7 @@ void NetworkBehaviourScript::onUpdate() {
     SceneManager& sceneManager = engine.getSceneManager();
     NetworkManager& networkManager = engine.getNetworkManager();
 
-    if (networkManager.getRole() == NetworkRole::SERVER) {
+    if (networkManager.getRole() == NetworkRole::SERVER || networkManager.getRole() == NetworkRole::HOST) {
         Scene* scene = sceneManager.createScene("tempScene");
         GameObject* tempObject = new GameObject;
 

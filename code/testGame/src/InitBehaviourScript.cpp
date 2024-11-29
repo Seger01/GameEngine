@@ -36,13 +36,13 @@ void InitBehaviourScript::createLevel1() {
     scene->getActiveCamera().setWidth(16 * 30);
     scene->getActiveCamera().setHeight(9 * 30);
 
-    GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+    // GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
     // CircleCollider* circleCollider = new CircleCollider(8);
     // circleCollider->setTransform(Transform(Vector2(8, 0)));
     // defaultPlayerPrefab->addComponent(circleCollider);
 
-    scene->addGameObject(defaultPlayerPrefab);
+    // scene->addGameObject(defaultPlayerPrefab);
 
     GameObject* gameObject2 = new GameObject;
     Transform objectTransform2;
