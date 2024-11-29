@@ -1,0 +1,24 @@
+Minutes 21-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Implementing and designing update queue (not in that order).
+- Angel: Translation between box2d and engine finished and cleaned up.
+- Ronan: Validation app design, modified to be plantuml. Setting up validation app repository. Implementng first parts of validation app.
+- Sean: Not present
+- Seger: Implementing button functionality. Finished player animations.
+
+What is going to be done:
+- Siem: Implementing update queue.
+- Angel: Writing unit tests for physics.
+- Ronan: Implementing level creator and manager.
+- Sean: Not present
+- Seger: Implementing camera functionality.
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: -
+- Sean: Not present
+- Seger: -
