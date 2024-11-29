@@ -7,7 +7,6 @@
 class PathfindingTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        // Create a sample adjacency list for a 3x3 grid
         adjacencyList = {
             {0, {1, 3}},       // Node (0,0)
             {1, {0, 2, 4}},    // Node (0,1)

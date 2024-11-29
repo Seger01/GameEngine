@@ -4,13 +4,11 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
-// Test fixture for MapToGraph
 class MapToGraphTest : public ::testing::Test
 {
 protected:
 	void SetUp() override
 	{
-		// Create a sample JSON file for testing including graph layer
 		std::ofstream file("test_map.json");
 		if (!file)
 		{
@@ -59,7 +57,6 @@ protected:
 
 	void TearDown() override
 	{
-		// Remove the sample JSON file after testing
 		std::remove("test_map.json");
 	}
 };
@@ -70,12 +67,6 @@ TEST_F(MapToGraphTest, ConvertToGraph)
 	parser.parse();
 
 	const TileMapData& data = parser.getTileMapData();
-
-	// Print layer information for debugging
-	for (size_t i = 0; i < data.mLayers.size(); ++i)
-	{
-		std::cout << "Layer " << i << " Name: " << data.mLayerNames[i] << std::endl;
-	}
 
 	MapToGraph mapToGraph(data);
 	mapToGraph.convertToGraph();
@@ -92,7 +83,6 @@ TEST_F(MapToGraphTest, ConvertToGraph)
 }
 
 TEST_F(MapToGraphTest, NoGraphLayer) {
-    // Create a sample JSON file without a graph layer
     std::ofstream file("test_no_graph_layer.json");
     if (!file) {
         std::cerr << "Error opening file for writing" << std::endl;
@@ -143,9 +133,7 @@ TEST_F(MapToGraphTest, NoGraphLayer) {
     const TileMapData& data = parser.getTileMapData();
     MapToGraph mapToGraph(data);
     
-    // Expect an exception to be thrown when converting to graph
     EXPECT_THROW(mapToGraph.convertToGraph(), std::runtime_error);
 
-    // Remove the sample JSON file after testing
     std::remove("test_no_graph_layer.json");
 }
