@@ -162,25 +162,16 @@ void PlayerBehaviourScript::handleAnimations() {
 void PlayerBehaviourScript::handleMovement() {
     static const float movementSpeed = 50.0f;
 
-    if (mGameObject->hasComponent<NetworkObject>()) {
-        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-        if (!networkObject) {
-            return;
-        }
-        if (!networkObject->isOwner()) {
-            return;
-        }
-    }
+	Input& input = Input::getInstance();
 
-    Input& input = Input::getInstance();
+	Transform parentTransform = this->mGameObject->getTransform();
 
-    Transform parentTransform = this->mGameObject->getTransform();
+	if (input.GetKey(Key::Key_E))
+	{
+		deactivateAllAnimations();
+	}
 
-    if (input.GetKey(Key::Key_E)) {
-        deactivateAllAnimations();
-    }
-
-    if (input.GetKey(Key::Key_R)) {
+	if (input.GetKey(Key::Key_R)) {
         parentTransform.rotate(1.0f);
     }
     if (input.GetKey(Key::Key_T)) {
@@ -202,22 +193,13 @@ void PlayerBehaviourScript::handleMovement() {
     this->mGameObject->setTransform(parentTransform);
 }
 
-void PlayerBehaviourScript::hanldeCameraMovement() {
-    if (mGameObject->hasComponent<NetworkObject>()) {
-        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-        if (!networkObject) {
-            return;
-        }
-        if (!networkObject->isOwner()) {
-            return;
-        }
-    }
+void PlayerBehaviourScript::hanldeCameraMovement()
+{
+	Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
 
-    Camera& currentCam = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+	Transform playerTransform = this->mGameObject->getTransform();
 
-    Transform playerTransform = this->mGameObject->getTransform();
-
-    currentCam.setTransform(playerTransform);
+	currentCam.setTransform(playerTransform);
 }
 
 void PlayerBehaviourScript::fireBullet() {
@@ -244,58 +226,52 @@ void PlayerBehaviourScript::fireBullet() {
     Vector2 playerPosition = this->mGameObject->getTransform().position;
     Vector2 direction = worldMousePosition - playerPosition;
 
-    // std::cout << "Screen Mouse: (" << mousePosition.x << ", " << mousePosition.y << ")" << std::endl;
-    // std::cout << "Screen Center: (" << screenCenter.x << ", " << screenCenter.y << ")" << std::endl;
-    // std::cout << "Relative Mouse: (" << relativeMousePosition.x << ", " << relativeMousePosition.y << ")" <<
-    // std::endl; std::cout << "World Mouse: (" << worldMousePosition.x << ", " << worldMousePosition.y << ")" <<
-    // std::endl; std::cout << "Player Pos: (" << playerPosition.x << ", " << playerPosition.y << ")" << std::endl;
-    // std::cout << "Direction before norm: (" << direction.x << ", " << direction.y << ")" << std::endl;
+	// Normalize the direction vector
+	float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+	if (length > 0.0001f)
+	{
+		direction.x /= length;
+		direction.y /= length;
+	}
 
-    // Normalize the direction vector
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length > 0.0001f) {
-        direction.x /= length;
-        direction.y /= length;
-    }
+	// Create and setup the bullet
+	GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*this->mGameObject);
+	RigidBody* bulletRigidBody = bulletObject->getComponents<RigidBody>()[0];
+	bulletRigidBody->addForce(direction * 1000.0f);
 
-    direction = direction * -1;
-
-    // std::cout << "Final Direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
-
-    // Create and setup the bullet
-    GameObject* bulletObject = BulletPrefabFactory().createBulletPrefab(*this->mGameObject);
-    RigidBody* bulletRigidBody = bulletObject->getComponents<RigidBody>()[0];
-    bulletRigidBody->addForce(direction * 1000.0f);
-
-    sceneManager.getCurrentScene()->addGameObject(bulletObject);
+	sceneManager.getCurrentScene()->addGameObject(bulletObject);
 }
 
 void PlayerBehaviourScript::onUpdate() {
     Input& input = Input::getInstance();
 
-    handleMovement();
-    handleAnimations();
+	handleMovement();
+	handleAnimations();
 
-    hanldeCameraMovement();
+	hanldeCameraMovement();
 
-    if (input.GetKeyDown(Key::Key_C)) {
-        Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig(SHOW_COLLIDERS, !config.getConfig(SHOW_COLLIDERS));
-    }
+	if (input.GetKeyDown(Key::Key_C))
+	{
+		Configuration& config = EngineBravo::getInstance().getConfiguration();
+		config.setConfig(SHOW_COLLIDERS, !config.getConfig(SHOW_COLLIDERS));
+	}
 
-    if (input.GetKeyDown(Key::Key_F)) {
-        Configuration& config = EngineBravo::getInstance().getConfiguration();
-        config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
-    }
+	if (input.GetKeyDown(Key::Key_F))
+	{
+		Configuration& config = EngineBravo::getInstance().getConfiguration();
+		config.setConfig(SHOW_FPS, !config.getConfig(SHOW_FPS));
+	}
 
-    if (input.GetMouseButtonDown(MouseButton::LEFT)) {
-        fireBullet();
-    }
+	if (input.GetMouseButtonDown(MouseButton::LEFT))
+	{
+		fireBullet();
+	}
 
-    if (mGameObject->hasComponent<ParticleEmitter>()) {
-        static bool emitterMode = false;
+	if (mGameObject->hasComponent<ParticleEmitter>())
+	{
+		static bool emitterMode = false;
 
-        ParticleEmitter* emitter = mGameObject->getComponents<ParticleEmitter>()[0];
+		ParticleEmitter* emitter = mGameObject->getComponents<ParticleEmitter>()[0];
 
         if (input.GetKeyDown(Key::Key_P)) {
             emitter->setActive(!emitter->isActive());
@@ -312,7 +288,7 @@ void PlayerBehaviourScript::onUpdate() {
             emitter->setAngle(0, 360);
             emitter->getRelativeTransform().rotation = 0.0f;
         }
-    }
+	}
 }
 
 void PlayerBehaviourScript::onCollide(GameObject* aGameObject) {
