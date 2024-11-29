@@ -1,4 +1,5 @@
 #include "Physics/World.h"
+#include "BoxCollider.h"
 #include "CircleCollider.h"
 #include "Collider.h"
 #include "PhysicsEngine.h"
@@ -6,6 +7,7 @@
 #include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/collision.h"
+#include "box2d/types.h"
 #include <cmath>
 #include <math.h>
 
@@ -22,9 +24,7 @@ World::World(Vector2 aGravity)
 int World::createWorld(Vector2 aGravity) { return 0; }
 
 World::~World()
-{
-
-	//   b2DestroyWorld(mWorldID);
+{ // b2DestroyWorld(mWorldID);
 }
 
 void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID, aStep, aSubStep); }
@@ -110,7 +110,7 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 		shapeDef.filter.categoryBits = (1 << circleCollider->getCollideCategory());
 
 		shapeDef.filter.maskBits = maskBits;
-		shapeDef.isSensor = circleCollider->getIsTrigger();
+		shapeDef.isSensor = circleCollider->getTrigger();
 		b2CreateCircleShape(bodyID, &shapeDef, &circleShape);
 	}
 }
@@ -216,16 +216,28 @@ void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 
 	for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
 	{
+		BoxCollider* tempBoxCollider = aBodyProxy.getBoxColliders().at(i);
 		b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
 		b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
 		b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
 
-		if (b2Shape_IsSensor(shapeArray[i]) != aBodyProxy.getBoxColliders().at(i)->isTrigger())
+		if (b2Shape_IsSensor(shapeArray[i]) != tempBoxCollider->isTrigger())
 		{
 			b2DestroyShape(shapeArray[i]);
 			createShape(aBodyProxy, aBodyID);
 		}
-		// b2Shape_SetFilter(shapeArray[i], filterCategory::MONSTER);
+
+		uint16_t maskBits = 0;
+		for (int category : tempBoxCollider->getCollideWithCategory())
+		{
+			maskBits |= (1 << category); // Generate the bitmask
+		}
+
+		b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
+		tempFilter.maskBits = maskBits;
+		tempFilter.categoryBits = (1 << tempBoxCollider->getCollideCategory());
+
+		b2Shape_SetFilter(shapeArray[i], tempFilter);
 	}
 }
 

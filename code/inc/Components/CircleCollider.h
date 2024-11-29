@@ -13,8 +13,8 @@ public:
 	float getRadius() const;
 	void setRadius(float radius);
 
-	bool getIsTrigger() const;
-	void setIsTrigger(bool isTrigger);
+	bool getTrigger() const;
+	void setTrigger(bool isTrigger);
 
 	int getCollideCategory() const;
 	void setCollideCategory(int category);

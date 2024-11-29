@@ -265,6 +265,10 @@ void EngineBravo::updateAdditions()
 		{
 			mPhysicsManager.getPhysicsEngine().addObject(gameObject);
 		}
+		if (gameObject.hasComponent<CircleCollider>())
+		{
+			mPhysicsManager.getPhysicsEngine().addObject(gameObject);
+		}
 	}
 	mUpdateObjects.clear();
 }

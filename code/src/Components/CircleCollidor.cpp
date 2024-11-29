@@ -9,8 +9,8 @@ CircleCollider::~CircleCollider() {}
 float CircleCollider::getRadius() const { return mRadius; }
 void CircleCollider::setRadius(float radius) { mRadius = radius; }
 
-bool CircleCollider::getIsTrigger() const { return mIsTrigger; }
-void CircleCollider::setIsTrigger(bool isTrigger) { mIsTrigger = isTrigger; }
+bool CircleCollider::getTrigger() const { return mIsTrigger; }
+void CircleCollider::setTrigger(bool isTrigger) { mIsTrigger = isTrigger; }
 
 int CircleCollider::getCollideCategory() const { return mCollideCategory; }
 void CircleCollider::setCollideCategory(int category) { mCollideCategory = category; }
