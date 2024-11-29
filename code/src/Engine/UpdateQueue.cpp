@@ -1,3 +1,8 @@
+/**
+ * @file UpdateQueue.cpp
+ *
+ * @brief Contains the implementation of the UpdateQueue class
+ */
 #include "UpdateQueue.h"
 
 #include "Animation.h"
@@ -7,6 +12,12 @@
 #include "ParticleEmitter.h"
 #include "Text.h"
 
+/**
+ * @brief Adds a game object to the list of objects to be updated. If the object is already in the list, it is not added
+ * again.
+ *
+ * @param aGameObject The game object to be added
+ */
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
 	auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
@@ -21,8 +32,15 @@ void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 	}
 }
 
+/**
+ * @brief Clears the list of objects to be updated
+ */
 void UpdateQueue::clearUpdateObjects() { mUpdateObjects.clear(); }
 
+/**
+ * @brief Updates the managers with the objects that have been added. Removes the object from each manager, then checks
+ * if the manager requires it, and if so, it is added.
+ */
 void UpdateQueue::updateAdditions()
 {
 	// Iterate through the objects and update each manager
@@ -88,6 +106,10 @@ void UpdateQueue::updateAdditions()
 	mUpdateObjects.clear();
 }
 
+/**
+ * @brief Updates the managers with the objects that have been removed. Removes the object from each manager. Does this
+ * based on the objects to be removed list from the current scene.
+ */
 void UpdateQueue::updateRemovals()
 {
 	for (GameObject* gameObject :
@@ -112,6 +134,9 @@ void UpdateQueue::updateRemovals()
 	}
 }
 
+/**
+ * @brief Clears the objects from each manager, by calling the clearObjects method for each manager.
+ */
 void UpdateQueue::clearManagerObjects()
 {
 	EngineBravo::getInstance().getRenderSystem().clearObjects();
