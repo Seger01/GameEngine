@@ -23,6 +23,9 @@ public:
 
 	std::unique_ptr<Component> clone() const override;
 
+	bool getIsUpdated();
+	void setIsUpdated(bool aUpdated);
+
 private:
 	std::vector<int> mCollideWithCategory;
 	int mCollideCategory;
@@ -30,6 +33,8 @@ private:
 	bool mIsTrigger;
 
 	float mRadius;
+
+	bool mIsUpdated;
 };
 
 #endif // CIRCLE_COLLIDER_H

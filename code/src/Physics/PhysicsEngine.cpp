@@ -208,6 +208,17 @@ void PhysicsEngine::updateFlags()
 				if (tempBox->getIsUpdated())
 				{
 					mWorld.updateShapeProperties(bodyProxy, bodyID);
+
+					tempBox->setIsUpdated(false);
+				}
+			}
+			for (CircleCollider* tempCircle : mObjects.at(i).get().getComponents<CircleCollider>())
+			{
+				if (tempCircle->getIsUpdated())
+				{
+					mWorld.updateShapeProperties(bodyProxy, bodyID);
+
+					tempCircle->setIsUpdated(false);
 				}
 			}
 		}

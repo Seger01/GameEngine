@@ -1,8 +1,7 @@
 #include "BoxCollider.h"
 
 BoxCollider::BoxCollider(std::string aTag)
-	: Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mRotation(0.0f), mIsTrigger(false), mIsTrigger(false),
-	  mCollideWithCategory({1, 2}), mCollideCategory(1)
+	: Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mRotation(0.0f), mCollideWithCategory({1, 2}), mCollideCategory(1)
 {
 	// Constructor implementation
 }

@@ -208,36 +208,39 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 
 void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 {
-	b2BodyId bodyID = convertToB2BodyID(aBodyID);
-
-	b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
-
-	b2Body_GetShapes(bodyID, shapeArray, aBodyProxy.getBoxColliders().size());
-
-	for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
+	if (aBodyProxy.getBoxColliders().size() != 0)
 	{
-		BoxCollider* tempBoxCollider = aBodyProxy.getBoxColliders().at(i);
-		b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
-		b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
-		b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
+		b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
-		if (b2Shape_IsSensor(shapeArray[i]) != tempBoxCollider->isTrigger())
+		b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
+
+		b2Body_GetShapes(bodyID, shapeArray, aBodyProxy.getBoxColliders().size());
+
+		for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
 		{
-			b2DestroyShape(shapeArray[i]);
-			createShape(aBodyProxy, aBodyID);
+			BoxCollider* tempBoxCollider = aBodyProxy.getBoxColliders().at(i);
+			b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
+			b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
+			b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
+
+			if (b2Shape_IsSensor(shapeArray[i]) != tempBoxCollider->isTrigger())
+			{
+				b2DestroyShape(shapeArray[i]);
+				createShape(aBodyProxy, aBodyID);
+			}
+
+			uint16_t maskBits = 0;
+			for (int category : tempBoxCollider->getCollideWithCategory())
+			{
+				maskBits |= (1 << category); // Generate the bitmask
+			}
+
+			b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
+			tempFilter.maskBits = maskBits;
+			tempFilter.categoryBits = (1 << tempBoxCollider->getCollideCategory());
+
+			b2Shape_SetFilter(shapeArray[i], tempFilter);
 		}
-
-		uint16_t maskBits = 0;
-		for (int category : tempBoxCollider->getCollideWithCategory())
-		{
-			maskBits |= (1 << category); // Generate the bitmask
-		}
-
-		b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
-		tempFilter.maskBits = maskBits;
-		tempFilter.categoryBits = (1 << tempBoxCollider->getCollideCategory());
-
-		b2Shape_SetFilter(shapeArray[i], tempFilter);
 	}
 }
 
