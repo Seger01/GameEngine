@@ -291,3 +291,13 @@ void EngineBravo::updateRemovals()
 		mPhysicsManager.getPhysicsEngine().removeObject(*gameObject);
 	}
 }
+
+void EngineBravo::clearManagerObjects()
+{
+	mRenderSystem.clearObjects();
+	mParticleSystem.clearObjects();
+	mNetworkManager.clearObjects();
+	mAudioManager.clearObjects();
+	mUIManager.clearObjects();
+	mPhysicsManager.getPhysicsEngine().clearObjects();
+}

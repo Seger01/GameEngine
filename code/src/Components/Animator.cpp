@@ -1,6 +1,6 @@
 #include "Components/Animator.h"
 
-Animator::Animator() {}
+Animator::Animator(std::string aTag) : Component(aTag) {}
 
 Animator::~Animator() {}
 

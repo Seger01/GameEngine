@@ -1,6 +1,12 @@
+#include "Network/INetworkBehaviour.h"
+#include "Network/INetworkSerializable.h"
 #include "Network/NetworkObject.h"
+#include "Network/NetworkRegister.h"
 #include "Network/NetworkTransform.h"
 #include <gtest/gtest.h>
+
+#include "ConcreteNetworkBehaviour.h"
+#include "ConcreteNetworkSerializable.h"
 
 class NetworkTransformTest : public ::testing::Test {
 protected:
@@ -107,4 +113,32 @@ TEST_F(NetworkObjectTest, Clone) {
     ASSERT_NE(clonedNo, nullptr);
     EXPECT_TRUE(clonedNo->isOwner());
     EXPECT_EQ(clonedNo->getClientID(), clientID);
+}
+class NetworkBehaviourTest : public ::testing::Test {
+protected:
+    void SetUp() override {}
+};
+
+TEST_F(NetworkBehaviourTest, RegisterNetworkVariable) {
+    GameObject gameObject;
+    gameObject.addComponent<NetworkObject>();
+    gameObject.addComponent<ConcreteNetworkBehaviour>();
+
+    INetworkBehaviour* behaviour = gameObject.getComponents<INetworkBehaviour>()[0];
+
+    const auto& variables = behaviour->GetNetworkVariables();
+    ASSERT_EQ(variables.size(), 1);
+}
+
+class INetworkSerializableTest : public ::testing::Test {
+protected:
+    void SetUp() override {}
+};
+
+TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
+    auto& registry = NetworkRegister::Instance();
+    // registry.RegisterType<ConcreteNetworkSerializable>();
+
+    std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
+    ASSERT_NE(obj, nullptr);
 }

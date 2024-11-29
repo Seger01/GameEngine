@@ -5,11 +5,21 @@
 
 #include <slikenet/types.h>
 
+#include <vector>
+
 class NetworkManager;
+class INetworkBehaviour;
 
 class NetworkObject : public Component {
 public:
-    NetworkObject();
+    NetworkObject(std::string aTag = "defaultNetworkObject");
+    ~NetworkObject() = default;
+
+    NetworkObject(const NetworkObject& other);
+    NetworkObject& operator=(const NetworkObject& other);
+
+    NetworkObject(NetworkObject&& other) noexcept;
+    NetworkObject& operator=(NetworkObject&& other) noexcept;
 
     std::unique_ptr<Component> clone() const override;
 
@@ -20,13 +30,19 @@ public:
     bool isOwner() const;
 
     bool isPlayer() const;
+    int getNetworkObjectID() const;
 
 private:
     bool mIsOwner;
+    int mNetworkObjectID;
     SLNet::RakNetGUID mClientID;
 
     friend class NetworkManager;
     bool mIsPlayer;
+
+    static int networkObjectIDCounter;
+
+private:
     void setPlayer(bool aIsPlayer);
 };
 

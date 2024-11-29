@@ -1,42 +1,61 @@
 #ifndef NETWORKVARIABLE_H
 #define NETWORKVARIABLE_H
 
-#include <stdexcept> // For std::runtime_error
+#include "Network/INetworkBehaviour.h"
+#include "Network/NetworkInformation.h"
 
-enum class WritePermission
-{
-    ReadOnly,
-    ReadWrite
+#include <stdexcept>
+
+class NetworkVariableBase {
+public:
+    NetworkVariableBase() : mDirty(false), mNetworkVariableID(-1) {}
+    virtual ~NetworkVariableBase() = default;
+
+    virtual void serialize(SLNet::BitStream& stream) const = 0;
+    virtual void deserialize(SLNet::BitStream& stream) = 0;
+
+    bool isDirty() const { return mDirty; }
+    void setClean() { mDirty = false; }
+
+    virtual int getTypeId() const = 0;
+
+    void setNetworkVariableID(int aNetworkVariableID) { mNetworkVariableID = aNetworkVariableID; }
+    int getNetworkVariableID() const { return mNetworkVariableID; }
+
+protected:
+    bool mDirty;
+    int mNetworkVariableID;
 };
 
-template <typename T>
-class NetworkVariable
-{
+template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase {
 public:
-    NetworkVariable(WritePermission aWritePermission);
-    T getValue() const;
-    void setValue(T aValue);
+    // NetworkVariable(WritePermission aWritePermission);
+    NetworkVariable(INetworkBehaviour* aOwner, INetworkSerializableTemplate aValue = INetworkSerializableTemplate())
+        : mValue(std::move(aValue)) {
+        if (aOwner) {
+            aOwner->RegisterNetworkVariable(this);
+        } else {
+            throw std::runtime_error("NetworkVariable::NetworkVariable() aOwner is nullptr");
+        }
+    }
+
+    INetworkSerializableTemplate getValue() const { return mValue; }
+
+    void setValue(INetworkSerializableTemplate aValue) {
+        if (mValue != aValue) {
+            mValue = aValue;
+            mDirty = true;
+        }
+    }
+
+    void serialize(SLNet::BitStream& stream) const override { mValue.serialize(stream); }
+
+    void deserialize(SLNet::BitStream& stream) override { mValue.deserialize(stream); }
+
+    int getTypeId() const override { return GetTypeId<INetworkSerializableTemplate>(); }
 
 private:
-    T mValue;
+    INetworkSerializableTemplate mValue;
 };
-
-template <typename T>
-NetworkVariable<T>::NetworkVariable(WritePermission aWritePermission)
-{
-    throw std::runtime_error("NetworkVariable::NetworkVariable() not implemented");
-}
-
-template <typename T>
-T NetworkVariable<T>::getValue() const
-{
-    throw std::runtime_error("NetworkVariable::getValue() not implemented");
-}
-
-template <typename T>
-void NetworkVariable<T>::setValue(T aValue)
-{
-    throw std::runtime_error("NetworkVariable::setValue() not implemented");
-}
 
 #endif // NETWORKVARIABLE_H

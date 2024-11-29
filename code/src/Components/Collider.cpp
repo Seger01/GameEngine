@@ -1,6 +1,6 @@
 #include "Collider.h"
 
-Collider::Collider() {
+Collider::Collider(std::string aTag) : Component(aTag) {
     // Constructor implementation
 }
 

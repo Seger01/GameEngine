@@ -1,12 +1,9 @@
 #include "NetworkTransform.h"
 #include <stdexcept>
 
-NetworkTransform::NetworkTransform()
-    : mSendPositionX(false), mSendPositionY(false), mSendRotation(false), mSendScaleX(false), mSendScaleY(false) {}
-
 NetworkTransform::NetworkTransform(bool aSendPositionX, bool aSendPositionY, bool aSendRotation, bool aSendScaleX,
-                                   bool aSendScaleY)
-    : mSendPositionX(aSendPositionX), mSendPositionY(aSendPositionY), mSendRotation(aSendRotation),
+                                   bool aSendScaleY, std::string aTag)
+    : Component{aTag}, mSendPositionX(aSendPositionX), mSendPositionY(aSendPositionY), mSendRotation(aSendRotation),
       mSendScaleX(aSendScaleX), mSendScaleY(aSendScaleY) {}
 
 std::unique_ptr<Component> NetworkTransform::clone() const { return std::make_unique<NetworkTransform>(*this); }

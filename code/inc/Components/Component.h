@@ -8,8 +8,7 @@ class GameObject;
 
 class Component {
 public:
-    Component() = default;
-    Component(std::string aTag);
+    Component(std::string aTag = "defaultComponent");
     virtual ~Component() = default;
 
     // Rule of Five

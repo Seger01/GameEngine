@@ -9,10 +9,12 @@
 
 ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs,
                                  int aMaxLifeTimeMs, Vector2 aSize, Vector2 aEndSize, float aRotation,
-                                 float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient)
-    : mEmitterMode(aEmitterMode), mVelocity(aSpeed), mAcceleration(aAcceleration), mMinLifeTimeMs(aMinLifeTimeMs),
-      mMaxLifeTimeMs(aMaxLifeTimeMs), mSize(aSize), mEndSize(aEndSize), mRotation(aRotation),
-      mAngularVelocity(angularVelocity), mAngularAcceleration(angularAcceleration), mColorGradient(aColorGradient) {
+                                 float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient,
+                                 std::string aTag)
+    : Component{aTag}, mEmitterMode(aEmitterMode), mVelocity(aSpeed), mAcceleration(aAcceleration),
+      mMinLifeTimeMs(aMinLifeTimeMs), mMaxLifeTimeMs(aMaxLifeTimeMs), mSize(aSize), mEndSize(aEndSize),
+      mRotation(aRotation), mAngularVelocity(angularVelocity), mAngularAcceleration(angularAcceleration),
+      mColorGradient(aColorGradient) {
     mParticlesPerSecond = 0;
     mMinAngle = 0;
     mMaxAngle = 0;
