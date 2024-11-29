@@ -66,9 +66,11 @@ std::string FSConverter::findResourcesFolder() const
 	{
         return it->string();
     }
-
-	throw std::runtime_error("Resources folder not found in any of the checked paths.");
-	return ""; // Resources folder not found
+    else 
+    {
+	    throw std::runtime_error("Resources folder not found in any of the checked paths.");
+	    return ""; // Resources folder not found
+    }
 }
 
 
@@ -88,8 +90,10 @@ std::string FSConverter::getResourcePath(const std::string& resourceName, bool a
         throw std::runtime_error("Error: Resource " + resourceName + " does not exist at " + fullPath.string());
 		return "";
 	}
-
-	return fullPath.string();
+    else 
+    {
+	    return fullPath.string();
+    }
 }
 
 
@@ -106,5 +110,8 @@ std::string FSConverter::executablePath() const
 	{
 		throw std::runtime_error("Unable to determine the executable path.");
 	}
-	return std::filesystem::path(path).parent_path().string();
+    else 
+    {
+	    return std::filesystem::path(path).parent_path().string();
+    }
 }
