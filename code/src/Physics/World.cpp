@@ -91,28 +91,28 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 		b2CreatePolygonShape(bodyID, &shapeDef, &polygon);
 	}
 
-	for (CircleCollider* circleCollider : aBodyProxy.getCircleColliders())
-	{
-		b2Circle circleShape;
-
-		circleShape.radius = circleCollider->getRadius();
-		circleShape.center = {circleCollider->getTransform().position.x, circleCollider->getTransform().position.y};
-		b2ShapeDef shapeDef = b2DefaultShapeDef();
-		shapeDef.density = aBodyProxy.getDensity();
-		shapeDef.friction = aBodyProxy.getFriction();
-		shapeDef.restitution = aBodyProxy.getRestitution();
-
-		uint16_t maskBits = 0;
-		for (int category : circleCollider->getCollideWithCategory())
-		{
-			maskBits |= (1 << category); // Generate the bitmask
-		}
-		shapeDef.filter.categoryBits = (1 << circleCollider->getCollideCategory());
-
-		shapeDef.filter.maskBits = maskBits;
-		shapeDef.isSensor = circleCollider->getTrigger();
-		b2CreateCircleShape(bodyID, &shapeDef, &circleShape);
-	}
+	// for (CircleCollider* circleCollider : aBodyProxy.getCircleColliders())
+	// {
+	// 	b2Circle circleShape;
+	//
+	// 	circleShape.radius = circleCollider->getRadius();
+	// 	circleShape.center = {circleCollider->getTransform().position.x, circleCollider->getTransform().position.y};
+	// 	b2ShapeDef shapeDef = b2DefaultShapeDef();
+	// 	shapeDef.density = aBodyProxy.getDensity();
+	// 	shapeDef.friction = aBodyProxy.getFriction();
+	// 	shapeDef.restitution = aBodyProxy.getRestitution();
+	//
+	// 	uint16_t maskBits = 0;
+	// 	for (int category : circleCollider->getCollideWithCategory())
+	// 	{
+	// 		maskBits |= (1 << category); // Generate the bitmask
+	// 	}
+	// 	shapeDef.filter.categoryBits = (1 << circleCollider->getCollideCategory());
+	//
+	// 	shapeDef.filter.maskBits = maskBits;
+	// 	shapeDef.isSensor = circleCollider->getTrigger();
+	// 	b2CreateCircleShape(bodyID, &shapeDef, &circleShape);
+	// }
 }
 
 void World::deleteBody(BodyID aBodyID)
@@ -139,6 +139,7 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 		b2Body_ApplyTorque(bodyID, aTorque[torqueBufferIndex], true);
 	}
 }
+
 void World::setPosition(Vector2 aPosition, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);

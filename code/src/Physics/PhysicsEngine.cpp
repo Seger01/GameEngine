@@ -34,22 +34,22 @@ void PhysicsEngine::update()
 				mWorld.setPosition(newPos, rigidBody->getBodyId());
 			}
 		}
-		else if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<CircleCollider>())
-		{
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-
-			Transform transform = gameObject.getTransform();
-			transform.position.x = transform.position.x - gameObject.getComponents<CircleCollider>()[0]->getRadius();
-			transform.position.y = transform.position.y - gameObject.getComponents<CircleCollider>()[0]->getRadius();
-
-			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
-
-			if (newPos != mWorld.getPosition(rigidBody->getBodyId()))
-			{
-
-				mWorld.setPosition(newPos, rigidBody->getBodyId());
-			}
-		}
+		// else if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<CircleCollider>())
+		// {
+		// 	RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+		//
+		// 	Transform transform = gameObject.getTransform();
+		// 	transform.position.x = transform.position.x - gameObject.getComponents<CircleCollider>()[0]->getRadius();
+		// 	transform.position.y = transform.position.y - gameObject.getComponents<CircleCollider>()[0]->getRadius();
+		//
+		// 	Vector2 newPos = Vector2(transform.position.x, transform.position.y);
+		//
+		// 	if (newPos != mWorld.getPosition(rigidBody->getBodyId()))
+		// 	{
+		//
+		// 		mWorld.setPosition(newPos, rigidBody->getBodyId());
+		// 	}
+		// }
 	}
 
 	for (GameObject& gameObject : mObjects)
@@ -200,27 +200,17 @@ void PhysicsEngine::updateFlags()
 
 				body->setIsUpdated(false);
 			}
+			for (int i = 0; i < bodyProxy.getBoxColliders().size(); i++)
+			{
+				if (bodyProxy.getBoxColliders().at(i)->getIsUpdated())
+				{
+					mWorld.updateShapeProperties(bodyProxy, bodyID);
+					bodyProxy.getBoxColliders().at(i)->setIsUpdated(false);
+					break;
+				}
+			}
 
 			mWorld.setBodyActivity(mObjects.at(i).get().getComponents<RigidBody>().at(0)->isActive(), bodyID);
-
-			for (BoxCollider* tempBox : mObjects.at(i).get().getComponents<BoxCollider>())
-			{
-				if (tempBox->getIsUpdated())
-				{
-					mWorld.updateShapeProperties(bodyProxy, bodyID);
-
-					tempBox->setIsUpdated(false);
-				}
-			}
-			for (CircleCollider* tempCircle : mObjects.at(i).get().getComponents<CircleCollider>())
-			{
-				if (tempCircle->getIsUpdated())
-				{
-					mWorld.updateShapeProperties(bodyProxy, bodyID);
-
-					tempCircle->setIsUpdated(false);
-				}
-			}
 		}
 	}
 }
@@ -253,40 +243,40 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 					boxCollider->setHeight(boxCollider->getHeight() * 2);
 				}
 
-				for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
-				{
-					circleCollider->setRadius(circleCollider->getRadius() * 2);
-				}
+				// for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
+				// {
+				// 	circleCollider->setRadius(circleCollider->getRadius() * 2);
+				// }
 
 				gameObject.setTransform(transform);
 			}
-			else if (gameObject.hasComponent<CircleCollider>())
-			{
-				Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-				Transform transform = gameObject.getTransform();
-				float rotation = mWorld.getRotation(rigidBody->getBodyId());
-				CircleCollider* circleCollider = gameObject.getComponents<CircleCollider>()[0];
-				transform.position = position;
-
-				transform = Transform(Vector2(position.x, position.y));
-
-				transform.position.x = (transform.position.x - circleCollider->getRadius());
-				transform.position.y = (transform.position.y - circleCollider->getRadius());
-				transform.rotation = rotation;
-
-				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
-				{
-					boxCollider->setWidth(boxCollider->getWidth() * 2);
-					boxCollider->setHeight(boxCollider->getHeight() * 2);
-				}
-
-				for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
-				{
-					circleCollider->setRadius(circleCollider->getRadius() * 2);
-				}
-
-				gameObject.setTransform(transform);
-			}
+			// else if (gameObject.hasComponent<CircleCollider>())
+			// {
+			// 	Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+			// 	Transform transform = gameObject.getTransform();
+			// 	float rotation = mWorld.getRotation(rigidBody->getBodyId());
+			// 	CircleCollider* circleCollider = gameObject.getComponents<CircleCollider>()[0];
+			// 	transform.position = position;
+			//
+			// 	transform = Transform(Vector2(position.x, position.y));
+			//
+			// 	transform.position.x = (transform.position.x - circleCollider->getRadius());
+			// 	transform.position.y = (transform.position.y - circleCollider->getRadius());
+			// 	transform.rotation = rotation;
+			//
+			// 	for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			// 	{
+			// 		boxCollider->setWidth(boxCollider->getWidth() * 2);
+			// 		boxCollider->setHeight(boxCollider->getHeight() * 2);
+			// 	}
+			//
+			// 	for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
+			// 	{
+			// 		circleCollider->setRadius(circleCollider->getRadius() * 2);
+			// 	}
+			//
+			// 	gameObject.setTransform(transform);
+			// }
 		}
 	}
 }
@@ -310,34 +300,34 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 				boxCollider->setHeight(boxCollider->getHeight() / 2);
 			}
 
-			for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
-			{
-				circleCollider->setRadius(circleCollider->getRadius() / 2);
-			}
-
+			// for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
+			// {
+			// 	circleCollider->setRadius(circleCollider->getRadius() / 2);
+			// }
+			//
 			gameObject.setTransform(transform);
 		}
-		else if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<CircleCollider>())
-		{
-			Transform transform = gameObject.getTransform();
-			CircleCollider* circleCollider = gameObject.getComponents<CircleCollider>()[0];
-			transform.position.x = (transform.position.x + circleCollider->getRadius());
-			transform.position.y = (transform.position.y + circleCollider->getRadius());
-			transform.rotation = transform.rotation;
-
-			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
-			{
-				boxCollider->setWidth(boxCollider->getWidth() / 2);
-				boxCollider->setHeight(boxCollider->getHeight() / 2);
-			}
-
-			for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
-			{
-				circleCollider->setRadius(circleCollider->getRadius() / 2);
-			}
-
-			gameObject.setTransform(transform);
-		}
+		// else if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<CircleCollider>())
+		// {
+		// 	Transform transform = gameObject.getTransform();
+		// 	CircleCollider* circleCollider = gameObject.getComponents<CircleCollider>()[0];
+		// 	transform.position.x = (transform.position.x + circleCollider->getRadius());
+		// 	transform.position.y = (transform.position.y + circleCollider->getRadius());
+		// 	transform.rotation = transform.rotation;
+		//
+		// 	for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+		// 	{
+		// 		boxCollider->setWidth(boxCollider->getWidth() / 2);
+		// 		boxCollider->setHeight(boxCollider->getHeight() / 2);
+		// 	}
+		//
+		// 	for (CircleCollider* circleCollider : gameObject.getComponents<CircleCollider>())
+		// 	{
+		// 		circleCollider->setRadius(circleCollider->getRadius() / 2);
+		// 	}
+		//
+		// 	gameObject.setTransform(transform);
+		// }
 	}
 }
 
