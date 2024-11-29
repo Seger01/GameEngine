@@ -58,26 +58,20 @@ void InitBehaviourScript::createLevel1()
 
 	GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
-<<<<<<< HEAD
-	CircleCollider* circleCollider = new CircleCollider(8);
-	circleCollider->setTransform(Transform(Vector2(8, 0)));
-	defaultPlayerPrefab->addComponent(circleCollider);
-
 	scene->addGameObject(defaultPlayerPrefab);
-=======
-    gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
-    gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
-    gameObject2->addComponent<RigidBody>();
-    RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
-    rigidBody->setHasGravity(true);
-    rigidBody->setDensity(1.0f);
-    rigidBody->setFriction(0.3f);
-    rigidBody->setRestitution(0.2f);
-    rigidBody->setMass(1.0f);
-    rigidBody->setGravityScale(10.0f);
-    rigidBody->setCanRotate(false);
-    gameObject2->setName("Guy");
->>>>>>> development
+	//
+	// gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+	// gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+	// gameObject2->addComponent<RigidBody>();
+	// RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+	// rigidBody->setHasGravity(true);
+	// rigidBody->setDensity(1.0f);
+	// rigidBody->setFriction(0.3f);
+	// rigidBody->setRestitution(0.2f);
+	// rigidBody->setMass(1.0f);
+	// rigidBody->setGravityScale(10.0f);
+	// rigidBody->setCanRotate(false);
+	// gameObject2->setName("Guy");
 
 	GameObject* gameObject2 = new GameObject;
 	Transform objectTransform2;
@@ -213,29 +207,28 @@ void InitBehaviourScript::createLevel1()
 
 						GameObject* gameObject = new GameObject;
 
-<<<<<<< HEAD
 						Transform objectTransform;
 						objectTransform.position.x = static_cast<int>(colIndex * 16);
 						objectTransform.position.y = static_cast<int>(rowIndex * 16);
 						gameObject->setTransform(objectTransform);
-=======
-                        // Add BoxCollider components to the GameObject
-                        for (const auto& collider : tileInfo.mColliders) {
-                            BoxCollider* boxCollider = new BoxCollider();
-                            // boxCollider->setFilterCategory(1);
-                            Transform transform;
-                            transform.position.x = collider.x;
-                            transform.position.y = collider.y;
-                            boxCollider->setTransform(transform);
-                            boxCollider->setWidth(collider.mWidth);
-                            boxCollider->setHeight(collider.mHeight);
+						// Add BoxCollider components to the GameObject
+						for (const auto& collider : tileInfo.mColliders)
+						{
+							BoxCollider* boxCollider = new BoxCollider();
+							// boxCollider->setFilterCategory(1);
+							Transform transform;
+							transform.position.x = collider.x;
+							transform.position.y = collider.y;
+							boxCollider->setTransform(transform);
+							boxCollider->setWidth(collider.mWidth);
+							boxCollider->setHeight(collider.mHeight);
 
-                            if (isDoorsLayer) {
-                                boxCollider->setActive(false);
-                            }
-                            gameObject->addComponent(boxCollider);
-                        }
->>>>>>> development
+							if (isDoorsLayer)
+							{
+								boxCollider->setActive(false);
+							}
+							gameObject->addComponent(boxCollider);
+						}
 
 						// Add a Sprite component to the GameObject
 						Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
