@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera() : mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600) {}
+Camera::Camera() : mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}) {}
 
 Camera::~Camera() {}
 

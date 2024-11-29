@@ -211,6 +211,7 @@ void InitBehaviourScript::createLevel1()
 						objectTransform.position.x = static_cast<int>(colIndex * 16);
 						objectTransform.position.y = static_cast<int>(rowIndex * 16);
 						gameObject->setTransform(objectTransform);
+
 						// Add BoxCollider components to the GameObject
 						for (const auto& collider : tileInfo.mColliders)
 						{
@@ -288,6 +289,74 @@ void InitBehaviourScript::createLevel1()
 }
 
 void InitBehaviourScript::onStart() { createLevel1(); }
+
+// =======
+//
+// if (!tileInfo.mColliders.empty())
+// {
+// 	RigidBody* rigidBody = new RigidBody();
+// 	rigidBody->setTransform(objectTransform);
+// 	if (isDoorsLayer)
+// 	{
+// 		if (rigidBody != nullptr)
+// 		{
+// 			rigidBody->setActive(false);
+// 		}
+// 	}
+// 	gameObject->addComponent(rigidBody);
+// 	gameObject->setName("Tile");
+// }
+// if (isDoorsLayer)
+// {
+// 	gameObject->setTag("Door");
+// }
+// scene->addGameObject(gameObject);
+// }
+// else
+// {
+// 	// Handle the case where tileId does not exist in the map
+// 	std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
+// }
+// }
+// }
+// }
+// }
+//
+// return;
+// }
+
+// void InitBehaviourScript::onStart()
+// {
+// 	createLevel1();
+// 	// std::cout << "InitBehaviourScript::onStart()" << std::endl;
+// 	// EngineBravo& engine = EngineBravo::getInstance();
+// 	// SceneManager& sceneManager = engine.getSceneManager();
+//
+// 	// Scene* scene = sceneManager.createScene("Level-1");
+// 	// if (scene == nullptr)
+// 	//     exit(1);
+// 	//
+// 	// int cameraID = scene->addCamera();
+// 	// scene->setActiveGamera(cameraID);
+// 	//
+// 	// scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+// 	// scene->getActiveCamera().setWidth(160);
+// 	// scene->getActiveCamera().setHeight(90);
+// 	//
+// 	// GameObject* gameObject = new GameObject;
+// 	//
+// 	// Transform objectTransform;
+// 	// objectTransform.position.x = 80;
+// 	// objectTransform.position.y = 0;
+// 	// gameObject->setTransform(objectTransform);
+// 	//
+// 	// gameObject->addComponent<PlayerBehaviourScript>();
+// 	//
+// 	// scene->addGameObject(gameObject);
+// 	//
+// 	// sceneManager.requestSceneChange("Level-1");
+// }
+// >>>>>>> development
 
 void InitBehaviourScript::onUpdate() {}
 

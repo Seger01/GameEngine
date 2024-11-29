@@ -296,7 +296,11 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	}
 }
 
-void Renderer::setViewport(const SDL_Rect& viewport) { SDL_RenderSetViewport(mRenderer, &viewport); }
+void Renderer::setViewport(Rect& viewport)
+{
+	SDL_Rect rect = ((SDL_Rect)viewport);
+	SDL_RenderSetViewport(mRenderer, &rect);
+}
 
 void Renderer::clear(Color aColor)
 {

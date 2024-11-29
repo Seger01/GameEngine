@@ -45,6 +45,7 @@ public:
 	void clearUpdateObjects();
 	void updateAdditions();
 	void updateRemovals();
+	void clearManagerObjects();
 
 private:
 	// Private constructor and destructor

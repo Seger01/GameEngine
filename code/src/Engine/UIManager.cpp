@@ -22,6 +22,7 @@ void UIManager::init()
 }
 
 void UIManager::handleMouseDownEvent(const Event& aEvent) { mMouseDownEventQueue.push_back(aEvent); }
+
 void UIManager::handleMouseUpEvent(const Event& aEvent) { mMouseUpEventQueue.push_back(aEvent); }
 
 void UIManager::update(Scene* aScene)
@@ -161,3 +162,5 @@ void UIManager::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& UIManager::getObjects() const { return mObjects; }
+
+void UIManager::clearObjects() { mObjects.clear(); }

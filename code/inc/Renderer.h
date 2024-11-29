@@ -20,7 +20,7 @@ public:
 
 	void clear(Color aColor);
 	void show();
-	void setViewport(const SDL_Rect& viewport);
+	void setViewport(Rect& viewport);
 
 	void renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
 					   bool aFlipY, float aRotation, Color aColor);

@@ -19,3 +19,4 @@ PointerAlignment: Left
 AccessModifierOffset: -4
 
 BreakBeforeBraces: Allman
+SeparateDefinitionBlocks: Always

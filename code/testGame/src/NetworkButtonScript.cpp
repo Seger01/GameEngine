@@ -41,6 +41,7 @@ void NetworkButtonScript::onButtonPressed() {
                 std::cout << "Network is already connected" << std::endl;
             } else {
                 networkManager.setRole(NetworkRole::HOST);
+                networkManager.startNetwork();
             }
             setButtonsVisibility();
         } else if (button->getTag() == "Search") {

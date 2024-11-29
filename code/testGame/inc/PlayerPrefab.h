@@ -1,17 +1,7 @@
 #ifndef PLAYERPREFAB_H
 #define PLAYERPREFAB_H
 
-#include "Animation.h"
-#include "EngineBravo.h"
-#include "GameObject.h"
-#include "NetworkTransform.h"
-#include "ParticleEmitter.h"
-#include "PlayerBehaviourScript.h"
-#include "SpriteDefUtil.h"
-#include "Transform.h"
-#include <iostream>
-#include <vector>
-
+class GameObject;
 class PlayerPrefabFactory {
 public:
     static GameObject* createPlayerPrefab();
@@ -26,6 +16,7 @@ private:
     static void addRigidBody(GameObject* gameObject);
     static void addCollider(GameObject* gameObject);
     static void addSound(GameObject* gameObject);
+    static void addNetworkObject(GameObject* gameObject);
 };
 
 #endif // PLAYERPREFAB_H

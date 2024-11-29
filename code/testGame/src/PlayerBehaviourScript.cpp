@@ -103,7 +103,12 @@ void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool a
 	}
 }
 
-void PlayerBehaviourScript::onStart() {}
+void PlayerBehaviourScript::onStart() {
+	if (!isOwner())
+	{
+		destroy();
+	}
+}
 
 void PlayerBehaviourScript::handleAnimations()
 {

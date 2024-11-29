@@ -10,7 +10,7 @@
 
 class Sprite : public Component {
 public:
-    Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect());
+    Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect(), std::string aTag = "defaultSprite");
     ~Sprite();
 
     // Rule of Five

@@ -29,6 +29,9 @@ public:
 	void addObject(GameObject& aObject);
 	void removeObject(GameObject& aObject);
 
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
+	void clearObjects();
+
 private:
 	void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort);
 	void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation, Rect aScreenViewPort);
@@ -39,7 +42,6 @@ private:
 	void renderForCamera(Scene* aScene, Camera& camera, Rect aScreenViewPort);
 
 	void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera);
-	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 
 	int getLowestLayer(Scene* aScene);
 	int getHighestLayer(Scene* aScene);

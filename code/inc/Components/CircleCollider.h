@@ -5,8 +5,7 @@
 
 class CircleCollider : public Collider {
 public:
-    CircleCollider();
-    CircleCollider(float radius);
+    CircleCollider(float aRadius = 0.0f, std::string aTag = "defaultCircleCollider");
     ~CircleCollider();
 
     float getRadius() const;

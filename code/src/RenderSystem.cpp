@@ -91,6 +91,7 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 							 aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
 							 aSprite->getColorFilter());
 }
+
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation,
 								   Rect aScreenViewPort)
 {
@@ -169,7 +170,6 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
-	// std::cout << "Original screen pos: " << screenPos.x << " " << screenPos.y << std::endl;
 	FRect viewport = aCurrentCamera.getViewport();
 
 	Rect screenViewPort =
@@ -179,18 +179,12 @@ Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 	screenPos.x = screenPos.x - screenViewPort.x;
 	screenPos.y = screenPos.y - screenViewPort.y;
 
-	// std::cout << "Screen pos: " << screenPos.x << " " << screenPos.y << std::endl;
-
 	Vector2 worldPos;
 	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
 	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
 
-	// std::cout << "World pos: " << worldPos.x << " " << worldPos.y << std::endl;
-
 	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
 	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
-
-	// std::cout << "World pos: " << worldPos.x << " " << worldPos.y << std::endl;
 
 	return worldPos;
 }
@@ -230,6 +224,14 @@ int RenderSystem::getLowestLayer(Scene* aScene)
 				}
 			}
 		}
+		if (typeid(*gameObject) == typeid(Text))
+		{
+			Text& text = dynamic_cast<Text&>(*gameObject);
+			if (text.getLayer() < lowestLayer)
+			{
+				lowestLayer = text.getLayer();
+			}
+		}
 	}
 	return lowestLayer;
 }
@@ -267,6 +269,14 @@ int RenderSystem::getHighestLayer(Scene* aScene)
 				{
 					highestLayer = particleEmitter->getLayer();
 				}
+			}
+		}
+		if (typeid(*gameObject) == typeid(Text))
+		{
+			Text& text = dynamic_cast<Text&>(*gameObject);
+			if (text.getLayer() > highestLayer)
+			{
+				highestLayer = text.getLayer();
 			}
 		}
 	}
@@ -325,21 +335,11 @@ void RenderSystem::render(Scene* aScene)
 
 		FRect viewport = camera->getViewport();
 
-		std::cout << "Window size: " << mWindow->getSize().x << " " << mWindow->getSize().y << std::endl;
-
-		std::cout << "viewport: " << viewport.x << " " << viewport.y << " " << viewport.w << " " << viewport.h
-				  << std::endl;
-
 		Rect screenViewPort = Rect{
 			static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
 			static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
 
-		std::cout << "screenViewPort: " << screenViewPort.x << " " << screenViewPort.y << " " << screenViewPort.w << " "
-				  << screenViewPort.h << std::endl;
-
-		SDL_Rect sdlViewport = (SDL_Rect)screenViewPort;
-		// Set the viewport for the current camera
-		SDL_RenderSetViewport(mRenderer->getSDLRenderer(), &sdlViewport);
+		mRenderer->setViewport(screenViewPort);
 
 		// Render objects visible to this camera
 		renderForCamera(aScene, *camera, screenViewPort);
@@ -456,6 +456,7 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }
+
 Window& RenderSystem::getWindow() { return *mWindow; }
 
 void RenderSystem::addObject(GameObject& aObject)
@@ -483,3 +484,5 @@ void RenderSystem::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& RenderSystem::getObjects() const { return mObjects; }
+
+void RenderSystem::clearObjects() { mObjects.clear(); }
