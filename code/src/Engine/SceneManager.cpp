@@ -5,145 +5,195 @@ SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSce
 
 SceneManager::~SceneManager() {}
 
-void SceneManager::update() {
-    if (mScenes.size() == 0) {
-        return;
-    }
+void SceneManager::update()
+{
+	if (mScenes.size() == 0)
+	{
+		return;
+	}
 
-    if (mCurrentSceneIndex <= mScenes.size() - 1) {
-        mScenes[mCurrentSceneIndex]->update();
-    }
+	if (mCurrentSceneIndex <= mScenes.size() - 1)
+	{
+		mScenes[mCurrentSceneIndex]->update();
+	}
 
-    // check if scene would like to be changed
-    sceneChanged();
+	// check if scene would like to be changed
+	sceneChanged();
 }
 
-bool SceneManager::sceneChanged() {
-    if (mNewSceneName != "") {
-        loadScene(mNewSceneName);
-        mNewSceneName = "";
-        return true;
-    } else if (mNewSceneID != -1) {
-        loadScene(mNewSceneID);
-        mNewSceneID = -1;
-        return true;
-    }
-    return false;
+bool SceneManager::sceneChanged()
+{
+	if (mNewSceneName != "")
+	{
+		loadScene(mNewSceneName);
+		mNewSceneName = "";
+		return true;
+	}
+	else if (mNewSceneID != -1)
+	{
+		loadScene(mNewSceneID);
+		mNewSceneID = -1;
+		return true;
+	}
+	return false;
 }
 
 void SceneManager::requestSceneChange(const std::string& sceneName) { mNewSceneName = sceneName; }
 
 void SceneManager::requestSceneChange(int sceneID) { mNewSceneID = sceneID; }
 
-int SceneManager::getNewSceneID() {
-    bool idFound = false;
+int SceneManager::getNewSceneID()
+{
+	bool idFound = false;
 
-    int sceneID = -1;
-    while (idFound == false) {
-        sceneID++;
-        bool idSeen = false;
-        for (int i = 0; i < mScenes.size(); i++) {
-            if (mScenes[i]->getID() == sceneID) {
-                idSeen = true;
-            }
-        }
-        if (!idSeen)
-            idFound = true;
-    }
-    return sceneID;
+	int sceneID = -1;
+	while (idFound == false)
+	{
+		sceneID++;
+		bool idSeen = false;
+		for (int i = 0; i < mScenes.size(); i++)
+		{
+			if (mScenes[i]->getID() == sceneID)
+			{
+				idSeen = true;
+			}
+		}
+		if (!idSeen)
+			idFound = true;
+	}
+	return sceneID;
 }
 
-bool SceneManager::sceneNameExists(std::string aSceneName) {
-    for (auto& scene : mScenes) {
-        if (scene->getName() == aSceneName) {
-            return true;
-        }
-    }
-    return false;
+bool SceneManager::sceneNameExists(std::string aSceneName)
+{
+	for (auto& scene : mScenes)
+	{
+		if (scene->getName() == aSceneName)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
-bool SceneManager::sceneIDExists(int aSceneID) {
-    for (auto& scene : mScenes) {
-        if (scene->getID() == aSceneID) {
-            return true;
-        }
-    }
-    return false;
+bool SceneManager::sceneIDExists(int aSceneID)
+{
+	for (auto& scene : mScenes)
+	{
+		if (scene->getID() == aSceneID)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
-Scene* SceneManager::createScene(std::string aSceneName, int aSceneID) {
-    if (sceneNameExists(aSceneName) || sceneIDExists(aSceneID)) {
-        return nullptr;
-    }
+Scene* SceneManager::createScene(std::string aSceneName, int aSceneID)
+{
+	if (sceneNameExists(aSceneName) || sceneIDExists(aSceneID))
+	{
+		return nullptr;
+	}
 
-    if (aSceneID == -1) {
-        aSceneID = getNewSceneID();
-    }
+	if (aSceneID == -1)
+	{
+		aSceneID = getNewSceneID();
+	}
 
-    mScenes.push_back(std::unique_ptr<Scene>(new Scene(aSceneName, aSceneID)));
-    return mScenes.back().get();
-    // return mScenes[mScenes.size() - 1].get();
+	mScenes.push_back(std::unique_ptr<Scene>(new Scene(aSceneName, aSceneID)));
+	return mScenes.back().get();
+	// return mScenes[mScenes.size() - 1].get();
 }
 
-void SceneManager::removeScene(const std::string& sceneName) {
-    for (int i = 0; i < mScenes.size(); ++i) {
-        if (mScenes[i]->getName() == sceneName) {
-            mScenes.erase(mScenes.begin() + i);
-            break;
-        }
-    }
+void SceneManager::removeScene(const std::string& sceneName)
+{
+	for (int i = 0; i < mScenes.size(); ++i)
+	{
+		if (mScenes[i]->getName() == sceneName)
+		{
+			mScenes.erase(mScenes.begin() + i);
+			break;
+		}
+	}
 }
 
-void SceneManager::loadScene(int index) {
-    Scene* currentScene = getCurrentScene();
-    if (currentScene) {
-        currentScene->releasePersistentGameObjects();
-    }
+void SceneManager::loadScene(int index)
+{
+	// Release all objects from the managers
+	EngineBravo::getInstance().clearManagerObjects();
 
-    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	Scene* currentScene = getCurrentScene();
+	if (currentScene)
+	{
+		currentScene->releasePersistentGameObjects();
+	}
 
-    currentScene->clearPersistentGameObjects();
+	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
 
-    if (index >= 0 && index < mScenes.size()) {
-        mCurrentSceneIndex = index;
-    }
+	currentScene->clearPersistentGameObjects();
 
-    currentScene = getCurrentScene();
+	if (index >= 0 && index < mScenes.size())
+	{
+		mCurrentSceneIndex = index;
+	}
 
-    for (auto& object : persistentGameObjects) {
-        currentScene->addPersistentGameObject(object);
-    }
+	currentScene = getCurrentScene();
+
+	for (auto& object : persistentGameObjects)
+	{
+		currentScene->addPersistentGameObject(object);
+		// Add the object to the update list
+		EngineBravo::getInstance().addToUpdateObjects(*object);
+	}
+	EngineBravo::getInstance().updateAdditions();
 }
 
-void SceneManager::loadScene(const std::string& sceneName) {
-    Scene* currentScene = getCurrentScene();
-    if (currentScene) {
-        currentScene->releasePersistentGameObjects();
-    }
+void SceneManager::loadScene(const std::string& sceneName)
+{
+	// Release all objects from the managers
+	EngineBravo::getInstance().clearManagerObjects();
 
-    std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	Scene* currentScene = getCurrentScene();
+	if (currentScene)
+	{
+		currentScene->releasePersistentGameObjects();
+	}
 
-    currentScene->clearPersistentGameObjects();
+	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
 
-    for (int i = 0; i < mScenes.size(); ++i) {
-        if (mScenes[i]->getName() == sceneName) {
-            std::cout << "Loading scene: " << sceneName << std::endl;
-            mCurrentSceneIndex = i;
-            EngineBravo::getInstance().getAudioManager().wake();
-            break;
-        }
-    }
+	currentScene->clearPersistentGameObjects();
 
-    currentScene = getCurrentScene();
+	for (int i = 0; i < mScenes.size(); ++i)
+	{
+		if (mScenes[i]->getName() == sceneName)
+		{
+			std::cout << "Loading scene: " << sceneName << std::endl;
+			mCurrentSceneIndex = i;
+			EngineBravo::getInstance().getAudioManager().wake();
+			break;
+		}
+	}
 
-    for (auto& object : persistentGameObjects) {
-        currentScene->addPersistentGameObject(object);
-    }
+	currentScene = getCurrentScene();
+
+	for (auto& object : persistentGameObjects)
+	{
+		currentScene->addPersistentGameObject(object);
+		// Add the object to the update list
+		EngineBravo::getInstance().addToUpdateObjects(*object);
+	}
+	for (GameObject* object : currentScene->getGameObjects())
+	{
+		EngineBravo::getInstance().addToUpdateObjects(*object);
+	}
+	EngineBravo::getInstance().updateAdditions();
 }
 
-Scene* SceneManager::getCurrentScene() {
-    if (mCurrentSceneIndex >= 0 && mCurrentSceneIndex < mScenes.size()) {
-        return mScenes[mCurrentSceneIndex].get();
-    }
-    return nullptr;
+Scene* SceneManager::getCurrentScene()
+{
+	if (mCurrentSceneIndex >= 0 && mCurrentSceneIndex < mScenes.size())
+	{
+		return mScenes[mCurrentSceneIndex].get();
+	}
+	return nullptr;
 }

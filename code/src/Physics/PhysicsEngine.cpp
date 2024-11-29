@@ -372,3 +372,5 @@ void PhysicsEngine::removeObject(GameObject& aObject)
 }
 
 const std::vector<std::reference_wrapper<GameObject>>& PhysicsEngine::getObjects() const { return mObjects; }
+
+void PhysicsEngine::clearObjects() { mObjects.clear(); }
