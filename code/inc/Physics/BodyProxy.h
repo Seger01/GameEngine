@@ -12,56 +12,57 @@
 #include <iostream>
 #include <vector>
 
-class BodyProxy {
+class BodyProxy
+{
 public:
-    BodyProxy(const std::reference_wrapper<GameObject>& aGameObject);
-    ~BodyProxy();
+	BodyProxy(const std::reference_wrapper<GameObject>& aGameObject);
+	~BodyProxy();
 
-    void processBodyType();
+	void processBodyType();
 
-    Vector2 getPosition() const;
+	Vector2 getPosition() const;
 
-    bool getHasGravity() const;
-    bool getIsMoveableByForce() const;
-    bool getCanRotate() const;
-    BodyType getBodyType() const;
+	bool getHasGravity() const;
+	bool getIsMoveableByForce() const;
+	bool getCanRotate() const;
+	BodyType getBodyType() const;
 
-    float getLinearDamping() const;
-    float getAngularDamping() const;
+	float getLinearDamping() const;
+	float getAngularDamping() const;
 
-    float getDensity() const;
-    float getFriction() const;
-    float getRestitution() const;
+	float getDensity() const;
+	float getFriction() const;
+	float getRestitution() const;
 
-    float getMass() const;
-    float getGravityScale() const;
+	float getMass() const;
+	float getGravityScale() const;
 
-    bool getCanCollide() const;
+	bool getCanCollide() const;
 
-    std::vector<BoxCollider*> getBoxColliders() const;
-    std::vector<CircleCollider*> getCircleColliders() const;
+	std::vector<BoxCollider*> getBoxColliders() const;
+	std::vector<CircleCollider*> getCircleColliders() const;
 
 private:
-    Vector2 mPosition;
+	Vector2 mPosition;
 
-    bool mHasGravity;
-    bool mIsMoveableByForce;
-    bool mCanRotate;
-    bool mCanCollide;
-    BodyType mBodyType;
+	bool mHasGravity;
+	bool mIsMoveableByForce;
+	bool mCanRotate;
+	bool mCanCollide;
+	BodyType mBodyType;
 
-    float mLinearDamping;
-    float mAngularDamping;
+	float mLinearDamping;
+	float mAngularDamping;
 
-    float mDensity;
-    float mFriction;
-    float mRestitution;
+	float mDensity;
+	float mFriction;
+	float mRestitution;
 
-    float mMass;
-    float mGravityScale;
+	float mMass;
+	float mGravityScale;
 
-    std::vector<BoxCollider*> mBoxColliders;
-    std::vector<CircleCollider*> mCircleColliders;
+	std::vector<BoxCollider*> mBoxColliders;
+	std::vector<CircleCollider*> mCircleColliders;
 };
 
 #endif // BODYPROXY_H

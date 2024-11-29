@@ -9,46 +9,46 @@
 #include <utility>
 #include <vector>
 
-class World {
+class World
+{
 public:
-    World(Vector2 aGravity);
-    World();
-    ~World();
+	World(Vector2 aGravity);
+	World();
+	~World();
 
-    int createWorld(Vector2 aGravity);
-    void resetWorld();
+	int createWorld(Vector2 aGravity);
+	void resetWorld();
 
-    void executeWorldStep(float step, int subStep);
+	void executeWorldStep(float step, int subStep);
 
-    void updateBodyPosition(BodyProxy& aBodyProxy, BodyID aBodyID);
-    void updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
-    void updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
+	void updateBodyPosition(BodyProxy& aBodyProxy, BodyID aBodyID);
+	void updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
+	void updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
 
-    BodyID createBody(BodyProxy& aBodyProxy);
-    void createShape(BodyProxy& aBodyProxy, BodyID aBodyID);
+	BodyID createBody(BodyProxy& aBodyProxy);
+	void createShape(BodyProxy& aBodyProxy, BodyID aBodyID);
 
-    void deleteBody(BodyID aBodyID);
+	void deleteBody(BodyID aBodyID);
 
-    void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
-    void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
+	void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
+	void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
 
-    void setPosition(Vector2 aPosition, BodyID aBodyID);
-    void setRotation(float aRotation, BodyID aBodyID);
-    void setGravity(Vector2 aGravity);
+	void setPosition(Vector2 aPosition, BodyID aBodyID);
+	void setRotation(float aRotation, BodyID aBodyID);
+	void setGravity(Vector2 aGravity);
+	Vector2 getPosition(BodyID aBodyID);
+	float getRotation(BodyID aBodyID);
+	Vector2 getGravity();
 
-    Vector2 getPosition(BodyID aBodyID);
-    float getRotation(BodyID aBodyID);
-    Vector2 getGravity();
+	void setBodyActivity(bool aState, BodyID aBodyID);
 
-    void setBodyActivity(bool aState, BodyID aBodyID);
-
-    b2BodyId convertToB2BodyID(BodyID aBodyID);
-    std::vector<std::pair<int, int>> getContactEvents();
-    std::vector<std::pair<int, int>> getSensorEvents();
+	b2BodyId convertToB2BodyID(BodyID aBodyID);
+	std::vector<std::pair<int, int>> getContactEvents();
+	std::vector<std::pair<int, int>> getSensorEvents();
 
 private:
-    b2WorldId mWorldID;
-    Vector2 mGravity;
+	b2WorldId mWorldID;
+	Vector2 mGravity;
 };
 
 #endif // WORLD_H

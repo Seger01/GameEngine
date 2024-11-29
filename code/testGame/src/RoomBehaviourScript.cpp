@@ -61,7 +61,7 @@ void RoomBehaviourScript::spawnEnemies() {
             rigidBody->setRestitution(0.2f);
             rigidBody->setMass(1.0f);
             rigidBody->setGravityScale(10.0f);
-            rigidBody->setCanRotate(false);
+            rigidBody->setCanRotate(true);
             enemy->setTransform(transform);
             enemy->addComponent(new EnemyBehaviourScript());
             // std::cout << "Spawned enemy at (" << spawnPoint.x << ", " << spawnPoint.y << ")" << std::endl;

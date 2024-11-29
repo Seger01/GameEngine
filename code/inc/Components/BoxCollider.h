@@ -2,37 +2,42 @@
 
 #include "Collider.h"
 
-class BoxCollider : public Collider {
+class BoxCollider : public Collider
+{
 public:
-    BoxCollider(std::string aTag = "defaultBoxCollider");
-    virtual ~BoxCollider();
+	BoxCollider(std::string aTag = "defaultBoxCollider");
+	virtual ~BoxCollider();
 
-    std::unique_ptr<Component> clone() const override;
+	std::unique_ptr<Component> clone() const override;
 
-    // Getter and setter methods for width, height, and rotation
-    float getWidth() const;
-    void setWidth(float width);
+	// Getter and setter methods for width, height, and rotation
+	float getWidth() const;
+	void setWidth(float width);
 
-    float getHeight() const;
-    void setHeight(float height);
+	float getHeight() const;
+	void setHeight(float height);
 
-    float getRotation() const;
-    void setRotation(float rotation);
+	float getRotation() const;
+	void setRotation(float rotation);
 
-    bool isTrigger() const;
-    void setTrigger(bool isTrigger);
+	bool isTrigger() const;
+	void setTrigger(bool isTrigger);
 
-    filterCategory getFilterCategory() const;
-    void setFilterCategory(filterCategory category);
+	int getCollideCategory() const;
+	void setCollideCategory(int category);
 
-    std::vector<filterCategory> getCollideWith() const;
-    void setCollideWith(std::vector<filterCategory> aCollideWith);
+	std::vector<int> getCollideWithCategory() const;
+	void setCollideWithCategory(std::vector<int> aCollideWith);
+
+	bool getIsUpdated();
+	void setIsUpdated(bool aUpdated);
 
 private:
-    bool mIsTrigger;
-    float mWidth;
-    float mHeight;
-    float mRotation;
-    std::vector<filterCategory> mCollideWith;
-    filterCategory mFilterCategory;
+	bool mIsTrigger;
+	float mWidth;
+	float mHeight;
+	float mRotation;
+	std::vector<int> mCollideWithCategory;
+	int mCollideCategory;
+	bool mIsUpdated;
 };

@@ -204,7 +204,6 @@ void InitBehaviourScript::createLevel1()
 
 						gameObject->addComponent(sprite);
 
-						// Add BoxCollider components to the GameObject
 						for (const auto& collider : tileInfo.mColliders)
 						{
 							BoxCollider* boxCollider = new BoxCollider();
