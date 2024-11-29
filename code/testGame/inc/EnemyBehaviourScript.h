@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Components/IBehaviourScript.h"
+#include "EnemyTransformSerialize.h"
 #include "GameObject.h"
+#include "Network/INetworkBehaviour.h"
+#include "Network/NetworkVariable.h"
 #include <iostream>
 
-class EnemyBehaviourScript : public IBehaviourScript {
+class EnemyBehaviourScript : public INetworkBehaviour
+{
 public:
     void onStart() override;
     void onUpdate() override;
@@ -17,4 +20,7 @@ private:
     void deactivateAllAnimations();
     void setFlipX(bool aState);
     void setFlipY(bool aState);
+
+private:
+	NetworkVariable<EnemyTransformSerialize> mTransform{this};
 };

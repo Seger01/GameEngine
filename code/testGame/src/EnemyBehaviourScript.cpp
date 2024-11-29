@@ -1,9 +1,18 @@
 #include "EnemyBehaviourScript.h"
+#include "EngineBravo.h"
 
 void EnemyBehaviourScript::onStart() {
 }
 
 void EnemyBehaviourScript::onUpdate() {
+	if (isOwner())
+	{ // if owner set the data to be synchronized with the network variable
+		mTransform.getValue().setTransform(mGameObject->getTransform());
+	}
+	else
+	{ // if not owner set the data to be synchronized with the network variable
+		mGameObject->getTransform().position = mTransform.getValue().getTransform().position;
+	}
 }
 
 void EnemyBehaviourScript::onCollide(GameObject* aGameObject) {
