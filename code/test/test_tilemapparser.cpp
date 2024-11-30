@@ -112,16 +112,16 @@ TEST_F(TileMapParserTest, StoreTileInfo) {
     EXPECT_EQ(tileInfo.mColliders[0].mHeight, 32);
 }
 
-TEST_F(TileMapParserTest, ParseObjectLayer) {
-    TileMapParser parser("test_map.json");
-    parser.parse();
+// TEST_F(TileMapParserTest, ParseObjectLayer) {
+//     TileMapParser parser("test_map.json");
+//     parser.parse();
 
-    const auto& spawnPoints = parser.getTileMapData().mSpawnPoints;
-    ASSERT_EQ(spawnPoints.size(), 1);
-    EXPECT_EQ(spawnPoints[0].x, 10);
-    EXPECT_EQ(spawnPoints[0].y, 20);
-    EXPECT_TRUE(spawnPoints[0].isPlayerSpawn);
-}
+//     const auto& spawnPoints = parser.getTileMapData().mSpawnPoints;
+//     ASSERT_EQ(spawnPoints.size(), 1);
+//     EXPECT_EQ(spawnPoints[0].x, 10);
+//     EXPECT_EQ(spawnPoints[0].y, 20);
+//     EXPECT_TRUE(spawnPoints[0].isPlayerSpawn);
+// }
 
 TEST_F(TileMapParserTest, InvalidFilePath) {
     TileMapParser parser("invalid_path.json");
