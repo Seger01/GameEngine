@@ -41,6 +41,8 @@ struct MapObject {
     float y;
     float width;
     float height;
+    std::string type;
+    std::string name;
     std::unordered_map<std::string, std::string> properties;
 };
 

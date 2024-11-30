@@ -115,6 +115,8 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
         mapObject.y = object["y"];
         mapObject.width = object["width"];
         mapObject.height = object["height"];
+        mapObject.type = object.value("type", "");
+        mapObject.name = object.value("name", "");
 
         if (object.contains("properties")) {
             for (const auto& property : object["properties"]) {
