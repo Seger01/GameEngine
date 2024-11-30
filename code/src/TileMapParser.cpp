@@ -105,30 +105,36 @@ void TileMapParser::parse()
  * 
  * @param layer 
  */
-void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
-{
-	if (!layer.contains("objects") || !layer["objects"].is_array())
-	{
-		throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
-	}
-	for (const auto& object : layer["objects"])
-	{
-		MapObject mapObject;
-		mapObject.x = object["x"];
-		mapObject.y = object["y"];
-		mapObject.width = object["width"];
-		mapObject.height = object["height"];
+void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
+    if (!layer.contains("objects") || !layer["objects"].is_array()) {
+        throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
+    }
+    for (const auto& object : layer["objects"]) {
+        MapObject mapObject;
+        mapObject.x = object["x"];
+        mapObject.y = object["y"];
+        mapObject.width = object["width"];
+        mapObject.height = object["height"];
 
-		if (object.contains("properties"))
-		{
-			for (const auto& property : object["properties"])
-			{
-				mapObject.properties[property["name"]] = property["value"].dump();
-			}
-		}
+        if (object.contains("properties")) {
+            for (const auto& property : object["properties"]) {
+                std::string propertyName = property["name"];
+                if (property["type"] == "bool") {
+                    mapObject.properties[propertyName] = property["value"].get<bool>() ? "true" : "false";
+                } else if (property["type"] == "int") {
+                    mapObject.properties[propertyName] = std::to_string(property["value"].get<int>());
+                } else if (property["type"] == "float") {
+                    mapObject.properties[propertyName] = std::to_string(property["value"].get<float>());
+                } else if (property["type"] == "string") {
+                    mapObject.properties[propertyName] = property["value"].get<std::string>();
+                } else {
+                    mapObject.properties[propertyName] = property["value"].dump();
+                }
+            }
+        }
 
-		mTileMapData.mMapObjects.push_back(mapObject);
-	}
+        mTileMapData.mMapObjects.push_back(mapObject);
+    }
 }
 
 
