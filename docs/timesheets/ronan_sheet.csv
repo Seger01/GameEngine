@@ -72,3 +72,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-26, 9:15, 7.25, worked on test document and started work on AI
 2024-11-27, 9:15, 7.5, worked on AI and fixed some issues with the level creator
 2024-11-28, 17:00, 1.5, made some improvements to the pathfinding and worked on compliance with codestandard for maptograph and pathfinding
+2024-11-29, 9:45, 5.5, worked on tests for AI and MapToGraph and started work on improved TileMapParser.
+2024-11-30, 16:00, 2.5, worked on improved TileMapParser and made new branch to use it in the game
