@@ -5,15 +5,14 @@
 
 /**
  * @brief Construct a new TileMapParser object
- * 
- * @param aFilePath 
+ *
+ * @param aFilePath
  */
 TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath) {}
 
-
 /**
  * @brief Parses the JSON file
- * 
+ *
  * @details Parse() reads the JSON file and calls the private storeTileInfo() and storeObjectLayer() methods accordingly
  */
 void TileMapParser::parse()
@@ -102,49 +101,61 @@ void TileMapParser::parse()
 
 /**
  * @brief Parses the objects of JSON TileMap Object Layer
- * 
- * @param layer 
+ *
+ * @param layer
  */
-void TileMapParser::parseObjectLayer(const nlohmann::json& layer) {
-    if (!layer.contains("objects") || !layer["objects"].is_array()) {
-        throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
-    }
-    for (const auto& object : layer["objects"]) {
-        MapObject mapObject;
-        mapObject.x = object["x"];
-        mapObject.y = object["y"];
-        mapObject.width = object["width"];
-        mapObject.height = object["height"];
-        mapObject.type = object.value("type", "");
-        mapObject.name = object.value("name", "");
+void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
+{
+	if (!layer.contains("objects") || !layer["objects"].is_array())
+	{
+		throw std::runtime_error("Object layer 'objects' is missing or not an array in JSON: " + mFilePath);
+	}
+	for (const auto& object : layer["objects"])
+	{
+		MapObject mapObject;
+		mapObject.x = object["x"];
+		mapObject.y = object["y"];
+		mapObject.width = object["width"];
+		mapObject.height = object["height"];
+		mapObject.type = object.value("type", "");
+		mapObject.name = object.value("name", "");
 
-        if (object.contains("properties")) {
-            for (const auto& property : object["properties"]) {
-                std::string propertyName = property["name"];
-                if (property["type"] == "bool") {
-                    mapObject.properties[propertyName] = property["value"].get<bool>() ? "true" : "false";
-                } else if (property["type"] == "int") {
-                    mapObject.properties[propertyName] = std::to_string(property["value"].get<int>());
-                } else if (property["type"] == "float") {
-                    mapObject.properties[propertyName] = std::to_string(property["value"].get<float>());
-                } else if (property["type"] == "string") {
-                    mapObject.properties[propertyName] = property["value"].get<std::string>();
-                } else {
-                    mapObject.properties[propertyName] = property["value"].dump();
-                }
-            }
-        }
-
-        mTileMapData.mMapObjects.push_back(mapObject);
-    }
+		if (object.contains("properties"))
+		{
+			for (const auto& property : object["properties"])
+			{
+				std::string propertyName = property["name"];
+				if (property["type"] == "bool")
+				{
+					mapObject.properties[propertyName] = property["value"].get<bool>() ? "true" : "false";
+				}
+				else if (property["type"] == "int")
+				{
+					mapObject.properties[propertyName] = std::to_string(property["value"].get<int>());
+				}
+				else if (property["type"] == "float")
+				{
+					mapObject.properties[propertyName] = std::to_string(property["value"].get<float>());
+				}
+				else if (property["type"] == "string")
+				{
+					mapObject.properties[propertyName] = property["value"].get<std::string>();
+				}
+				else
+				{
+					std::runtime_error("Unhandled property type: " + property["type"].get<std::string>());
+				}
+			}
+		}
+		mTileMapData.mMapObjects.push_back(mapObject);
+	}
 }
-
 
 /**
  * @brief Getter for a tile position
- * 
- * @param gID 
- * @return std::pair<int, int> 
+ *
+ * @param gID
+ * @return std::pair<int, int>
  */
 std::pair<int, int> TileMapParser::getTilePosition(int gID) const
 {
@@ -167,10 +178,9 @@ std::pair<int, int> TileMapParser::getTilePosition(int gID) const
 	throw std::runtime_error("gID not found in any tileset");
 }
 
-
 /**
  * @brief Stores tile information in a map into a TileMapData struct
- * 
+ *
  */
 void TileMapParser::storeTileInfo()
 {
@@ -228,8 +238,8 @@ void TileMapParser::storeTileInfo()
 								}
 								catch (const nlohmann::json::type_error& e)
 								{
-									std::cerr << "Error parsing collider for gID " << gID << ": " << e.what()
-											  << std::endl;
+									throw std::runtime_error(
+										"Error parsing collider for gID " + std::to_string(gID) + ": " + e.what());
 								}
 							}
 						}
@@ -243,10 +253,9 @@ void TileMapParser::storeTileInfo()
 	}
 }
 
-
 /**
  * @brief Getter for the parsed TileMapData
- * 
- * @return const TileMapData& 
+ *
+ * @return const TileMapData&
  */
 const TileMapData& TileMapParser::getTileMapData() const { return mTileMapData; }
