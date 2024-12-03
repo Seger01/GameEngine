@@ -1,5 +1,4 @@
-#ifndef TILEMAPPARSER_H
-#define TILEMAPPARSER_H
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -11,6 +10,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
+/**
+ * @brief Struct to store data of colliders
+ * 
+ */
 struct ColliderData {
     float x;
     float y;
@@ -18,61 +21,64 @@ struct ColliderData {
     float mHeight;
 };
 
+/**
+ * @brief Struct to store tile information
+ * 
+ */
 struct TileInfo {
     std::string mTilesetName;
     std::pair<int, int> mCoordinates;
     std::vector<ColliderData> mColliders;
 };
 
-struct SpawnPoint {
+
+/**
+ * @brief Struct to store map object data, like triggers
+ * 
+ */
+struct MapObject {
     float x;
     float y;
     float width;
     float height;
-    bool isPlayerSpawn = false;
-    bool isEnemySpawn = false;
-    std::string roomID = "";
+    std::string type;
+    std::string name;
+    std::unordered_map<std::string, std::string> properties;
 };
 
-struct RoomTrigger {
-    float x;
-    float y;
-    float mWidth;
-    float mHeight;
-    std::string roomID;
-};
 
-struct LevelEndTrigger {
-    float x;
-    float y;
-    float mWidth;
-    float mHeight;
-    std::string nextLevel;
-};
-
+/**
+ * @brief Main Struct to store a parsed map
+ * 
+ */
 struct TileMapData {
     std::vector<std::vector<std::vector<int>>> mLayers;
     std::vector<std::string> mLayerNames;
     std::unordered_map<int, TileInfo> mTileInfoMap;
-    std::vector<SpawnPoint> mSpawnPoints;
-    std::vector<RoomTrigger> mRoomTriggers;
-    std::vector<LevelEndTrigger> mLevelEndTriggers;
+    std::vector<MapObject> mMapObjects;
 };
 
+
+/**
+ * @brief Class to convert a JSON TileMap to a TileMapData struct
+ * 
+ * @details The class reads a JSON file and converts it to a TileMapData struct using the nlohmann JSON library
+ *          Use parse to convert the JSON file to the TileMapData struct
+ * @param aFilePath The path to the JSON file
+ */
 class TileMapParser {
 public:
     TileMapParser(const std::string& aFilePath);
     void parse();
     std::pair<int, int> getTilePosition(int gID) const;
-    void storeTileInfo();
-    void parseObjectLayer(const nlohmann::json& layer);
     const TileMapData& getTileMapData() const;
 
+private:
+    void storeTileInfo();
+    void parseObjectLayer(const nlohmann::json& layer);
 private:
     std::string mFilePath;
     nlohmann::json mJsonData;
     std::vector<nlohmann::json> mTilesets;
     TileMapData mTileMapData;
 };
-
-#endif // TILEMAPPARSER_H

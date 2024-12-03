@@ -5,14 +5,16 @@
 #include <stdexcept>
 
 AudioSource::AudioSource(std::string aPath, bool aIsMusic, std::string aTag)
-    : Component(aTag), mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0} {
-    mFileName = FSConverter().getResourcePath(aPath);
+	: Component(aTag), mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0}
+{
+	mFileName = FSConverter().getResourcePath(aPath);
 }
 
-void AudioSource::play(bool aLooping) {
-    setLooping(aLooping);
+void AudioSource::play(bool aLooping)
+{
+	setLooping(aLooping);
 
-    EngineBravo::getInstance().getAudioManager().play(*this);
+	EngineBravo::getInstance().getAudioManager().play(*this);
 }
 
 /**
@@ -31,29 +33,46 @@ void AudioSource::setLooping(bool aLooping) { mLoop = aLooping; }
 
 bool AudioSource::getLooping() const { return mLoop; }
 
-void AudioSource::setVolume(unsigned aVolume) {
-    if (aVolume > mMaxVolume) {
-        std::cerr << "Volume cannot be greater than " << mMaxVolume << ". Setting to " << mMaxVolume << " instead\n";
-        mVolume = 100;
-    } else {
-        mVolume = aVolume;
-    }
+void AudioSource::setVolume(unsigned aVolume)
+{
+	if (aVolume > mMaxVolume)
+	{
+		std::cerr << "Volume cannot be greater than " << mMaxVolume << ". Setting to " << mMaxVolume << " instead\n";
+		mVolume = 100;
+	}
+	else
+	{
+		mVolume = aVolume;
+	}
 }
 
 unsigned AudioSource::getVolume() const { return mVolume; }
 
-void AudioSource::setXDirection(int aXCoord) {
-    if (aXCoord < mMinXDirection) {
-        std::cerr << "X coordinate must be greater than or equal to " << mMinXDirection << ". Setting to "
-                  << mMinXDirection << " instead\n";
-        mXCoord = mMinXDirection;
-    } else if (aXCoord > mMaxXDirection) {
-        std::cerr << "X coordinate must be less than or equal to " << mMaxXDirection << ". Setting to "
-                  << mMaxXDirection << " instead\n";
-        mXCoord = mMaxXDirection;
-    } else {
-        mXCoord = aXCoord;
-    }
+void AudioSource::setXDirection(int aXCoord)
+{
+	std::cout << "Setting X direction to " << aXCoord << std::endl;
+	if (aXCoord < mMinXDirection)
+	{
+		std::cerr << "X coordinate must be greater than or equal to " << mMinXDirection << ". Setting to "
+				  << mMinXDirection << " instead\n";
+		mXCoord = mMinXDirection;
+	}
+	else if (aXCoord > mMaxXDirection)
+	{
+		std::cerr << "X coordinate must be less than or equal to " << mMaxXDirection << ". Setting to "
+				  << mMaxXDirection << " instead\n";
+		mXCoord = mMaxXDirection;
+	}
+	else
+	{
+		mXCoord = aXCoord;
+	}
+}
+
+void AudioSource::setXDirection(int aListenerX, int aSourceX)
+{
+	int xCoord = aSourceX - aListenerX;
+	setXDirection(xCoord);
 }
 
 int AudioSource::getXDirection() const { return mXCoord; }

@@ -1,0 +1,303 @@
+@startuml Validation Game Diagram
+
+package "Init Scene" {
+
+class InitBehaviour {
+    +onStart() : void
+    +onUpdate() : void
+}
+
+class StartupBehaviour {
+    +onStart() : void
+    +onUpdate() : void
+    +clone() const : unique_ptr<Component>
+
+    -mStartupTime : chrono::timepoint<chrono::system_clock>
+}
+}
+
+
+package "Menu Scene" {  
+class MenuBehaviour {
+    +onStart() : void
+    +onUpdate() : void
+}
+}
+
+package "Persistent Level Management Objects" {
+class LevelManagerBehaviour {
+    +onStart() : void
+    +onUpdate() : void
+    +doneWithCurrentLevel() : void
+    -mCurrentLevel : int
+}
+
+class LevelCreatorBehaviour {
+    +onStart() : void
+    +onUpdate() : void
+    -createLevel1() : void
+    -createLevel2() : void
+    -createLevel3() : void
+    -createEnemey() : void
+    -createPlayer() : void
+    -createBoss() : void
+}
+}
+
+package "Game Scene" {
+    class canvasBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +clone() const : unique_ptr<Component>
+        +onCollide(GameObject* gameObject) : void
+    }
+
+    class PlayerPrefabFactory {
+        +createPlayerPrefab() : static void
+        -setTransform(GameObject* gameObject) : static void
+        -addPlayerBehaviourScript(GameObject* gameObject) : static void
+        -setTag(GameObject* gameObject) : static void
+        -setHealth(GameObject* gameObject) : static void
+        -addNetworkTransform(GameObject* gameObject) : static void
+        -addAnimations(GameObject* gameObject) : static void
+        -addParticleEmitter(GameObject* gameObject) : static void
+        -addRigidBody(GameObject* gameObject) : static void
+        -addCollider(GameObject* gameObject) : static void
+        -addSound(GameObject* gameObject) : static void
+    }
+
+    class PlayerBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +getHealth() : float 
+        +getMaxHealth() : float
+        +getECCount() : int
+        +getBSCount() : int
+        -setFlipX(bool aState) : void
+        -setFlipY(bool aState) : void
+        -deactivateAllAnimations() : void
+        -toggleAnimationsEnabled() : void
+        -handleAnimations() : void
+        -handleMovement() : void
+        -setAnimationActive(string aAnimationTag, bool aState) : void 
+        -shootGun() : void
+        -takeDamage() : void
+        -defeated() : void
+        -getItemFromInventory(string aName) : GameObject&
+        -addItemToInventory(GameObject& aItem) : void 
+        -removeItemFromInventory(GameObject& aItem) : void
+        -setActiveWeapon(string aName)
+
+        -mHealth : float
+        -mMaxHealth : float
+        -mInventory : vector<GameObject*>
+        -mActiveWeapon : GameObject*
+        -mECCount : int
+        -mBSCount : int
+    }  
+
+    class HUDBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +clone() const : unique_ptr<Component>
+        +onCollide(GameObject* gameObject) : void
+    } 
+
+    class DeathScreenBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+    }
+
+    class EnemyFactory {
+        +createEnemy() : static void
+        -setTransform(GameObject* gameObject) : static void
+        -addEnemyBehaviourScript(GameObject* gameObject) : static void
+        -setTag(GameObject* gameObject) : static void
+        -setHealth(GameObject* gameObject) : static void
+        -addNetworkTransform(GameObject* gameObject) : static void
+        -addAnimations(GameObject* gameObject) : static void
+        -addParticleEmitter(GameObject* gameObject) : static void
+        -addRigidBody(GameObject* gameObject) : static void
+        -addCollider(GameObject* gameObject) : static void
+        -addSound(GameObject* gameObject) : static void
+    }
+
+    class EnemyBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +getHealth() : float 
+        -setFlipX(bool aState) : void
+        -setFlipY(bool aState) : void
+        -deactivateAllAnimations() : void
+        -toggleAnimationsEnabled() : void
+        -handleAnimations() : void  
+        -handleMovement() : void
+        -setAnimationActive(string aAnimationTag, bool aState) : void 
+        -shootGun() : void
+        -takeDamage() : void
+        -defeated() : void
+
+        -mHealth : float
+        -mBSCount : int
+    }
+
+    class BossFactory {
+        +createBoss() : static void
+        -setTransform(GameObject* gameObject) : static void
+        -addBossBehaviourScript(GameObject* gameObject) : static void
+        -setTag(GameObject* gameObject) : static void
+        -setHealth(GameObject* gameObject) : static void
+        -addNetworkTransform(GameObject* gameObject) : static void
+        -addAnimations(GameObject* gameObject) : static void
+        -addParticleEmitter(GameObject* gameObject) : static void
+        -addRigidBody(GameObject* gameObject) : static void
+        -addCollider(GameObject* gameObject) : static void
+        -addSound(GameObject* gameObject) : static void
+    }
+
+    class BossBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +getHealth() : float 
+        -setFlipX(bool aState) : void
+        -setFlipY(bool aState) : void
+        -deactivateAllAnimations() : void
+        -toggleAnimationsEnabled() : void
+        -handleAnimations() : void  
+        -handleMovement() : void
+        -setAnimationActive(string aAnimationTag, bool aState) : void 
+        -shootGun() : void
+        -takeDamage() : void
+        -defeated() : void
+
+        -mHealth : float
+        -mBSCount : int
+    }
+
+    class RoomBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +clone() const : unique_ptr<Component>
+        +onCollide(GameObject* gameObject) : void
+        +setEnemyCount() : void
+        +createEnemy() : void
+        +createBoss() : void
+        +getEnemyCount() : int
+        +getBossCount() : int
+        +getRoomID() : int
+        +updateDoors() : void
+        +closeDoors() : void
+        +openDoors() : void
+
+        -mEnemyCount : int
+        -mRoomID : int
+        -mBossCount : int
+        -mEnemySpawns : vector<SpawnPoint>
+        -mBossSpawns : vector<SpawnPoint>
+        -mClosedDoorSpriteDef : SpriteDef
+        -mOpenDoorSpriteDef : SpriteDef
+        -mEnemySpriteDef : SpriteDef
+        -mBossSpriteDef : SpriteDef
+        -mDoorsOpen : bool
+    }
+
+    class LevelEndTriggerBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +onTriggered() : void
+    }
+
+    class ShopBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +buyItem(GameObject* aItem) : void
+
+        -mSpriteWidth : const int
+        -mSpriteHeight : const int
+        -mShopSpriteDef : SpriteDef
+        -mStock : map<GameObject* aItem, int aPrice>
+    }
+
+    class ECBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +onPickup() : void
+    }
+
+    class BSBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +onPickup() : void
+    }
+
+    class BulletFactory {
+        +createBullet() : static void
+        -setTransform(GameObject* gameObject) : static void
+        -addBulletBehaviourScript(GameObject* gameObject) : static void
+        -setTag(GameObject* gameObject) : static void
+        -addNetworkTransform(GameObject* gameObject) : static void
+        -addRigidBody(GameObject* gameObject) : static void
+        -addCollider(GameObject* gameObject) : static void
+        -addSound(GameObject* gameObject) : static void
+        -addSprite(GameObject* gameObject) : static 
+
+        -mBulletSpriteDef : SpriteDef
+        -mBulletWidth : float
+        -mBulletHeight : float
+        -mBulletSpritePosition : float
+    }
+
+    class BulletBehaviour {
+        +onStart() : void
+        +onUpdate() : void
+        +onCollide(GameObject* gameObject) : void
+        +clone() const : unique_ptr<Component>
+        +setDirection(Vector2 aDirection) : void
+        +setSpeed(float aSpeed) : void
+        +setDamage(float aDamage) : void
+        +getDamge() : float
+        +getDirection() : Vector2
+        +getSpeed() : float
+
+        -mDirection : Vector2
+        -mSpeed : float
+        -mDamage : float
+    }
+
+}
+
+InitBehaviour --> StartupBehaviour
+StartupBehaviour --> MenuBehaviour
+MenuBehaviour --> LevelManagerBehaviour
+LevelManagerBehaviour --> LevelCreatorBehaviour
+LevelCreatorBehaviour --> canvasBehaviour
+LevelCreatorBehaviour --> PlayerPrefabFactory
+PlayerPrefabFactory --> PlayerBehaviour
+PlayerBehaviour --> HUDBehaviour
+PlayerBehaviour --> DeathScreenBehaviour
+LevelCreatorBehaviour --> EnemyFactory
+EnemyFactory --> EnemyBehaviour
+LevelCreatorBehaviour --> BossFactory
+BossFactory --> BossBehaviour
+LevelCreatorBehaviour --> RoomBehaviour
+RoomBehaviour --> LevelEndTriggerBehaviour
+RoomBehaviour --> ShopBehaviour
+
+EnemyBehaviour --> BulletFactory
+PlayerBehaviour --> BulletFactory
+BossBehaviour --> BulletFactory
+BulletFactory --> BulletBehaviour
+
+
+@enduml

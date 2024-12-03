@@ -12,6 +12,6 @@ void PhysicsManager::startPhysicsEngine(Vector2 aGravity)
 	mPhysicsEngine.createWorld(aGravity);
 }
 
-void PhysicsManager::updatePhysicsEngine(Scene* aScene) { mPhysicsEngine.update(); }
+void PhysicsManager::updatePhysicsEngine() { mPhysicsEngine.update(); }
 
 PhysicsEngine& PhysicsManager::getPhysicsEngine() { return mPhysicsEngine; }

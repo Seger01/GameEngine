@@ -68,9 +68,9 @@ void EngineBravo::run()
 		startBehaviourScripts();
 		runBehaviourScripts();
 
-		updateAdditions();
+		mUpdateQueue.updateAdditions();
 
-		mPhysicsManager.updatePhysicsEngine(mSceneManager.getCurrentScene());
+		mPhysicsManager.updatePhysicsEngine();
 
 		mParticleSystem.update();
 
@@ -79,7 +79,7 @@ void EngineBravo::run()
 		mNetworkManager.update();
 		limitFrameRate(mFrameRateLimit);
 
-		updateRemovals();
+		mUpdateQueue.updateRemovals();
 	}
 }
 
@@ -127,9 +127,15 @@ SceneManager& EngineBravo::getSceneManager() { return mSceneManager; }
 RenderSystem& EngineBravo::getRenderSystem() { return mRenderSystem; }
 
 ResourceManager& EngineBravo::getResourceManager() { return mResourceManager; }
+
+ParticleSystem& EngineBravo::getParticleSystem() { return mParticleSystem; }
+
 SaveGameManager& EngineBravo::getSaveGameManager() { return mSaveGameManager; }
+
 AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
+
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
+
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
@@ -183,121 +189,4 @@ void EngineBravo::runBehaviourScripts()
 
 PhysicsManager& EngineBravo::getPhysicsManager() { return mPhysicsManager; }
 
-void EngineBravo::addToUpdateObjects(GameObject& aGameObject)
-{
-	auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
-						   [&aGameObject](const std::reference_wrapper<GameObject>& wrapper)
-						   {
-							   return &wrapper.get() == &aGameObject; // Compare addresses
-						   });
-	if (it == mUpdateObjects.end())
-	{
-		if (aGameObject.hasComponent<RigidBody>())
-		{
-			BodyID bodyIDA = aGameObject.getComponents<RigidBody>()[0]->getBodyId();
-			std::cout << "EngineBravo::addToUpdateObjects(): adding " << bodyIDA.world0 << bodyIDA.bodyID
-					  << bodyIDA.revision << std::endl;
-		}
-		mUpdateObjects.push_back(aGameObject);
-	}
-}
-
-void EngineBravo::clearUpdateObjects() { mUpdateObjects.clear(); }
-
-void EngineBravo::updateAdditions()
-{
-	// Iterate through the objects and update each manager
-	for (GameObject& gameObject : mUpdateObjects)
-	{
-		// Scene manager: does not use a list of game objects
-		// Render system
-		mRenderSystem.removeObject(gameObject);
-		if (typeid(gameObject) == typeid(Text))
-		{
-			mRenderSystem.addObject(gameObject);
-		}
-		if (gameObject.hasComponent<Animation>())
-		{
-			mRenderSystem.addObject(gameObject);
-		}
-		if (gameObject.hasComponent<Sprite>())
-		{
-			mRenderSystem.addObject(gameObject);
-		}
-		if (gameObject.hasComponent<ParticleEmitter>())
-		{
-			mRenderSystem.addObject(gameObject);
-		}
-		// Resource manager: does not use a list of game objects
-		// Particle system
-		mParticleSystem.removeObject(gameObject);
-		if (gameObject.hasComponent<ParticleEmitter>())
-		{
-			mParticleSystem.addObject(gameObject);
-		}
-		// Network manager:
-		mNetworkManager.removeObject(gameObject);
-		if (gameObject.hasComponent<NetworkObject>())
-		{
-			mNetworkManager.addObject(gameObject);
-		}
-		// Event manager: does not use a list of game objects
-		// Save game manager: does not use a list of game objects
-		// Audio manager
-		mAudioManager.removeObject(gameObject);
-		if (gameObject.hasComponent<AudioSource>())
-		{
-			mAudioManager.addObject(gameObject);
-		}
-		// UI manager:
-		mUIManager.removeObject(gameObject);
-		if (typeid(gameObject) == typeid(Button))
-		{
-			mUIManager.addObject(gameObject);
-		}
-		// Physics manager
-		mPhysicsManager.getPhysicsEngine().removeObject(gameObject);
-		if (gameObject.hasComponent<RigidBody>())
-		{
-			mPhysicsManager.getPhysicsEngine().addObject(gameObject);
-		}
-		if (gameObject.hasComponent<BoxCollider>())
-		{
-			mPhysicsManager.getPhysicsEngine().addObject(gameObject);
-		}
-	}
-	mUpdateObjects.clear();
-}
-
-void EngineBravo::updateRemovals()
-{
-	for (GameObject* gameObject : mSceneManager.getCurrentScene()->getGameObjectsToBeRemoved())
-	{
-		// Scene manager: does not use a list of game objects
-		// Render system
-		mRenderSystem.removeObject(*gameObject);
-		// Resource manager: does not use a list of game objects
-		// Particle system
-		mParticleSystem.removeObject(*gameObject);
-		// Network manager:
-		mNetworkManager.removeObject(*gameObject);
-		// Event manager: does not use a list of game objects
-		// Save game manager: does not use a list of game objects
-		// Audio manager
-		mAudioManager.removeObject(*gameObject);
-		// UI manager
-		mUIManager.removeObject(*gameObject);
-		// Physics manager
-		mPhysicsManager.getPhysicsEngine().removeObject(*gameObject);
-	}
-}
-
-void EngineBravo::clearManagerObjects()
-{
-	mRenderSystem.clearObjects();
-	mParticleSystem.clearObjects();
-	mNetworkManager.clearObjects();
-	mAudioManager.clearObjects();
-	mUIManager.clearObjects();
-	mPhysicsManager.getPhysicsEngine().clearObjects();
-}
+UpdateQueue& EngineBravo::getUpdateQueue() { return mUpdateQueue; }

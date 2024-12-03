@@ -292,10 +292,11 @@ TEST_F(AudioTest, componentDirection)
 TEST_F(AudioTest, componentClone)
 {
 	AudioSource audio("Audio/gun1.wav", false);
-	AudioSource* clone = dynamic_cast<AudioSource*>(audio.clone().get());
-	ASSERT_EQ(clone->getFileName(), audio.getFileName());
-	ASSERT_EQ(clone->getLooping(), audio.getLooping());
-	ASSERT_EQ(clone->getPlayOnWake(), audio.getPlayOnWake());
-	ASSERT_EQ(clone->getVolume(), audio.getVolume());
-	ASSERT_EQ(clone->getXDirection(), audio.getXDirection());
+    std::unique_ptr<AudioSource> clone = std::unique_ptr<AudioSource>(dynamic_cast<AudioSource*>(audio.clone().release()));
+    ASSERT_NE(clone, nullptr); // Ensure the clone is not null
+    ASSERT_EQ(clone->getFileName(), audio.getFileName());
+    ASSERT_EQ(clone->getLooping(), audio.getLooping());
+    ASSERT_EQ(clone->getPlayOnWake(), audio.getPlayOnWake());
+    ASSERT_EQ(clone->getVolume(), audio.getVolume());
+    ASSERT_EQ(clone->getXDirection(), audio.getXDirection());
 }

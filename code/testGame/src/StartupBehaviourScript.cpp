@@ -10,7 +10,7 @@ void StartupBehaviourScript::onUpdate()
 	auto currentTime = std::chrono::system_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - mStartTime).count();
 
-	if (duration > 400)
+	if (duration > 300)
 	{
 		EngineBravo& engine = EngineBravo::getInstance();
 		SceneManager& sceneManager = engine.getSceneManager();

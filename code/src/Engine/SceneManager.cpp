@@ -120,7 +120,7 @@ void SceneManager::removeScene(const std::string& sceneName)
 void SceneManager::loadScene(int index)
 {
 	// Release all objects from the managers
-	EngineBravo::getInstance().clearManagerObjects();
+	EngineBravo::getInstance().getUpdateQueue().clearManagerObjects();
 
 	Scene* currentScene = getCurrentScene();
 	if (currentScene)
@@ -143,15 +143,15 @@ void SceneManager::loadScene(int index)
 	{
 		currentScene->addPersistentGameObject(object);
 		// Add the object to the update list
-		EngineBravo::getInstance().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
-	EngineBravo::getInstance().updateAdditions();
+	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }
 
 void SceneManager::loadScene(const std::string& sceneName)
 {
 	// Release all objects from the managers
-	EngineBravo::getInstance().clearManagerObjects();
+	EngineBravo::getInstance().getUpdateQueue().clearManagerObjects();
 
 	Scene* currentScene = getCurrentScene();
 	if (currentScene)
@@ -180,13 +180,13 @@ void SceneManager::loadScene(const std::string& sceneName)
 	{
 		currentScene->addPersistentGameObject(object);
 		// Add the object to the update list
-		EngineBravo::getInstance().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
 	for (GameObject* object : currentScene->getGameObjects())
 	{
-		EngineBravo::getInstance().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
-	EngineBravo::getInstance().updateAdditions();
+	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }
 
 Scene* SceneManager::getCurrentScene()

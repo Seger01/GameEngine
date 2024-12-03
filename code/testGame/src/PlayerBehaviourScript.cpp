@@ -64,6 +64,7 @@ void PlayerBehaviourScript::setFlipX(bool aState)
 		}
 	}
 }
+
 void PlayerBehaviourScript::setFlipY(bool aState)
 {
 	if (mGameObject->hasComponent<Animation>())
@@ -103,7 +104,8 @@ void PlayerBehaviourScript::setAnimationActive(std::string aAnimationTag, bool a
 	}
 }
 
-void PlayerBehaviourScript::onStart() {
+void PlayerBehaviourScript::onStart()
+{
 	if (!isOwner())
 	{
 		destroy();
@@ -252,6 +254,10 @@ void PlayerBehaviourScript::handleMovement()
 	if (input.GetKey(Key::Key_T))
 	{
 		parentTransform.rotate(-1.0f);
+	}
+	if (input.GetKey(Key::Key_Y))
+	{
+		mGameObject->getComponents<RigidBody>()[0]->addTorque(5000);
 	}
 
 	if (input.GetKey(Key::Key_W))

@@ -9,6 +9,7 @@
 #include "FRect.h"
 #include "FSConverter.h"
 #include "GameObject.h"
+#include "MapToGraph.h"
 #include "PlayerPrefab.h"
 #include "RigidBody.h"
 #include "RoomBehaviourScript.h"
@@ -18,7 +19,6 @@
 #include "TileMapParser.h"
 
 SpriteDef textBackgroundDef = {"UI/ui_images.png", Rect{0, 96, 48, 32}, 48, 32};
-
 SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
 
 void InitBehaviourScript::createLevel1()
@@ -109,6 +109,15 @@ void InitBehaviourScript::createLevel1()
 	tileMapParser.parse();
 	const TileMapData& tileMapData = tileMapParser.getTileMapData();
 
+	// Initialize the Pathfinding object
+	int mapWidth = 50;
+	int mapHeight = 50;
+	std::shared_ptr<MapToGraph> mapToGraph = std::make_shared<MapToGraph>(tileMapData);
+	mapToGraph->convertToGraph();
+	// mapToGraph->printGraph();
+	std::shared_ptr<Pathfinding> pathfinding =
+		std::make_shared<Pathfinding>(mapToGraph->getAdjacencyList(), mapWidth, mapHeight);
+
 	for (const auto& roomTrigger : tileMapData.mRoomTriggers)
 	{
 		// Collect enemy spawns for this room
@@ -122,7 +131,7 @@ void InitBehaviourScript::createLevel1()
 		}
 
 		GameObject* roomObject = new GameObject;
-		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
+		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns, pathfinding, mapWidth));
 		BoxCollider* boxCollider = new BoxCollider();
 		Transform transform;
 		transform.position.x = roomTrigger.x;
@@ -186,6 +195,7 @@ void InitBehaviourScript::createLevel1()
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
+		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
 		// Access rows within the layer by index
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
@@ -212,7 +222,13 @@ void InitBehaviourScript::createLevel1()
 						objectTransform.position.y = static_cast<int>(rowIndex * 16);
 						gameObject->setTransform(objectTransform);
 
-						// Add BoxCollider components to the GameObject
+						// Add a Sprite component to the GameObject
+						Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+
+						sprite->setLayer(layerIndex);
+
+						gameObject->addComponent(sprite);
+
 						for (const auto& collider : tileInfo.mColliders)
 						{
 							BoxCollider* boxCollider = new BoxCollider();

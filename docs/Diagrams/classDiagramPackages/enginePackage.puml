@@ -6,9 +6,10 @@ package Engine {
         + getSceneManager() : SceneManager&
         + runBehaviourScripts() : void
         + getAudioManager() : AudioManager&
-        + addToUpdateQueue(GameObject &aGameObject) : void
-        - updateManagers() : void
-        - mUpdateQueue : std::queue<GameObject&>
+        + addToUpdateObjects(GameObject &aGameObject) : void
+        - updateAdditions() : void
+        - updateRemovals() : void
+        - mUpdateObjects : vector<reference_wrapper<GameObject>>
         - mSaveGameManager : SaveGameManager 
         - mSceneManager : SceneManager
         - mTextureManager : TextureManager
@@ -48,10 +49,13 @@ package Engine {
 
     class UIManager {
         - mClickableButtons : vector<UIObject&>
+        - mObjects : vector<reference_wrapper<GameObject>>
         + ClickableButtonPressed() : bool
         + checkIsClickableButton() : bool
         + addClickableButton((UIObject& aButton)) : void
         + removeClickableButton(std::string ID) : void
+        + addObject(GameObject& aObject) : void
+        + removeObject(GameObject& aObject) : void
         - UIManager()
     }
 
@@ -78,7 +82,10 @@ package Engine {
         + RenderSystem()
         + render(Scene* aScene) : void 
         + getRenderer() : Renderer& 
-        + getWindow() : Window& 
+        + getWindow() : Window&
+        + addObject(GameObject& aObject) : void
+        + removeObject(GameObject& aObject) : void
+        - mObjects : vector<reference_wrapper<GameObject>>
         - renderSprite(GameObject* aGameObject, Sprite* aSprite) : void 
         - renderAnimation(GameObject* aGameObject, Animation* aAnimation) : void 
         - mRenderer : std::unique_ptr<Renderer> 
@@ -100,7 +107,10 @@ package Engine {
 
     class ParticleSystem {
         + ParticleSystem()
-        + update(Scene* aScene) : void
+        + update() : void
+        + addObject(GameObject& aObject) : void
+        + removeObject(GameObject& aObject) : void
+        - mObjects : vector<reference_wrapper<GameObject>>
     }
 
     EngineBravo *-- "1" SceneManager
