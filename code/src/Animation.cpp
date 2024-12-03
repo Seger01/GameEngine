@@ -22,7 +22,7 @@ Animation::Animation(const Animation& other)
 	  mTimeBetweenFrames(other.mTimeBetweenFrames), mIsLooping(other.mIsLooping), mLayer(other.mLayer)
 {
 	// Deep copy of mAnimationFrames
-	for (const auto& frame : other.mAnimationFrames)
+	for (const std::unique_ptr<Sprite>& frame : other.mAnimationFrames)
 	{
 		if (frame)
 		{
@@ -47,7 +47,7 @@ Animation& Animation::operator=(const Animation& other)
 
 	// Deep copy of mAnimationFrames
 	mAnimationFrames.clear();
-	for (const auto& frame : other.mAnimationFrames)
+	for (const std::unique_ptr<Sprite>& frame : other.mAnimationFrames)
 	{
 		if (frame)
 		{
@@ -100,7 +100,7 @@ std::unique_ptr<Component> Animation::clone() const
 	return std::make_unique<Animation>(*this); // Uses the copy constructor of Sprite
 }
 
-Transform Animation::getTransform()
+Transform Animation::getTransform() const
 {
 	Transform parentTransform = this->mGameObject->getTransform();
 	return parentTransform + mTransform;
@@ -129,9 +129,9 @@ Sprite& Animation::getCurrentFrame()
 	return getFrame(frameIndex);
 }
 
-Color Animation::getColorFilter()
+Color Animation::getColorFilter() const
 {
-	for (std::unique_ptr<Sprite>& frame : mAnimationFrames)
+	for (const std::unique_ptr<Sprite>& frame : mAnimationFrames)
 	{
 		// Check if the frame is not nullptr
 		if (frame)
@@ -155,24 +155,24 @@ void Animation::setColorFilter(const Color& aColor)
 	throw std::runtime_error("Cannot set color filter: no instantiated frames in the animation");
 }
 
-int Animation::getTimeBetweenFrames() { return mTimeBetweenFrames; }
+int Animation::getTimeBetweenFrames() const { return mTimeBetweenFrames; }
 
 void Animation::setTimeBetweenFrames(int aTimeBetweenFrames) { mTimeBetweenFrames = aTimeBetweenFrames; }
 
-bool Animation::isLooping() { return mIsLooping; }
+bool Animation::isLooping() const { return mIsLooping; }
 
 void Animation::setIsLooping(bool aIsLooping) { mIsLooping = aIsLooping; }
 
 void Animation::setFlipX(bool state) { mFlipX = state; }
 
-bool Animation::getFlipX() { return mFlipX; }
+bool Animation::getFlipX() const { return mFlipX; }
 
 void Animation::setFlipY(bool state) { mFlipY = state; }
 
-bool Animation::getFlipY() { return mFlipY; }
+bool Animation::getFlipY() const { return mFlipY; }
 
-int Animation::getFrameCount() { return mAnimationFrames.size(); }
+int Animation::getFrameCount() const { return mAnimationFrames.size(); }
 
 void Animation::setLayer(int aLayer) { mLayer = aLayer; }
 
-int Animation::getLayer() { return mLayer; }
+int Animation::getLayer() const { return mLayer; }

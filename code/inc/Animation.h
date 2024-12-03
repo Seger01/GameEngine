@@ -22,31 +22,31 @@ public:
 	// Override the clone method
 	std::unique_ptr<Component> clone() const override;
 
-	Transform getTransform();
+	Transform getTransform() const;
 	void setTransform(const Transform& aNewTransform);
 
 	Sprite& getFrame(int aFrameIndex);
 	Sprite& getCurrentFrame();
 
-	Color getColorFilter();
+	Color getColorFilter() const;
 	void setColorFilter(const Color& aColor);
 
-	int getTimeBetweenFrames();
+	int getTimeBetweenFrames() const;
 	void setTimeBetweenFrames(int aTimeBetweenFrames);
 
 	void setFlipX(bool state);
-	bool getFlipX();
+	bool getFlipX() const;
 
 	void setFlipY(bool state);
-	bool getFlipY();
+	bool getFlipY() const;
 
-	bool isLooping();
+	bool isLooping() const;
 	void setIsLooping(bool aIsLooping);
 
-	int getFrameCount();
+	int getFrameCount() const;
 
 	void setLayer(int aLayer);
-	int getLayer();
+	int getLayer() const;
 
 private:
 	Transform mTransform;
