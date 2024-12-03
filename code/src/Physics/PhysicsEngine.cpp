@@ -47,8 +47,22 @@ void PhysicsEngine::setPositions()
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			Transform transform = gameObject.getTransform();
-			transform.position.x = transform.position.x - gameObject.getComponents<BoxCollider>()[0]->getWidth();
-			transform.position.y = transform.position.y - gameObject.getComponents<BoxCollider>()[0]->getHeight();
+
+			float x = 0;
+			float y = 0;
+			int i = 0;
+
+			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			{
+				x += boxCollider->getWidth();
+				y += boxCollider->getHeight();
+				i++;
+			}
+
+			// x = x / i;
+			// y = y / i;
+			transform.position.x = transform.position.x - x;
+			transform.position.y = transform.position.y - y;
 
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
@@ -205,8 +219,25 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 
 				transform = Transform(Vector2(position.x, position.y));
 
-				transform.position.x = (transform.position.x - boxCollider->getWidth());
-				transform.position.y = (transform.position.y - boxCollider->getHeight());
+				float x = 0;
+				float y = 0;
+				int i = 0;
+
+				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				{
+					x += boxCollider->getWidth() + boxCollider->getTransform().position.x;
+					y += boxCollider->getHeight();
+					i++;
+				}
+
+				// x = x / i;
+				// y = y / i;
+
+				transform.position.x = (transform.position.x - x);
+				transform.position.y = (transform.position.y - y);
+
+				// transform.position.x = (transform.position.x - boxCollider->getWidth());
+				// transform.position.y = (transform.position.y - boxCollider->getHeight());
 				transform.rotation = rotation;
 
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
@@ -231,8 +262,26 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 		{
 			Transform transform = gameObject.getTransform();
 			BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
-			transform.position.x = (transform.position.x + boxCollider->getWidth());
-			transform.position.y = (transform.position.y + boxCollider->getHeight());
+
+			float x = 0;
+			float y = 0;
+			int i = 0;
+
+			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			{
+				x += boxCollider->getWidth();
+				y += boxCollider->getHeight();
+				i++;
+			}
+
+			// x = x / i;
+			// y = y / i;
+
+			transform.position.x = (transform.position.x + x);
+			transform.position.y = (transform.position.y + y);
+
+			// transform.position.x = (transform.position.x + boxCollider->getWidth());
+			// transform.position.y = (transform.position.y + boxCollider->getHeight());
 			transform.rotation = transform.rotation;
 
 			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
@@ -267,6 +316,7 @@ void PhysicsEngine::removeObject(GameObject& aObject)
 		if (&it->get() == &aObject)
 		{
 			mWorld.deleteBody(it->get().getComponents<RigidBody>()[0]->getBodyId());
+			it->get().getComponents<RigidBody>()[0]->setBodyId({-1, 0, 0});
 			mObjects.erase(it);
 			break;
 		}
