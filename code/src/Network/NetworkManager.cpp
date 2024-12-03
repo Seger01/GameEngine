@@ -157,6 +157,10 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
 	for (auto object : persistantObjects)
 	{
+		if (!object->hasComponent<NetworkObject>())
+		{
+			continue;
+		}
 		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
 		if (networkObject->getClientID() == playerID)
 		{
