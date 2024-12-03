@@ -69,3 +69,6 @@ out/
 
 #ignore compile_commands.json
 code/compile_commands.json
+
+html/
+latex/

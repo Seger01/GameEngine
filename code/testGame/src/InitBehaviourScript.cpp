@@ -8,6 +8,7 @@
 #include "FPSCounterBehaviourScript.h"
 #include "FSConverter.h"
 #include "GameObject.h"
+#include "MapToGraph.h"
 #include "PlayerPrefab.h"
 #include "RigidBody.h"
 #include "RoomBehaviourScript.h"
@@ -84,6 +85,15 @@ void InitBehaviourScript::createLevel1()
 	scene->getActiveCamera().setWidth(16 * 30);
 	scene->getActiveCamera().setHeight(9 * 30);
 
+	// Initialize the Pathfinding object
+	int mapWidth = 50;
+	int mapHeight = 50;
+	std::shared_ptr<MapToGraph> mapToGraph = std::make_shared<MapToGraph>(tileMapData);
+	mapToGraph->convertToGraph();
+	// mapToGraph->printGraph();
+	std::shared_ptr<Pathfinding> pathfinding =
+		std::make_shared<Pathfinding>(mapToGraph->getAdjacencyList(), mapWidth, mapHeight);
+
 	for (const auto& roomTrigger : tileMapData.mRoomTriggers)
 	{
 		// Collect enemy spawns for this room
@@ -97,7 +107,7 @@ void InitBehaviourScript::createLevel1()
 		}
 
 		GameObject* roomObject = new GameObject;
-		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
+		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns, pathfinding, mapWidth));
 		BoxCollider* boxCollider = new BoxCollider();
 		Transform transform;
 		transform.position.x = roomTrigger.x;
@@ -171,6 +181,7 @@ void InitBehaviourScript::createLevel1()
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
+		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
 		// Access rows within the layer by index
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
