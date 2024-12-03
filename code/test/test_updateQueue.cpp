@@ -55,6 +55,7 @@ TEST(UpdateQueue, updateRemovals)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
 	engineBravo.getUpdateQueue().clearUpdateObjects();
+	engineBravo.getUpdateQueue().clearManagerObjects();
 	SceneManager& sceneManager = engineBravo.getSceneManager();
 	sceneManager.createScene("TestScene");
 	sceneManager.requestSceneChange("TestScene");
