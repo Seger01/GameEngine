@@ -6,15 +6,7 @@
 #include "Component.h"
 #include "EngineBravo.h"
 
-GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true)
-{
-	mComponents = std::vector<std::unique_ptr<Component>>();
-}
-
-GameObject::~GameObject()
-{
-	mComponents.clear(); // unique_ptr automatically handles deletion
-}
+GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
 
 // Copy constructor
 GameObject::GameObject(const GameObject& other)

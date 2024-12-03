@@ -20,6 +20,8 @@
  */
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
+	std::cout << "Current scene name: " << EngineBravo::getInstance().getSceneManager().getCurrentScene()->getName()
+			  << std::endl;
 	auto currObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
 	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
 	if (currObjectsIt == currObjects.end())

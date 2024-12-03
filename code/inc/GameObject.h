@@ -15,7 +15,7 @@ class GameObject
 {
 public:
 	GameObject();
-	virtual ~GameObject();
+	virtual ~GameObject() = default;
 
 	// Rule of Five
 	GameObject(const GameObject& other);				// Copy constructor
@@ -62,7 +62,7 @@ public:
 	template <typename T> std::vector<T*> getComponents() const
 	{
 		std::vector<T*> componentsOfType;
-		std::cout << "tag: " << mTag << std::endl;
+		//		std::cout << "tag: " << mTag << std::endl;
 		std::cout << "size: " << mComponents.size() << std::endl;
 		for (const auto& component : mComponents)
 		{
