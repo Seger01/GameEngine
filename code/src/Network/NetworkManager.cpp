@@ -75,6 +75,8 @@ bool NetworkManager::isClient() const { return mRole == NetworkRole::CLIENT; }
 
 bool NetworkManager::isHost() const { return mRole == NetworkRole::HOST; }
 
+bool NetworkManager::isNetworked() const { return isServer() || isClient() || isHost(); }
+
 bool NetworkManager::isConnected() const
 {
 	if (mRole == NetworkRole::SERVER)
