@@ -83,12 +83,15 @@ void NetworkBehaviourScript::onUpdate() {
 
         scene->addGameObject(tempObject);
 
-        int cameraID = scene->addCamera();
-        scene->setActiveCamera(cameraID);
+        Camera* camera = new Camera;
+        camera->setTag("MainCamera");
+        camera->setActive(true);
 
-        scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-        scene->getActiveCamera().setWidth(16 * 30);
-        scene->getActiveCamera().setHeight(9 * 30);
+        camera->setTransform(Transform(Vector2(80, 96)));
+        camera->setWidth(16 * 30);
+        camera->setHeight(9 * 30);
+
+        scene->addGameObject(camera);
 
         sceneManager.requestSceneChange("tempScene");
     }
@@ -101,12 +104,15 @@ void NetworkBehaviourScript::onUpdate() {
 
             scene->addGameObject(tempObject);
 
-            int cameraID = scene->addCamera();
-            scene->setActiveCamera(cameraID);
+            Camera* camera = new Camera;
+            camera->setTag("MainCamera");
+            camera->setActive(true);
 
-            scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-            scene->getActiveCamera().setWidth(16 * 30);
-            scene->getActiveCamera().setHeight(9 * 30);
+            camera->setTransform(Transform(Vector2(80, 96)));
+            camera->setWidth(16 * 30);
+            camera->setHeight(9 * 30);
+
+            scene->addGameObject(camera);
 
             sceneManager.requestSceneChange("tempScene");
         }

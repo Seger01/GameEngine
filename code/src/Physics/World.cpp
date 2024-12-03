@@ -96,7 +96,10 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 void World::deleteBody(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
-	b2DestroyBody(bodyID);
+	if (b2Body_IsValid(bodyID))
+	{
+		b2DestroyBody(bodyID);
+	}
 }
 
 void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID)

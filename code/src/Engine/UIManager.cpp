@@ -22,6 +22,7 @@ void UIManager::init()
 }
 
 void UIManager::handleMouseDownEvent(const Event& aEvent) { mMouseDownEventQueue.push_back(aEvent); }
+
 void UIManager::handleMouseUpEvent(const Event& aEvent) { mMouseUpEventQueue.push_back(aEvent); }
 
 void UIManager::update(Scene* aScene)
@@ -30,34 +31,21 @@ void UIManager::update(Scene* aScene)
 	{
 		Button& button = dynamic_cast<Button&>(gameObject);
 
-		Camera& currentCamera = aScene->getActiveCamera();
-
-		Vector2 cameraOrigin = currentCamera.getOrigin();
-
-		int windowWidth = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().x;
-		int windowHeight = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().y;
-
-		int buttonWidth = button.getWidth();
-		int buttonHeight = button.getHeight();
-
-		Vector2 buttonPosition = button.getTransform().position;
-		Vector2 drawPosition = buttonPosition - cameraOrigin;
-
-		drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
-		drawPosition.y = std::round(drawPosition.y * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
-
-		buttonWidth = std::round(buttonWidth * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
-
-		buttonHeight = std::round(buttonHeight * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
+		Camera* currentCamera = aScene->getCameraWithTag("MainCamera");
 
 		for (Event event : mMouseDownEventQueue)
 		{
 			Point mouseScreenPos = event.mouse.position;
 
+			Vector2 worldMousePos =
+				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
+
 			if (button.interactable())
 			{
-				if (mouseScreenPos.x >= drawPosition.x && mouseScreenPos.x <= drawPosition.x + buttonWidth &&
-					mouseScreenPos.y >= drawPosition.y && mouseScreenPos.y <= drawPosition.y + buttonHeight)
+				if (worldMousePos.x >= button.getTransform().position.x &&
+					worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+					worldMousePos.y >= button.getTransform().position.y &&
+					worldMousePos.y <= button.getTransform().position.y + button.getHeight())
 				{
 					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 					{
@@ -79,10 +67,15 @@ void UIManager::update(Scene* aScene)
 		{
 			Point mouseScreenPos = event.mouse.position;
 
+			Vector2 worldMousePos =
+				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
+
 			if (button.interactable())
 			{
-				if (mouseScreenPos.x >= drawPosition.x && mouseScreenPos.x <= drawPosition.x + buttonWidth &&
-					mouseScreenPos.y >= drawPosition.y && mouseScreenPos.y <= drawPosition.y + buttonHeight)
+				if (worldMousePos.x >= button.getTransform().position.x &&
+					worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+					worldMousePos.y >= button.getTransform().position.y &&
+					worldMousePos.y <= button.getTransform().position.y + button.getHeight())
 				{
 					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 					{
@@ -102,10 +95,15 @@ void UIManager::update(Scene* aScene)
 
 		Point currentMousePos = Input::getInstance().MousePosition();
 
+		Vector2 worldMousePos =
+			EngineBravo::getInstance().getRenderSystem().screenToWorldPos(currentMousePos, *currentCamera);
+
 		if (button.interactable())
 		{
-			if (currentMousePos.x >= drawPosition.x && currentMousePos.x <= drawPosition.x + buttonWidth &&
-				currentMousePos.y >= drawPosition.y && currentMousePos.y <= drawPosition.y + buttonHeight)
+			if (worldMousePos.x >= button.getTransform().position.x &&
+				worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+				worldMousePos.y >= button.getTransform().position.y &&
+				worldMousePos.y <= button.getTransform().position.y + button.getHeight())
 			{
 				if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 				{
@@ -155,9 +153,8 @@ void UIManager::addObject(GameObject& aObject)
 
 void UIManager::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());

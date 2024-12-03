@@ -19,7 +19,7 @@ void CanvasBehaviourScript::onStart() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     Scene* scene = sceneManager.getCurrentScene();
-    Camera& camera = scene->getActiveCamera();
+    Camera& camera = *scene->getCameraWithTag("MainCamera");
 
     Button* buttonObject = new Button;
     buttonObject->setTransform(Transform(Vector2(10, 50)));
@@ -59,7 +59,7 @@ void CanvasBehaviourScript::onStart() {
 
 void CanvasBehaviourScript::onUpdate() {
     // constantly retrieve the current camera and update the canvas position to the camera origin
-    Camera& camera = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getActiveCamera();
+    Camera& camera = *EngineBravo::getInstance().getSceneManager().getCurrentScene()->getCameraWithTag("MainCamera");
 
     Transform newTransform;
     newTransform.position = camera.getOrigin();
