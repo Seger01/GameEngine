@@ -6,7 +6,17 @@
 
 void EnemyBehaviourScript::onStart() { findPathToPlayer(); }
 
-void EnemyBehaviourScript::onUpdate() { move(); }
+void EnemyBehaviourScript::onUpdate() { 
+    move();
+	if (isOwner())
+	{ // if owner set the data to be synchronized with the network variable
+		mTransform.getValue().setTransform(mGameObject->getTransform());
+	}
+	else
+	{ // if not owner set the data to be synchronized with the network variable
+		mGameObject->getTransform().position = mTransform.getValue().getTransform().position;
+	}
+}
 
 void EnemyBehaviourScript::onCollide(GameObject* aGameObject) {}
 

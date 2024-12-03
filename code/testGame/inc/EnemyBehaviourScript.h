@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Components/IBehaviourScript.h"
+#include "EnemyTransformSerialize.h"
 #include "GameObject.h"
+#include "Network/INetworkBehaviour.h"
+#include "Network/NetworkVariable.h"
 #include <iostream>
 #include "Pathfinding.h"
 
-class EnemyBehaviourScript : public IBehaviourScript {
+class EnemyBehaviourScript : public INetworkBehaviour
+{
 public:
     EnemyBehaviourScript(std::shared_ptr<Pathfinding> pathfinding, int mapWidth) : mPathfinding(pathfinding), mMapWidth(mapWidth) {}
     void onStart() override;
@@ -28,4 +31,5 @@ private:
 
     std::vector<int> mPath;
     int mPathIndex = 0;
+	NetworkVariable<EnemyTransformSerialize> mTransform{this};
 };

@@ -9,7 +9,7 @@ class Camera : public GameObject
 {
 public:
 	Camera();
-	~Camera();
+	virtual ~Camera() = default;
 
 	void setBackgroundColor(Color aColor);
 	Color getBackgroundColor();
