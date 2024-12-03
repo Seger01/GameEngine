@@ -13,7 +13,6 @@ void PlayerStatsBehaviourScript::onStart() {
     EngineBravo& engine = EngineBravo::getInstance();
     SceneManager& sceneManager = engine.getSceneManager();
     Scene* scene = sceneManager.getCurrentScene();
-    Camera& camera = scene->getActiveCamera();
 
     Sprite* playerStatBackgroundSprite = engine.getResourceManager().createSprite(playerStatBackgroundDef);
     playerStatBackgroundSprite->setLayer(4);
@@ -26,13 +25,6 @@ void PlayerStatsBehaviourScript::onStart() {
     playerStatHealthBarBackgroundSprite->setWidth(playerStatHealthBarBackgroundSprite->getWidth());
     playerStatHealthBarBackgroundSprite->setHeight(playerStatHealthBarBackgroundSprite->getHeight());
     playerStatHealthBarBackgroundSprite->setRelativePosition(Transform(Vector2(39, 0)));
-
-    // Sprite* playerStatHealthBarSprite = engine.getResourceManager().createSprite(playerStatHealthBarDef);
-    // playerStatHealthBarSprite->setLayer(5);
-    // playerStatHealthBarSprite->setWidth(playerStatHealthBarSprite->getWidth());
-    // playerStatHealthBarSprite->setHeight(playerStatHealthBarSprite->getHeight());
-    // playerStatHealthBarSprite->setRelativePosition(Transform(Vector2(42, 5)));
-    // playerStatHealthBarSprite->setTag("playerHealthBar");
 
     Sprite* playerStatHealthBarSprite = engine.getResourceManager().createSprite(playerStatHealthBarDef);
     playerStatHealthBarSprite->setLayer(5);
