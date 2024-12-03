@@ -95,10 +95,9 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation,
 								   Rect aScreenViewPort)
 {
-	Sprite* currentFrame = aAnimation->getCurrentFrame();
-	// Sprite* currentFrame = aAnimation->getFrame(0);
+	Sprite& currentFrame = aAnimation->getCurrentFrame();
 
-	renderSprite(aCurrentCamera, aGameObject, currentFrame, aScreenViewPort);
+	renderSprite(aCurrentCamera, aGameObject, &currentFrame, aScreenViewPort);
 }
 
 void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, Rect aScreenViewPort)
@@ -112,9 +111,6 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 
 	drawPosition.x = drawPosition.x * (static_cast<float>(aScreenViewPort.w) / aCurrentCamera.getWidth());
 	drawPosition.y = drawPosition.y * (static_cast<float>(aScreenViewPort.h) / aCurrentCamera.getHeight());
-
-	// drawPosition.x += aScreenViewPort.x;
-	// drawPosition.y += aScreenViewPort.y;
 
 	particleWidth =
 		static_cast<int>(static_cast<float>(particleWidth) *
@@ -146,9 +142,6 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 
 	drawPosition.x = drawPosition.x * (static_cast<float>(aScreenViewPort.w) / aCurrentCamera.getWidth());
 	drawPosition.y = drawPosition.y * (static_cast<float>(aScreenViewPort.h) / aCurrentCamera.getHeight());
-
-	// drawPosition.x += aScreenViewPort.x;
-	// drawPosition.y += aScreenViewPort.y;
 
 	mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
@@ -475,8 +468,9 @@ void RenderSystem::addObject(GameObject& aObject)
 
 void RenderSystem::removeObject(GameObject& aObject)
 {
-	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
-							 { return &obj.get() == &aObject; });
+	auto it =
+		std::remove_if(mObjects.begin(), mObjects.end(),
+					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
