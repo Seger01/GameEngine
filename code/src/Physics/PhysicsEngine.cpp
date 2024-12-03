@@ -1,11 +1,6 @@
 #include "Physics/PhysicsEngine.h"
-#include "BoxCollider.h"
-#include "GameObject.h"
-#include "RigidBody.h"
-#include "box2d/box2d.h"
-#include <functional>
 
-PhysicsEngine::PhysicsEngine() {}
+PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
 
 PhysicsEngine::~PhysicsEngine() {}
 
@@ -14,14 +9,43 @@ void PhysicsEngine::update()
 	convertToBox2D(mObjects);
 
 	createBodies();
+
 	updateFlags();
+	setPositions();
+	applyForces();
+
+	mWorld.executeWorldStep(mStep, mSubStep);
+
+	executeCollisionScripts(mWorld.getContactEvents());
+	executeCollisionScripts(mWorld.getSensorEvents());
+
+	convertFromBox2D(mObjects);
+}
+
+// Applies forces from the forces buffer to the bodies in the world
+void PhysicsEngine::applyForces()
+{
+	for (GameObject& gameObject : mObjects)
+	{
+		if (gameObject.hasComponent<RigidBody>())
+		{
+			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+			mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
+			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
+			rigidBody->clearForcesBuffer();
+			rigidBody->clearTorqueBuffer();
+		}
+	}
+}
+
+// Sets positions of bodies in world if they differ from the GameObject's position
+void PhysicsEngine::setPositions()
+{
 	for (GameObject& gameObject : mObjects)
 	{
 		if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<BoxCollider>())
 		{
-
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-
 			Transform transform = gameObject.getTransform();
 			transform.position.x = transform.position.x - gameObject.getComponents<BoxCollider>()[0]->getWidth();
 			transform.position.y = transform.position.y - gameObject.getComponents<BoxCollider>()[0]->getHeight();
@@ -30,34 +54,10 @@ void PhysicsEngine::update()
 
 			if (newPos != mWorld.getPosition(rigidBody->getBodyId()))
 			{
-
 				mWorld.setPosition(newPos, rigidBody->getBodyId());
 			}
 		}
 	}
-
-	for (GameObject& gameObject : mObjects)
-	{
-		if (gameObject.hasComponent<RigidBody>())
-		{
-
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-
-			mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
-			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
-			rigidBody->clearForcesBuffer();
-			rigidBody->clearTorqueBuffer();
-		}
-	}
-
-	float timeStep = 20.0f / 60.0f;
-	int velocityIterations = 4;
-	int positionIterations = 2;
-	mWorld.executeWorldStep(timeStep, velocityIterations);
-
-	executeCollisionScripts(mWorld.getContactEvents());
-	executeCollisionScripts(mWorld.getSensorEvents());
-	convertFromBox2D(mObjects);
 }
 
 void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
@@ -107,6 +107,7 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 	}
 }
 
+// Creates bodies in Box2D world for GameObjects with RigidBody components
 void PhysicsEngine::createBodies()
 {
 	for (GameObject& gameObject : mObjects)
@@ -129,24 +130,9 @@ void PhysicsEngine::createBodies()
 	}
 }
 
-void PhysicsEngine::deleteBodies() {}
-
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
 
 World& PhysicsEngine::getWorld() { return mWorld; }
-
-void PhysicsEngine::reset()
-{
-	mWorld.resetWorld();
-	for (GameObject& gameObject : mObjects)
-	{
-		std::vector<RigidBody*> rigidBodies = gameObject.getComponents<RigidBody>();
-		for (int rigidBodyIndex = 0; rigidBodyIndex < rigidBodies.size(); rigidBodyIndex++)
-		{
-			rigidBodies.at(rigidBodyIndex)->setBodyId({-1, 0, 0});
-		}
-	}
-}
 
 // Checks and returns GameObject if BodyID exists within world
 GameObject* PhysicsEngine::getGameObjectByID(int aID)
@@ -168,6 +154,7 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID)
 	return nullptr;
 }
 
+// Updates flags for gameObjects rigidbodies and collider shapes
 void PhysicsEngine::updateFlags()
 {
 	for (int i = 0; i < mObjects.size(); i++)
@@ -199,6 +186,7 @@ void PhysicsEngine::updateFlags()
 	}
 }
 
+// Converts GameObjects from Box2D positions to (local)
 void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
 	for (GameObject& gameObject : aGameObjects)
@@ -233,6 +221,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 	}
 }
 
+// Converts GameObjects to Box2D world positions
 void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
 
@@ -286,4 +275,20 @@ void PhysicsEngine::removeObject(GameObject& aObject)
 
 const std::vector<std::reference_wrapper<GameObject>>& PhysicsEngine::getObjects() const { return mObjects; }
 
-void PhysicsEngine::clearObjects() { mObjects.clear(); }
+void PhysicsEngine::clearObjects()
+{
+	std::cout << "start clear" << std::endl;
+	for (GameObject& gameObject : mObjects)
+	{
+		if (gameObject.hasComponent<RigidBody>())
+		{
+			std::cout << "delete body: " << gameObject.getComponents<RigidBody>()[0]->getBodyId().world0
+					  << gameObject.getComponents<RigidBody>()[0]->getBodyId().bodyID
+					  << gameObject.getComponents<RigidBody>()[0]->getBodyId().revision << std::endl;
+			mWorld.deleteBody(gameObject.getComponents<RigidBody>()[0]->getBodyId());
+
+			gameObject.getComponents<RigidBody>()[0]->setBodyId({-1, 0, 0});
+		}
+	}
+	mObjects.clear();
+}

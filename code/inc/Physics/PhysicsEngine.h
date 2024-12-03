@@ -9,6 +9,7 @@
 #include "WorldID.h"
 #include <functional>
 #include <vector>
+
 class PhysicsEngine
 {
 
@@ -17,17 +18,17 @@ public:
 	~PhysicsEngine();
 
 	void createWorld(Vector2 aGravity);
-	void reset();
 
 	void createBodies();
-	void deleteBodies();
 
 	void update();
 	void updateFlags();
-	void updateForces();
 
 	void setStep(float);
 	void setSubStep(int);
+
+	void setPositions();
+	void applyForces();
 
 	std::vector<GameObject*> getgameObjects() const;
 	float getStep() const;
