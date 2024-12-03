@@ -10,7 +10,7 @@ Animation::Animation(std::vector<std::reference_wrapper<Sprite>> aAnimationFrame
 	// Transfer each raw pointer to a unique_ptr and store in mAnimationFrames
 	for (Sprite& sprite : aAnimationFrames)
 	{
-		mAnimationFrames.push_back(std::unique_ptr<Sprite>(&sprite));
+		mAnimationFrames.emplace_back(&sprite);
 	}
 }
 
@@ -131,8 +131,9 @@ Sprite& Animation::getCurrentFrame()
 
 Color Animation::getColorFilter()
 {
-	for (auto& frame : mAnimationFrames)
+	for (std::unique_ptr<Sprite>& frame : mAnimationFrames)
 	{
+		// Check if the frame is not nullptr
 		if (frame)
 		{
 			return frame->getColorFilter();
@@ -143,13 +144,15 @@ Color Animation::getColorFilter()
 
 void Animation::setColorFilter(const Color& aColor)
 {
-	for (auto& frame : mAnimationFrames)
+	for (std::unique_ptr<Sprite>& frame : mAnimationFrames)
 	{
+		// Check if the frame is not nullptr
 		if (frame)
 		{
 			frame->setColorFilter(aColor);
 		}
 	}
+	throw std::runtime_error("Cannot set color filter: no instantiated frames in the animation");
 }
 
 int Animation::getTimeBetweenFrames() { return mTimeBetweenFrames; }
