@@ -39,10 +39,9 @@ void Scene::removeGameObject(GameObject* aObject)
 	// std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
 }
 
-std::vector<GameObject*>& Scene::getGameObjects()
+std::vector<GameObject*> Scene::getGameObjects()
 {
-	static std::vector<GameObject*> gameObjectRefs;
-	gameObjectRefs.clear();
+	std::vector<GameObject*> gameObjectRefs;
 	for (const auto& gameObject : mGameObjects)
 	{
 		gameObjectRefs.push_back(gameObject.get());

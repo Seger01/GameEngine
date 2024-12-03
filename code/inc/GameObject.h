@@ -62,8 +62,6 @@ public:
 	template <typename T> std::vector<T*> getComponents() const
 	{
 		std::vector<T*> componentsOfType;
-		//		std::cout << "tag: " << mTag << std::endl;
-		std::cout << "size: " << mComponents.size() << std::endl;
 		for (const auto& component : mComponents)
 		{
 			if (T* casted = dynamic_cast<T*>(component.get()))
