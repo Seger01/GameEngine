@@ -64,3 +64,11 @@ Date,Time,Duration(in hours),Activity
 2024-11-15, 9:00, 2.25, group lesson with bob and added colliders to doors
 2024-11-16, 14:00, 3.25, worked on enemy spawning and spawning bullets
 2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
+2024-11-19, 9:15, 7.5, worked on game template and fixing tests for tilemapparser and worked on design for validation game
+2024-11-20, 9:45, 6.75, worked on design for validation game and implementing the design
+2024-11-21, 9:15, 7, worked on level creator and level manager and fixed segfault when switching levels
+2024-11-22, 11:30, 3, worked on levelcreator and level mechanics
+2024-11-25, 14:00, 2, worked on fixing shooting and created coin prefabs
+2024-11-26, 9:15, 7.25, worked on test document and started work on AI
+2024-11-27, 9:15, 7.5, worked on AI and fixed some issues with the level creator
+2024-11-28, 17:00, 1.5, made some improvements to the pathfinding and worked on compliance with codestandard for maptograph and pathfinding

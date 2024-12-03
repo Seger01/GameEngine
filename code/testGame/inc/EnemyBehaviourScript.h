@@ -5,10 +5,12 @@
 #include "Network/INetworkBehaviour.h"
 #include "Network/NetworkVariable.h"
 #include <iostream>
+#include "Pathfinding.h"
 
 class EnemyBehaviourScript : public INetworkBehaviour
 {
 public:
+    EnemyBehaviourScript(std::shared_ptr<Pathfinding> pathfinding, int mapWidth) : mPathfinding(pathfinding), mMapWidth(mapWidth) {}
     void onStart() override;
     void onUpdate() override;
     void onCollide(GameObject* aGameObject) override;
@@ -20,7 +22,14 @@ private:
     void deactivateAllAnimations();
     void setFlipX(bool aState);
     void setFlipY(bool aState);
+    void findPathToPlayer();
+    void move();
 
 private:
+    std::shared_ptr<Pathfinding> mPathfinding;
+    int mMapWidth;
+
+    std::vector<int> mPath;
+    int mPathIndex = 0;
 	NetworkVariable<EnemyTransformSerialize> mTransform{this};
 };

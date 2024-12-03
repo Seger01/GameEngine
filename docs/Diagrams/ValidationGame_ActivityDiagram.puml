@@ -1,0 +1,58 @@
+@startuml ValidationGame_ActivityDiagram
+
+start
+:Show menu;
+
+if (Quit clicked) then (yes)
+    :Exit Game;
+    stop
+else (no)
+    if (Options clicked) then (yes)
+        :Show options;
+        :Back to menu clicked;
+        :Show menu;
+    else (no)
+        if (Start Game clicked) then (yes)
+            :Initialize player;
+            :Initialize Scene;
+            :Game loop;
+            if (Level switch) then (yes)
+                :Initialize Scene;
+                :Game loop;
+            else (no)
+                :Game loop;
+            endif
+        endif
+    endif
+endif
+
+stop
+
+start 
+    :Initialize Scene called;
+
+    :Parse level data;
+
+    :Extract level layers;
+
+    if (Ground Layer) then (yes)
+        :Create Ground GameObjects without collision;
+    else (no)
+        if (Wall layer) then (yes)
+        :Create Wall GameObjects with collision;
+
+        else (no)
+            if (Door Layer) then (yes)
+            :Create Door GameObjects with collision inactive;
+            else (no)
+            :Parse interactive elements;
+            :Set up room triggers and level end trigger;
+            :Intialize Room Behaviour;
+            :Set up enemy spawns;
+            :Set up player spawn;
+            endif
+        endif
+    endif
+stop
+
+@enduml

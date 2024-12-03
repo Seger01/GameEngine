@@ -1,0 +1,24 @@
+Minutes 27-11-24
+
+What was discussed:
+
+What has been done:
+- Siem: Work on test plan, update queue bug hunting
+- Angel: Implemented circle colliders. Discuss physics filter system design. Add rotational forces to physics.
+- Ronan: Work on test plan. Improve initbehavoiur and levelmanager. Work on AI implementation.
+- Sean: Work on test plan, multiplayer template design.
+- Seger: Created menu with buttons, game can now be started.
+
+What is going to be done:
+- Siem: Update queue physics bug hunting
+- Angel: Update queue physics bug hunting. Discuss physics filter system design.
+- Ronan: Work an AI implementation, adding graph to level.
+- Sean: Fix issue with multiplayer templates. Add slitenet facade.
+- Seger: Improving camera functionality: multixple cameras and viewports.
+
+Roadblocks:
+- Siem: Issues with physics game object updates
+- Angel: Issues with physics game object updates
+- Ronan: -
+- Sean: multiplayer templating.
+- Seger: -

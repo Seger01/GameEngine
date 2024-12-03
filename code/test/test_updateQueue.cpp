@@ -9,7 +9,7 @@
 TEST(UpdateQueue, updateAdditions)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
-	engineBravo.clearUpdateObjects();
+	engineBravo.getUpdateQueue().clearUpdateObjects();
 
 	AudioManager& audioManager = engineBravo.getAudioManager();
 	audioManager.clearObjects();
@@ -21,7 +21,7 @@ TEST(UpdateQueue, updateAdditions)
 
 	GameObject* gameObject = new GameObject();
 
-	engineBravo.updateAdditions();
+	engineBravo.getUpdateQueue().updateAdditions();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 0);
 	ASSERT_EQ(networkManager.getObjects().size(), 0);
@@ -31,7 +31,7 @@ TEST(UpdateQueue, updateAdditions)
 
 	AudioSource* audioSource = new AudioSource("Audio/gun1.wav");
 	gameObject->addComponent(audioSource);
-	engineBravo.updateAdditions();
+	engineBravo.getUpdateQueue().updateAdditions();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 1);
 	ASSERT_EQ(networkManager.getObjects().size(), 0);
@@ -42,7 +42,7 @@ TEST(UpdateQueue, updateAdditions)
 	gameObject->removeComponent(audioSource);
 	RigidBody* rigidBody = new RigidBody();
 	gameObject->addComponent(rigidBody);
-	engineBravo.updateAdditions();
+	engineBravo.getUpdateQueue().updateAdditions();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 0);
 	ASSERT_EQ(networkManager.getObjects().size(), 0);
@@ -54,7 +54,7 @@ TEST(UpdateQueue, updateAdditions)
 TEST(UpdateQueue, updateRemovals)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
-	engineBravo.clearUpdateObjects();
+	engineBravo.getUpdateQueue().clearUpdateObjects();
 	SceneManager& sceneManager = engineBravo.getSceneManager();
 	sceneManager.createScene("TestScene");
 	sceneManager.requestSceneChange("TestScene");
@@ -68,13 +68,13 @@ TEST(UpdateQueue, updateRemovals)
 	ASSERT_EQ(audioManager.getObjects().size(), 0);
 
 	sceneManager.getCurrentScene()->addGameObject(gameObject);
-	engineBravo.addToUpdateObjects(*gameObject);
-	engineBravo.updateAdditions();
+	engineBravo.getUpdateQueue().addToUpdateObjects(*gameObject);
+	engineBravo.getUpdateQueue().updateAdditions();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 1);
 
 	sceneManager.getCurrentScene()->requestGameObjectRemoval(gameObject);
-	engineBravo.updateRemovals();
+	engineBravo.getUpdateQueue().updateRemovals();
 	sceneManager.update();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 0);
