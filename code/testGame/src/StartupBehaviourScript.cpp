@@ -16,12 +16,15 @@ void StartupBehaviourScript::onUpdate()
 		SceneManager& sceneManager = engine.getSceneManager();
 		Scene* scene = sceneManager.createScene("networkScene");
 
-		int cameraIDNetwork = scene->addCamera();
-		scene->setActiveCamera(cameraIDNetwork);
+		Camera* camera = new Camera;
+		camera->setTag("MainCamera");
+		camera->setActive(true);
 
-		scene->getActiveCamera().setTransform(Transform(Vector2(100, 100)));
-		scene->getActiveCamera().setWidth(200);
-		scene->getActiveCamera().setHeight(200);
+		camera->setTransform(Transform(Vector2(100, 100)));
+		camera->setWidth(200);
+		camera->setHeight(200);
+
+		scene->addGameObject(camera);
 
 		GameObject* gameObject = new GameObject;
 

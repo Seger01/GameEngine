@@ -19,11 +19,8 @@ public:
     void requestGameObjectRemoval(GameObject* object);
     GameObject& getGameObject(int id);
 
-    int addCamera();
-    void removeCamera(int id);
-    Camera& getCamera(int id);
-    void setActiveCamera(int id);
-    Camera& getActiveCamera();
+    std::vector<Camera*> getCameras();
+    Camera* getCameraWithTag(const std::string& tag);
 
     int getID();
     std::string getName();
@@ -42,16 +39,13 @@ public:
 private:
     Scene(std::string aSceneName, int aSceneID);
 
-private:
     void removeGameObject(GameObject* aObject);
 
 private:
     std::vector<std::unique_ptr<GameObject>> mGameObjects;
     std::vector<GameObject*> mPersistentGameObjects;
-
     std::vector<GameObject*> mGameObjectsToRemove;
 
-    std::vector<std::unique_ptr<Camera>> mCameras;
     int mActiveCameraIndex;
     std::string mSceneName;
     int mSceneID = -1;

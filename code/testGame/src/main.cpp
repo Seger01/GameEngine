@@ -10,63 +10,68 @@
 #include "PlayerPrefab.h"
 #include "StartupBehaviourScript.h"
 
-void engineTest() {
-    EngineBravo& engine = EngineBravo::getInstance();
-    engine.initialize();
-    SceneManager& sceneManager = engine.getSceneManager();
+void engineTest()
+{
+	EngineBravo& engine = EngineBravo::getInstance();
+	engine.initialize();
+	SceneManager& sceneManager = engine.getSceneManager();
 
-    NetworkManager& networkManager = engine.getNetworkManager();
+	NetworkManager& networkManager = engine.getNetworkManager();
 
-    GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+	GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
 
-    networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
+	networkManager.setDefaultPlayerPrefab(defaultPlayerPrefab);
 
-    Scene* sceneStartup = sceneManager.createScene("startupScene");
+	Scene* sceneStartup = sceneManager.createScene("startupScene");
 
-    int cameraIDStartup = sceneStartup->addCamera();
-    sceneStartup->setActiveCamera(cameraIDStartup);
+	Camera* camera = new Camera;
+	camera->setTag("MainCamera");
+	camera->setActive(true);
 
-    sceneStartup->getActiveCamera().setTransform(Transform(Vector2(50, 50)));
-    sceneStartup->getActiveCamera().setWidth(100);
-    sceneStartup->getActiveCamera().setHeight(100);
+	camera->setTransform(Transform(Vector2(50, 50)));
+	camera->setWidth(100);
+	camera->setHeight(100);
 
-    GameObject* gameObjectStartup = new GameObject;
-    SpriteDef logo = {"Engine_logo/Engine-BRAVO_logo.png", Rect(), 100, 100};
-    Sprite* sprite = EngineBravo::getInstance().getResourceManager().createSprite(logo);
+	sceneStartup->addGameObject(camera);
 
-    gameObjectStartup->addComponent(sprite);
+	GameObject* gameObjectStartup = new GameObject;
+	SpriteDef logo = {"Engine_logo/Engine-BRAVO_logo.png", Rect(), 100, 100};
+	Sprite* sprite = EngineBravo::getInstance().getResourceManager().createSprite(logo);
 
-    sceneStartup->addGameObject(gameObjectStartup);
+	gameObjectStartup->addComponent(sprite);
 
-    GameObject* startupBehaviourObject = new GameObject;
-    startupBehaviourObject->addComponent<StartupBehaviourScript>();
-    sceneStartup->addGameObject(startupBehaviourObject);
+	sceneStartup->addGameObject(gameObjectStartup);
 
-    sceneManager.requestSceneChange("startupScene");
+	GameObject* startupBehaviourObject = new GameObject;
+	startupBehaviourObject->addComponent<StartupBehaviourScript>();
+	sceneStartup->addGameObject(startupBehaviourObject);
 
-    // Scene* scene = sceneManager.createScene("tempScene");
-    // GameObject* tempObject = new GameObject;
+	sceneManager.requestSceneChange("startupScene");
 
-    // tempObject->addComponent<InitBehaviourScript>();
+	// Scene* scene = sceneManager.createScene("tempScene");
+	// GameObject* tempObject = new GameObject;
 
-    // scene->addGameObject(tempObject);
+	// tempObject->addComponent<InitBehaviourScript>();
 
-    // int cameraID = scene->addCamera();
-    // scene->setActiveCamera(cameraID);
+	// scene->addGameObject(tempObject);
 
-    // scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-    // scene->getActiveCamera().setWidth(16 * 30);
-    // scene->getActiveCamera().setHeight(9 * 30);
+	// int cameraID = scene->addCamera();
+	// scene->setActiveCamera(cameraID);
 
-    // sceneManager.requestSceneChange("tempScene");
+	// scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
+	// scene->getActiveCamera().setWidth(16 * 30);
+	// scene->getActiveCamera().setHeight(9 * 30);
 
-    engine.run();
+	// sceneManager.requestSceneChange("tempScene");
 
-    return;
+	engine.run();
+
+	return;
 }
 
-int main() {
-    engineTest();
+int main()
+{
+	engineTest();
 
-    return 0;
+	return 0;
 }
