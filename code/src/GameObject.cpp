@@ -11,6 +11,12 @@ GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), m
 GameObject::~GameObject()
 {
 	mComponents.clear(); // unique_ptr automatically handles deletion
+						 //
+
+	if (mParent)
+	{
+		mParent->removeChild(this);
+	}
 
 	for (auto child : mChildren)
 	{
