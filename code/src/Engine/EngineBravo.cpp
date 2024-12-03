@@ -56,6 +56,7 @@ void EngineBravo::run()
 
 	while (mRunning)
 	{
+		std::cout << "Start cycle\n";
 		Time::update();
 
 		mEventManager.handleEvents();
@@ -68,7 +69,11 @@ void EngineBravo::run()
 		startBehaviourScripts();
 		runBehaviourScripts();
 
+		std::cout << "Start update additions\n";
+
 		mUpdateQueue.updateAdditions();
+
+		std::cout << "Update physics\n";
 
 		mPhysicsManager.updatePhysicsEngine();
 
@@ -78,6 +83,8 @@ void EngineBravo::run()
 
 		mNetworkManager.update();
 		limitFrameRate(mFrameRateLimit);
+
+		std::cout << "Update removals\n";
 
 		mUpdateQueue.updateRemovals();
 	}

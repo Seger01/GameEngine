@@ -67,8 +67,8 @@ void Scene::addGameObject(GameObject* object)
 {
 	if (object)
 	{
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 		mGameObjects.push_back(std::unique_ptr<GameObject>(object));
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
 }
 

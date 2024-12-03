@@ -6,7 +6,10 @@
 #include "Component.h"
 #include "EngineBravo.h"
 
-GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
+GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true)
+{
+	mComponents = std::vector<std::unique_ptr<Component>>();
+}
 
 GameObject::~GameObject()
 {
@@ -18,8 +21,6 @@ GameObject::GameObject(const GameObject& other)
 	: mParent(other.mParent), mTransform(other.mTransform), mID(other.mID), mName(other.mName), mTag(other.mTag),
 	  mIsActive(other.mIsActive)
 {
-
-	std::cout << "GameObject copy constructor called" << std::endl;
 	// Deep copy each component using its copy constructor
 	for (const auto& component : other.mComponents)
 	{
