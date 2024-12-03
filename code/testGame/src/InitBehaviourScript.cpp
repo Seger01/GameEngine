@@ -6,8 +6,10 @@
 #include "CanvasBehaviourScript.h"
 #include "EngineBravo.h"
 #include "FPSCounterBehaviourScript.h"
+#include "FRect.h"
 #include "FSConverter.h"
 #include "GameObject.h"
+#include "MapToGraph.h"
 #include "PlayerPrefab.h"
 #include "RigidBody.h"
 #include "RoomBehaviourScript.h"
@@ -17,7 +19,6 @@
 #include "TileMapParser.h"
 
 SpriteDef textBackgroundDef = {"UI/ui_images.png", Rect{0, 96, 48, 32}, 48, 32};
-
 SpriteDef guyFrameDef = {"Dungeontileset/0x72_DungeonTilesetII_v1.7.png", Rect{182, 389, 20, 27}, 20, 27};
 
 void InitBehaviourScript::createLevel1()
@@ -31,20 +32,46 @@ void InitBehaviourScript::createLevel1()
 		exit(1);
 	}
 
-	int cameraID = scene->addCamera();
-	scene->setActiveCamera(cameraID);
+	Camera* camera = new Camera;
+	camera->setTag("MainCamera");
+	camera->setActive(true);
 
-	scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-	scene->getActiveCamera().setWidth(16 * 30);
-	scene->getActiveCamera().setHeight(9 * 30);
+	camera->setTransform(Transform(Vector2(80, 96)));
+	camera->setWidth(16 * 30);
+	camera->setHeight(9 * 30);
 
-	// GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+	camera->setViewport(FRect{0, 0, 1, 1});
 
-	// CircleCollider* circleCollider = new CircleCollider(8);
-	// circleCollider->setTransform(Transform(Vector2(8, 0)));
-	// defaultPlayerPrefab->addComponent(circleCollider);
+	scene->addGameObject(camera);
 
-	// scene->addGameObject(defaultPlayerPrefab);
+	Camera* miniMapCamera = new Camera;
+	miniMapCamera->setTag("MiniMapCamera");
+	miniMapCamera->setActive(true);
+
+	miniMapCamera->setTransform(Transform(Vector2(80, 96)));
+	miniMapCamera->setWidth(16 * 60);
+	miniMapCamera->setHeight(9 * 60);
+
+	miniMapCamera->setViewport(FRect{0.5, 0.5, 0.5, 0.5});
+
+	scene->addGameObject(miniMapCamera);
+
+	GameObject* defaultPlayerPrefab = PlayerPrefabFactory().createPlayerPrefab();
+
+	scene->addGameObject(defaultPlayerPrefab);
+	//
+	// gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
+	// gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+	// gameObject2->addComponent<RigidBody>();
+	// RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
+	// rigidBody->setHasGravity(true);
+	// rigidBody->setDensity(1.0f);
+	// rigidBody->setFriction(0.3f);
+	// rigidBody->setRestitution(0.2f);
+	// rigidBody->setMass(1.0f);
+	// rigidBody->setGravityScale(10.0f);
+	// rigidBody->setCanRotate(false);
+	// gameObject2->setName("Guy");
 
 	GameObject* gameObject2 = new GameObject;
 	Transform objectTransform2;
@@ -61,6 +88,7 @@ void InitBehaviourScript::createLevel1()
 
 	gameObject2->getComponents<BoxCollider>().at(0)->setWidth(guySprite->getWidth());
 	gameObject2->getComponents<BoxCollider>().at(0)->setHeight(guySprite->getHeight());
+
 	gameObject2->addComponent<RigidBody>();
 	RigidBody* rigidBody = gameObject2->getComponents<RigidBody>().at(0);
 	rigidBody->setHasGravity(true);
@@ -80,9 +108,15 @@ void InitBehaviourScript::createLevel1()
 	TileMapParser tileMapParser(path);
 	tileMapParser.parse();
 	const TileMapData& tileMapData = tileMapParser.getTileMapData();
-	scene->getActiveCamera().setTransform(Transform(Vector2(80, 96)));
-	scene->getActiveCamera().setWidth(16 * 30);
-	scene->getActiveCamera().setHeight(9 * 30);
+
+	// Initialize the Pathfinding object
+	int mapWidth = 50;
+	int mapHeight = 50;
+	std::shared_ptr<MapToGraph> mapToGraph = std::make_shared<MapToGraph>(tileMapData);
+	mapToGraph->convertToGraph();
+	// mapToGraph->printGraph();
+	std::shared_ptr<Pathfinding> pathfinding =
+		std::make_shared<Pathfinding>(mapToGraph->getAdjacencyList(), mapWidth, mapHeight);
 
 	for (const auto& roomTrigger : tileMapData.mRoomTriggers)
 	{
@@ -97,7 +131,7 @@ void InitBehaviourScript::createLevel1()
 		}
 
 		GameObject* roomObject = new GameObject;
-		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns));
+		roomObject->addComponent(new RoomBehaviourScript(roomTrigger.roomID, enemySpawns, pathfinding, mapWidth));
 		BoxCollider* boxCollider = new BoxCollider();
 		Transform transform;
 		transform.position.x = roomTrigger.x;
@@ -157,20 +191,11 @@ void InitBehaviourScript::createLevel1()
 
 	sceneManager.requestSceneChange("Level-1");
 
-	// tileMapParser.printLayers();
-
-	// // print mTileInfoMap
-	// for (const auto& pair : tileMapData.mTileInfoMap) {
-	//     int gID = pair.first;
-	//     const TileInfo& info = pair.second;
-	//     std::cout << "gID: " << gID << ", Tileset: " << info.mTilesetName << ", Coordinates: ("
-	//               << info.mCoordinates.first << ", " << info.mCoordinates.second << ")" << std::endl;
-	// }
-
 	// Assuming tileMapData is a const reference to TileMapData
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
+		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
 		// Access rows within the layer by index
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
@@ -222,6 +247,30 @@ void InitBehaviourScript::createLevel1()
 							gameObject->addComponent(boxCollider);
 						}
 
+						// Add a Sprite component to the GameObject
+						Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+
+						sprite->setLayer(layerIndex);
+
+						gameObject->addComponent(sprite);
+
+						// Add BoxCollider components to the GameObject
+						for (const auto& collider : tileInfo.mColliders)
+						{
+							BoxCollider* boxCollider = new BoxCollider();
+							Transform transform;
+							transform.position.x = collider.x;
+							transform.position.y = collider.y;
+							boxCollider->setTransform(transform);
+							boxCollider->setWidth(collider.mWidth);
+							boxCollider->setHeight(collider.mHeight);
+							if (isDoorsLayer)
+							{
+								boxCollider->setActive(false);
+							}
+							gameObject->addComponent(boxCollider);
+						}
+
 						if (!tileInfo.mColliders.empty())
 						{
 							RigidBody* rigidBody = new RigidBody();
@@ -255,37 +304,75 @@ void InitBehaviourScript::createLevel1()
 	return;
 }
 
-void InitBehaviourScript::onStart()
-{
-	createLevel1();
-	// std::cout << "InitBehaviourScript::onStart()" << std::endl;
-	// EngineBravo& engine = EngineBravo::getInstance();
-	// SceneManager& sceneManager = engine.getSceneManager();
+void InitBehaviourScript::onStart() { createLevel1(); }
 
-	// Scene* scene = sceneManager.createScene("Level-1");
-	// if (scene == nullptr)
-	//     exit(1);
-	//
-	// int cameraID = scene->addCamera();
-	// scene->setActiveGamera(cameraID);
-	//
-	// scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
-	// scene->getActiveCamera().setWidth(160);
-	// scene->getActiveCamera().setHeight(90);
-	//
-	// GameObject* gameObject = new GameObject;
-	//
-	// Transform objectTransform;
-	// objectTransform.position.x = 80;
-	// objectTransform.position.y = 0;
-	// gameObject->setTransform(objectTransform);
-	//
-	// gameObject->addComponent<PlayerBehaviourScript>();
-	//
-	// scene->addGameObject(gameObject);
-	//
-	// sceneManager.requestSceneChange("Level-1");
-}
+// =======
+//
+// if (!tileInfo.mColliders.empty())
+// {
+// 	RigidBody* rigidBody = new RigidBody();
+// 	rigidBody->setTransform(objectTransform);
+// 	if (isDoorsLayer)
+// 	{
+// 		if (rigidBody != nullptr)
+// 		{
+// 			rigidBody->setActive(false);
+// 		}
+// 	}
+// 	gameObject->addComponent(rigidBody);
+// 	gameObject->setName("Tile");
+// }
+// if (isDoorsLayer)
+// {
+// 	gameObject->setTag("Door");
+// }
+// scene->addGameObject(gameObject);
+// }
+// else
+// {
+// 	// Handle the case where tileId does not exist in the map
+// 	std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
+// }
+// }
+// }
+// }
+// }
+//
+// return;
+// }
+
+// void InitBehaviourScript::onStart()
+// {
+// 	createLevel1();
+// 	// std::cout << "InitBehaviourScript::onStart()" << std::endl;
+// 	// EngineBravo& engine = EngineBravo::getInstance();
+// 	// SceneManager& sceneManager = engine.getSceneManager();
+//
+// 	// Scene* scene = sceneManager.createScene("Level-1");
+// 	// if (scene == nullptr)
+// 	//     exit(1);
+// 	//
+// 	// int cameraID = scene->addCamera();
+// 	// scene->setActiveGamera(cameraID);
+// 	//
+// 	// scene->getActiveCamera().setTransform(Transform(Vector2(80, 0)));
+// 	// scene->getActiveCamera().setWidth(160);
+// 	// scene->getActiveCamera().setHeight(90);
+// 	//
+// 	// GameObject* gameObject = new GameObject;
+// 	//
+// 	// Transform objectTransform;
+// 	// objectTransform.position.x = 80;
+// 	// objectTransform.position.y = 0;
+// 	// gameObject->setTransform(objectTransform);
+// 	//
+// 	// gameObject->addComponent<PlayerBehaviourScript>();
+// 	//
+// 	// scene->addGameObject(gameObject);
+// 	//
+// 	// sceneManager.requestSceneChange("Level-1");
+// }
+// >>>>>>> development
 
 void InitBehaviourScript::onUpdate() {}
 

@@ -97,7 +97,7 @@ void MixerFacade::playSound(const std::string& aPath, bool aLooping, unsigned aV
 	int channel = findAvailableChannel();
 	Mix_Volume(channel, aVolume);
 
-	Mix_SetPosition(channel, distanceToAngle(aDirection), aDirection);
+	Mix_SetPosition(channel, distanceToAngle(aDirection), std::abs(aDirection));
 	Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
 }
 
@@ -146,7 +146,8 @@ bool MixerFacade::isPlaying(const std::string& aPath) const
 bool MixerFacade::isMusicPlaying() const { return Mix_PlayingMusic(); }
 
 /**
- * @brief Convert a direction to an angle
+ * @brief Convert a direction to an angle. The greater the argument, the further away the sound. This is simulated by
+ * increasing the angle, up to a maximum of 90 degrees for the right, and -90 degrees for the left.
  *
  * @param aDirection The direction to convert. Negative is left, positive is right, 0 is center.
  *
@@ -154,15 +155,13 @@ bool MixerFacade::isMusicPlaying() const { return Mix_PlayingMusic(); }
  */
 int MixerFacade::distanceToAngle(int aDirection) const
 {
-	if (aDirection < 0)
+	if (aDirection >= 0)
 	{
-		return 90;
+		// Play to the right
+		return std::min(aDirection, 90);
 	}
-	if (aDirection > 0)
-	{
-		return 270;
-	}
-	return 0;
+	// Play to the left
+	return std::max(aDirection, -90);
 }
 
 /**
