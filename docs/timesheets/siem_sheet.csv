@@ -88,3 +88,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-27, 9:15, 7.5, Investigate physics issues related to update queue and fixed those
 2024-11-27, 19:00, 1.25, Updated update queue to be compatible with scene changes and persistent objects
 2024-11-28, 10:00, 1.25, Updated savegame to follow code standard, added Doxygen
+2024-11-29, 9:15, 1.25, Standup; discuss issues with engine structure.
+2024-11-29, 12:00, 4, Improve update queue; add better positional audio
