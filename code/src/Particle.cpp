@@ -7,81 +7,79 @@
 Particle::Particle(const Vector2& aPosition, const Vector2& aVelocity, float aAcceleration, int aLifeTime,
 				   int aMaxLifeTime, const Vector2& aSize, const Vector2& aSizeShift, float aRotation,
 				   float aAngularVelocity, float aAngularAcceleration, const std::vector<Color>& aColorGradient)
-	: position(aPosition), velocity(aVelocity), acceleration(aAcceleration), maxLifeTime(aMaxLifeTime), size(aSize),
-	  endSize(aSizeShift), rotation(aRotation), angularVelocity(aAngularVelocity),
-	  angularAcceleration(aAngularAcceleration), colorGradient(aColorGradient)
+	: mPosition(aPosition), mVelocity(aVelocity), mAcceleration(aAcceleration), mMaxLifeTime(aMaxLifeTime),
+	  mSize(aSize), mEndSize(aSizeShift), mRotation(aRotation), mAngularVelocity(aAngularVelocity),
+	  mAngularAcceleration(aAngularAcceleration), mColorGradient(aColorGradient), mStartSize(aSize),
+	  mInitialLifeTime(aLifeTime), mInterpolateColor(true)
 {
-
-	lifeTimeRemainingSec = static_cast<double>(aLifeTime) / 1000;
-	startSize = aSize;
-	initialLifeTime = aLifeTime;
+	mLifeTimeRemainingSec = static_cast<double>(aLifeTime) / 1000;
 }
 
 void Particle::update()
 {
-	position.x += velocity.x * Time::deltaTime;
-	position.y += velocity.y * Time::deltaTime;
+	mPosition.x += mVelocity.x * Time::deltaTime;
+	mPosition.y += mVelocity.y * Time::deltaTime;
 
-	velocity.x += acceleration * Time::deltaTime;
-	velocity.y += acceleration * Time::deltaTime;
-	lifeTimeRemainingSec -= Time::deltaTime;
+	mVelocity.x += mAcceleration * Time::deltaTime;
+	mVelocity.y += mAcceleration * Time::deltaTime;
+	mLifeTimeRemainingSec -= Time::deltaTime;
 
-	if (lifeTimeRemainingSec <= 0)
+	if (mLifeTimeRemainingSec <= 0)
 	{
-		lifeTimeRemainingSec = 0;
+		mLifeTimeRemainingSec = 0;
 	}
 
-	float percentage = (static_cast<float>(maxLifeTime) / 1000) -
-					   (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime) / 1000));
+	float percentage = (static_cast<float>(mMaxLifeTime) / 1000) -
+					   (mLifeTimeRemainingSec + (static_cast<float>(mMaxLifeTime - mInitialLifeTime) / 1000));
 
-	size.x = startSize.x + ((endSize.x - startSize.x) * percentage);
-	size.y = startSize.y + ((endSize.y - startSize.y) * percentage);
+	mSize.x = mStartSize.x + ((mEndSize.x - mStartSize.x) * percentage);
+	mSize.y = mStartSize.y + ((mEndSize.y - mStartSize.y) * percentage);
 
-	if (size.x < 0)
+	if (mSize.x < 0)
 	{
-		size.x = 0;
-		lifeTimeRemainingSec = 0;
+		mSize.x = 0;
+		mLifeTimeRemainingSec = 0;
 	}
 
-	if (size.y < 0)
+	if (mSize.y < 0)
 	{
-		size.y = 0;
-		lifeTimeRemainingSec = 0;
+		mSize.y = 0;
+		mLifeTimeRemainingSec = 0;
 	}
 
-	rotation += angularVelocity * Time::deltaTime;
-	angularVelocity += angularAcceleration * Time::deltaTime;
+	mRotation += mAngularVelocity * Time::deltaTime;
+	mAngularVelocity += mAngularAcceleration * Time::deltaTime;
 }
 
-Vector2 Particle::getPosition() { return position; }
+Vector2 Particle::getPosition() const { return mPosition; }
 
-float Particle::getLifeTime() { return lifeTimeRemainingSec; }
+float Particle::getLifeTime() const { return mLifeTimeRemainingSec; }
 
-Vector2 Particle::getSize() { return size; }
+Vector2 Particle::getSize() const { return mSize; }
 
-float Particle::getRotation() { return rotation; }
+float Particle::getRotation() const { return mRotation; }
 
-Color Particle::getColor()
+Color Particle::getColor() const
 {
-	if (colorGradient.size() == 0)
+	if (mColorGradient.size() == 0)
 	{
 		return Color(255, 255, 255, 255);
 	}
-	else if (colorGradient.size() == 1)
+	else if (mColorGradient.size() == 1)
 	{
-		return colorGradient[0];
+		return mColorGradient[0];
 	}
 	else
 	{
 		return calculateColor();
 	}
 
-	return colorGradient[0];
+	return mColorGradient[0];
 }
 
-Color Particle::calculateColor()
+Color Particle::calculateColor() const
 {
-	if (interpolateColor)
+	if (mInterpolateColor)
 	{
 		return calculateInterpolatedColor();
 	}
@@ -91,27 +89,27 @@ Color Particle::calculateColor()
 	}
 }
 
-Color Particle::calculateInterpolatedColor()
+Color Particle::calculateInterpolatedColor() const
 {
 	// Calculate the percentage of life time remaining
-	float percentage = (static_cast<float>(maxLifeTime) / 1000) -
-					   (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime) / 1000));
+	float percentage = (static_cast<float>(mMaxLifeTime) / 1000) -
+					   (mLifeTimeRemainingSec + (static_cast<float>(mMaxLifeTime - mInitialLifeTime) / 1000));
 
 	// Calculate the index of the color gradient
-	int index = static_cast<int>(percentage * (colorGradient.size() - 1));
+	int index = static_cast<int>(percentage * (mColorGradient.size() - 1));
 
 	// Handle edge case where percentage is 1 (fully alive)
-	if (index >= colorGradient.size() - 1)
+	if (index >= mColorGradient.size() - 1)
 	{
-		return colorGradient.back(); // Return the last color if fully alive
+		return mColorGradient.back(); // Return the last color if fully alive
 	}
 
 	// Get the two colors to interpolate between
-	Color startColor = colorGradient[index];
-	Color endColor = colorGradient[index + 1];
+	Color startColor = mColorGradient[index];
+	Color endColor = mColorGradient[index + 1];
 
 	// Calculate the interpolation factor
-	float t = (percentage * (colorGradient.size() - 1)) - index; // Fractional part
+	float t = (percentage * (mColorGradient.size() - 1)) - index; // Fractional part
 
 	// Perform linear interpolation between startColor and endColor
 	Color interpolatedColor;
@@ -123,17 +121,17 @@ Color Particle::calculateInterpolatedColor()
 	return interpolatedColor;
 }
 
-Color Particle::getNearestColor()
+Color Particle::getNearestColor() const
 {
 	// Calculate the percentage of life time remaining
-	float percentage = (static_cast<float>(maxLifeTime) / 1000) -
-					   (lifeTimeRemainingSec + (static_cast<float>(maxLifeTime - initialLifeTime)));
+	float percentage = (static_cast<float>(mMaxLifeTime) / 1000) -
+					   (mLifeTimeRemainingSec + (static_cast<float>(mMaxLifeTime - mInitialLifeTime)));
 
 	// Calculate the index of the color gradient
-	int index = static_cast<int>(percentage * (colorGradient.size() - 1));
+	int index = static_cast<int>(percentage * (mColorGradient.size() - 1));
 
 	// Calculate the color based on the gradient
-	Color color = colorGradient[index];
+	Color color = mColorGradient[index];
 
 	return color;
 }
