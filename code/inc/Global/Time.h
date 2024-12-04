@@ -3,36 +3,44 @@
 
 #include <chrono>
 
-class Time {
+class Time
+{
 public:
-    // Call this once at the start of the application
-    static void initialize() {
-        startTime = std::chrono::high_resolution_clock::now();
-        lastFrameTime = startTime;
-        ticks = 0.0;
-        deltaTime = 0.0;
-    }
+	// Call this once at the start of the application
+	static void initialize()
+	{
+		startTime = std::chrono::high_resolution_clock::now();
+		lastFrameTime = startTime;
+		ticks = 0.0;
+		deltaTime = 0.0;
+		timeDilation = 1.0; // Default time dilation factor is 1 (normal speed)
+	}
 
-    // Call this once per frame to update deltaTime and elapsed time since start
-    static void update() {
-        auto currentTime = std::chrono::high_resolution_clock::now();
+	// Call this once per frame to update deltaTime and elapsed time since start
+	static void update()
+	{
+		auto currentTime = std::chrono::high_resolution_clock::now();
 
-        // Calculate deltaTime in seconds
-        deltaTime = std::chrono::duration<double>(currentTime - lastFrameTime).count();
+		// Calculate raw deltaTime in seconds
+		double rawDeltaTime = std::chrono::duration<double>(currentTime - lastFrameTime).count();
 
-        // Update lastFrameTime to the current time
-        lastFrameTime = currentTime;
+		// Apply time dilation
+		deltaTime = rawDeltaTime * timeDilation;
 
-        // Accumulate total elapsed time in seconds
-        ticks += deltaTime;
-    }
+		// Update lastFrameTime to the current time
+		lastFrameTime = currentTime;
 
-    static double deltaTime; // Time in seconds since last frame
-    static double ticks;     // Total time since start in seconds
+		// Accumulate total elapsed time in seconds
+		ticks += deltaTime;
+	}
+
+	static double deltaTime;	// Time in seconds since last frame, affected by time dilation
+	static double ticks;		// Total time since start in seconds, affected by time dilation
+	static double timeDilation; // Time dilation factor (e.g., 0.5 for half speed, 2.0 for double speed)
 
 private:
-    static std::chrono::high_resolution_clock::time_point startTime;
-    static std::chrono::high_resolution_clock::time_point lastFrameTime;
+	static std::chrono::high_resolution_clock::time_point startTime;
+	static std::chrono::high_resolution_clock::time_point lastFrameTime;
 };
 
 #endif // TIME_H
