@@ -63,3 +63,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-27, 09:00, 7.5 , Wrote and mostly finished camera viewport functionality
 2024-11-29, 09:15, 1.25, standup and worked on intergration of different PRs and branches
 2024-11-29, 12:00, 4.5 , Worked on camera system and merging differnet branches 
+2024-12-03, 09:15, 7.5 , Debug issue with scene changes, merged a bunch of code into development and worked a small bit on Camera functionality
