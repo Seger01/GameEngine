@@ -21,41 +21,10 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480)
 	mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
 	mRenderer = std::make_unique<Renderer>(*mWindow);
 
-	mBackgroundColor = Color(255, 255, 255);
+	mBackgroundColor = Color(0, 0, 0);
 
 	return;
 }
-
-// void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite)
-// {
-//
-// 	int spriteWidth = aSprite->getWidth();
-// 	int spriteHeight = aSprite->getHeight();
-//
-// 	int windowWidth = mWindow->getSize().x;
-// 	int windowHeight = mWindow->getSize().y;
-//
-// 	Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
-//
-// 	// Calculate the camera's origin and position the sprite relative to it
-// 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-//
-// 	Vector2 drawPosition = texturePosition - cameraOrigin;
-//
-// 	// Snap position to integer to avoid subpixel offsets
-// 	drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth()));
-// 	drawPosition.y = std::round(drawPosition.y * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight()));
-//
-// 	// Adjust the width and height slightly to cover gaps
-// 	spriteWidth = std::round(spriteWidth * (static_cast<float>(windowWidth) / aCurrentCamera.getWidth())) + 1;
-// 	spriteHeight = std::round(spriteHeight * (static_cast<float>(windowHeight) / aCurrentCamera.getHeight())) + 1;
-//
-// 	// Render the sprite with adjusted size
-// 	mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
-// 							 aSprite->getFlipX(), aSprite->getFlipY(),
-// 							 aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
-// 							 aSprite->getColorFilter());
-// }
 
 void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort)
 {
@@ -78,9 +47,6 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 	// Adjust draw position and size to the viewport
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
-
-	// drawPosition.x += aScreenViewPort.x;
-	// drawPosition.y += aScreenViewPort.y;
 
 	int spriteWidth = std::round(aSprite->getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 	int spriteHeight = std::round(aSprite->getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
@@ -325,6 +291,10 @@ void RenderSystem::render(Scene* aScene)
 			static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
 
 		mRenderer->setViewport(screenViewPort);
+
+		// draw the camera background color
+		mRenderer->renderSquare(Vector2(0, 0), screenViewPort.w, screenViewPort.h, 0, camera->getBackgroundColor(),
+								true);
 
 		// Render objects visible to this camera
 		renderForCamera(aScene, *camera, screenViewPort);

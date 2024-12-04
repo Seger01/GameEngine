@@ -3,9 +3,9 @@
 
 struct CameraDebugOverlay
 {
-	bool renderCameraViewport = true;
-	bool renderColliders = true;
-	bool showFPS = true;
+	bool renderCameraViewport = false;
+	bool renderColliders = false;
+	bool showFPS = false;
 };
 
 #endif // CAMERADEBUGOVERLAY_H
