@@ -26,6 +26,12 @@ void Scene::update()
 	}
 }
 
+/**
+ * @brief Removes a GameObject from the scene
+ * @note This functions also removes it from the persistent game objects list
+ *
+ * @param aObject The GameObject to remove
+ */
 void Scene::removeGameObject(GameObject* aObject)
 {
 	for (int i = 0; i < mGameObjects.size(); i++)
@@ -36,6 +42,7 @@ void Scene::removeGameObject(GameObject* aObject)
 			return;
 		}
 	}
+	removePersistentGameObject(aObject);
 	// std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
 }
 
@@ -150,7 +157,12 @@ void Scene::addPersistentGameObject(GameObject* object)
 	}
 }
 
-// function removes the object from the persistant gameObjects vector and from the mGameObjects vector
+/**
+ * @brief Removes a GameObject from the persistent game objects list
+ * @note This function does not remove the GameObject from the scene
+ *
+ * @param object The GameObject to remove
+ */
 void Scene::removePersistentGameObject(GameObject* object)
 {
 	for (int i = 0; i < mPersistentGameObjects.size(); i++)
@@ -158,15 +170,6 @@ void Scene::removePersistentGameObject(GameObject* object)
 		if (mPersistentGameObjects[i] == object)
 		{
 			mPersistentGameObjects.erase(mPersistentGameObjects.begin() + i);
-			break;
-		}
-	}
-
-	for (int i = 0; i < mGameObjects.size(); i++)
-	{
-		if (mGameObjects[i].get() == object)
-		{
-			mGameObjects.erase(mGameObjects.begin() + i);
 			break;
 		}
 	}

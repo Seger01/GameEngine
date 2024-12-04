@@ -30,7 +30,6 @@ public:
 	std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
 
 	void addPersistentGameObject(GameObject* object);
-	void removePersistentGameObject(GameObject* object);
 	std::vector<GameObject*>& getPersistentGameObjects();
 	void clearPersistentGameObjects();
 	void releasePersistentGameObjects();
@@ -41,6 +40,7 @@ private:
 	Scene(std::string aSceneName, int aSceneID);
 
 	void removeGameObject(GameObject* aObject);
+	void removePersistentGameObject(GameObject* object);
 
 private:
 	std::vector<std::unique_ptr<GameObject>> mGameObjects;

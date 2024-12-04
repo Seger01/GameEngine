@@ -164,8 +164,9 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
 		if (networkObject->getClientID() == playerID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->removePersistentGameObject(object);
-			break;
+			std::cout << "Destroying player with ID: " << playerID.g << std::endl;
+			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(object);
+			return;
 		}
 	}
 }
