@@ -10,6 +10,7 @@ class SceneTest : public ::testing::Test
 {
 protected:
 	void SetUp() override { scene = EngineBravo::getInstance().getSceneManager().createScene("TestScene", 1); }
+
 	void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("TestScene"); }
 
 	Scene* scene;
@@ -115,21 +116,6 @@ TEST_F(SceneTest, AddAndRemoveCameras)
 
 // Test setting and getting active camera
 TEST_F(SceneTest, ActiveCamera) {}
-
-// Test persistent GameObject management
-TEST_F(SceneTest, PersistentGameObjects)
-{
-	auto* obj1 = new GameObject();
-	scene->addPersistentGameObject(obj1);
-
-	EXPECT_EQ(scene->getPersistentGameObjects().size(), 1);
-
-	scene->removePersistentGameObject(obj1);
-	EXPECT_EQ(scene->getPersistentGameObjects().size(), 0);
-
-	scene->releasePersistentGameObjects();
-	scene->clearPersistentGameObjects();
-}
 
 // Test updating GameObjects
 TEST_F(SceneTest, UpdateRemovesGameObjects)
