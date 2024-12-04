@@ -75,3 +75,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-29, 9:45, 5.5, worked on tests for AI and MapToGraph and started work on improved TileMapParser.
 2024-11-30, 16:00, 2.5, worked on improved TileMapParser and made new branch to use it in the game
 2024-12-02, 15:45, 1.0, worked on improved TileMapParser and created new tests to improve coverage
+2024-12-03, 9:15, 7.5, worked on improved TileMapParser integration with BulletBravo and worked on Demo.
+2024-12-04, 9:15, 7.5, worked on Demo
