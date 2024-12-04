@@ -299,9 +299,6 @@ void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
-
-	std::cout << "playerId to destroy: " << networkPacket.clientGUID.ToString() << std::endl;
-
 	EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
 }
 

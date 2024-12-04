@@ -134,7 +134,7 @@ void NetworkServer::sendTransform() {
 	{
 		if (!gameObject.hasComponent<NetworkTransform>()) {
             continue;
-        }
+		}
 
 		Transform transform = gameObject.getTransform();
 		NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
@@ -144,6 +144,7 @@ void NetworkServer::sendTransform() {
 		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
 		networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
 		networkPacket.networkObjectID = networkObject->getNetworkObjectID();
+		networkPacket.clientGUID = networkObject->getClientGUID();
 		NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 
 		if (networkTransform->getSendPositionX())
