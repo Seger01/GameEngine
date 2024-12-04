@@ -39,7 +39,7 @@ void Scene::removeGameObject(GameObject* aObject)
 		if (mGameObjects[i].get() == aObject)
 		{
 			mGameObjects.erase(mGameObjects.begin() + i);
-			return;
+			break;
 		}
 	}
 	removePersistentGameObject(aObject);
