@@ -203,14 +203,9 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 				Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
 				Transform transform = gameObject.getTransform();
 				float rotation = mWorld.getRotation(rigidBody->getBodyId());
-				BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
 				transform.position = position;
 
 				transform = Transform(Vector2(position.x, position.y));
-
-				float x = 0;
-				float y = 0;
-				int i = 0;
 
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
