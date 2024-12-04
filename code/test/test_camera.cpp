@@ -33,5 +33,5 @@ TEST(CameraTest, CameraInitialization)
 	camera.getDebugOverlayRef();
 
 	camera.setRenderOrder(0);
-	EXPECT_EQ(debugOverlay.getRenderOrder(), 0);
+	EXPECT_EQ(camera.getRenderOrder(), 0);
 }
