@@ -365,6 +365,24 @@ void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, floa
 	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled);
 }
 
+void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
+								Rect aScreenViewPort)
+{
+
+	Vector2 circlePosition = aPosition;
+	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+	Vector2 drawPosition = circlePosition - cameraOrigin;
+
+	// Adjust draw position and size to the viewport
+	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+
+	int radius = std::round(aRadius * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+
+	// Render
+	mRenderer->drawCircle(drawPosition, radius, aColor, aFilled);
+}
+
 void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort)
 {
 	if (Time::deltaTime == 0)
@@ -405,6 +423,17 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 					renderSquare(boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
 								 gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
 								 aScreenViewPort);
+				}
+			}
+			if (gameObject->hasComponent<CircleCollider>())
+			{
+				for (auto circleCollider : gameObject->getComponents<CircleCollider>())
+				{
+					Vector2 circleColliderWorldPos =
+						gameObject->getTransform().position + circleCollider->getTransform().position;
+
+					renderCircle(circleColliderWorldPos, circleCollider->getRadius(), Color(0, 0, 255), false,
+								 aCurrentCamera, aScreenViewPort);
 				}
 			}
 		}
