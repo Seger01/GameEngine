@@ -274,12 +274,21 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, 
 	}
 }
 
+void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras)
+{
+	std::sort(aCameras.begin(), aCameras.end(),
+			  [](Camera* a, Camera* b) { return a->getRenderOrder() < b->getRenderOrder(); });
+}
+
 void RenderSystem::render(Scene* aScene)
 {
 	mRenderer->clear(mBackgroundColor);
 
 	// Get all active cameras
 	std::vector<Camera*> cameras = aScene->getCameras();
+
+	// Sort cameras by render order
+	sortCamerasByRenderOrder(cameras);
 
 	for (Camera* camera : cameras)
 	{

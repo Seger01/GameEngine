@@ -30,7 +30,12 @@ public:
 	CameraDebugOverlay getDebugOverlay() const;
 	CameraDebugOverlay& getDebugOverlayRef();
 
+	void setRenderOrder(uint aRenderOrder);
+	uint getRenderOrder() const;
+
 private:
+	uint mRenderOrder; // position in the camera render queue
+
 	Color mBackgroundColor;
 	int mWidth;
 	int mHeight;

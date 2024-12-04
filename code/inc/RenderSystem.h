@@ -47,6 +47,8 @@ private:
 
 	void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort);
 
+	void sortCamerasByRenderOrder(std::vector<Camera*>& aCameras);
+
 	int getLowestLayer(Scene* aScene);
 	int getHighestLayer(Scene* aScene);
 

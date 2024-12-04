@@ -26,4 +26,12 @@ TEST(CameraTest, CameraInitialization)
 	Vector2 cameraOrigin = camera.getOrigin();
 	EXPECT_EQ(cameraOrigin.x, -400);
 	EXPECT_EQ(cameraOrigin.y, -300);
+
+	camera.setDebugOverlay(CameraDebugOverlay());
+	CameraDebugOverlay debugOverlay = camera.getDebugOverlay();
+	camera.getDebugOverlay();
+	camera.getDebugOverlayRef();
+
+	camera.setRenderOrder(0);
+	EXPECT_EQ(camera.getRenderOrder(), 0);
 }

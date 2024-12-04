@@ -2,7 +2,7 @@
 
 Camera::Camera()
 	: GameObject(), mBackgroundColor(Color(0, 0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
-	  mDebugOverlay(CameraDebugOverlay())
+	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0)
 {
 }
 
@@ -33,3 +33,7 @@ void Camera::setDebugOverlay(const CameraDebugOverlay& debugOverlay) { mDebugOve
 CameraDebugOverlay Camera::getDebugOverlay() const { return mDebugOverlay; }
 
 CameraDebugOverlay& Camera::getDebugOverlayRef() { return mDebugOverlay; }
+
+void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
+
+uint Camera::getRenderOrder() const { return mRenderOrder; }
