@@ -37,6 +37,8 @@ private:
 	Color mBackgroundColor;
 	/// @brief Width of the camera, in game units.
 	int mWidth;
+	/// @brief  Height of the camera, in game units.
 	int mHeight;
-	FRect mViewport; // Portion of the screen this camera renders to
+	/// @brief Portion of the screen this camera renders to
+	FRect mViewport;
 };
