@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "CameraDebugOverlay.h"
 #include "Color.h"
 #include "FRect.h"
 #include "GameObject.h"
@@ -25,11 +26,17 @@ public:
 	void setViewport(const FRect& viewport);
 	FRect getViewport() const;
 
+	void setDebugOverlay(const CameraDebugOverlay& debugOverlay);
+	CameraDebugOverlay getDebugOverlay() const;
+	CameraDebugOverlay& getDebugOverlayRef();
+
 private:
 	Color mBackgroundColor;
 	int mWidth;
 	int mHeight;
 	FRect mViewport; // Portion of the screen this camera renders to
+
+	CameraDebugOverlay mDebugOverlay;
 };
 
 #endif // CAMERA_H

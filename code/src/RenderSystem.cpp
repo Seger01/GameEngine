@@ -119,16 +119,8 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 		static_cast<int>(static_cast<float>(particleHeight) *
 						 (static_cast<float>(aScreenViewPort.h) / static_cast<float>(aCurrentCamera.getHeight())));
 
-	if (aParticle.getRotation() == 0)
-	{
-		mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
-								aParticle.getColor(), true);
-	}
-	else
-	{
-		mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
-								aParticle.getRotation(), aParticle.getColor(), true);
-	}
+	mRenderer->renderSquare(drawPosition, static_cast<int>(particleWidth), static_cast<int>(particleHeight),
+							aParticle.getRotation(), aParticle.getColor(), true);
 }
 
 void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
@@ -351,26 +343,55 @@ void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenVi
 		renderLayer(aScene, layer, camera, aScreenViewPort);
 	}
 
-	renderDebugInfo(aScene, camera);
+	renderDebugInfo(aScene, camera, aScreenViewPort);
 }
 
-void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
+void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
+								Camera& aCurrentCamera, Rect aScreenViewPort)
+{
+
+	Vector2 squarePosition = aPosition;
+	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+	Vector2 drawPosition = squarePosition - cameraOrigin;
+
+	// Adjust draw position and size to the viewport
+	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+
+	int squareWidth = std::round(aWidth * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int squareHeight = std::round(aHeight * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+
+	// Render
+	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled);
+}
+
+void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort)
 {
 	if (Time::deltaTime == 0)
 	{
 		return;
 	}
 
-	Configuration& config = EngineBravo::getInstance().getConfiguration();
-
-	if (config.getConfig(SHOW_FPS))
+	if (aCurrentCamera.getDebugOverlayRef().showFPS)
 	{
 		int fps = 1.0f / Time::deltaTime;
 
-		mRenderer->renderText("FPS: " + std::to_string(fps), Vector2(10, 10), Color(0, 255, 0), 1.5, 1.5);
+		renderText(aCurrentCamera, "FPS: " + std::to_string(fps),
+				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
+				   Vector2(0.5, 0.5), aScreenViewPort);
+	}
+	// std::cout << "Camera Tag: " << aCurrentCamera.getTag() << std::endl;
+	// std::cout << "Viewport: " << aCurrentCamera.getViewport().x << ", " << aCurrentCamera.getViewport().y << ", "
+	// 		  << aCurrentCamera.getViewport().w << ", " << aCurrentCamera.getViewport().h << std::endl;
+	// std::cout << "ScreenViewport: " << aScreenViewPort.x << ", " << aScreenViewPort.y << ", " << aScreenViewPort.w
+	// 		  << ", " << aScreenViewPort.h << std::endl;
+	//
+	if (aCurrentCamera.getDebugOverlayRef().renderCameraViewport)
+	{
+		mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
 	}
 
-	if (config.getConfig(SHOW_COLLIDERS))
+	if (aCurrentCamera.getDebugOverlayRef().renderColliders)
 	{
 		for (auto& gameObject : aScene->getGameObjects())
 		{
@@ -378,76 +399,95 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
 			{
 				for (auto boxCollider : gameObject->getComponents<BoxCollider>())
 				{
-					int spriteWidth = boxCollider->getWidth();
-					int spriteHeight = boxCollider->getHeight();
-
-					int WindowWidth = mWindow->getSize().x;
-					int WindowHeight = mWindow->getSize().y;
-
-					Vector2 texturePosition =
+					Vector2 boxColliderWorldPos =
 						gameObject->getTransform().position + boxCollider->getTransform().position;
 
-					Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
-										   Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
-
-					Vector2 drawPosition = texturePosition - cameraOrigin;
-
-					drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-					drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-
-					spriteWidth = std::ceil(static_cast<int>(
-						static_cast<float>(spriteWidth) *
-						(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-					spriteHeight = std::ceil(static_cast<int>(
-						static_cast<float>(spriteHeight) *
-						(static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
-
-					Color renderColor = Color(0, 0, 255);
-
-					if (!boxCollider->isActive())
-					{
-						renderColor = Color(252, 3, 252);
-					}
-
-					mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight,
-											gameObject->getTransform().rotation, renderColor, false);
-					// mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
-				}
-			}
-			if (gameObject->hasComponent<CircleCollider>())
-			{
-				for (auto circleCollider : gameObject->getComponents<CircleCollider>())
-				{
-					int WindowWidth = mWindow->getSize().x;
-					int WindowHeight = mWindow->getSize().y;
-
-					Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
-
-					float circleRadius = circleCollider->getRadius();
-
-					Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-
-					Vector2 drawPosition = circlePos - cameraOrigin;
-
-					drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-					drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-
-					circleRadius = std::ceil(static_cast<int>(
-						static_cast<float>(circleRadius) *
-						(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-
-					Color renderColor = Color(0, 0, 255);
-
-					if (!circleCollider->isActive())
-					{
-						renderColor = Color(252, 3, 252);
-					}
-
-					mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
+					renderSquare(boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
+								 gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
+								 aScreenViewPort);
 				}
 			}
 		}
 	}
+
+	// if (config.getConfig(SHOW_COLLIDERS))
+	// {
+	// 	for (auto& gameObject : aScene->getGameObjects())
+	// 	{
+	// 		if (gameObject->hasComponent<BoxCollider>())
+	// 		{
+	// 			for (auto boxCollider : gameObject->getComponents<BoxCollider>())
+	// 			{
+	// 				int spriteWidth = boxCollider->getWidth();
+	// 				int spriteHeight = boxCollider->getHeight();
+	//
+	// 				int WindowWidth = mWindow->getSize().x;
+	// 				int WindowHeight = mWindow->getSize().y;
+	//
+	// 				Vector2 texturePosition =
+	// 					gameObject->getTransform().position + boxCollider->getTransform().position;
+	//
+	// 				Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
+	// 									   Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
+	//
+	// 				Vector2 drawPosition = texturePosition - cameraOrigin;
+	//
+	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+	//
+	// 				spriteWidth = std::ceil(static_cast<int>(
+	// 					static_cast<float>(spriteWidth) *
+	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+	// 				spriteHeight = std::ceil(static_cast<int>(
+	// 					static_cast<float>(spriteHeight) *
+	// 					(static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
+	//
+	// 				Color renderColor = Color(0, 0, 255);
+	//
+	// 				if (!boxCollider->isActive())
+	// 				{
+	// 					renderColor = Color(252, 3, 252);
+	// 				}
+	//
+	// 				mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight,
+	// 										gameObject->getTransform().rotation, renderColor, false);
+	// 				// mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
+	// 			}
+	// 		}
+	// 		if (gameObject->hasComponent<CircleCollider>())
+	// 		{
+	// 			for (auto circleCollider : gameObject->getComponents<CircleCollider>())
+	// 			{
+	// 				int WindowWidth = mWindow->getSize().x;
+	// 				int WindowHeight = mWindow->getSize().y;
+	//
+	// 				Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
+	//
+	// 				float circleRadius = circleCollider->getRadius();
+	//
+	// 				Vector2 cameraOrigin = aCurrentCamera.getOrigin();
+	//
+	// 				Vector2 drawPosition = circlePos - cameraOrigin;
+	//
+	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
+	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
+	//
+	// 				circleRadius = std::ceil(static_cast<int>(
+	// 					static_cast<float>(circleRadius) *
+	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
+	//
+	// 				Color renderColor = Color(0, 0, 255);
+	//
+	// 				if (!circleCollider->isActive())
+	// 				{
+	// 					renderColor = Color(252, 3, 252);
+	// 				}
+	//
+	// 				mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }
@@ -470,9 +510,8 @@ void RenderSystem::addObject(GameObject& aObject)
 
 void RenderSystem::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
