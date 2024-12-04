@@ -121,16 +121,14 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 	}
 }
 
-void World::setPosition(Vector2 aPosition, BodyID aBodyID)
+void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);
-	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
-}
-
-void World::setRotation(float aRotation, BodyID aBodyID)
-{
-	// b2BodyId bodyID = convertToB2BodyID(aBodyID);
-	// b2Body_SetTransform(bodyID, b2Body_GetPosition(bodyID), aRotation);
+	float radians = aRotation * (M_PI / 180.0f);
+	b2Rot rot;
+	rot.s = sin(radians);
+	rot.c = cos(radians);
+	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)

@@ -58,7 +58,7 @@ void PhysicsEngine::setPositions()
 
 			if (newPos != mWorld.getPosition(rigidBody->getBodyId()))
 			{
-				mWorld.setPosition(newPos, rigidBody->getBodyId());
+				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			}
 		}
 	}
@@ -247,10 +247,6 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 				transform.position.y = transform.position.y + boxCollider->getHeight();
 				boxCollider->setTransform(transform);
 			}
-
-			transform.rotation = transform.rotation;
-
-			gameObject.setTransform(transform);
 		}
 	}
 }
