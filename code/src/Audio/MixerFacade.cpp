@@ -104,7 +104,8 @@ void MixerFacade::playSound(const std::string& aPath, bool aLooping, unsigned aV
 /**
  * @brief Play the music. If the music is already playing, do nothing.
  *
- * @param aVolume The volume of the music
+ * @param aVolume The volume of the music. If it is below zero, volume is not adjusted (and will be the same as it was
+ * last set.)
  */
 void MixerFacade::playMusic(int aVolume)
 {
@@ -114,7 +115,11 @@ void MixerFacade::playMusic(int aVolume)
 		throw std::runtime_error("Music not found.");
 	}
 
-	Mix_VolumeMusic(aVolume);
+	if (aVolume > 0)
+	{
+		Mix_VolumeMusic(aVolume);
+	}
+
 	if (Mix_PlayingMusic() == 0)
 	{
 		Mix_PlayMusic(music, -1);
@@ -123,9 +128,27 @@ void MixerFacade::playMusic(int aVolume)
 
 void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
 
-void MixerFacade::resumeMusic() { Mix_ResumeMusic(); }
+void MixerFacade::resumeMusic()
+{
+	std::cout << "Resuming music\n";
+	if (!Mix_PlayingMusic())
+	{
+		std::cout << "Not playing music yet, starting.\n";
+		playMusic(-1);
+	}
+	else
+	{
 
-void MixerFacade::stopMusic() { Mix_HaltMusic(); }
+		Mix_ResumeMusic();
+	}
+}
+
+void MixerFacade::stopMusic()
+{
+	std::cout << "Stopping music.\n";
+	Mix_HaltMusic();
+	//	Mix_RewindMusic();
+}
 
 /**
  * @brief Check if a sound effect is playing
