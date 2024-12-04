@@ -38,10 +38,14 @@ private:
 	void renderParticle(Camera& aCurrentCamera, Particle& aParticle, Rect aScreenViewPort);
 	void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale,
 					Rect aScreenViewPort);
+	void renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
+					  Camera& aCurrentCamera, Rect aScreenViewPort);
+	void renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
+					  Rect aScreenViewPort);
 
 	void renderForCamera(Scene* aScene, Camera& camera, Rect aScreenViewPort);
 
-	void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera);
+	void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort);
 
 	int getLowestLayer(Scene* aScene);
 	int getHighestLayer(Scene* aScene);
