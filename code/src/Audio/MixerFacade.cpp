@@ -121,6 +121,10 @@ void MixerFacade::playMusic(int aVolume)
 	}
 }
 
+void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
+
+void MixerFacade::resumeMusic() { Mix_ResumeMusic(); }
+
 void MixerFacade::stopMusic() { Mix_HaltMusic(); }
 
 /**
