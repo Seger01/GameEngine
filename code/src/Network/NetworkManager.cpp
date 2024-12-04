@@ -124,15 +124,9 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 		throw std::runtime_error("Player prefab not set.");
 	}
 
-	std::vector<GameObject*> persistantObjects =
-		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-	for (auto object : persistantObjects) // loop trough all persistent objects
+	for (auto object : mObjects)
 	{
-		if (!object->hasComponent<NetworkObject>())
-		{
-			continue;
-		}
-		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
+		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
 		if (networkObject->getClientGUID() == playerID) // Check if player already exists
 		{
 			return nullptr;
@@ -153,19 +147,12 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 
 void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 {
-	std::vector<GameObject*> persistantObjects =
-		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-	for (auto object : persistantObjects)
+	for (auto object : mObjects)
 	{
-		if (!object->hasComponent<NetworkObject>())
-		{
-			continue;
-		}
-		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
+		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
 		if (networkObject->getClientGUID() == playerID)
 		{
-			std::cout << "Destroying player with ID: " << playerID.g << std::endl;
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(object);
+			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&object.get());
 			return;
 		}
 	}
