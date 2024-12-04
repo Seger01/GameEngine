@@ -1,0 +1,26 @@
+Minutes dd-mm-yy
+
+What was discussed:
+How can physics be effectively debugged?
+- Maybe testing physics completely outside of the context of the engine.
+
+What has been done:
+- Siem: Debug scene change issues.
+- Angel: Fix physics issue with clearing objects. Debugging physics translate.
+- Ronan: Fix merge conflicts updated tilemapparser. Work on engine demo.
+- Sean: Debug scene change issues. Multiplayer: debugging server demo issues. Work on client-side prediciton.
+- Seger: Camera: fixed merge conflicts. Debug scene change issues.
+
+What is going to be done:
+- Siem:
+- Angel: Debugging physics translate.
+- Ronan: Continue work on demo.
+- Sean: Work on client-side prediciton.
+- Seger: Work on demo level with Ronan. Improve camera funcitonality.
+
+Roadblocks:
+- Siem:
+- Angel: -
+- Ronan: Requiring physics functionality, which does not yet work.
+- Sean: -
+- Seger: -
