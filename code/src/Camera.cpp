@@ -2,7 +2,7 @@
 
 Camera::Camera()
 	: GameObject(), mBackgroundColor(Color(0, 0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
-	  mDebugOverlay(CameraDebugOverlay())
+	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0)
 {
 }
 
