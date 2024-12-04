@@ -30,7 +30,8 @@ public:
 	bool isOwner() const;
 
     bool isPlayer() const;
-    int getNetworkObjectID() const;
+
+	int getNetworkObjectID() const;
 
 private:
     bool mIsOwner;
@@ -44,6 +45,7 @@ private:
 
 private:
     void setPlayer(bool aIsPlayer);
+	void setNetworkObjectID(int aNetworkObjectID);
 };
 
 #endif // NETWORKOBJECT_H

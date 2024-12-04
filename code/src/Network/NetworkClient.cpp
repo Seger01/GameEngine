@@ -266,15 +266,12 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket)
 {
-	SLNet::RakNetGUID playerID;
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
-	playerID = networkPacket.clientGUID;
-	std::cout << "playerID: " << playerID.ToString() << std::endl;
 
-	GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(playerID); // Instantiate
-																									 // client-side
-																									 // player
+	GameObject* player = EngineBravo::getInstance().getNetworkManager().instantiatePlayer(networkPacket); // Instantiate
+																										  // client-side
+																										  // player
 	if (!player)
 	{
 		std::cout << "Player already exists\n";
@@ -285,7 +282,7 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket)
 	{
 		throw std::runtime_error("Player does not have a NetworkObject component");
 	}
-	if (playerID == mClient->GetMyGUID())
+	if (networkPacket.clientGUID == mClient->GetMyGUID())
 	{
 		networkObjects[0]->setOwner(true); // This client owns the player object
 	}

@@ -117,7 +117,7 @@ void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab)
 
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
-GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
+GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 {
 	if (!mDefaultPlayerPrefab)
 	{
@@ -127,7 +127,7 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 	for (auto object : mObjects)
 	{
 		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientGUID() == playerID) // Check if player already exists
+		if (networkObject->getClientGUID() == packet.clientGUID) // Check if player already exists
 		{
 			return nullptr;
 		}
@@ -139,7 +139,11 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 	{
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
-	networkObjects[0]->setClientGUID(playerID); // Assign unique ID to player
+	networkObjects[0]->setClientGUID(packet.clientGUID); // Assign unique ID to player
+	if (packet.networkObjectID != -1)
+	{
+		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
+	}
 	networkObjects[0]->setPlayer(true);		  // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
 	return player;

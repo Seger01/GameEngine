@@ -18,15 +18,17 @@
 #include <string>
 
 NetworkServer::NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
-    : mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
-      mLastSendPacketsTime(std::chrono::steady_clock::now()), mObjects(aObjects), mTickRate(aTickRate) {
-    SLNet::SocketDescriptor sd(SERVER_PORT, 0);
-    sd.socketFamily = AF_INET;
-    SLNet::StartupResult result = mServer->Startup(10, &sd, 1);
-    mServer->SetMaximumIncomingConnections(10);
-    if (result != SLNet::RAKNET_STARTED) {
-        throw std::runtime_error("Failed to start server");
-    }
+	: mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
+	  mLastSendPacketsTime(std::chrono::steady_clock::now()), mObjects(aObjects), mTickRate(aTickRate)
+{
+	SLNet::SocketDescriptor sd(SERVER_PORT, 0);
+	sd.socketFamily = AF_INET;
+	SLNet::StartupResult result = mServer->Startup(10, &sd, 1);
+	mServer->SetMaximumIncomingConnections(10);
+	if (result != SLNet::RAKNET_STARTED)
+	{
+		throw std::runtime_error("Failed to start server");
+	}
 }
 
 void NetworkServer::update()
@@ -96,12 +98,15 @@ void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID)
 	}
 }
 
-void NetworkServer::handleIncomingPackets() {
-    SLNet::Packet* packet;
-    for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive()) {
-        switch (packet->data[0]) {
-        case ID_NEW_INCOMING_CONNECTION:
-            std::cout << "A connection is incoming.\n";
+void NetworkServer::handleIncomingPackets()
+{
+	SLNet::Packet* packet;
+	for (packet = mServer->Receive(); packet; mServer->DeallocatePacket(packet), packet = mServer->Receive())
+	{
+		switch (packet->data[0])
+		{
+		case ID_NEW_INCOMING_CONNECTION:
+			std::cout << "A connection is incoming.\n";
 			spawnPlayerForNewClient(packet->guid);
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -110,37 +115,39 @@ void NetworkServer::handleIncomingPackets() {
 		case ID_DISCONNECTION_NOTIFICATION:
 			std::cout << "A client has disconnected.\n";
 			onClientDisconnected(packet->guid);
-            break;
-        case ID_CONNECTION_LOST:
-            std::cout << "A client lost the connection.\n";
+			break;
+		case ID_CONNECTION_LOST:
+			std::cout << "A client lost the connection.\n";
 			onClientDisconnected(packet->guid);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
 			handleTransform(packet);
 			break;
-        case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
-            std::cout << "Received player instantiation message.\n";
-            spawnNewPlayer(packet);
-            break;
-        default:
-            std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
-            break;
-        }
-    }
+		case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
+			std::cout << "Received player instantiation message.\n";
+			spawnNewPlayer(packet);
+			break;
+		default:
+			std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
+			break;
+		}
+	}
 }
 
-void NetworkServer::sendTransform() {
+void NetworkServer::sendTransform()
+{
 	for (GameObject& gameObject : mObjects)
 	{
-		if (!gameObject.hasComponent<NetworkTransform>()) {
-            continue;
+		if (!gameObject.hasComponent<NetworkTransform>())
+		{
+			continue;
 		}
 
 		Transform transform = gameObject.getTransform();
 		NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
-        SLNet::BitStream bs;
-        NetworkSharedFunctions::makeBitStream(bs);
-        NetworkPacket networkPacket;
+		SLNet::BitStream bs;
+		NetworkSharedFunctions::makeBitStream(bs);
+		NetworkPacket networkPacket;
 		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
 		networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
 		networkPacket.networkObjectID = networkObject->getNetworkObjectID();
@@ -163,17 +170,19 @@ void NetworkServer::sendTransform() {
 		{
 			bs.Write(transform.scale.x);
 		}
-		if (networkTransform->getSendScaleY()) {
-            bs.Write(transform.scale.y);
-        }
+		if (networkTransform->getSendScaleY())
+		{
+			bs.Write(transform.scale.y);
+		}
 
-        sendToAllClients(bs);
+		sendToAllClients(bs);
 	}
 }
 
-void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
-    SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkSharedFunctions::getBitStreamData(bs);
+void NetworkServer::handleTransform(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkSharedFunctions::getBitStreamData(bs);
 
 	for (auto gameObject : mObjects)
 	{
@@ -202,17 +211,19 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
 			{
 				bs.Read(transform.scale.x);
 			}
-			if (networkTransform->getSendScaleY()) {
-                bs.Read(transform.scale.y);
-            }
+			if (networkTransform->getSendScaleY())
+			{
+				bs.Read(transform.scale.y);
+			}
 			gameObject.get().setTransform(transform);
 		}
 	}
 }
 
-void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
-    SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-    NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 
 	for (auto gameObject : mObjects)
 	{
@@ -242,49 +253,58 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
 	}
 }
 
-void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
-    SLNet::RakNetGUID clientID = aPacket->guid;
+void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket)
+{
+	SLNet::RakNetGUID clientID = aPacket->guid;
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST)
 	{																				// if host don't add
-		EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
-                                                                                    // instantiation
+		EngineBravo::getInstance().getNetworkManager().instantiatePlayer(networkPacket); // Server-side
+																						 // instantiation
 	}
 
 	sendPlayerInstantiation(clientID); // Send instantiation message to all clients
 }
 
-void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {
-    EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
+void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID)
+{
+	EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
 
-    SLNet::BitStream bs;
-    NetworkSharedFunctions::makeBitStream(bs);
-    NetworkPacket networkPacket;
-    networkPacket.messageID = NetworkMessage::ID_PLAYER_DESTROY;
-    networkPacket.clientGUID = clientID;
-    NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-    sendToAllClients(bs);
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = NetworkMessage::ID_PLAYER_DESTROY;
+	networkPacket.clientGUID = clientID;
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+	sendToAllClients(bs);
 }
 
-void NetworkServer::sendToAllClients(SLNet::BitStream& aBitStream) {
-    DataStructures::List<SLNet::SystemAddress> addresses;
-    DataStructures::List<SLNet::RakNetGUID> guids;
-    mServer->GetSystemList(addresses, guids);
-    for (int i = 0; i < addresses.Size(); i++) {
-        mServer->Send(&aBitStream, PacketPriority::MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, guids[i], false);
-    }
+void NetworkServer::sendToAllClients(SLNet::BitStream& aBitStream)
+{
+	DataStructures::List<SLNet::SystemAddress> addresses;
+	DataStructures::List<SLNet::RakNetGUID> guids;
+	mServer->GetSystemList(addresses, guids);
+	for (int i = 0; i < addresses.Size(); i++)
+	{
+		mServer->Send(&aBitStream, PacketPriority::MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, guids[i], false);
+	}
 }
 
-void NetworkServer::sendPackets() {
-    auto now = std::chrono::steady_clock::now();
-    auto frameTime = std::chrono::milliseconds(1000 / mTickRate);
-    if (now - mLastSendPacketsTime < frameTime) {
-        return;
-    }
-    sendTransform();
-    mLastSendPacketsTime = now;
+void NetworkServer::sendPackets()
+{
+	auto now = std::chrono::steady_clock::now();
+	auto frameTime = std::chrono::milliseconds(1000 / mTickRate);
+	if (now - mLastSendPacketsTime < frameTime)
+	{
+		return;
+	}
+	sendTransform();
+	mLastSendPacketsTime = now;
 }
 
-void NetworkServer::sendCustomSerialize() {
+void NetworkServer::sendCustomSerialize()
+{
 	for (auto gameObject : mObjects)
 	{
 		if (!gameObject.get().hasComponent<INetworkBehaviour>())
@@ -307,7 +327,7 @@ void NetworkServer::sendCustomSerialize() {
 
 				networkBehaviour->GetNetworkVariables().at(i)->serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-                sendToAllClients(bs);
+				sendToAllClients(bs);
 			}
 		}
 	}

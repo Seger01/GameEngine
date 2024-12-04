@@ -61,3 +61,5 @@ bool NetworkObject::isPlayer() const { return mIsPlayer; }
 int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
 
 void NetworkObject::setPlayer(bool aIsPlayer) { mIsPlayer = aIsPlayer; }
+
+void NetworkObject::setNetworkObjectID(int aNetworkObjectID) { mNetworkObjectID = aNetworkObjectID; }
