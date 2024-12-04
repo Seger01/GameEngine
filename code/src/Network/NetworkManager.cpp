@@ -133,7 +133,7 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 			continue;
 		}
 		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-		if (networkObject->getClientID() == playerID) // Check if player already exists
+		if (networkObject->getClientGUID() == playerID) // Check if player already exists
 		{
 			return nullptr;
 		}
@@ -145,7 +145,7 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 	{
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
-	networkObjects[0]->setClientID(playerID); // Assign unique ID to player
+	networkObjects[0]->setClientGUID(playerID); // Assign unique ID to player
 	networkObjects[0]->setPlayer(true);		  // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
 	return player;
@@ -162,7 +162,7 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 			continue;
 		}
 		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-		if (networkObject->getClientID() == playerID)
+		if (networkObject->getClientGUID() == playerID)
 		{
 			std::cout << "Destroying player with ID: " << playerID.g << std::endl;
 			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(object);

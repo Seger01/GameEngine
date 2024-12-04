@@ -201,9 +201,10 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
 		{
 			continue;
 		}
-		if (networkObject->getClientID() != clientGuid) {
-            continue;
-        }
+		if (networkObject->getClientGUID() != clientGuid)
+		{
+			continue;
+		}
 		if (gameObject.get().hasComponent<NetworkTransform>())
 		{
 			Transform transform = gameObject.get().getTransform();

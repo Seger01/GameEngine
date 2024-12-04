@@ -21,9 +21,6 @@ public:
 
 	bool isConnected() const;
 
-    void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
-    void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
-
 private:
     void handleIncomingPackets();
     void sendTransform();
@@ -34,6 +31,8 @@ private:
     void sendToAllClients(SLNet::BitStream& aBitStream);
     void sendPackets();
     void sendCustomSerialize();
+	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
+	void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
 
 private:
     std::vector<std::reference_wrapper<GameObject>>& mObjects;

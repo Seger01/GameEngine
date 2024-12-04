@@ -41,16 +41,59 @@ void NetworkServer::update()
 
 bool NetworkServer::isConnected() const { return mServer->IsActive(); }
 
-void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID) {
-    std::cout << "Sending player instantiation message to all clients.\n";
-    SLNet::BitStream bs;
-    NetworkSharedFunctions::makeBitStream(bs);
-    NetworkPacket networkPacket;
-    networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
-    networkPacket.clientGUID = playerID;
-    NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+void NetworkServer::spawnPlayerForNewClient(SLNet::RakNetGUID playerID)
+{
+	std::cout << "Sending all players to each client" << std::endl;
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
+	networkPacket.clientGUID = playerID;
 
-    sendToAllClients(bs);
+	auto persistantObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
+	for (auto player : persistantObjects)
+	{
+		if (!player->hasComponent<NetworkObject>())
+		{
+			continue;
+		}
+		auto networkObject = player->getComponents<NetworkObject>()[0];
+		networkPacket.clientGUID = networkObject->getClientGUID();
+		networkPacket.networkObjectID = networkObject->getNetworkObjectID();
+		networkPacket.SetTimeStampNow();
+		NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+		sendToAllClients(bs);
+	}
+}
+
+void NetworkServer::sendPlayerInstantiation(SLNet::RakNetGUID playerID)
+{
+	std::cout << "Sending player instantiation message to all clients.\n";
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
+	networkPacket.clientGUID = playerID;
+
+	auto persistantObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
+	for (auto player : persistantObjects)
+	{
+		if (!player->hasComponent<NetworkObject>())
+		{
+			continue;
+		}
+		auto networkObject = player->getComponents<NetworkObject>()[0];
+		if (networkObject->getClientGUID() != playerID)
+		{
+			continue;
+		}
+		networkPacket.clientGUID = networkObject->getClientGUID();
+		networkPacket.networkObjectID = networkObject->getNetworkObjectID();
+		networkPacket.SetTimeStampNow();
+		NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+		sendToAllClients(bs);
+		return;
+	}
 }
 
 void NetworkServer::handleIncomingPackets() {
@@ -59,13 +102,14 @@ void NetworkServer::handleIncomingPackets() {
         switch (packet->data[0]) {
         case ID_NEW_INCOMING_CONNECTION:
             std::cout << "A connection is incoming.\n";
-            break;
-        case ID_NO_FREE_INCOMING_CONNECTIONS:
-            std::cout << "The server is full.\n";
-            break;
-        case ID_DISCONNECTION_NOTIFICATION:
-            std::cout << "A client has disconnected.\n";
-            onClientDisconnected(packet->guid);
+			spawnPlayerForNewClient(packet->guid);
+			break;
+		case ID_NO_FREE_INCOMING_CONNECTIONS:
+			std::cout << "The server is full.\n";
+			break;
+		case ID_DISCONNECTION_NOTIFICATION:
+			std::cout << "A client has disconnected.\n";
+			onClientDisconnected(packet->guid);
             break;
         case ID_CONNECTION_LOST:
             std::cout << "A client lost the connection.\n";
@@ -86,9 +130,8 @@ void NetworkServer::handleIncomingPackets() {
 }
 
 void NetworkServer::sendTransform() {
-    for (GameObject& gameObject : mObjects) {
-		std::cout << "Sending transfrom with player ID: "
-				  << gameObject.getComponents<NetworkObject>()[0]->getClientID().g << std::endl;
+	for (GameObject& gameObject : mObjects)
+	{
 		if (!gameObject.hasComponent<NetworkTransform>()) {
             continue;
         }
@@ -124,7 +167,7 @@ void NetworkServer::sendTransform() {
         }
 
         sendToAllClients(bs);
-    }
+	}
 }
 
 void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
@@ -134,7 +177,7 @@ void NetworkServer::handleTransform(SLNet::Packet* aPacket) {
 	for (auto gameObject : mObjects)
 	{
 		auto networkObject = gameObject.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientID() != aPacket->guid)
+		if (networkObject->getClientGUID() != aPacket->guid)
 		{
 			continue;
 		}
@@ -173,7 +216,7 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
 	for (auto gameObject : mObjects)
 	{
 		NetworkObject* networkObject = gameObject.get().getComponents<NetworkObject>()[0];
-		if (aPacket->guid != networkObject->getClientID())
+		if (aPacket->guid != networkObject->getClientGUID())
 		{ // check client ID
 			continue;
 		}
@@ -259,7 +302,7 @@ void NetworkServer::sendCustomSerialize() {
 					gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID();
 				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i)->getTypeId();
 				networkPacket.SetTimeStampNow();
-				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientID();
+				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 
 				networkBehaviour->GetNetworkVariables().at(i)->serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);

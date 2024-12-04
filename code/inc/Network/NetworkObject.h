@@ -23,11 +23,11 @@ public:
 
     std::unique_ptr<Component> clone() const override;
 
-    void setClientID(SLNet::RakNetGUID aClientID);
-    SLNet::RakNetGUID getClientID() const;
+	void setClientGUID(SLNet::RakNetGUID aClientID);
+	SLNet::RakNetGUID getClientGUID() const;
 
-    void setOwner(bool aIsOwner);
-    bool isOwner() const;
+	void setOwner(bool aIsOwner);
+	bool isOwner() const;
 
     bool isPlayer() const;
     int getNetworkObjectID() const;
@@ -35,12 +35,12 @@ public:
 private:
     bool mIsOwner;
     int mNetworkObjectID;
-    SLNet::RakNetGUID mClientID;
+	SLNet::RakNetGUID mClientGUID;
 
-    friend class NetworkManager;
-    bool mIsPlayer;
+	friend class NetworkManager;
+	bool mIsPlayer;
 
-    static int networkObjectIDCounter;
+	static int networkObjectIDCounter;
 
 private:
     void setPlayer(bool aIsPlayer);

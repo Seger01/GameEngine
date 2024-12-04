@@ -83,14 +83,14 @@ protected:
 TEST_F(NetworkObjectTest, DefaultConstructor) {
     NetworkObject no;
     EXPECT_FALSE(no.isOwner());
-    EXPECT_EQ(no.getClientID(), SLNet::UNASSIGNED_RAKNET_GUID);
+	EXPECT_EQ(no.getClientGUID(), SLNet::UNASSIGNED_RAKNET_GUID);
 }
 
 TEST_F(NetworkObjectTest, SetAndGetClientID) {
     NetworkObject no;
     SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
-    no.setClientID(clientID);
-    EXPECT_EQ(no.getClientID(), clientID);
+	no.setClientGUID(clientID);
+	EXPECT_EQ(no.getClientGUID(), clientID);
 }
 
 TEST_F(NetworkObjectTest, SetAndGetOwner) {
@@ -105,14 +105,14 @@ TEST_F(NetworkObjectTest, Clone) {
     NetworkObject no;
     no.setOwner(true);
     SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
-    no.setClientID(clientID);
+	no.setClientGUID(clientID);
 
-    std::unique_ptr<Component> clone = no.clone();
-    NetworkObject* clonedNo = dynamic_cast<NetworkObject*>(clone.get());
+	std::unique_ptr<Component> clone = no.clone();
+	NetworkObject* clonedNo = dynamic_cast<NetworkObject*>(clone.get());
 
     ASSERT_NE(clonedNo, nullptr);
     EXPECT_TRUE(clonedNo->isOwner());
-    EXPECT_EQ(clonedNo->getClientID(), clientID);
+	EXPECT_EQ(clonedNo->getClientGUID(), clientID);
 }
 class NetworkBehaviourTest : public ::testing::Test {
 protected:
