@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <type_traits>

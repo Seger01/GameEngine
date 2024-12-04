@@ -26,6 +26,12 @@ void Scene::update()
 	}
 }
 
+/**
+ * @brief Removes a GameObject from the scene
+ * @note This functions also removes it from the persistent game objects list
+ *
+ * @param aObject The GameObject to remove
+ */
 void Scene::removeGameObject(GameObject* aObject)
 {
 	for (int i = 0; i < mGameObjects.size(); i++)
@@ -33,16 +39,16 @@ void Scene::removeGameObject(GameObject* aObject)
 		if (mGameObjects[i].get() == aObject)
 		{
 			mGameObjects.erase(mGameObjects.begin() + i);
-			return;
+			break;
 		}
 	}
+	removePersistentGameObject(aObject);
 	// std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
 }
 
-std::vector<GameObject*>& Scene::getGameObjects()
+std::vector<GameObject*> Scene::getGameObjects()
 {
-	static std::vector<GameObject*> gameObjectRefs;
-	gameObjectRefs.clear();
+	std::vector<GameObject*> gameObjectRefs;
 	for (const auto& gameObject : mGameObjects)
 	{
 		gameObjectRefs.push_back(gameObject.get());
@@ -67,8 +73,8 @@ void Scene::addGameObject(GameObject* object)
 {
 	if (object)
 	{
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 		mGameObjects.push_back(std::unique_ptr<GameObject>(object));
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
 }
 
@@ -151,7 +157,12 @@ void Scene::addPersistentGameObject(GameObject* object)
 	}
 }
 
-// function removes the object from the persistant gameObjects vector and from the mGameObjects vector
+/**
+ * @brief Removes a GameObject from the persistent game objects list
+ * @note This function does not remove the GameObject from the scene
+ *
+ * @param object The GameObject to remove
+ */
 void Scene::removePersistentGameObject(GameObject* object)
 {
 	for (int i = 0; i < mPersistentGameObjects.size(); i++)
@@ -159,15 +170,6 @@ void Scene::removePersistentGameObject(GameObject* object)
 		if (mPersistentGameObjects[i] == object)
 		{
 			mPersistentGameObjects.erase(mPersistentGameObjects.begin() + i);
-			break;
-		}
-	}
-
-	for (int i = 0; i < mGameObjects.size(); i++)
-	{
-		if (mGameObjects[i].get() == object)
-		{
-			mGameObjects.erase(mGameObjects.begin() + i);
 			break;
 		}
 	}

@@ -10,9 +10,6 @@ GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), m
 
 GameObject::~GameObject()
 {
-	mComponents.clear(); // unique_ptr automatically handles deletion
-						 //
-
 	if (mParent)
 	{
 		mParent->removeChild(this);
@@ -30,8 +27,6 @@ GameObject::GameObject(const GameObject& other)
 	: mParent(other.mParent), mTransform(other.mTransform), mID(other.mID), mName(other.mName), mTag(other.mTag),
 	  mIsActive(other.mIsActive)
 {
-
-	std::cout << "GameObject copy constructor called" << std::endl;
 	// Deep copy each component using its copy constructor
 	for (const auto& component : other.mComponents)
 	{

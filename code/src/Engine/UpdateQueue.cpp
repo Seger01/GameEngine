@@ -20,6 +20,14 @@
  */
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
+	auto currObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
+	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
+	if (currObjectsIt == currObjects.end())
+	{
+		// Object is not in the scene, do not add it
+		return;
+	}
+
 	auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
 						   [&aGameObject](const std::reference_wrapper<GameObject>& wrapper)
 						   {

@@ -37,8 +37,6 @@ bool INetworkBehaviour::isOwner() {
     }
 }
 
-void INetworkBehaviour::destroy() {
-    EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(mGameObject);
-}
+void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
 
 int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
