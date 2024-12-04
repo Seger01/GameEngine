@@ -38,6 +38,7 @@ public:
 	void setGravity(Vector2 aGravity);
 
 	Vector2 getPosition(BodyID aBodyID);
+	std::vector<float> getShapeWidths(BodyProxy& aBodyProxy, BodyID aBodyID);
 	float getRotation(BodyID aBodyID);
 	Vector2 getGravity();
 
