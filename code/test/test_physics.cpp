@@ -206,7 +206,6 @@ TEST_F(PhysicsTest, PositionTranslate)
 
 	gameObject->addComponent<RigidBody>();
 	gameObject->addComponent<BoxCollider>();
-	// gameObject->addComponent<CircleCollider>();
 
 	// set values for rigidbody
 	RigidBody* rigidBody = gameObject->getComponents<RigidBody>().at(0);
@@ -218,9 +217,6 @@ TEST_F(PhysicsTest, PositionTranslate)
 	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
 	boxCollider->setWidth(10);
 	boxCollider->setHeight(10);
-
-	// CircleCollider* circleCollider = gameObject->getComponents<CircleCollider>()[0];
-	// circleCollider->setRadius(10);
 
 	mPhysicsEngine.addObject(*gameObject);
 
