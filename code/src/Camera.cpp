@@ -33,3 +33,7 @@ void Camera::setDebugOverlay(const CameraDebugOverlay& debugOverlay) { mDebugOve
 CameraDebugOverlay Camera::getDebugOverlay() const { return mDebugOverlay; }
 
 CameraDebugOverlay& Camera::getDebugOverlayRef() { return mDebugOverlay; }
+
+void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
+
+uint Camera::getRenderOrder() const { return mRenderOrder; }
