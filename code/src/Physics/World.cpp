@@ -127,11 +127,40 @@ void World::setPosition(Vector2 aPosition, BodyID aBodyID)
 	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
 }
 
+void World::setRotation(float aRotation, BodyID aBodyID)
+{
+	// b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	// b2Body_SetTransform(bodyID, b2Body_GetPosition(bodyID), aRotation);
+}
+
 Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
+	if (aBodyID.bodyID == 3)
+	{
+		std::cout << "World pos is: ";
+		std::cout << "bodyID: " << aBodyID.bodyID << std::endl;
+		std::cout << "Position: " << position.x << " " << position.y << std::endl;
+	}
 	return position;
+}
+
+std::vector<float> World::getShapeWidths(BodyProxy& aBodyProxy, BodyID aBodyID)
+{
+	std::vector<float> shapeWidths;
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+
+	for (BoxCollider* boxCollider : aBodyProxy.getBoxColliders())
+	{
+		b2ShapeId shapeArray[aBodyProxy.getBoxColliders().size()];
+		b2Body_GetShapes(bodyID, shapeArray, aBodyProxy.getBoxColliders().size());
+
+		for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
+		{
+			// shapeWidths.push_back(b2shape_(shapeArray[i]));
+		}
+	}
 }
 
 float World::getRotation(BodyID aBodyID)
