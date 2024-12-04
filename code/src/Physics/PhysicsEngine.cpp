@@ -45,12 +45,6 @@ void PhysicsEngine::setPositions()
 	{
 		if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<BoxCollider>())
 		{
-			if (gameObject.getComponents<RigidBody>()[0]->getBodyId().bodyID == 3)
-			{
-				std::cout << "SDL pos is: ";
-				std::cout << "Position: " << gameObject.getTransform().position.x << " "
-						  << gameObject.getTransform().position.y << std::endl;
-			}
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			Transform transform = gameObject.getTransform();
 
@@ -287,14 +281,10 @@ const std::vector<std::reference_wrapper<GameObject>>& PhysicsEngine::getObjects
 
 void PhysicsEngine::clearObjects()
 {
-	std::cout << "start clear" << std::endl;
 	for (GameObject& gameObject : mObjects)
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			std::cout << "delete body: " << gameObject.getComponents<RigidBody>()[0]->getBodyId().world0
-					  << gameObject.getComponents<RigidBody>()[0]->getBodyId().bodyID
-					  << gameObject.getComponents<RigidBody>()[0]->getBodyId().revision << std::endl;
 			mWorld.deleteBody(gameObject.getComponents<RigidBody>()[0]->getBodyId());
 
 			gameObject.getComponents<RigidBody>()[0]->setBodyId({-1, 0, 0});
