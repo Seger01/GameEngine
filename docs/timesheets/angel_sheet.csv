@@ -71,3 +71,5 @@ Date,Time,Duration(in hours),Activity
 2024-11-28, 13:00, 2.0, Re wrote some tests; added temporary fix for translate step
 2024-11-29, 8:00, 2.25, writing tests for physics delete handler branch
 2024-11-29, 12:30, 4.0, fixing physics bug; writing tests physics delete handler
+2024-12-03, 7:45, 8.0, Helped with update queue bug, fixing translate step for multiple colliders
+2024-12-04, 7:45, 9.0, Finished fixing translate; Fixed physics bugs; added physics tests; attempt at rotate fix
