@@ -11,8 +11,9 @@
 
 SpriteDef buttonSpriteDef = {"UI/ui_images.png", Rect{145, 81, 46, 14}, 46, 14};
 
-void CanvasBehaviourScript::onTestButtonClick() { std::cout << "Test Button clicked!" << std::endl; }
-void CanvasBehaviourScript::onTestButtonRelease() { std::cout << "Test Button released!" << std::endl; }
+void CanvasBehaviourScript::onTestButtonClick() {}
+
+void CanvasBehaviourScript::onTestButtonRelease() {}
 
 void CanvasBehaviourScript::onStart() {
     EngineBravo& engine = EngineBravo::getInstance();

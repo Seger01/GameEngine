@@ -152,7 +152,8 @@ void EngineBravo::startBehaviourScripts()
 
 	if (currentScene)
 	{
-		for (auto& gameObject : currentScene->getGameObjects())
+		auto gameObjects = currentScene->getGameObjects();
+		for (auto& gameObject : gameObjects)
 		{
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{

@@ -69,10 +69,11 @@ void NetworkServer::handleIncomingPackets() {
             break;
         case ID_CONNECTION_LOST:
             std::cout << "A client lost the connection.\n";
-            break;
-        case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
-            handleTransform(packet);
-            break;
+			onClientDisconnected(packet->guid);
+			break;
+		case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
+			handleTransform(packet);
+			break;
         case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
             std::cout << "Received player instantiation message.\n";
             spawnNewPlayer(packet);
@@ -86,12 +87,14 @@ void NetworkServer::handleIncomingPackets() {
 
 void NetworkServer::sendTransform() {
     for (GameObject& gameObject : mObjects) {
-        if (!gameObject.hasComponent<NetworkTransform>()) {
+		std::cout << "Sending transfrom with player ID: "
+				  << gameObject.getComponents<NetworkObject>()[0]->getClientID().g << std::endl;
+		if (!gameObject.hasComponent<NetworkTransform>()) {
             continue;
         }
 
-        Transform transform = gameObject.getTransform();
-        NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
+		Transform transform = gameObject.getTransform();
+		NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
         SLNet::BitStream bs;
         NetworkSharedFunctions::makeBitStream(bs);
         NetworkPacket networkPacket;
@@ -197,12 +200,13 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket) {
 
 void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket) {
     SLNet::RakNetGUID clientID = aPacket->guid;
-    if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST) {
-        EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
+	if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST)
+	{																				// if host don't add
+		EngineBravo::getInstance().getNetworkManager().instantiatePlayer(clientID); // Server-side
                                                                                     // instantiation
-    }
+	}
 
-    sendPlayerInstantiation(clientID); // Send instantiation message to all clients
+	sendPlayerInstantiation(clientID); // Send instantiation message to all clients
 }
 
 void NetworkServer::onClientDisconnected(SLNet::RakNetGUID clientID) {

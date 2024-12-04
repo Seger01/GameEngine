@@ -27,6 +27,7 @@ public:
 	bool isServer() const;
 	bool isClient() const;
 	bool isHost() const;
+	bool isNetworked() const;
 	bool isConnected() const;
 
 	void setTickRate(int aTickRate);

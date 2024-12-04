@@ -152,11 +152,9 @@ void NetworkClient::handleIncomingPackets() {
 
 void NetworkClient::sendTransform() {
 
-    for (GameObject& gameObject : mObjects) {
-        if (!gameObject.hasComponent<NetworkObject>()) {
-            continue;
-        }
-        NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
+	for (GameObject& gameObject : mObjects)
+	{
+		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
         if (!networkObject->isOwner()) {
             continue;
         }
@@ -186,7 +184,7 @@ void NetworkClient::sendTransform() {
             }
             sendToServer(bs);
         }
-    }
+	}
 }
 
 void NetworkClient::handleTransform(SLNet::Packet* aPacket) {
@@ -256,9 +254,7 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket) {
         networkObjects[0]->setOwner(true); // This client owns the player object
     } else {
         networkObjects[0]->setOwner(false); // This client does not own the player object
-    }
-    std::cout << "mClient GUID: " << mClient->GetMyGUID().ToString() << std::endl;
-    std::cout << "Player GUID: " << playerID.ToString() << std::endl;
+	}
 }
 
 void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket) {
