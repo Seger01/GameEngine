@@ -416,7 +416,9 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera)
 						renderColor = Color(252, 3, 252);
 					}
 
-					mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
+					mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight,
+											gameObject->getTransform().rotation, renderColor, false);
+					// mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
 				}
 			}
 			if (gameObject->hasComponent<CircleCollider>())
