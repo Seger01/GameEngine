@@ -36,6 +36,7 @@ public:
 	void setPosition(Vector2 aPosition, BodyID aBodyID);
 	void setRotation(float aRotation, BodyID aBodyID);
 	void setGravity(Vector2 aGravity);
+
 	Vector2 getPosition(BodyID aBodyID);
 	float getRotation(BodyID aBodyID);
 	Vector2 getGravity();

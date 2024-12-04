@@ -127,10 +127,22 @@ void World::setPosition(Vector2 aPosition, BodyID aBodyID)
 	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
 }
 
+void World::setRotation(float aRotation, BodyID aBodyID)
+{
+	// b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	// b2Body_SetTransform(bodyID, b2Body_GetPosition(bodyID), aRotation);
+}
+
 Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
+	if (aBodyID.bodyID == 3)
+	{
+		std::cout << "World pos is: ";
+		std::cout << "bodyID: " << aBodyID.bodyID << std::endl;
+		std::cout << "Position: " << position.x << " " << position.y << std::endl;
+	}
 	return position;
 }
 
