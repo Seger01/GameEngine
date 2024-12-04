@@ -24,6 +24,10 @@ public:
 		// Calculate raw deltaTime in seconds
 		double rawDeltaTime = std::chrono::duration<double>(currentTime - lastFrameTime).count();
 
+		if (timeDilation <= 0.0)
+		{
+			timeDilation = 0.0;
+		}
 		// Apply time dilation
 		deltaTime = rawDeltaTime * timeDilation;
 
