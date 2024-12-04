@@ -15,7 +15,7 @@ class GameObject
 {
 public:
 	GameObject();
-	virtual ~GameObject() = default;
+	virtual ~GameObject();
 
 	// Rule of Five
 	GameObject(const GameObject& other);				// Copy constructor
@@ -43,6 +43,10 @@ public:
 
 	void setParent(GameObject* parent);
 	GameObject* getParent();
+
+	void addChild(GameObject* child);
+	void removeChild(GameObject* child);
+	std::vector<GameObject*> getChildren();
 
 	std::vector<Component*> getComponentsWithTag(const std::string& tag) const;
 
@@ -98,6 +102,7 @@ public:
 
 protected:
 	GameObject* mParent;
+	std::vector<GameObject*> mChildren;
 
 	std::vector<std::unique_ptr<Component>> mComponents;
 	Transform mTransform;

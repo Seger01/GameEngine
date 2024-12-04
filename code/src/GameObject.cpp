@@ -8,6 +8,20 @@
 
 GameObject::GameObject() : mParent(nullptr), mTransform(Transform()), mID(-1), mName(""), mTag(""), mIsActive(true) {}
 
+GameObject::~GameObject()
+{
+	if (mParent)
+	{
+		mParent->removeChild(this);
+	}
+
+	for (auto child : mChildren)
+	{
+		child->setParent(nullptr);
+	}
+	mChildren.clear();
+}
+
 // Copy constructor
 GameObject::GameObject(const GameObject& other)
 	: mParent(other.mParent), mTransform(other.mTransform), mID(other.mID), mName(other.mName), mTag(other.mTag),
@@ -129,9 +143,34 @@ Transform GameObject::getTransform()
 
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
 
-void GameObject::setParent(GameObject* parent) { mParent = parent; }
+void GameObject::setParent(GameObject* parent)
+{
+	if (mParent)
+	{
+		mParent->removeChild(this);
+	}
+	if (parent)
+	{
+		mParent = parent;
+		mParent->addChild(this);
+	}
+	return;
+}
 
 GameObject* GameObject::getParent() { return mParent; }
+
+void GameObject::addChild(GameObject* child) { mChildren.push_back(child); }
+
+void GameObject::removeChild(GameObject* child)
+{
+	auto it = std::remove(mChildren.begin(), mChildren.end(), child);
+	if (it != mChildren.end())
+	{
+		mChildren.erase(it, mChildren.end());
+	}
+}
+
+std::vector<GameObject*> GameObject::getChildren() { return mChildren; }
 
 std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag) const
 {
