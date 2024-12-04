@@ -119,11 +119,13 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 	rect.w = aWidth;
 	rect.h = aHeight;
 
-	// Set the render color
-	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
-
 	if (rotation == 0.0f)
 	{
+		if (aColor.a != 255)
+			SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+
+		// Set the render color
+		SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
 		// If no rotation, use the SDL drawing functions directly
 		if (aFill)
 		{
@@ -136,6 +138,9 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 	}
 	else
 	{
+		// Set the render color
+		SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+
 		// Create a temporary texture with transparency
 		SDL_Texture* texture =
 			SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, aWidth, aHeight);
@@ -175,27 +180,27 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 	}
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill)
-{
-	SDL_Rect rect;
-	rect.x = aLocation.x;
-	rect.y = aLocation.y;
-	rect.w = aWidth;
-	rect.h = aHeight;
-
-	if (aColor.a != 255)
-		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
-
-	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
-	if (aFill)
-	{
-		SDL_RenderFillRect(mRenderer, &rect);
-	}
-	else
-	{
-		SDL_RenderDrawRect(mRenderer, &rect);
-	}
-}
+// void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill)
+// {
+// 	SDL_Rect rect;
+// 	rect.x = aLocation.x;
+// 	rect.y = aLocation.y;
+// 	rect.w = aWidth;
+// 	rect.h = aHeight;
+//
+// 	if (aColor.a != 255)
+// 		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+//
+// 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+// 	if (aFill)
+// 	{
+// 		SDL_RenderFillRect(mRenderer, &rect);
+// 	}
+// 	else
+// 	{
+// 		SDL_RenderDrawRect(mRenderer, &rect);
+// 	}
+// }
 
 void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
 {
