@@ -132,7 +132,7 @@ void GameObject::setActive(bool isActive) { mIsActive = isActive; }
 
 bool GameObject::isActive() { return mIsActive; }
 
-Transform GameObject::getTransform()
+Transform GameObject::getTransform() const
 {
 	if (mParent)
 	{
