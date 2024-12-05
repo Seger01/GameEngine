@@ -15,11 +15,10 @@ void PhysicsEngine::update()
 	applyForces();
 
 	mWorld.executeWorldStep(mStep, mSubStep);
+	convertFromBox2D(mObjects);
 
 	executeCollisionScripts(mWorld.getContactEvents());
 	executeCollisionScripts(mWorld.getSensorEvents());
-
-	convertFromBox2D(mObjects);
 }
 
 // Applies forces from the forces buffer to the bodies in the world
@@ -50,9 +49,10 @@ void PhysicsEngine::setPositions()
 
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
-			if (newPos != mWorld.getPosition(rigidBody->getBodyId()))
+			if (newPos != mWorld.getPosition(rigidBody->getBodyId()) ||
+				transform.rotation != mWorld.getRotation(rigidBody->getBodyId()))
 			{
-				mWorld.setPosition(newPos, rigidBody->getBodyId());
+				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			}
 		}
 	}
@@ -241,10 +241,6 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 				transform.position.y = transform.position.y + boxCollider->getHeight();
 				boxCollider->setTransform(transform);
 			}
-
-			transform.rotation = transform.rotation;
-
-			gameObject.setTransform(transform);
 		}
 	}
 }

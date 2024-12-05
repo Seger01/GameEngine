@@ -199,6 +199,38 @@ TEST_F(PhysicsTest, UpdateFlag)
 	ASSERT_EQ(tempFilter.maskBits, 224);
 }
 
+TEST_F(PhysicsTest, PositionTranslate)
+{
+	// Create object with rigidbody + circlecollider + boxcollider for tests
+	GameObject* gameObject = new GameObject();
+
+	gameObject->addComponent<RigidBody>();
+	gameObject->addComponent<BoxCollider>();
+
+	// set values for rigidbody
+	RigidBody* rigidBody = gameObject->getComponents<RigidBody>().at(0);
+	rigidBody->setIsMoveableByForce(true);
+	rigidBody->setDensity(1.0f);
+	rigidBody->setFriction(0.6f);
+	rigidBody->setRestitution(0.0f);
+
+	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider->setWidth(10);
+	boxCollider->setHeight(10);
+
+	mPhysicsEngine.addObject(*gameObject);
+
+	mPhysicsEngine.update();
+
+	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
+	RigidBody* tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
+
+	// Check if position is correctly translated
+	ASSERT_EQ(tempRigidBody->getBodyId().bodyID, 1);
+	ASSERT_EQ(tempObject.get().getTransform().position,
+			  mPhysicsEngine.getWorld().getPosition(tempRigidBody->getBodyId()));
+}
+
 TEST_F(PhysicsTest, testcollide)
 {
 	GameObject* gameObject = new GameObject();
