@@ -58,8 +58,9 @@ Renderer::~Renderer()
 	TTF_Quit();
 }
 
-void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
-							 bool aFlipX, bool aFlipY, float aRotation, Color aColor)
+void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation,
+							 const int aWidth, const int aHeight, const bool aFlipX, const bool aFlipY,
+							 const float aRotation, const Color& aColor) const
 {
 	// Get the SDL_Texture from the Texture class
 	SDL_Texture* sdlTexture = aTexture.getSDLTexture();
@@ -110,65 +111,100 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
 	);
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill)
+void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
+							const Color& aColor, const bool aFill) const
 {
 	// Create a rectangle to define the size and position
 	SDL_Rect rect;
-	rect.x = aLocation.x;
-	rect.y = aLocation.y;
+	rect.x = static_cast<int>(aLocation.x);
+	rect.y = static_cast<int>(aLocation.y);
 	rect.w = aWidth;
 	rect.h = aHeight;
 
-	// Set the render color
-	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
-
-	// Create a texture from a surface
-	SDL_Surface* surface = SDL_CreateRGBSurface(0, aWidth, aHeight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-	if (aFill)
+	if (rotation == 0.0f)
 	{
-		SDL_FillRect(surface, nullptr, SDL_MapRGBA(surface->format, aColor.r, aColor.g, aColor.b, aColor.a));
+		if (aColor.a != 255)
+			SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+
+		// Set the render color
+		SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+		// If no rotation, use the SDL drawing functions directly
+		if (aFill)
+		{
+			SDL_RenderFillRect(mRenderer, &rect);
+		}
+		else
+		{
+			SDL_RenderDrawRect(mRenderer, &rect);
+		}
 	}
 	else
 	{
-		SDL_Rect outlineRect = {0, 0, aWidth, aHeight};
-		SDL_FillRect(surface, &outlineRect, SDL_MapRGBA(surface->format, aColor.r, aColor.g, aColor.b, aColor.a));
+		// Set the render color
+		SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+
+		// Create a temporary texture with transparency
+		SDL_Texture* texture =
+			SDL_CreateTexture(mRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, aWidth, aHeight);
+
+		// Enable blending on the texture
+		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+		// Set the texture as the rendering target
+		SDL_SetRenderTarget(mRenderer, texture);
+
+		// Clear the texture with full transparency
+		SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0); // RGBA(0, 0, 0, 0) = transparent
+		SDL_RenderClear(mRenderer);
+
+		// Draw the rectangle outline or fill on the texture
+		SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+		if (aFill)
+		{
+			SDL_Rect fillRect = {0, 0, aWidth, aHeight};
+			SDL_RenderFillRect(mRenderer, &fillRect);
+		}
+		else
+		{
+			SDL_Rect outlineRect = {0, 0, aWidth, aHeight};
+			SDL_RenderDrawRect(mRenderer, &outlineRect);
+		}
+
+		// Reset the rendering target to the default renderer
+		SDL_SetRenderTarget(mRenderer, nullptr);
+
+		// Render the texture with rotation
+		SDL_Point center = {aWidth / 2, aHeight / 2}; // Rotation center
+		SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, rotation, &center, SDL_FLIP_NONE);
+
+		// Destroy the temporary texture
+		SDL_DestroyTexture(texture);
 	}
-
-	// Create a texture from the surface
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(mRenderer, surface);
-	SDL_FreeSurface(surface); // Free the surface after creating the texture
-
-	// Render the texture with rotation
-	SDL_Point center = {aWidth / 2, aHeight / 2}; // Rotation center
-	SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, rotation, &center, SDL_FLIP_NONE);
-
-	// Destroy the texture after rendering
-	SDL_DestroyTexture(texture);
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill)
-{
-	SDL_Rect rect;
-	rect.x = aLocation.x;
-	rect.y = aLocation.y;
-	rect.w = aWidth;
-	rect.h = aHeight;
+// void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill)
+// {
+// 	SDL_Rect rect;
+// 	rect.x = aLocation.x;
+// 	rect.y = aLocation.y;
+// 	rect.w = aWidth;
+// 	rect.h = aHeight;
+//
+// 	if (aColor.a != 255)
+// 		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
+//
+// 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
+// 	if (aFill)
+// 	{
+// 		SDL_RenderFillRect(mRenderer, &rect);
+// 	}
+// 	else
+// 	{
+// 		SDL_RenderDrawRect(mRenderer, &rect);
+// 	}
+// }
 
-	if (aColor.a != 255)
-		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
-
-	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
-	if (aFill)
-	{
-		SDL_RenderFillRect(mRenderer, &rect);
-	}
-	else
-	{
-		SDL_RenderDrawRect(mRenderer, &rect);
-	}
-}
-
-void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
+void Renderer::drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const
 {
 	// Set the render color
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
@@ -222,7 +258,8 @@ void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
 	}
 }
 
-void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY)
+void Renderer::renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
+						  const float scaleY) const
 {
 	// Determine if text is fully opaque
 	bool isOpaque = (aColor.a == 255);
@@ -283,7 +320,7 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
 	SDL_FreeSurface(surface);
 }
 
-bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height)
+bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) const
 {
 	if (TTF_SizeText(mFont, text.c_str(), &width, &height) == 0)
 	{
@@ -296,18 +333,18 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	}
 }
 
-void Renderer::setViewport(Rect& viewport)
+void Renderer::setViewport(const Rect& viewport) const
 {
 	SDL_Rect rect = ((SDL_Rect)viewport);
 	SDL_RenderSetViewport(mRenderer, &rect);
 }
 
-void Renderer::clear(Color aColor)
+void Renderer::clear(const Color& aColor) const
 {
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 	SDL_RenderClear(mRenderer);
 }
 
-void Renderer::show() { SDL_RenderPresent(mRenderer); }
+void Renderer::show() const { SDL_RenderPresent(mRenderer); }
 
 SDL_Renderer*& Renderer::getSDLRenderer() { return mRenderer; }

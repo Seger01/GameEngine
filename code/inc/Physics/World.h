@@ -33,10 +33,12 @@ public:
 	void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
 	void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
 
-	void setPosition(Vector2 aPosition, BodyID aBodyID);
+	void setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID);
 	void setRotation(float aRotation, BodyID aBodyID);
 	void setGravity(Vector2 aGravity);
+
 	Vector2 getPosition(BodyID aBodyID);
+	std::vector<float> getShapeWidths(BodyProxy& aBodyProxy, BodyID aBodyID);
 	float getRotation(BodyID aBodyID);
 	Vector2 getGravity();
 

@@ -74,7 +74,7 @@ void EngineBravo::run()
 
 		mParticleSystem.update();
 
-		mRenderSystem.render(mSceneManager.getCurrentScene());
+		mRenderSystem.render(*mSceneManager.getCurrentScene());
 
 		mNetworkManager.update();
 		limitFrameRate(mFrameRateLimit);

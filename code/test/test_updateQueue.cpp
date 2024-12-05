@@ -18,8 +18,11 @@ TEST(UpdateQueue, updateAdditions)
 	PhysicsManager& physicsManager = engineBravo.getPhysicsManager();
 	RenderSystem& renderSystem = engineBravo.getRenderSystem();
 	UIManager& uiManager = engineBravo.getUIManager();
+	engineBravo.getSceneManager().createScene("TestScene");
+	engineBravo.getSceneManager().requestSceneChange("TestScene");
 
 	GameObject* gameObject = new GameObject();
+	engineBravo.getSceneManager().getCurrentScene()->addGameObject(gameObject);
 
 	engineBravo.getUpdateQueue().updateAdditions();
 

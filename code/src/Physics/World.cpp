@@ -121,10 +121,15 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 	}
 }
 
-void World::setPosition(Vector2 aPosition, BodyID aBodyID)
+void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);
-	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, b2Body_GetRotation(bodyid));
+	float radians = aRotation * (M_PI / 180.0f);
+	b2Rot rot;
+	rot.s = sin(radians);
+	rot.c = cos(radians);
+
+	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)
@@ -156,8 +161,12 @@ std::vector<std::pair<int, int>> World::getContactEvents()
 
 	for (int i = 0; i < contactlist.beginCount; i++)
 	{
-		collisionList.push_back({b2Shape_GetBody(contactlist.beginEvents[i].shapeIdA).index1,
-								 b2Shape_GetBody(contactlist.beginEvents[i].shapeIdB).index1});
+		if (b2Shape_IsValid(contactlist.beginEvents[i].shapeIdA) &&
+			b2Shape_IsValid(contactlist.beginEvents[i].shapeIdB))
+		{
+			collisionList.push_back({b2Shape_GetBody(contactlist.beginEvents[i].shapeIdA).index1,
+									 b2Shape_GetBody(contactlist.beginEvents[i].shapeIdB).index1});
+		}
 	}
 	return collisionList;
 }
@@ -233,8 +242,12 @@ std::vector<std::pair<int, int>> World::getSensorEvents()
 
 	for (int i = 0; i < sensorEvents.beginCount; i++)
 	{
-		sensorList.push_back({b2Shape_GetBody(sensorEvents.beginEvents[i].sensorShapeId).index1,
-							  b2Shape_GetBody(sensorEvents.beginEvents[i].visitorShapeId).index1});
+		if (b2Shape_IsValid(sensorEvents.beginEvents[i].sensorShapeId) &&
+			b2Shape_IsValid(sensorEvents.beginEvents[i].visitorShapeId))
+		{
+			sensorList.push_back({b2Shape_GetBody(sensorEvents.beginEvents[i].sensorShapeId).index1,
+								  b2Shape_GetBody(sensorEvents.beginEvents[i].visitorShapeId).index1});
+		}
 	}
 
 	return sensorList;

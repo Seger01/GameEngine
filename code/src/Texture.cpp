@@ -6,4 +6,4 @@ Texture::Texture(SDL_Texture* aTexture, int aID) : mTexture(aTexture), mID(aID) 
 
 Texture::~Texture() {}
 
-SDL_Texture* Texture::getSDLTexture() { return mTexture; }
+SDL_Texture* Texture::getSDLTexture() const { return mTexture; }
