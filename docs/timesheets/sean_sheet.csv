@@ -66,4 +66,3 @@ Date,Time,Duration(in hours),Activity
 2024-12-03, 09:00, 8, worked on networking demo
 2024-12-04, 09:00, 8, worked on syncing network packets between client and server. debug scene change bug
 2024-12-05, 09:00, 7.5, worked on syncing network packets between client and server
-
