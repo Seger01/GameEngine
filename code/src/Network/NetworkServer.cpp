@@ -235,7 +235,7 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 		{
 			continue;
 		}
-		if (aPacket->guid != networkObject->getClientGUID())
+		if (networkPacket.clientGUID != networkObject->getClientGUID())
 		{ // check client ID
 			continue;
 		}
@@ -323,17 +323,21 @@ void NetworkServer::sendCustomSerialize()
 		{
 			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
 			{
+				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not send it
+				// {
+				// 	continue;
+				// }
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::makeBitStream(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
-				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 				networkPacket.networkObjectID =
 					gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID();
 				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i).get().getTypeId();
+				networkPacket.SetTimeStampNow();
+				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 				networkPacket.networkBehaviourID = networkBehaviour->getNetworkBehaviourID();
 				networkPacket.networkVariableID = i;
-				networkPacket.SetTimeStampNow();
 
 				networkBehaviour->GetNetworkVariables().at(i).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);

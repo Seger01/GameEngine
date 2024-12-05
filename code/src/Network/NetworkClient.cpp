@@ -322,6 +322,11 @@ void NetworkClient::sendCustomSerialize()
 		{
 			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
 			{
+				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not
+				// 																	// send it
+				// {
+				// 	continue;
+				// }
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::makeBitStream(bs);
 				NetworkPacket networkPacket;
@@ -350,11 +355,11 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 	for (auto gameObject : mObjects)
 	{
 		NetworkObject* networkObject = gameObject.get().getComponents<NetworkObject>()[0];
-		if (!networkObject->isOwner())
+		if (!networkObject->isOwner()) // if owner do not overwrite with value from other instances
 		{
 			continue;
 		}
-		if (aPacket->guid != networkObject->getClientGUID())
+		if (networkPacket.clientGUID != networkObject->getClientGUID())
 		{ // check client ID
 			continue;
 		}
