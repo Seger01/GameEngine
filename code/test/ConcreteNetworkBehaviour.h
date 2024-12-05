@@ -7,9 +7,9 @@
 
 class ConcreteNetworkBehaviour : public INetworkBehaviour {
 public:
-    void OnNetworkSpawn() override;
+	void onNetworkSpawn() override;
 
-    void onStart() override;
+	void onStart() override;
 
     void onUpdate() override;
 

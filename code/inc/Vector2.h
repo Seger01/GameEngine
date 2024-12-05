@@ -38,6 +38,13 @@ struct Vector2 {
         y *= scalar;
         return *this;
     }
+
+    // Overload the = operator for Vector2
+    Vector2& operator=(const Vector2& other) {
+        x = other.x;
+        y = other.y;
+        return *this;
+    }
 };
 
 #endif

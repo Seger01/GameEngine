@@ -19,26 +19,28 @@ public:
 
     virtual void serverRpc();
     virtual void clientRpc();
-    virtual void OnNetworkSpawn();
+	virtual void onNetworkSpawn();
 
-    void RegisterNetworkVariable(NetworkVariableBase* variable);
+	void RegisterNetworkVariable(NetworkVariableBase* variable);
 
-    std::vector<NetworkVariableBase*> GetNetworkVariables();
+	std::vector<std::reference_wrapper<NetworkVariableBase>> GetNetworkVariables();
 
-    bool isOwner();
+	bool isOwner();
 
-    void destroy();
-    int getNetworkBehaviourID() const;
+	void destroy();
+	uint8_t getNetworkBehaviourID() const;
 
 private:
     bool mIsOwner;
     bool mIsOwnerSet;
-    int mNetworkBehaviourID;
-    static int networkBehaviourIDCounter;
-    std::vector<NetworkVariableBase*> mNetworkVariables;
+	uint8_t mNetworkBehaviourID;
+	static int networkBehaviourIDCounter;
 
-private:
-    friend class NetworkObject;
+    protected:
+		std::vector<std::reference_wrapper<NetworkVariableBase>> mNetworkVariables;
+
+	private:
+		friend class NetworkObject;
 };
 
 #endif // NETWORKBEHAVIOUR_H

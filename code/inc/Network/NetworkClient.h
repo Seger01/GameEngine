@@ -26,7 +26,9 @@ private:
     void handleTransform(SLNet::Packet* aPacket);
     void handlePlayerInstantiation(SLNet::Packet* aPacket);
     void handlePlayerDestruction(SLNet::Packet* aPacket);
-    void sendToServer(SLNet::BitStream& aBitStream);
+	void sendCustomSerialize();
+	void handleCustomSerialize(SLNet::Packet* aPacket);
+	void sendToServer(SLNet::BitStream& aBitStream);
 
 private:
     bool mIsConnected;

@@ -127,6 +127,9 @@ void NetworkServer::handleIncomingPackets()
 			std::cout << "Received player instantiation message.\n";
 			spawnNewPlayer(packet);
 			break;
+		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:
+			handleCustomSerialize(packet);
+			break;
 		default:
 			std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
 			break;
@@ -228,6 +231,10 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 	for (auto gameObject : mObjects)
 	{
 		NetworkObject* networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		if (networkObject->isOwner()) // if owner do not overwrite with value from other instances
+		{
+			continue;
+		}
 		if (aPacket->guid != networkObject->getClientGUID())
 		{ // check client ID
 			continue;
@@ -243,12 +250,12 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 			  // behaviour ID
 				continue;
 			}
-			if (networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID)->getTypeId() !=
+			if (networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
 				continue;
 			}
-			networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID)->deserialize(bs);
+			networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
 		}
 	}
 }
@@ -259,7 +266,7 @@ void NetworkServer::spawnNewPlayer(SLNet::Packet* aPacket)
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	if (EngineBravo::getInstance().getNetworkManager().getRole() != NetworkRole::HOST)
-	{																				// if host don't add
+	{																					 // if host don't add
 		EngineBravo::getInstance().getNetworkManager().instantiatePlayer(networkPacket); // Server-side
 																						 // instantiation
 	}
@@ -300,6 +307,7 @@ void NetworkServer::sendPackets()
 		return;
 	}
 	sendTransform();
+	sendCustomSerialize();
 	mLastSendPacketsTime = now;
 }
 
@@ -319,13 +327,15 @@ void NetworkServer::sendCustomSerialize()
 				NetworkSharedFunctions::makeBitStream(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
+				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 				networkPacket.networkObjectID =
 					gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID();
-				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i)->getTypeId();
+				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i).get().getTypeId();
+				networkPacket.networkBehaviourID = networkBehaviour->getNetworkBehaviourID();
+				networkPacket.networkVariableID = i;
 				networkPacket.SetTimeStampNow();
-				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 
-				networkBehaviour->GetNetworkVariables().at(i)->serialize(bs);
+				networkBehaviour->GetNetworkVariables().at(i).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 				sendToAllClients(bs);
 			}

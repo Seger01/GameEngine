@@ -5,21 +5,24 @@ int INetworkBehaviour::networkBehaviourIDCounter = 0;
 INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false) {
     mNetworkBehaviourID = networkBehaviourIDCounter++;
 }
-
 void INetworkBehaviour::serverRpc() { throw std::runtime_error("INetworkBehaviour::serverRpc() not implemented"); }
 
 void INetworkBehaviour::clientRpc() { throw std::runtime_error("INetworkBehaviour::clientRpc() not implemented"); }
 
-void INetworkBehaviour::OnNetworkSpawn() {
-    throw std::runtime_error("INetworkBehaviour::OnNetworkSpawn() not implemented");
+void INetworkBehaviour::onNetworkSpawn()
+{
+	throw std::runtime_error("INetworkBehaviour::OnNetworkSpawn() not implemented");
 }
 
 void INetworkBehaviour::RegisterNetworkVariable(NetworkVariableBase* variable) {
-    mNetworkVariables.emplace_back(variable);
-    variable->setNetworkVariableID(mNetworkVariables.size() - 1);
+	mNetworkVariables.push_back(*variable);
+	variable->setNetworkVariableID(mNetworkVariables.size() - 1);
 }
 
-std::vector<NetworkVariableBase*> INetworkBehaviour::GetNetworkVariables() { return mNetworkVariables; }
+std::vector<std::reference_wrapper<NetworkVariableBase>> INetworkBehaviour::GetNetworkVariables()
+{
+	return mNetworkVariables;
+}
 
 bool INetworkBehaviour::isOwner() {
     return mGameObject->getComponents<NetworkObject>()[0]->isOwner();
@@ -39,4 +42,4 @@ bool INetworkBehaviour::isOwner() {
 
 void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
 
-int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+uint8_t INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
