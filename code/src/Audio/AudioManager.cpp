@@ -39,6 +39,40 @@ void AudioManager::play(const AudioSource& aSource)
 }
 
 /**
+ * @brief Pause the given audio source (must be music). If the music is not playing, nothing happens.
+ *
+ * @throw std::logic_error if the audio source is not music
+ */
+void AudioManager::pause(const AudioSource& aSource)
+{
+	if (aSource.isMusic())
+	{
+		mFacade->pauseMusic();
+	}
+	else
+	{
+		throw std::logic_error("Only music sources can be paused.");
+	}
+}
+
+/**
+ * @brief Resume the given audio source (must be music). If the music is already playing, nothing happens.
+ *
+ * @throw std::logic_error if the audio source is not music
+ */
+void AudioManager::resume(const AudioSource& aSource)
+{
+	if (aSource.isMusic())
+	{
+		mFacade->resumeMusic();
+	}
+	else
+	{
+		throw std::logic_error("Only music sources can be resumed.");
+	}
+}
+
+/**
  * @brief Stop the audio source. If it is not a music source, throw an error.
  */
 void AudioManager::stop(const AudioSource& aSource)

@@ -10,7 +10,6 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	}
 	if (aGameObject.get().hasComponent<CircleCollider>())
 	{
-		std::cout << "setting circle colliders" << std::endl;
 		mCircleColliders = aGameObject.get().getComponents<CircleCollider>();
 	}
 

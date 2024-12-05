@@ -13,6 +13,8 @@ public:
 
 	virtual void playSound(const std::string& aPath, bool aLooping, unsigned aVolume, int aDirection) = 0;
 	virtual void playMusic(int aVolume) = 0;
+	virtual void pauseMusic() = 0;
+	virtual void resumeMusic() = 0;
 	virtual void stopMusic() = 0;
 
 	virtual bool isPlaying(const std::string& aPath) const = 0;

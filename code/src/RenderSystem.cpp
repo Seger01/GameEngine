@@ -16,15 +16,19 @@
 #include "Time.h"
 #include "UIObject.h"
 
-RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480)
+RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio(Point{16, 9})
 {
 	mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
 	mRenderer = std::make_unique<Renderer>(*mWindow);
 
-	mBackgroundColor = Color(0, 0, 0);
+	mBackgroundColor = Color(255, 255, 255);
 
 	return;
 }
+
+void RenderSystem::setAspectRatio(Point aAspectRatio) { mAspectRatio = aAspectRatio; }
+
+Point RenderSystem::getAspectRatio() { return mAspectRatio; }
 
 void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort)
 {
@@ -123,19 +127,38 @@ Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
 	FRect viewport = aCurrentCamera.getViewport();
 
+	// Determine the actual screen viewport after letterboxing/pillarboxing
 	Rect screenViewPort =
 		Rect{static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
 			 static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
 
+	if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Letterbox
+		int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
+		screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * viewport.y);
+		screenViewPort.h = newHeight * viewport.h;
+	}
+	else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Pillarbox
+		int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
+		screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * viewport.x);
+		screenViewPort.w = newWidth * viewport.w;
+	}
+
+	// Adjust screen position to viewport coordinates
 	screenPos.x = screenPos.x - screenViewPort.x;
 	screenPos.y = screenPos.y - screenViewPort.y;
 
+	// Convert screen position to world position
 	Vector2 worldPos;
-	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
-	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
+	worldPos.x = (screenPos.x / screenViewPort.w) * aCurrentCamera.getWidth();
+	worldPos.y = (screenPos.y / screenViewPort.h) * aCurrentCamera.getHeight();
 
-	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
-	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
+	// Offset by the camera's origin
+	worldPos.x += aCurrentCamera.getOrigin().x;
+	worldPos.y += aCurrentCamera.getOrigin().y;
 
 	return worldPos;
 }
@@ -274,6 +297,12 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, 
 	}
 }
 
+void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras)
+{
+	std::sort(aCameras.begin(), aCameras.end(),
+			  [](Camera* a, Camera* b) { return a->getRenderOrder() < b->getRenderOrder(); });
+}
+
 void RenderSystem::render(Scene* aScene)
 {
 	mRenderer->clear(mBackgroundColor);
@@ -281,14 +310,33 @@ void RenderSystem::render(Scene* aScene)
 	// Get all active cameras
 	std::vector<Camera*> cameras = aScene->getCameras();
 
+	// Sort cameras by render order
+	sortCamerasByRenderOrder(cameras);
+
 	for (Camera* camera : cameras)
 	{
 
-		FRect viewport = camera->getViewport();
+		FRect cameraViewport = camera->getViewport();
 
-		Rect screenViewPort = Rect{
-			static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
-			static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
+		Rect screenViewPort = Rect{static_cast<int>(cameraViewport.x * mWindow->getSize().x),
+								   static_cast<int>(cameraViewport.y * mWindow->getSize().y),
+								   static_cast<int>(cameraViewport.w * mWindow->getSize().x),
+								   static_cast<int>(cameraViewport.h * mWindow->getSize().y)};
+
+		if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
+		{
+			// Letterbox
+			int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
+			screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * cameraViewport.y);
+			screenViewPort.h = newHeight * cameraViewport.h;
+		}
+		else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
+		{
+			// Pillarbox
+			int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
+			screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * cameraViewport.x);
+			screenViewPort.w = newWidth * cameraViewport.w;
+		}
 
 		mRenderer->setViewport(screenViewPort);
 
@@ -368,12 +416,7 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
-	// std::cout << "Camera Tag: " << aCurrentCamera.getTag() << std::endl;
-	// std::cout << "Viewport: " << aCurrentCamera.getViewport().x << ", " << aCurrentCamera.getViewport().y << ", "
-	// 		  << aCurrentCamera.getViewport().w << ", " << aCurrentCamera.getViewport().h << std::endl;
-	// std::cout << "ScreenViewport: " << aScreenViewPort.x << ", " << aScreenViewPort.y << ", " << aScreenViewPort.w
-	// 		  << ", " << aScreenViewPort.h << std::endl;
-	//
+
 	if (aCurrentCamera.getDebugOverlayRef().renderCameraViewport)
 	{
 		mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
@@ -408,85 +451,6 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 			}
 		}
 	}
-
-	// if (config.getConfig(SHOW_COLLIDERS))
-	// {
-	// 	for (auto& gameObject : aScene->getGameObjects())
-	// 	{
-	// 		if (gameObject->hasComponent<BoxCollider>())
-	// 		{
-	// 			for (auto boxCollider : gameObject->getComponents<BoxCollider>())
-	// 			{
-	// 				int spriteWidth = boxCollider->getWidth();
-	// 				int spriteHeight = boxCollider->getHeight();
-	//
-	// 				int WindowWidth = mWindow->getSize().x;
-	// 				int WindowHeight = mWindow->getSize().y;
-	//
-	// 				Vector2 texturePosition =
-	// 					gameObject->getTransform().position + boxCollider->getTransform().position;
-	//
-	// 				Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
-	// 									   Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
-	//
-	// 				Vector2 drawPosition = texturePosition - cameraOrigin;
-	//
-	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-	//
-	// 				spriteWidth = std::ceil(static_cast<int>(
-	// 					static_cast<float>(spriteWidth) *
-	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-	// 				spriteHeight = std::ceil(static_cast<int>(
-	// 					static_cast<float>(spriteHeight) *
-	// 					(static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
-	//
-	// 				Color renderColor = Color(0, 0, 255);
-	//
-	// 				if (!boxCollider->isActive())
-	// 				{
-	// 					renderColor = Color(252, 3, 252);
-	// 				}
-	//
-	// 				mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight,
-	// 										gameObject->getTransform().rotation, renderColor, false);
-	// 				// mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
-	// 			}
-	// 		}
-	// 		if (gameObject->hasComponent<CircleCollider>())
-	// 		{
-	// 			for (auto circleCollider : gameObject->getComponents<CircleCollider>())
-	// 			{
-	// 				int WindowWidth = mWindow->getSize().x;
-	// 				int WindowHeight = mWindow->getSize().y;
-	//
-	// 				Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
-	//
-	// 				float circleRadius = circleCollider->getRadius();
-	//
-	// 				Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-	//
-	// 				Vector2 drawPosition = circlePos - cameraOrigin;
-	//
-	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-	//
-	// 				circleRadius = std::ceil(static_cast<int>(
-	// 					static_cast<float>(circleRadius) *
-	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-	//
-	// 				Color renderColor = Color(0, 0, 255);
-	//
-	// 				if (!circleCollider->isActive())
-	// 				{
-	// 					renderColor = Color(252, 3, 252);
-	// 				}
-	//
-	// 				mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }

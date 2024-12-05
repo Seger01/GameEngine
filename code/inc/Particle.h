@@ -1,5 +1,4 @@
-#ifndef PARTICLE_H
-#define PARTICLE_H
+#pragma once
 
 #include <vector>
 
@@ -7,45 +6,44 @@
 #include "Transform.h"
 #include "Vector2.h"
 
-class Particle {
+class Particle
+{
 public:
-    Particle();
-    Particle(Vector2 aPosition, Vector2 aVelocity, float aAcceleration, int aLifeTime, int aMaxLifeTime, Vector2 aSize,
-             Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
-             std::vector<Color> aColorGradient);
-    ~Particle();
+	Particle(const Vector2& aPosition = Vector2(0, 0), const Vector2& aVelocity = Vector2(0, 0),
+			 float aAcceleration = 0, int aLifeTime = 0, int aMaxLifeTime = 0, const Vector2& aSize = Vector2(0, 0),
+			 const Vector2& aEndSize = Vector2(0, 0), float aRotation = 0, float aAngularVelocity = 0,
+			 float aAngularAcceleration = 0, const std::vector<Color>& aColorGradient = std::vector<Color>());
 
-    void update();
+	void update();
 
-    Vector2 getPosition();
-    float getLifeTime();
-    Vector2 getSize();
-    float getRotation();
-    Color getColor();
-
-private:
-    Color calculateColor();
-    Color calculateInterpolatedColor();
-    Color getNearestColor();
+	Vector2 getPosition() const;
+	float getLifeTime() const;
+	Vector2 getSize() const;
+	float getRotation() const;
+	Color getColor() const;
 
 private:
-    Vector2 position;
-    Vector2 velocity;
-    float acceleration;
+	Color calculateColor() const;
+	Color calculateInterpolatedColor() const;
+	Color getNearestColor() const;
 
-    int maxLifeTime;
-    float lifeTimeRemainingSec;
-    int initialLifeTime;
+private:
+	Vector2 mPosition;
+	Vector2 mVelocity;
+	float mAcceleration;
 
-    Vector2 startSize;
-    Vector2 size;
-    Vector2 endSize;
-    float rotation;
-    float angularVelocity;
-    float angularAcceleration;
-    std::vector<Color> colorGradient;
+	int mMaxLifeTime;
+	float mLifeTimeRemainingSec;
+	int mInitialLifeTime;
 
-    bool interpolateColor = true;
+	Vector2 mStartSize;
+	Vector2 mSize;
+	Vector2 mEndSize;
+
+	float mRotation;
+	float mAngularVelocity;
+	float mAngularAcceleration;
+	std::vector<Color> mColorGradient;
+
+	bool mInterpolateColor;
 };
-
-#endif // PARTICLE_H
