@@ -25,8 +25,8 @@ public:
 	Transform getTransform() const;
 	void setTransform(const Transform& aNewTransform);
 
-	Sprite& getFrame(int aFrameIndex);
-	Sprite& getCurrentFrame();
+	const Sprite& getFrame(int aFrameIndex) const;
+	const Sprite& getCurrentFrame() const;
 
 	Color getColorFilter() const;
 	void setColorFilter(const Color& aColor);

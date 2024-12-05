@@ -108,7 +108,7 @@ Transform Animation::getTransform() const
 
 void Animation::setTransform(const Transform& aNewTransform) { mTransform = aNewTransform; }
 
-Sprite& Animation::getFrame(int aFrameIndex)
+const Sprite& Animation::getFrame(int aFrameIndex) const
 {
 	if (aFrameIndex >= mAnimationFrames.size())
 	{
@@ -122,7 +122,7 @@ Sprite& Animation::getFrame(int aFrameIndex)
 	return sprite;
 }
 
-Sprite& Animation::getCurrentFrame()
+const Sprite& Animation::getCurrentFrame() const
 {
 	int frameIndex =
 		(static_cast<int>(Time::ticks * 1000) % (mTimeBetweenFrames * mAnimationFrames.size())) / mTimeBetweenFrames;

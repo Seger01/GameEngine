@@ -58,8 +58,9 @@ Renderer::~Renderer()
 	TTF_Quit();
 }
 
-void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
-							 bool aFlipX, bool aFlipY, float aRotation, Color aColor)
+void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation,
+							 const int aWidth, const int aHeight, const bool aFlipX, const bool aFlipY,
+							 const float aRotation, const Color& aColor) const
 {
 	// Get the SDL_Texture from the Texture class
 	SDL_Texture* sdlTexture = aTexture.getSDLTexture();
@@ -110,7 +111,8 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
 	);
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill)
+void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
+							const Color& aColor, const bool aFill) const
 {
 	// Create a rectangle to define the size and position
 	SDL_Rect rect;
@@ -202,7 +204,7 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 // 	}
 // }
 
-void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
+void Renderer::drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const
 {
 	// Set the render color
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
@@ -256,7 +258,8 @@ void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
 	}
 }
 
-void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY)
+void Renderer::renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
+						  const float scaleY) const
 {
 	// Determine if text is fully opaque
 	bool isOpaque = (aColor.a == 255);
@@ -317,7 +320,7 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
 	SDL_FreeSurface(surface);
 }
 
-bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height)
+bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) const
 {
 	if (TTF_SizeText(mFont, text.c_str(), &width, &height) == 0)
 	{
@@ -330,18 +333,18 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	}
 }
 
-void Renderer::setViewport(Rect& viewport)
+void Renderer::setViewport(const Rect& viewport) const
 {
 	SDL_Rect rect = ((SDL_Rect)viewport);
 	SDL_RenderSetViewport(mRenderer, &rect);
 }
 
-void Renderer::clear(Color aColor)
+void Renderer::clear(const Color& aColor) const
 {
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 	SDL_RenderClear(mRenderer);
 }
 
-void Renderer::show() { SDL_RenderPresent(mRenderer); }
+void Renderer::show() const { SDL_RenderPresent(mRenderer); }
 
 SDL_Renderer*& Renderer::getSDLRenderer() { return mRenderer; }

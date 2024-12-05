@@ -76,16 +76,16 @@ Sprite::~Sprite()
 
 std::unique_ptr<Component> Sprite::clone() const { return std::make_unique<Sprite>(*this); }
 
-Texture* Sprite::getTexture() { return mTexture; }
+Texture* Sprite::getTexture() const { return mTexture; }
 
-Transform Sprite::getRelativePosition() { return mTransform; }
+Transform Sprite::getRelativePosition() const { return mTransform; }
 
 void Sprite::setRelativePosition(Transform aNewTransform) { mTransform = aNewTransform; }
 
-Rect Sprite::getSource() { return mSourceRect; }
+Rect Sprite::getSource() const { return mSourceRect; }
 
 void Sprite::setSource(Rect aSourceRect) { mSourceRect = aSourceRect; }
 
-Color Sprite::getColorFilter() { return mColorFilter; }
+Color Sprite::getColorFilter() const { return mColorFilter; }
 
 void Sprite::setColorFilter(Color aColor) { mColorFilter = aColor; }

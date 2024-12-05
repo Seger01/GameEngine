@@ -1,20 +1,16 @@
 #include "RenderSystem.h"
 
-#include <iostream>
+#include <cmath>
 #include <memory>
 
 #include "Animation.h"
 #include "BoxCollider.h"
-#include "Button.h"
+#include "CircleCollider.h"
 #include "Color.h"
-#include "EngineBravo.h"
 #include "ParticleEmitter.h"
-#include "SDL_timer.h"
-#include "ScopedTimer.h"
 #include "Sprite.h"
 #include "Text.h"
 #include "Time.h"
-#include "UIObject.h"
 
 RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio(Point{16, 9})
 {
@@ -26,13 +22,14 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio
 	return;
 }
 
-void RenderSystem::setAspectRatio(Point aAspectRatio) { mAspectRatio = aAspectRatio; }
+void RenderSystem::setAspectRatio(const Point& aAspectRatio) { mAspectRatio = aAspectRatio; }
 
-Point RenderSystem::getAspectRatio() { return mAspectRatio; }
+Point RenderSystem::getAspectRatio() const { return mAspectRatio; }
 
-void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort)
+void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& aGameObject, const Sprite& aSprite,
+								const Rect& aScreenViewPort) const
 {
-	Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
+	Vector2 texturePosition = aGameObject.getTransform().position + aSprite.getRelativePosition().position;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = texturePosition - cameraOrigin;
 
@@ -52,25 +49,26 @@ void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject,
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
-	int spriteWidth = std::round(aSprite->getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
-	int spriteHeight = std::round(aSprite->getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+	int spriteWidth = std::round(aSprite.getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int spriteHeight = std::round(aSprite.getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
 	// Render
-	mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
-							 aSprite->getFlipX(), aSprite->getFlipY(),
-							 aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
-							 aSprite->getColorFilter());
+	mRenderer->renderTexture(*aSprite.getTexture(), aSprite.getSource(), drawPosition, spriteWidth, spriteHeight,
+							 aSprite.getFlipX(), aSprite.getFlipY(),
+							 aGameObject.getTransform().rotation + aSprite.getRelativePosition().rotation,
+							 aSprite.getColorFilter());
 }
 
-void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation,
-								   Rect aScreenViewPort)
+void RenderSystem::renderAnimation(const Camera& aCurrentCamera, const GameObject& aGameObject,
+								   const Animation& aAnimation, const Rect& aScreenViewPort) const
 {
-	Sprite& currentFrame = aAnimation->getCurrentFrame();
+	const Sprite& currentFrame = aAnimation.getCurrentFrame();
 
-	renderSprite(aCurrentCamera, aGameObject, &currentFrame, aScreenViewPort);
+	renderSprite(aCurrentCamera, aGameObject, currentFrame, aScreenViewPort);
 }
 
-void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, Rect aScreenViewPort)
+void RenderSystem::renderParticle(const Camera& aCurrentCamera, const Particle& aParticle,
+								  const Rect& aScreenViewPort) const
 {
 	float particleWidth = aParticle.getSize().x;
 	float particleHeight = aParticle.getSize().y;
@@ -93,8 +91,8 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 							aParticle.getRotation(), aParticle.getColor(), true);
 }
 
-void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
-							  Vector2 aScale, Rect aScreenViewPort)
+void RenderSystem::renderText(const Camera& aCurrentCamera, const std::string& aText, const Vector2& aLocation,
+							  const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const
 {
 	float scaleX = aScale.x * (aScreenViewPort.w / static_cast<float>(aCurrentCamera.getWidth()));
 	float scaleY = aScale.y * (aScreenViewPort.h / static_cast<float>(aCurrentCamera.getHeight()));
@@ -109,7 +107,7 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 }
 
 bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
-							   Vector2 aScale)
+							   const Vector2& aScale) const
 {
 	if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight))
 	{
@@ -122,7 +120,7 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 	return true;
 }
 
-Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
+Vector2 RenderSystem::screenToWorldPos(const Point& aScreenpos, const Camera& aCurrentCamera) const
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
 	FRect viewport = aCurrentCamera.getViewport();
@@ -163,10 +161,10 @@ Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 	return worldPos;
 }
 
-int RenderSystem::getLowestLayer(Scene* aScene)
+int RenderSystem::getLowestLayer(const Scene& aScene) const
 {
 	int lowestLayer = 0;
-	for (auto& gameObject : aScene->getGameObjects())
+	for (auto& gameObject : aScene.getGameObjects())
 	{
 		if (gameObject->hasComponent<Sprite>())
 		{
@@ -210,10 +208,10 @@ int RenderSystem::getLowestLayer(Scene* aScene)
 	return lowestLayer;
 }
 
-int RenderSystem::getHighestLayer(Scene* aScene)
+int RenderSystem::getHighestLayer(const Scene& aScene) const
 {
 	int highestLayer = 0;
-	for (auto& gameObject : aScene->getGameObjects())
+	for (auto& gameObject : aScene.getGameObjects())
 	{
 		if (gameObject->hasComponent<Sprite>())
 		{
@@ -257,7 +255,8 @@ int RenderSystem::getHighestLayer(Scene* aScene)
 	return highestLayer;
 }
 
-void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, Rect aScreenViewPort)
+void RenderSystem::renderLayer(const Scene& aScene, int aLayer, const Camera& activeCamera,
+							   const Rect& aScreenViewPort) const
 {
 	for (GameObject& gameObject : mObjects)
 	{
@@ -265,14 +264,14 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, 
 		{
 			if (animation->isActive() && animation->getLayer() == aLayer)
 			{
-				renderAnimation(activeCamera, &gameObject, animation, aScreenViewPort);
+				renderAnimation(activeCamera, gameObject, *animation, aScreenViewPort);
 			}
 		}
 		for (auto sprite : gameObject.getComponents<Sprite>())
 		{
 			if (sprite->isActive() && sprite->getLayer() == aLayer)
 			{
-				renderSprite(activeCamera, &gameObject, sprite, aScreenViewPort);
+				renderSprite(activeCamera, gameObject, *sprite, aScreenViewPort);
 			}
 		}
 		for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
@@ -297,18 +296,18 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, 
 	}
 }
 
-void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras)
+void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const
 {
 	std::sort(aCameras.begin(), aCameras.end(),
 			  [](Camera* a, Camera* b) { return a->getRenderOrder() < b->getRenderOrder(); });
 }
 
-void RenderSystem::render(Scene* aScene)
+void RenderSystem::render(const Scene& aScene) const
 {
 	mRenderer->clear(mBackgroundColor);
 
 	// Get all active cameras
-	std::vector<Camera*> cameras = aScene->getCameras();
+	std::vector<Camera*> cameras = aScene.getCameras();
 
 	// Sort cameras by render order
 	sortCamerasByRenderOrder(cameras);
@@ -351,7 +350,7 @@ void RenderSystem::render(Scene* aScene)
 	mRenderer->show();
 }
 
-void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenViewPort)
+void RenderSystem::renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const
 {
 	int lowestLayer = getLowestLayer(aScene);
 	int highestLayer = getHighestLayer(aScene);
@@ -364,8 +363,9 @@ void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenVi
 	renderDebugInfo(aScene, camera, aScreenViewPort);
 }
 
-void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
-								Camera& aCurrentCamera, Rect aScreenViewPort)
+void RenderSystem::renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
+								const Color& aColor, bool aFilled, const Camera& aCurrentCamera,
+								const Rect& aScreenViewPort) const
 {
 
 	Vector2 squarePosition = aPosition;
@@ -383,8 +383,8 @@ void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, floa
 	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled);
 }
 
-void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
-								Rect aScreenViewPort)
+void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
+								const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
 
 	Vector2 circlePosition = aPosition;
@@ -401,14 +401,14 @@ void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, 
 	mRenderer->drawCircle(drawPosition, radius, aColor, aFilled);
 }
 
-void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort)
+void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
 	if (Time::deltaTime == 0)
 	{
 		return;
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().showFPS)
+	if (aCurrentCamera.getDebugOverlay().showFPS)
 	{
 		int fps = 1.0f / Time::deltaTime;
 
@@ -417,14 +417,14 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().renderCameraViewport)
+	if (aCurrentCamera.getDebugOverlay().renderCameraViewport)
 	{
 		mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().renderColliders)
+	if (aCurrentCamera.getDebugOverlay().renderColliders)
 	{
-		for (auto& gameObject : aScene->getGameObjects())
+		for (auto& gameObject : aScene.getGameObjects())
 		{
 			if (gameObject->hasComponent<BoxCollider>())
 			{

@@ -46,7 +46,7 @@ void Scene::removeGameObject(GameObject* aObject)
 	// std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
 }
 
-std::vector<GameObject*> Scene::getGameObjects()
+std::vector<GameObject*> Scene::getGameObjects() const
 {
 	std::vector<GameObject*> gameObjectRefs;
 	for (const auto& gameObject : mGameObjects)
@@ -120,7 +120,7 @@ std::string Scene::getName() { return mSceneName; }
 
 int Scene::getID() { return mSceneID; }
 
-std::vector<Camera*> Scene::getCameras()
+std::vector<Camera*> Scene::getCameras() const
 {
 	std::vector<Camera*> cameras;
 	for (const auto& obj : mGameObjects)
