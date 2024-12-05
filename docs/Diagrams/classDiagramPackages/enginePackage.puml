@@ -113,6 +113,14 @@ package Engine {
         - mObjects : vector<reference_wrapper<GameObject>>
     }
 
+    class UpdateQueue {
+	    + addToUpdateObjects(GameObject& aGameObject) : void
+	    + clearUpdateObjects() : void
+	    + updateAdditions() : void
+	    + updateRemovals() : void
+	    + clearManagerObjects() : void
+    }
+
     EngineBravo *-- "1" SceneManager
     EngineBravo *-- "1" SaveGameManager
     EngineBravo *-- "1" UIManager
@@ -122,5 +130,6 @@ package Engine {
     EngineBravo *-- "1" RenderSystem
     EngineBravo *-- "1" AudioManager
     EngineBravo *-- "1" ParticleSystem
+    EngineBravo *-- "1" UpdateQueue
 }
 @enduml
