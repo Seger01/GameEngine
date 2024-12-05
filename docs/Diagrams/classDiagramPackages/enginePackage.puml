@@ -119,6 +119,7 @@ package Engine {
 	    + updateAdditions() : void
 	    + updateRemovals() : void
 	    + clearManagerObjects() : void
+        - mUpdateObjects : vector<reference_wrapper<GameObject>>
     }
 
     EngineBravo *-- "1" SceneManager
