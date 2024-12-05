@@ -30,7 +30,6 @@ void MixerFacade::loadSound(const std::string& aPath)
 	// Check if the sound is already loaded
 	if (audioIsLoaded(aPath))
 	{
-		std::cout << "Sound already loaded: " << aPath << std::endl;
 		return;
 	}
 	// Load the sound
@@ -130,10 +129,8 @@ void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
 
 void MixerFacade::resumeMusic()
 {
-	std::cout << "Resuming music\n";
 	if (!Mix_PlayingMusic())
 	{
-		std::cout << "Not playing music yet, starting.\n";
 		playMusic(-1);
 	}
 	else
@@ -145,7 +142,6 @@ void MixerFacade::resumeMusic()
 
 void MixerFacade::stopMusic()
 {
-	std::cout << "Stopping music.\n";
 	Mix_HaltMusic();
 	//	Mix_RewindMusic();
 }

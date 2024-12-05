@@ -8,7 +8,7 @@
  * @brief Constructor. Sets the width and height to 800*600 by default.
  */
 Camera::Camera()
-	: GameObject(), mBackgroundColor(Color(0, 0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
+	: GameObject(), mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
 	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0)
 {
 }
