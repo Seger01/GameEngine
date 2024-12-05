@@ -122,28 +122,6 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 	return true;
 }
 
-// Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
-// {
-// 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
-// 	FRect viewport = aCurrentCamera.getViewport();
-//
-// 	Rect screenViewPort =
-// 		Rect{static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
-// 			 static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
-//
-// 	screenPos.x = screenPos.x - screenViewPort.x;
-// 	screenPos.y = screenPos.y - screenViewPort.y;
-//
-// 	Vector2 worldPos;
-// 	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
-// 	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
-//
-// 	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
-// 	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
-//
-// 	return worldPos;
-// }
-
 Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
@@ -438,12 +416,7 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
-	// std::cout << "Camera Tag: " << aCurrentCamera.getTag() << std::endl;
-	// std::cout << "Viewport: " << aCurrentCamera.getViewport().x << ", " << aCurrentCamera.getViewport().y << ", "
-	// 		  << aCurrentCamera.getViewport().w << ", " << aCurrentCamera.getViewport().h << std::endl;
-	// std::cout << "ScreenViewport: " << aScreenViewPort.x << ", " << aScreenViewPort.y << ", " << aScreenViewPort.w
-	// 		  << ", " << aScreenViewPort.h << std::endl;
-	//
+
 	if (aCurrentCamera.getDebugOverlayRef().renderCameraViewport)
 	{
 		mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
@@ -478,85 +451,6 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 			}
 		}
 	}
-
-	// if (config.getConfig(SHOW_COLLIDERS))
-	// {
-	// 	for (auto& gameObject : aScene->getGameObjects())
-	// 	{
-	// 		if (gameObject->hasComponent<BoxCollider>())
-	// 		{
-	// 			for (auto boxCollider : gameObject->getComponents<BoxCollider>())
-	// 			{
-	// 				int spriteWidth = boxCollider->getWidth();
-	// 				int spriteHeight = boxCollider->getHeight();
-	//
-	// 				int WindowWidth = mWindow->getSize().x;
-	// 				int WindowHeight = mWindow->getSize().y;
-	//
-	// 				Vector2 texturePosition =
-	// 					gameObject->getTransform().position + boxCollider->getTransform().position;
-	//
-	// 				Vector2 cameraOrigin = aCurrentCamera.getTransform().position -
-	// 									   Vector2(aCurrentCamera.getWidth() / 2.0f, aCurrentCamera.getHeight() / 2.0f);
-	//
-	// 				Vector2 drawPosition = texturePosition - cameraOrigin;
-	//
-	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-	//
-	// 				spriteWidth = std::ceil(static_cast<int>(
-	// 					static_cast<float>(spriteWidth) *
-	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-	// 				spriteHeight = std::ceil(static_cast<int>(
-	// 					static_cast<float>(spriteHeight) *
-	// 					(static_cast<float>(WindowHeight) / static_cast<float>(aCurrentCamera.getHeight()))));
-	//
-	// 				Color renderColor = Color(0, 0, 255);
-	//
-	// 				if (!boxCollider->isActive())
-	// 				{
-	// 					renderColor = Color(252, 3, 252);
-	// 				}
-	//
-	// 				mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight,
-	// 										gameObject->getTransform().rotation, renderColor, false);
-	// 				// mRenderer->renderSquare(drawPosition, spriteWidth, spriteHeight, renderColor, false);
-	// 			}
-	// 		}
-	// 		if (gameObject->hasComponent<CircleCollider>())
-	// 		{
-	// 			for (auto circleCollider : gameObject->getComponents<CircleCollider>())
-	// 			{
-	// 				int WindowWidth = mWindow->getSize().x;
-	// 				int WindowHeight = mWindow->getSize().y;
-	//
-	// 				Vector2 circlePos = gameObject->getTransform().position + circleCollider->getTransform().position;
-	//
-	// 				float circleRadius = circleCollider->getRadius();
-	//
-	// 				Vector2 cameraOrigin = aCurrentCamera.getOrigin();
-	//
-	// 				Vector2 drawPosition = circlePos - cameraOrigin;
-	//
-	// 				drawPosition.x = drawPosition.x * (static_cast<float>(WindowWidth) / aCurrentCamera.getWidth());
-	// 				drawPosition.y = drawPosition.y * (static_cast<float>(WindowHeight) / aCurrentCamera.getHeight());
-	//
-	// 				circleRadius = std::ceil(static_cast<int>(
-	// 					static_cast<float>(circleRadius) *
-	// 					(static_cast<float>(WindowWidth) / static_cast<float>(aCurrentCamera.getWidth()))));
-	//
-	// 				Color renderColor = Color(0, 0, 255);
-	//
-	// 				if (!circleCollider->isActive())
-	// 				{
-	// 					renderColor = Color(252, 3, 252);
-	// 				}
-	//
-	// 				mRenderer->drawCircle(drawPosition, circleRadius, renderColor, false);
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }
