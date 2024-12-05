@@ -16,15 +16,19 @@
 #include "Time.h"
 #include "UIObject.h"
 
-RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(480)
+RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio(Point{16, 9})
 {
 	mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
 	mRenderer = std::make_unique<Renderer>(*mWindow);
 
-	mBackgroundColor = Color(0, 0, 0);
+	mBackgroundColor = Color(255, 255, 255);
 
 	return;
 }
+
+void RenderSystem::setAspectRatio(Point aAspectRatio) { mAspectRatio = aAspectRatio; }
+
+Point RenderSystem::getAspectRatio() { return mAspectRatio; }
 
 void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort)
 {
@@ -118,24 +122,65 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 	return true;
 }
 
+// Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
+// {
+// 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
+// 	FRect viewport = aCurrentCamera.getViewport();
+//
+// 	Rect screenViewPort =
+// 		Rect{static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
+// 			 static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
+//
+// 	screenPos.x = screenPos.x - screenViewPort.x;
+// 	screenPos.y = screenPos.y - screenViewPort.y;
+//
+// 	Vector2 worldPos;
+// 	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
+// 	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
+//
+// 	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
+// 	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
+//
+// 	return worldPos;
+// }
+
 Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
 	FRect viewport = aCurrentCamera.getViewport();
 
+	// Determine the actual screen viewport after letterboxing/pillarboxing
 	Rect screenViewPort =
 		Rect{static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
 			 static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
 
+	if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Letterbox
+		int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
+		screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * viewport.y);
+		screenViewPort.h = newHeight * viewport.h;
+	}
+	else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Pillarbox
+		int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
+		screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * viewport.x);
+		screenViewPort.w = newWidth * viewport.w;
+	}
+
+	// Adjust screen position to viewport coordinates
 	screenPos.x = screenPos.x - screenViewPort.x;
 	screenPos.y = screenPos.y - screenViewPort.y;
 
+	// Convert screen position to world position
 	Vector2 worldPos;
-	worldPos.x = screenPos.x * (aCurrentCamera.getWidth() / (viewport.w * mWindow->getSize().x));
-	worldPos.y = screenPos.y * (aCurrentCamera.getHeight() / (viewport.h * mWindow->getSize().y));
+	worldPos.x = (screenPos.x / screenViewPort.w) * aCurrentCamera.getWidth();
+	worldPos.y = (screenPos.y / screenViewPort.h) * aCurrentCamera.getHeight();
 
-	worldPos.x = worldPos.x + aCurrentCamera.getOrigin().x;
-	worldPos.y = worldPos.y + aCurrentCamera.getOrigin().y;
+	// Offset by the camera's origin
+	worldPos.x += aCurrentCamera.getOrigin().x;
+	worldPos.y += aCurrentCamera.getOrigin().y;
 
 	return worldPos;
 }
@@ -293,11 +338,27 @@ void RenderSystem::render(Scene* aScene)
 	for (Camera* camera : cameras)
 	{
 
-		FRect viewport = camera->getViewport();
+		FRect cameraViewport = camera->getViewport();
 
-		Rect screenViewPort = Rect{
-			static_cast<int>(viewport.x * mWindow->getSize().x), static_cast<int>(viewport.y * mWindow->getSize().y),
-			static_cast<int>(viewport.w * mWindow->getSize().x), static_cast<int>(viewport.h * mWindow->getSize().y)};
+		Rect screenViewPort = Rect{static_cast<int>(cameraViewport.x * mWindow->getSize().x),
+								   static_cast<int>(cameraViewport.y * mWindow->getSize().y),
+								   static_cast<int>(cameraViewport.w * mWindow->getSize().x),
+								   static_cast<int>(cameraViewport.h * mWindow->getSize().y)};
+
+		if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
+		{
+			// Letterbox
+			int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
+			screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * cameraViewport.y);
+			screenViewPort.h = newHeight * cameraViewport.h;
+		}
+		else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
+		{
+			// Pillarbox
+			int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
+			screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * cameraViewport.x);
+			screenViewPort.w = newWidth * cameraViewport.w;
+		}
 
 		mRenderer->setViewport(screenViewPort);
 

@@ -16,6 +16,9 @@ class RenderSystem
 public:
 	RenderSystem();
 
+	void setAspectRatio(Point aAspectRatio);
+	Point getAspectRatio();
+
 	void renderLayer(Scene* aScene, int aLayer, Camera& aCurrentCamera, Rect aScreenViewPort);
 	void render(Scene* aScene);
 
@@ -56,6 +59,8 @@ private:
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
 	std::unique_ptr<Renderer> mRenderer;
 	std::unique_ptr<Window> mWindow;
+
+	Point mAspectRatio;
 
 	int WindowWidth;
 	int WindowHeight;
