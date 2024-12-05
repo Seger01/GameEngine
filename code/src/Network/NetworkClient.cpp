@@ -338,7 +338,6 @@ void NetworkClient::sendCustomSerialize()
 				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
 				networkPacket.networkBehaviourID = networkBehaviour->getNetworkBehaviourID();
 				networkPacket.networkVariableID = i;
-
 				networkBehaviour->GetNetworkVariables().at(i).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 				sendToServer(bs);
@@ -355,10 +354,6 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 	for (auto gameObject : mObjects)
 	{
 		NetworkObject* networkObject = gameObject.get().getComponents<NetworkObject>()[0];
-		if (!networkObject->isOwner()) // if owner do not overwrite with value from other instances
-		{
-			continue;
-		}
 		if (networkPacket.clientGUID != networkObject->getClientGUID())
 		{ // check client ID
 			continue;
