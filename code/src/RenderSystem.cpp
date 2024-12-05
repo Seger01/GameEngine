@@ -33,17 +33,16 @@ void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& 
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = texturePosition - cameraOrigin;
 
-	// SDL_Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
-	// 					   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
-	//
-	// SDL_Rect spriteRect = {static_cast<int>(drawPosition.x), static_cast<int>(drawPosition.y), aSprite->getWidth(),
-	// 					   aSprite->getHeight()};
+	Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
+					   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
 
-	// // Perform culling: check if the sprite is outside the camera's view
-	// if (!SDL_HasIntersection(&cameraRect, &spriteRect))
-	// {
-	// 	return; // Skip rendering
-	// }
+	Rect spriteRect = {static_cast<int>(texturePosition.x), static_cast<int>(texturePosition.y), aSprite.getWidth(),
+					   aSprite.getHeight()};
+
+	if (!cameraRect.intersects(spriteRect))
+	{
+		return;
+	}
 
 	// Adjust draw position and size to the viewport
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
