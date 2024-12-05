@@ -18,6 +18,8 @@ public:
 
 	void playSound(const std::string& aPath, bool aLooping, unsigned aVolume, int aDirection) override;
 	void playMusic(int aVolume) override;
+	void pauseMusic() override;
+	void resumeMusic() override;
 	void stopMusic() override;
 
 	bool isPlaying(const std::string& aPath) const override;

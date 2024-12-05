@@ -8,7 +8,8 @@
  * @brief Constructor. Sets the width and height to 800*600 by default.
  */
 Camera::Camera()
-	: GameObject(), mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1})
+	: GameObject(), mBackgroundColor(Color(0, 0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
+	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0)
 {
 }
 
@@ -39,3 +40,13 @@ Vector2 Camera::getOrigin() const
 void Camera::setViewport(const FRect& viewport) { mViewport = viewport; }
 
 FRect Camera::getViewport() const { return mViewport; }
+
+void Camera::setDebugOverlay(const CameraDebugOverlay& debugOverlay) { mDebugOverlay = debugOverlay; }
+
+CameraDebugOverlay Camera::getDebugOverlay() const { return mDebugOverlay; }
+
+CameraDebugOverlay& Camera::getDebugOverlayRef() { return mDebugOverlay; }
+
+void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
+
+uint Camera::getRenderOrder() const { return mRenderOrder; }

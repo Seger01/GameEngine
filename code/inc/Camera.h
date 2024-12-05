@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "CameraDebugOverlay.h"
 #include "Color.h"
 #include "FRect.h"
 #include "GameObject.h"
@@ -32,7 +33,16 @@ public:
 	void setViewport(const FRect& viewport);
 	FRect getViewport() const;
 
+	void setDebugOverlay(const CameraDebugOverlay& debugOverlay);
+	CameraDebugOverlay getDebugOverlay() const;
+	CameraDebugOverlay& getDebugOverlayRef();
+
+	void setRenderOrder(uint aRenderOrder);
+	uint getRenderOrder() const;
+
 private:
+	uint mRenderOrder; // position in the camera render queue
+
 	/// @brief Background color, used to render every place where there is no renderable object.
 	Color mBackgroundColor;
 	/// @brief Width of the camera, in game units.
@@ -41,4 +51,6 @@ private:
 	int mHeight;
 	/// @brief Portion of the screen this camera renders to
 	FRect mViewport;
+
+	CameraDebugOverlay mDebugOverlay;
 };

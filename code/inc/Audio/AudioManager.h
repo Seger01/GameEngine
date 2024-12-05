@@ -13,8 +13,10 @@ public:
 	AudioManager();
 
 public:
-	void play(const AudioSource& aAudio);
-	void stop(const AudioSource& aAudio);
+	void play(const AudioSource& aSource);
+	void pause(const AudioSource& aSource);
+	void resume(const AudioSource& aSource);
+	void stop(const AudioSource& aSource);
 	void wake();
 
 public:
