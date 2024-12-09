@@ -122,7 +122,7 @@ Note: GoogleTest and GoogleMock libraries must be installed on your system to bu
 
 2. Run the Doxygen target
 ```sh
-    cmake . --build . --target Doxygen
+    cmake --build . --target Doxygen
 ```
 
 The Doxygen output will be placed under code/build/doxygen/html. Open the index.html file to go to docs' mainpage.
