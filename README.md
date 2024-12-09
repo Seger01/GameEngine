@@ -113,3 +113,16 @@ Note: GoogleTest and GoogleMock libraries must be installed on your system to bu
 ```sh
     sudo make install
 ```
+
+# How to generate Doxygen documentation
+1. Go to the build folder:
+```sh
+    cd code/build
+```
+
+2. Run the Doxygen target
+```sh
+    cmake . --build . --target Doxygen
+```
+
+The Doxygen output will be placed under code/build/doxygen/html. Open the index.html file to go to docs' mainpage.
