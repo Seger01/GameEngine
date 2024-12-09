@@ -90,7 +90,7 @@ Sprite* ResourceManager::createSprite(SpriteDef aSpriteDef)
 	Sprite* createdSprite = nullptr;
 
 	createdSprite =
-		new Sprite(loadTexture(aSpriteDef.texturePath), aSpriteDef.width, aSpriteDef.height, aSpriteDef.sourceRect);
+		new Sprite(*loadTexture(aSpriteDef.texturePath), aSpriteDef.width, aSpriteDef.height, aSpriteDef.sourceRect);
 
 	return createdSprite;
 }

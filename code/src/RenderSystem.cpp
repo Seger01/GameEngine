@@ -75,7 +75,7 @@ void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& 
 	int spriteHeight = std::round(aSprite.getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
 	// Render
-	mRenderer->renderTexture(*aSprite.getTexture(), aSprite.getSource(), drawPosition, spriteWidth, spriteHeight,
+	mRenderer->renderTexture(aSprite.getTexture(), aSprite.getSource(), drawPosition, spriteWidth, spriteHeight,
 							 aSprite.getFlipX(), aSprite.getFlipY(),
 							 aGameObject.getTransform().rotation + aSprite.getRelativePosition().rotation,
 							 aSprite.getColorFilter());

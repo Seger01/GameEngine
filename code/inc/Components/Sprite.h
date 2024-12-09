@@ -20,7 +20,8 @@
 class Sprite : public Component
 {
 public:
-	Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect(), std::string aTag = "defaultSprite");
+	Sprite(const Texture& aTexture, int aWidth, int aHeight, const Rect& aSourceRect = Rect(),
+		   const std::string& aTag = "defaultSprite");
 	~Sprite();
 
 	// Rule of Five
@@ -32,13 +33,13 @@ public:
 	// Override the clone method
 	std::unique_ptr<Component> clone() const override;
 
-	Texture* getTexture() const;
+	const Texture& getTexture() const;
 
 	Transform getRelativePosition() const;
-	void setRelativePosition(Transform aNewTransform);
+	void setRelativePosition(const Transform& aNewTransform);
 
-	Rect getSource() const;
-	void setSource(Rect aSourceRect);
+	const Rect& getSource() const;
+	void setSource(const Rect& aSourceRect);
 
 	Color getColorFilter() const;
 	void setColorFilter(Color aColor);
@@ -66,15 +67,14 @@ public:
 private:
 	Transform mTransform; // Relative position to the parent GameObject
 
-	Texture* mTexture = nullptr; // Pointer to the texture
-	Rect mSourceRect;			 // Source rectangle of the texture
-	Color mColorFilter;			 // Color filter of the sprite
+	const Texture& mTexture; // Pointer to the texture
+	Rect mSourceRect;		 // Source rectangle of the texture
+	Color mColorFilter;		 // Color filter of the sprite
 
-	std::string mSprite; // Tag of the sprite
-	float mWidth = 0;	 // Width of the sprite
-	float mHeight = 0;	 // Height of the sprite
-	bool mFlipX;		 // Whether the sprite should flip horizontally
-	bool mFlipY;		 // Whether the sprite should flip vertically
+	float mWidth = 0;  // Width of the sprite
+	float mHeight = 0; // Height of the sprite
+	bool mFlipX;	   // Whether the sprite should flip horizontally
+	bool mFlipY;	   // Whether the sprite should flip vertically
 
 	int mLayer = 0; // Layer of the sprite
 };
