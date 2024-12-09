@@ -119,3 +119,32 @@ if(ENABLE_TESTS)
     # Add the test subdirectory
     add_subdirectory(test)
 endif()
+
+# Add a custom target for Doxygen
+find_package(Doxygen REQUIRED)
+
+if(DOXYGEN_FOUND)
+    # Paths
+    set(DOXYFILE_PATH "${CMAKE_SOURCE_DIR}/../Doxyfile")
+    set(DOXYGEN_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/doxygen")
+
+    # Create the output directory if it doesn't exist
+    file(MAKE_DIRECTORY "${DOXYGEN_OUTPUT_DIR}")
+
+    # Configure the custom command to run Doxygen
+    add_custom_command(
+        OUTPUT ${DOXYGEN_OUTPUT_DIR}/html/index.html
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+
+    # Create a custom target to invoke the custom command
+    add_custom_target(
+        Doxygen ALL
+        DEPENDS ${DOXYGEN_OUTPUT_DIR}/html/index.html
+    )
+else()
+    message(FATAL_ERROR "Doxygen is required but was not found on the system.")
+endif()
