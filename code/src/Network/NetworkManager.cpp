@@ -215,7 +215,7 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
 	networkObjects[0]->setClientGUID(packet.clientGUID); // Assign unique ID to player
-	if (packet.networkObjectID != -1)
+	if (packet.networkObjectID != UINT16_MAX)
 	{
 		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
 	}
