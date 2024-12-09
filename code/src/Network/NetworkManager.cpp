@@ -1,11 +1,25 @@
+/**
+ * @file NetworkManager.cpp
+ * @brief Implementation of the NetworkManager class responsible for managing network roles and operations.
+ */
+
 #include "Network/NetworkManager.h"
+
 #include "Network/NetworkObject.h"
 
 #include "Engine/EngineBravo.h"
 #include "Engine/SceneManager.h"
 
-NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false) {}
+#include <stdexcept>
 
+/**
+ * @brief Constructs a NetworkManager with default role and tick rate.
+ */
+NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60) {}
+
+/**
+ * @brief Starts the network based on the assigned role.
+ */
 void NetworkManager::startNetwork()
 {
 	if (mRole == NetworkRole::SERVER)
@@ -22,10 +36,20 @@ void NetworkManager::startNetwork()
 	}
 }
 
+/**
+ * @brief Shuts down the network manager.
+ * @throws std::runtime_error Always throws as the function is not implemented.
+ */
 void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shutdown() not implemented"); }
 
+/**
+ * @brief Initializes the network manager by starting the network.
+ */
 void NetworkManager::initialize() { startNetwork(); }
 
+/**
+ * @brief Updates the network manager based on the current role.
+ */
 void NetworkManager::update()
 {
 	if (mRole == NetworkRole::SERVER && mServer)
@@ -42,6 +66,11 @@ void NetworkManager::update()
 	}
 }
 
+/**
+ * @brief Gets the server instance.
+ * @return Reference to the NetworkServer.
+ * @throws std::runtime_error If the server is not running.
+ */
 NetworkServer& NetworkManager::getServer() const
 {
 	if (!mServer)
@@ -51,6 +80,11 @@ NetworkServer& NetworkManager::getServer() const
 	return *mServer;
 }
 
+/**
+ * @brief Gets the client instance.
+ * @return Reference to the NetworkClient.
+ * @throws std::runtime_error If the client is not running.
+ */
 NetworkClient& NetworkManager::getClient() const
 {
 	if (!mClient)
@@ -60,6 +94,11 @@ NetworkClient& NetworkManager::getClient() const
 	return *mClient;
 }
 
+/**
+ * @brief Gets the host instance.
+ * @return Reference to the NetworkHost.
+ * @throws std::runtime_error If the host is not running.
+ */
 NetworkHost& NetworkManager::getHost() const
 {
 	if (!mHost)
@@ -69,14 +108,35 @@ NetworkHost& NetworkManager::getHost() const
 	return *mHost;
 }
 
+/**
+ * @brief Checks if the current role is server.
+ * @return True if the role is server, false otherwise.
+ */
 bool NetworkManager::isServer() const { return mRole == NetworkRole::SERVER; }
 
+/**
+ * @brief Checks if the current role is client.
+ * @return True if the role is client, false otherwise.
+ */
 bool NetworkManager::isClient() const { return mRole == NetworkRole::CLIENT; }
 
+/**
+ * @brief Checks if the current role is host.
+ * @return True if the role is host, false otherwise.
+ */
 bool NetworkManager::isHost() const { return mRole == NetworkRole::HOST; }
 
+/**
+ * @brief Checks if the network manager is networked (server, client, or host).
+ * @return True if networked, false otherwise.
+ */
 bool NetworkManager::isNetworked() const { return isServer() || isClient() || isHost(); }
 
+/**
+ * @brief Checks if the network manager is connected.
+ * @return True if connected, false otherwise.
+ * @throws std::runtime_error If the role is host and the function is not implemented.
+ */
 bool NetworkManager::isConnected() const
 {
 	if (mRole == NetworkRole::SERVER)
@@ -94,17 +154,22 @@ bool NetworkManager::isConnected() const
 	return false;
 }
 
+/**
+ * @brief Sets the tick rate for the network manager.
+ * @param aTickRate The tick rate to set.
+ */
 void NetworkManager::setTickRate(int aTickRate) { mTickRate = aTickRate; }
 
+/**
+ * @brief Gets the current tick rate.
+ * @return The current tick rate.
+ */
 int NetworkManager::getTickRate() const { return mTickRate; }
 
-void NetworkManager::setEnableSceneManagement(bool aEnableSceneManagement)
-{
-	mEnableSceneManagement = aEnableSceneManagement;
-}
-
-bool NetworkManager::getEnableSceneManagement() const { return mEnableSceneManagement; }
-
+/**
+ * @brief Sets the default player prefab.
+ * @param aDefaultPlayerPrefab Pointer to the default player prefab.
+ */
 void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab)
 {
 	if (!aDefaultPlayerPrefab->hasComponent<NetworkObject>())
@@ -115,8 +180,18 @@ void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab)
 	mDefaultPlayerPrefab.reset(aDefaultPlayerPrefab);
 }
 
+/**
+ * @brief Gets the default player prefab.
+ * @return Reference to the default player prefab.
+ */
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
+/**
+ * @brief Instantiates a player based on the provided network packet.
+ * @param packet The network packet containing player information.
+ * @return Pointer to the instantiated player.
+ * @throws std::runtime_error If the player prefab is not set or does not have a NetworkObject component.
+ */
 GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 {
 	if (!mDefaultPlayerPrefab)
@@ -150,6 +225,10 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	return player;
 }
 
+/**
+ * @brief Destroys a player based on the provided player ID.
+ * @param playerID The ID of the player to destroy.
+ */
 void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 {
 	for (auto object : mObjects)
@@ -163,12 +242,28 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 	}
 }
 
+/**
+ * @brief Sets the network role.
+ * @param aRole The role to set.
+ */
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
 
+/**
+ * @brief Gets the current network role.
+ * @return The current network role.
+ */
 NetworkRole NetworkManager::getRole() const { return mRole; }
 
+/**
+ * @brief Gets the list of game objects managed by the network manager.
+ * @return Reference to the vector of game objects.
+ */
 std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getGameObjects() { return mObjects; }
 
+/**
+ * @brief Starts the server.
+ * @throws std::runtime_error If the client or host is already running, or if the server is already running.
+ */
 void NetworkManager::startServer()
 {
 	if (mClient || mHost)
@@ -182,6 +277,10 @@ void NetworkManager::startServer()
 	mServer = std::make_unique<NetworkServer>(mObjects, mTickRate);
 }
 
+/**
+ * @brief Starts the client.
+ * @throws std::runtime_error If the server or host is already running, or if the client is already running.
+ */
 void NetworkManager::startClient()
 {
 	if (mServer || mHost)
@@ -195,6 +294,10 @@ void NetworkManager::startClient()
 	mClient = std::make_unique<NetworkClient>(mObjects, mTickRate);
 }
 
+/**
+ * @brief Starts the host.
+ * @throws std::runtime_error If the server or client is already running, or if the host is already running.
+ */
 void NetworkManager::startHost() {
     if (mServer || mClient) {
         throw std::runtime_error("Cannot start host when server or client is already running");
@@ -205,6 +308,10 @@ void NetworkManager::startHost() {
 	mHost = std::make_unique<NetworkHost>(mObjects, mTickRate);
 }
 
+/**
+ * @brief Adds a game object to the network manager.
+ * @param aObject The game object to add.
+ */
 void NetworkManager::addObject(GameObject& aObject)
 {
 	auto it = std::find_if(mObjects.begin(), mObjects.end(),
@@ -219,6 +326,10 @@ void NetworkManager::addObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Removes a game object from the network manager.
+ * @param aObject The game object to remove.
+ */
 void NetworkManager::removeObject(GameObject& aObject)
 {
 	auto it =
@@ -230,6 +341,13 @@ void NetworkManager::removeObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Gets the list of game objects managed by the network manager.
+ * @return Const reference to the vector of game objects.
+ */
 const std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getObjects() const { return mObjects; }
 
+/**
+ * @brief Clears all game objects managed by the network manager.
+ */
 void NetworkManager::clearObjects() { mObjects.clear(); }

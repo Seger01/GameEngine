@@ -1,3 +1,8 @@
+/**
+ * @file NetworkClient.cpp
+ * @brief Implementation of the NetworkClient class.
+ */
+
 #include "NetworkClient.h"
 
 #include "Network/INetworkBehaviour.h"
@@ -16,6 +21,11 @@
 #include <slikenet/peerinterface.h>
 #include <stdexcept>
 
+/**
+ * @brief Constructs a NetworkClient object.
+ * @param aObjects Reference to a vector of GameObjects.
+ * @param aTickRate Tick rate for sending packets.
+ */
 NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
 	: mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
 	  mIsConnecting(false), mServerAddress("0.0.0.0"), mObjects(aObjects), mTickRate(aTickRate),
@@ -31,6 +41,9 @@ NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aO
 	std::cout << "Client started\n";
 }
 
+/**
+ * @brief Destructor for NetworkClient.
+ */
 NetworkClient::~NetworkClient()
 {
 	if (mClient->IsActive())
@@ -40,6 +53,9 @@ NetworkClient::~NetworkClient()
 	}
 }
 
+/**
+ * @brief Connects to the server.
+ */
 void NetworkClient::connectToServer()
 {
 	if (mIsConnected || mIsConnecting)
@@ -57,6 +73,9 @@ void NetworkClient::connectToServer()
 	}
 }
 
+/**
+ * @brief Updates the network client, handling incoming packets and sending packets.
+ */
 void NetworkClient::update()
 {
 	if (!mClient->IsActive())
@@ -67,14 +86,25 @@ void NetworkClient::update()
 	sendPackets();
 }
 
+/**
+ * @brief Discovers available servers.
+ */
 void NetworkClient::discoverServers()
 {
 	mClient->Ping("255.255.255.255", SERVER_PORT, false); // Send discovery ping to the broadcast address
 	mServerAddresses.clear();
 }
 
+/**
+ * @brief Gets the list of discovered server addresses.
+ * @return Reference to a vector of server addresses.
+ */
 std::vector<std::string>& NetworkClient::getServerAddresses() { return mServerAddresses; }
 
+/**
+ * @brief Sets the server address to connect to.
+ * @param aServerAddress The server address.
+ */
 void NetworkClient::setServerAddress(std::string aServerAddress)
 {
 	const std::regex ipPattern(
@@ -87,8 +117,15 @@ void NetworkClient::setServerAddress(std::string aServerAddress)
 	mServerAddress = aServerAddress;
 }
 
+/**
+ * @brief Checks if the client is connected to the server.
+ * @return True if connected, false otherwise.
+ */
 bool NetworkClient::isConnected() const { return mIsConnected; }
 
+/**
+ * @brief Sends packets to the server at the specified tick rate.
+ */
 void NetworkClient::sendPackets()
 {
 	auto now = std::chrono::steady_clock::now();
@@ -103,7 +140,66 @@ void NetworkClient::sendPackets()
 	mLastSendPacketsTime = now;
 }
 
-void NetworkClient::requestPlayerInstantiation()
+/**
+ * @brief Sends a bitstream to the server.
+ * @param aBitStream The bitstream to send.
+ */
+void NetworkClient::sendToServer(SLNet::BitStream& aBitStream)
+{
+	mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
+}
+
+/**
+ * @brief Sends transform data of owned game objects to the server.
+ */
+void NetworkClient::sendTransform()
+{
+	for (GameObject& gameObject : mObjects)
+	{
+		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
+		if (!networkObject->isOwner())
+		{
+			continue;
+		}
+		if (gameObject.hasComponent<NetworkTransform>())
+		{
+			Transform transform = gameObject.getTransform();
+			NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
+			SLNet::BitStream bs;
+			NetworkSharedFunctions::makeBitStream(bs);
+			NetworkPacket networkPacket;
+			networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
+			networkPacket.networkObjectID = networkObject->getNetworkObjectID();
+			NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+			if (networkTransform->getSendPositionX())
+			{
+				bs.Write(transform.position.x);
+			}
+			if (networkTransform->getSendPositionY())
+			{
+				bs.Write(transform.position.y);
+			}
+			if (networkTransform->getSendRotation())
+			{
+				bs.Write(transform.rotation);
+			}
+			if (networkTransform->getSendScaleX())
+			{
+				bs.Write(transform.scale.x);
+			}
+			if (networkTransform->getSendScaleY())
+			{
+				bs.Write(transform.scale.y);
+			}
+			sendToServer(bs);
+		}
+	}
+}
+
+/**
+ * @brief Sends player initialization data to the server.
+ */
+void NetworkClient::sendPlayerInit()
 {
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::makeBitStream(bs);
@@ -115,6 +211,53 @@ void NetworkClient::requestPlayerInstantiation()
 	sendToServer(bs);
 }
 
+/**
+ * @brief Sends custom serialized data of owned game objects to the server.
+ */
+void NetworkClient::sendCustomSerialize()
+{
+	for (auto gameObject : mObjects)
+	{
+		auto networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		if (!networkObject->isOwner())
+		{
+			continue;
+		}
+		if (!gameObject.get().hasComponent<INetworkBehaviour>())
+		{
+			continue;
+		}
+		for (INetworkBehaviour* networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
+		{
+			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
+			{
+				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not
+				// 																	// send it
+				// {
+				// 	continue;
+				// }
+				SLNet::BitStream bs;
+				NetworkSharedFunctions::makeBitStream(bs);
+				NetworkPacket networkPacket;
+				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
+				networkPacket.networkObjectID =
+					gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID();
+				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i).get().getTypeId();
+				networkPacket.SetTimeStampNow();
+				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
+				networkPacket.networkBehaviourID = networkBehaviour->getNetworkBehaviourID();
+				networkPacket.networkVariableID = i;
+				networkBehaviour->GetNetworkVariables().at(i).get().serialize(bs);
+				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+				sendToServer(bs);
+			}
+		}
+	}
+}
+
+/**
+ * @brief Handles incoming packets from the server.
+ */
 void NetworkClient::handleIncomingPackets()
 {
 	SLNet::Packet* packet;
@@ -127,7 +270,7 @@ void NetworkClient::handleIncomingPackets()
 			mIsConnected = true;
 			mIsConnecting = false;
 			mServerGUID = packet->guid;
-			requestPlayerInstantiation();
+			sendPlayerInit();
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
 			std::cout << "Connection attempt failed. Retrying...\n";
@@ -177,51 +320,10 @@ void NetworkClient::handleIncomingPackets()
 	}
 }
 
-void NetworkClient::sendTransform()
-{
-
-	for (GameObject& gameObject : mObjects)
-	{
-		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
-		if (!networkObject->isOwner())
-		{
-			continue;
-		}
-		if (gameObject.hasComponent<NetworkTransform>())
-		{
-			Transform transform = gameObject.getTransform();
-			NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
-			SLNet::BitStream bs;
-			NetworkSharedFunctions::makeBitStream(bs);
-			NetworkPacket networkPacket;
-			networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
-			networkPacket.networkObjectID = networkObject->getNetworkObjectID();
-			NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-			if (networkTransform->getSendPositionX())
-			{
-				bs.Write(transform.position.x);
-			}
-			if (networkTransform->getSendPositionY())
-			{
-				bs.Write(transform.position.y);
-			}
-			if (networkTransform->getSendRotation())
-			{
-				bs.Write(transform.rotation);
-			}
-			if (networkTransform->getSendScaleX())
-			{
-				bs.Write(transform.scale.x);
-			}
-			if (networkTransform->getSendScaleY())
-			{
-				bs.Write(transform.scale.y);
-			}
-			sendToServer(bs);
-		}
-	}
-}
-
+/**
+ * @brief Handles transform packets from the server.
+ * @param aPacket The packet containing transform data.
+ */
 void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
@@ -270,6 +372,10 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 	}
 }
 
+/**
+ * @brief Handles player instantiation packets from the server.
+ * @param aPacket The packet containing player instantiation data.
+ */
 void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
@@ -298,54 +404,10 @@ void NetworkClient::handlePlayerInstantiation(SLNet::Packet* aPacket)
 	}
 }
 
-void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket)
-{
-	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
-	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
-	EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
-}
-
-void NetworkClient::sendCustomSerialize()
-{
-	for (auto gameObject : mObjects)
-	{
-		auto networkObject = gameObject.get().getComponents<NetworkObject>()[0];
-		if (!networkObject->isOwner())
-		{
-			continue;
-		}
-		if (!gameObject.get().hasComponent<INetworkBehaviour>())
-		{
-			continue;
-		}
-		for (INetworkBehaviour* networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
-		{
-			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
-			{
-				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not
-				// 																	// send it
-				// {
-				// 	continue;
-				// }
-				SLNet::BitStream bs;
-				NetworkSharedFunctions::makeBitStream(bs);
-				NetworkPacket networkPacket;
-				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
-				networkPacket.networkObjectID =
-					gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID();
-				networkPacket.ISerializableID = networkBehaviour->GetNetworkVariables().at(i).get().getTypeId();
-				networkPacket.SetTimeStampNow();
-				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0]->getClientGUID();
-				networkPacket.networkBehaviourID = networkBehaviour->getNetworkBehaviourID();
-				networkPacket.networkVariableID = i;
-				networkBehaviour->GetNetworkVariables().at(i).get().serialize(bs);
-				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-				sendToServer(bs);
-			}
-		}
-	}
-}
-
+/**
+ * @brief Handles custom serialization packets from the server.
+ * @param aPacket The packet containing custom serialization data.
+ */
 void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
@@ -379,7 +441,13 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 	}
 }
 
-void NetworkClient::sendToServer(SLNet::BitStream& aBitStream)
+/**
+ * @brief Handles player destruction packets from the server.
+ * @param aPacket The packet containing player destruction data.
+ */
+void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket)
 {
-	mClient->Send(&aBitStream, MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, mServerGUID, false);
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+	EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
 }

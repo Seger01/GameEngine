@@ -1,9 +1,13 @@
+/**
+ * @file NetworkServer.h
+ * @brief Header file for the NetworkServer class.
+ */
+
 #ifndef NETWORKSERVER_H
 #define NETWORKSERVER_H
 
-#include "NetworkClient.h"
-
 #include "GameObject.h"
+#include "NetworkClient.h"
 
 #include <chrono>
 #include <list>
@@ -12,6 +16,10 @@
 #include <slikenet/types.h>
 #include <vector>
 
+/**
+ * @class NetworkServer
+ * @brief Manages the server-side networking for the game.
+ */
 class NetworkServer {
 public:
 	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
@@ -24,23 +32,36 @@ private:
 
 	void sendTransform();
 	void sendCustomSerialize();
-	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
-	void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
-	void spawnNewPlayer(SLNet::Packet* aPacket);
+	void sendPlayerInit(SLNet::RakNetGUID playerID);
 
-	void onClientDisconnected(SLNet::RakNetGUID aClientID);
 	void handleTransform(SLNet::Packet* aPacket);
 	void handleCustomSerialize(SLNet::Packet* aPacket);
+	void handlePlayerInit(SLNet::Packet* aPacket);
+	void handleClientDisconnect(SLNet::RakNetGUID aClientID);
 
 	void sendToAllClients(SLNet::BitStream& aBitStream);
+	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
 
 private:
-    std::vector<std::reference_wrapper<GameObject>>& mObjects;
+	/**
+	 * @brief Reference to the game objects managed by the server.
+	 */
+	std::vector<std::reference_wrapper<GameObject>>& mObjects;
 
-    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;
-    std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
+	/**
+	 * @brief Unique pointer to the RakNet peer interface for the server.
+	 */
+	std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mServer;
 
-    int mTickRate;
+	/**
+	 * @brief Time point of the last packet sent.
+	 */
+	std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
+
+	/**
+	 * @brief Tick rate for the server updates.
+	 */
+	int mTickRate;
 };
 
 #endif // NETWORKSERVER_H

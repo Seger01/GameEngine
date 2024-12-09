@@ -1,7 +1,14 @@
+/**
+ * @file NetworkSharedFunctions.cpp
+ * @brief Contains the implementation of the NetworkSharedFunctions class.
+ */
 #include "Network/NetworkSharedFunctions.h"
 
-#include <iostream>
-
+/**
+ * @brief Creates a bit stream from a network packet.
+ *
+ * @param aBitStream The bit stream to be created.
+ */
 void NetworkSharedFunctions::makeBitStream(SLNet::BitStream& aBitStream) {
     NetworkPacket networkPacket;
     aBitStream.Reset();
@@ -15,6 +22,12 @@ void NetworkSharedFunctions::makeBitStream(SLNet::BitStream& aBitStream) {
     aBitStream.Write(networkPacket.networkVariableID);
 }
 
+/**
+ * @brief Extracts data from a bit stream into a network packet.
+ *
+ * @param aBitStream The bit stream to extract data from.
+ * @return NetworkPacket The extracted network packet.
+ */
 NetworkPacket NetworkSharedFunctions::getBitStreamData(SLNet::BitStream& aBitStream) {
     NetworkPacket networkPacket;
     aBitStream.Read(networkPacket.messageID);
@@ -28,6 +41,12 @@ NetworkPacket NetworkSharedFunctions::getBitStreamData(SLNet::BitStream& aBitStr
     return networkPacket;
 }
 
+/**
+ * @brief Sets the bit stream with the given network packet data.
+ *
+ * @param aBitStream The bit stream to be set.
+ * @param aNetworkPacket The network packet containing the data.
+ */
 void NetworkSharedFunctions::setBitStreamNetworkPacket(SLNet::BitStream& aBitStream,
                                                        const NetworkPacket& aNetworkPacket) {
     SLNet::BitSize_t WriteOffset = aBitStream.GetWriteOffset();

@@ -1,11 +1,19 @@
+/**
+ * @file NetworkSharedFunctions.h
+ * @brief Contains the declaration of the NetworkSharedFunctions class.
+ */
+
 #ifndef NETWORKSHAREDFUNCTIONS_H
 #define NETWORKSHAREDFUNCTIONS_H
 
 #include "Network/NetworkInformation.h"
-
 #include <chrono>
 #include <slikenet/BitStream.h>
 
+/**
+ * @class NetworkSharedFunctions
+ * @brief Provides shared network functions for the NetworkServer and NetworkClient classes.
+ */
 class NetworkSharedFunctions {
 public:
 private:
