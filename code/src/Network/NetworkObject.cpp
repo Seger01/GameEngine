@@ -13,9 +13,9 @@ int NetworkObject::networkObjectIDCounter = 0;
  * @param aTag The tag for the NetworkObject.
  */
 NetworkObject::NetworkObject(std::string aTag)
-	: Component{aTag}, mIsOwner(false), mClientGUID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false)
+	: Component{aTag}, mIsOwner(false), mClientGUID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
+	  mNetworkObjectID(networkObjectIDCounter++)
 {
-	mNetworkObjectID = networkObjectIDCounter++;
 }
 
 /**
@@ -32,10 +32,12 @@ NetworkObject::NetworkObject(const NetworkObject& other)
  * @param other The NetworkObject to copy from.
  * @return A reference to this NetworkObject.
  */
-NetworkObject& NetworkObject::operator=(const NetworkObject& other) {
-    if (this != &other) {
-        Component::operator=(other);
-        mIsOwner = other.mIsOwner;
+NetworkObject& NetworkObject::operator=(const NetworkObject& other)
+{
+	if (this != &other)
+	{
+		Component::operator=(other);
+		mIsOwner = other.mIsOwner;
 		mClientGUID = other.mClientGUID;
 		mIsPlayer = other.mIsPlayer;
 	}
@@ -59,10 +61,12 @@ NetworkObject::NetworkObject(NetworkObject&& other) noexcept
  * @param other The NetworkObject to move from.
  * @return A reference to this NetworkObject.
  */
-NetworkObject& NetworkObject::operator=(NetworkObject&& other) noexcept {
-    if (this != &other) {
-        Component::operator=(std::move(other));
-        mIsOwner = other.mIsOwner;
+NetworkObject& NetworkObject::operator=(NetworkObject&& other) noexcept
+{
+	if (this != &other)
+	{
+		Component::operator=(std::move(other));
+		mIsOwner = other.mIsOwner;
 		mClientGUID = other.mClientGUID;
 		mIsPlayer = other.mIsPlayer;
 
