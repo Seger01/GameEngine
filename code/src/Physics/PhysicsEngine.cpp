@@ -235,6 +235,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			float yPivot = 0;
 			float firstOffx = 0;
 			float firstOffy = 0;
+			int i = 0;
 
 			if (gameObject.hasComponent<BoxCollider>())
 			{
@@ -243,13 +244,15 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 				{
 
 					Transform transform = boxCollider->getTransform();
-					transform.position.x = transform.position.x - boxCollider->getWidth();
-					transform.position.y = transform.position.y - boxCollider->getHeight();
+					//  transform.position.x = transform.position.x - boxCollider->getWidth();
+					// transform.position.y = transform.position.y - boxCollider->getHeight();
 
 					if (xPivot == 0)
 					{
 						xPivot += boxCollider->getWidth();
 						yPivot += boxCollider->getHeight();
+						// firstOffx = transform.position.x;
+						// firstOffy = transform.position.y;
 					}
 					else
 					{
@@ -264,6 +267,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 						{
 							yPivot += abs(extraHeight);
 						}
+						i++;
 					}
 
 					// boxCollider->setTransform(transform);
@@ -314,8 +318,8 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 					boxCollider->setHeight(boxCollider->getHeight() / 2);
 					Transform transform = boxCollider->getTransform();
 
-					transform.position.x = transform.position.x + boxCollider->getWidth();
-					transform.position.y = transform.position.y + boxCollider->getHeight();
+					// transform.position.x = transform.position.x + boxCollider->getWidth();
+					// transform.position.y = transform.position.y + boxCollider->getHeight();
 
 					if (xPivot == 0)
 					{
