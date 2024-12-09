@@ -1,3 +1,11 @@
+/**
+ * @mainpage Engine Bravo
+ *
+ * Engine Bravo is the game engine, created for the Systems Programming in C++ minor at Avans University of Applied
+ * Sciences. It largely uses the interface provided by Unity.
+ *
+ */
+
 #ifndef ENGINEBRAVO_H
 #define ENGINEBRAVO_H
 
