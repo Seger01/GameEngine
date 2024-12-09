@@ -61,6 +61,10 @@ void MapToGraph::convertToGraph()
 	{
 		for (size_t col = 0; col < (*graphLayer)[row].size(); ++col)
 		{
+			if (!isWalkableTile((*graphLayer)[row][col]))
+			{
+				continue;
+			}
 			int currentNode = calculateNodeIndex(row, col, (*graphLayer)[row].size());
 			connectAdjacentNodes(currentNode, row, col, graphLayer);
 		}
