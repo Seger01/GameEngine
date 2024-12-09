@@ -181,10 +181,6 @@ void NetworkServer::sendCustomSerialize()
 		{
 			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
 			{
-				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not send it
-				// {
-				// 	continue;
-				// }
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
