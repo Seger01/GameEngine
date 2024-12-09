@@ -40,7 +40,7 @@ public:
 	void setRenderOrder(uint aRenderOrder);
 	uint getRenderOrder() const;
 
-	Vector2 getCurrentShake() const;
+	void update();
 
 	void startShake(float duration, float magnitude);
 	void stopShake();
@@ -61,6 +61,7 @@ private:
 	float mShakeStartTime; // When the shake started
 	float mShakeDuration;  // How long the shake will last
 	float mShakeMagnitude; // The intensity of the shake
+	Vector2 mShakeOffset;  // The current offset of the camera due to the shake
 
 	CameraDebugOverlay mDebugOverlay;
 };

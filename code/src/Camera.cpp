@@ -34,11 +34,9 @@ int Camera::getHeight() const { return mHeight; }
  */
 Vector2 Camera::getOrigin() const
 {
-	Vector2 shake = getCurrentShake();
-
 	// Get the centre's offset (half of the total width and height)
 	Vector2 offset{getWidth() / 2.0f, getHeight() / 2.0f};
-	return getTransform().position - offset + shake;
+	return getTransform().position - offset + mShakeOffset;
 }
 
 void Camera::setViewport(const FRect& viewport) { mViewport = viewport; }
@@ -55,7 +53,7 @@ void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
 
 uint Camera::getRenderOrder() const { return mRenderOrder; }
 
-Vector2 Camera::getCurrentShake() const
+void Camera::update()
 {
 	Vector2 shakeOffset(0, 0);
 	if (mIsShaking)
@@ -66,8 +64,8 @@ Vector2 Camera::getCurrentShake() const
 		float progress = shakeTimeElapsed / mShakeDuration;
 		if (progress >= 1.0f)
 		{
-			// stopShake();
-			return shakeOffset;
+			stopShake();
+			return;
 		}
 
 		// Apply random shake offsets (using the magnitude)
@@ -78,7 +76,8 @@ Vector2 Camera::getCurrentShake() const
 	{
 		shakeOffset = Vector2(0, 0);
 	}
-	return shakeOffset;
+	mShakeOffset = shakeOffset;
+	return;
 }
 
 void Camera::startShake(float duration, float magnitude)
@@ -92,6 +91,7 @@ void Camera::startShake(float duration, float magnitude)
 void Camera::stopShake()
 {
 	mIsShaking = false;
+	mShakeOffset = Vector2(0, 0);
 	mShakeStartTime = 0;
 	mShakeDuration = 0;
 	mShakeMagnitude = 0;

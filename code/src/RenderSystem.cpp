@@ -398,6 +398,7 @@ void RenderSystem::render(const Scene& aScene) const
 
 	for (Camera* camera : cameras)
 	{
+		camera->update();
 
 		FRect cameraViewport = camera->getViewport();
 
