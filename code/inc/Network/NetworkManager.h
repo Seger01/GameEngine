@@ -1,3 +1,7 @@
+/**
+ * @file NetworkManager.h
+ * @brief Header file for the NetworkManager class.
+ */
 #ifndef NETWORKMANAGER_H
 #define NETWORKMANAGER_H
 
@@ -6,9 +10,13 @@
 #include "Network/NetworkHost.h"
 #include "Network/NetworkInformation.h"
 #include "Network/NetworkServer.h"
-#include <memory>
-#include <stdexcept>
 
+#include <memory>
+
+/**
+ * @class Network
+ * @brief Manages network operations including server, client, and host.
+ */
 class NetworkManager
 {
 public:
@@ -33,11 +41,9 @@ public:
 	void setTickRate(int aTickRate);
 	int getTickRate() const;
 
-	void setEnableSceneManagement(bool aEnableSceneManagement);
-	bool getEnableSceneManagement() const;
-
 	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
 	GameObject& getDefaultPlayerPrefab() const;
+
 	GameObject* instantiatePlayer(NetworkPacket packet);
 	void destroyPlayer(SLNet::RakNetGUID playerID);
 
@@ -57,15 +63,14 @@ private:
 	void startHost();
 
 private:
-	NetworkRole mRole;
-	int mTickRate;
-	std::unique_ptr<GameObject> mDefaultPlayerPrefab;
-	bool mEnableSceneManagement;
-	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	NetworkRole mRole;  ///< The role of the network manager.
+	int mTickRate; 	///< The tick rate for sending packets.
+	std::unique_ptr<GameObject> mDefaultPlayerPrefab; ///< The default player prefab.
+	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< The list of game objects managed by the network manager.
 
-	std::unique_ptr<NetworkServer> mServer;
-	std::unique_ptr<NetworkClient> mClient;
-	std::unique_ptr<NetworkHost> mHost;
+	std::unique_ptr<NetworkServer> mServer; ///< The server for the network manager.
+	std::unique_ptr<NetworkClient> mClient; ///< The client for the network manager.
+	std::unique_ptr<NetworkHost> mHost; ///< The host for the network manager.
 };
 
 #endif // NETWORKMANAGER_H
