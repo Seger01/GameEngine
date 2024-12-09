@@ -219,6 +219,10 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	{
 		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
 	}
+	else
+	{
+		networkObjects[0]->setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
+	}
 	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
 	networkObjects[0]->setPlayer(true);		  // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
