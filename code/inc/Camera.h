@@ -40,6 +40,11 @@ public:
 	void setRenderOrder(uint aRenderOrder);
 	uint getRenderOrder() const;
 
+	void update();
+
+	void startShake(float duration, float magnitude);
+	void stopShake();
+
 private:
 	uint mRenderOrder; // position in the camera render queue
 
@@ -51,6 +56,12 @@ private:
 	int mHeight;
 	/// @brief Portion of the screen this camera renders to
 	FRect mViewport;
+
+	bool mIsShaking;	   // Whether the camera is currently shaking
+	float mShakeStartTime; // When the shake started
+	float mShakeDuration;  // How long the shake will last
+	float mShakeMagnitude; // The intensity of the shake
+	Vector2 mShakeOffset;  // The current offset of the camera due to the shake
 
 	CameraDebugOverlay mDebugOverlay;
 };
