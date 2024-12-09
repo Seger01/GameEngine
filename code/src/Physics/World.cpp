@@ -1,10 +1,5 @@
 #include "Physics/World.h"
-#include "BoxCollider.h"
-#include "CircleCollider.h"
-#include "Vector2.h"
 #include "box2d/box2d.h"
-#include "box2d/collision.h"
-#include "box2d/types.h"
 #include <cmath>
 #include <math.h>
 
@@ -60,6 +55,8 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
 	BodyID convertedBodyID = {bodyID.index1, bodyID.revision, bodyID.world0};
 	return convertedBodyID;
 }
+
+void World::applyRotationalImpusle(std::vector<float> aTorque, BodyProxy& aBodyProxy, float aImpulse, BodyID aBodyID) {}
 
 void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 {
@@ -124,6 +121,16 @@ void World::deleteBody(BodyID aBodyID)
 	}
 }
 
+void World::scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+
+	for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
+	{
+		BoxCollider* boxCollider = aBodyProxy.getBoxColliders().at(i);
+	}
+}
+
 void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
@@ -164,8 +171,13 @@ Vector2 World::getPosition(BodyID aBodyID)
 float World::getRotation(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
-	float radians = atan2(b2Body_GetRotation(bodyID).s, b2Body_GetRotation(bodyID).c);
-	return radians * (180.0f / M_PI);
+
+	if (b2Body_IsValid(bodyID))
+	{
+		float radians = atan2(b2Body_GetRotation(bodyID).s, b2Body_GetRotation(bodyID).c);
+		return radians * (180.0f / M_PI);
+	}
+	return 0;
 }
 
 void World::setGravity(Vector2 aGravity)
@@ -221,7 +233,7 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 
 void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 {
-	if (!aBodyProxy.getBoxColliders().empty())
+	if (!aBodyProxy.getBoxColliders().empty() && !aBodyProxy.getCircleColliders().empty())
 	{
 
 		b2BodyId bodyID = convertToB2BodyID(aBodyID);

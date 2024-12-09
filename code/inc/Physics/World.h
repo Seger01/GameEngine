@@ -35,7 +35,10 @@ public:
 
 	void setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID);
 	void setRotation(float aRotation, BodyID aBodyID);
+	void applyRotationalImpusle(std::vector<float> aTorque, BodyProxy& aBodyProxy, float aImpulse, BodyID aBodyID);
 	void setGravity(Vector2 aGravity);
+
+	void scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale);
 
 	Vector2 getPosition(BodyID aBodyID);
 	std::vector<float> getShapeWidths(BodyProxy& aBodyProxy, BodyID aBodyID);

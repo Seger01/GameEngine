@@ -1,5 +1,6 @@
 #include "Physics/PhysicsEngine.h"
 #include "CircleCollider.h"
+#include <algorithm>
 
 PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
 
@@ -50,11 +51,43 @@ void PhysicsEngine::setPositions()
 
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
-			if (newPos != mWorld.getPosition(rigidBody->getBodyId()) ||
-				transform.rotation != mWorld.getRotation(rigidBody->getBodyId()))
-			{
-				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
-			}
+			// if (newPos != mWorld.getPosition(rigidBody->getBodyId()) ||
+			// 	transform.rotation != mWorld.getRotation(rigidBody->getBodyId()))
+			// {
+			//
+
+			// for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			// {
+			//
+			// 	if (xPivot == 0)
+			// 	{
+			// 		xPivot += boxCollider->getWidth();
+			// 		yPivot += boxCollider->getHeight();
+			// 	}
+			// 	else
+			// 	{
+			// 		xPivot += xPivot - boxCollider->getWidth() + transform.position.x;
+			// 		yPivot += yPivot - boxCollider->getHeight() + transform.position.y;
+			// 	}
+			// }
+			//
+			// float relativeX = transform.position.x + xPivot;
+			//
+			// float relativeY = transform.position.y + yPivot;
+			//
+			// float radians = mWorld.getRotation(rigidBody->getBodyId()) * (M_PI / 180.0f);
+			//
+			// float x = (transform.position.x - xPivot) * cos(radians) - (transform.position.y - yPivot) * sin(radians)
+			// + 		  xPivot; float y = (transform.position.x - xPivot) * sin(radians) + (transform.position.y -
+			// yPivot) * cos(radians) + 		  yPivot;
+			//
+			// newPos = Vector2(x, y);
+			//
+			std::cout << "Pos after calculation: " << newPos.x << " " << newPos.y << std::endl;
+
+			mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
+			std::cout << "Rotation is: " << mWorld.getRotation(rigidBody->getBodyId()) << std::endl;
+			//}
 		}
 	}
 }
@@ -198,25 +231,55 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+			float xPivot = 0;
+			float yPivot = 0;
+			float firstOffx = 0;
+			float firstOffy = 0;
 
 			if (gameObject.hasComponent<BoxCollider>())
 			{
+				RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
-					boxCollider->setWidth(boxCollider->getWidth() * 2);
-					boxCollider->setHeight(boxCollider->getHeight() * 2);
 
 					Transform transform = boxCollider->getTransform();
-					transform.position.x = transform.position.x - boxCollider->getWidth() / 2;
-					transform.position.y = transform.position.y - boxCollider->getHeight() / 2;
-					boxCollider->setTransform(transform);
+					transform.position.x = transform.position.x - boxCollider->getWidth();
+					transform.position.y = transform.position.y - boxCollider->getHeight();
+
+					if (xPivot == 0)
+					{
+						xPivot += boxCollider->getWidth();
+						yPivot += boxCollider->getHeight();
+					}
+					else
+					{
+						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+
+						if (extraWidth < 0)
+						{
+							xPivot += abs(extraWidth);
+						}
+						if (extraHeight < 0)
+						{
+							yPivot += abs(extraHeight);
+						}
+					}
+
+					// boxCollider->setTransform(transform);
+
+					boxCollider->setWidth(boxCollider->getWidth() * 2);
+					boxCollider->setHeight(boxCollider->getHeight() * 2);
 				}
 			}
 
 			Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+			position.x = position.x - xPivot;
+			position.y = position.y - yPivot;
 			float rotation = mWorld.getRotation(rigidBody->getBodyId());
 
 			Transform transform = gameObject.getTransform();
+
 			transform.position = position;
 			transform = Transform(Vector2(position.x, position.y));
 
@@ -237,16 +300,52 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 		{
 			if (gameObject.hasComponent<BoxCollider>())
 			{
+				RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+
+				float xPivot = 0;
+				float yPivot = 0;
+				float firstOffx = 0;
+				float firstOffy = 0;
+
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
+
 					boxCollider->setWidth(boxCollider->getWidth() / 2);
 					boxCollider->setHeight(boxCollider->getHeight() / 2);
-
 					Transform transform = boxCollider->getTransform();
+
 					transform.position.x = transform.position.x + boxCollider->getWidth();
 					transform.position.y = transform.position.y + boxCollider->getHeight();
-					boxCollider->setTransform(transform);
+
+					if (xPivot == 0)
+					{
+						xPivot += boxCollider->getWidth();
+						yPivot += boxCollider->getHeight();
+					}
+					else
+					{
+						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+
+						if (extraWidth < 0)
+						{
+							xPivot += abs(extraWidth);
+						}
+						if (extraHeight < 0)
+						{
+							yPivot += abs(extraHeight);
+						}
+					}
+
+					// boxCollider->setTransform(transform);
 				}
+
+				Transform transform = gameObject.getTransform();
+
+				transform.position.x = transform.position.x + xPivot;
+				transform.position.y = transform.position.y + yPivot;
+
+				gameObject.setTransform(transform);
 			}
 		}
 	}
