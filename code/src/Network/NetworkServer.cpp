@@ -133,7 +133,7 @@ void NetworkServer::sendTransform()
 		Transform transform = gameObject.getTransform();
 		NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
 		SLNet::BitStream bs;
-		NetworkSharedFunctions::makeBitStream(bs);
+		NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 		NetworkPacket networkPacket;
 		NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
 		networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
@@ -186,7 +186,7 @@ void NetworkServer::sendCustomSerialize()
 				// 	continue;
 				// }
 				SLNet::BitStream bs;
-				NetworkSharedFunctions::makeBitStream(bs);
+				NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =
@@ -213,7 +213,7 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 {
 	std::cout << "Sending player instantiation message to all clients.\n";
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = playerID;
@@ -352,7 +352,7 @@ void NetworkServer::handleClientDisconnect(SLNet::RakNetGUID clientID)
 	EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
 
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = NetworkMessage::ID_PLAYER_DESTROY;
 	networkPacket.clientGUID = clientID;
@@ -383,7 +383,7 @@ void NetworkServer::spawnPlayerForNewClient(SLNet::RakNetGUID playerID)
 {
 	std::cout << "Sending all players to each client" << std::endl;
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = playerID;

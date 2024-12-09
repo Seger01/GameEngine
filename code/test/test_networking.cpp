@@ -2,6 +2,7 @@
 #include "Network/INetworkSerializable.h"
 #include "Network/NetworkObject.h"
 #include "Network/NetworkRegister.h"
+#include "Network/NetworkSharedFunctions.h"
 #include "Network/NetworkTransform.h"
 #include <gtest/gtest.h>
 
@@ -137,9 +138,9 @@ protected:
 
 TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
     auto& registry = NetworkRegister::Instance();
-    // registry.RegisterType<ConcreteNetworkSerializable>();
+	registry.RegisterType<ConcreteNetworkSerializable>();
 
-    std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
+	std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
     ASSERT_NE(obj, nullptr);
 }
 
@@ -170,4 +171,58 @@ TEST_F(NetworkInformationTest, SetTimeStampNow)
 	NetworkPacket packet;
 	packet.SetTimeStampNow();
 	EXPECT_NE(packet.timestamp, 0);
+}
+
+class NetworkSharedFunctionsTest : public ::testing::Test
+{
+protected:
+	void SetUp() override
+	{
+		// Set up necessary objects before each test.
+	}
+};
+
+TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
+{
+	SLNet::BitStream bitStream;
+	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+
+	NetworkPacket packet = NetworkSharedFunctions::getBitStreamData(bitStream);
+
+	EXPECT_EQ(packet.messageID, 0);
+	EXPECT_EQ(packet.networkObjectID, UINT16_MAX);
+	EXPECT_EQ(packet.prefabID, UINT16_MAX);
+	EXPECT_EQ(packet.timestamp, 0);
+	EXPECT_EQ(packet.clientGUID, SLNet::UNASSIGNED_RAKNET_GUID);
+	EXPECT_EQ(packet.ISerializableID, UINT16_MAX);
+	EXPECT_EQ(packet.networkBehaviourID, UINT8_MAX);
+	EXPECT_EQ(packet.networkVariableID, UINT8_MAX);
+}
+
+TEST_F(NetworkSharedFunctionsTest, SetBitStreamNetworkPacket)
+{
+	SLNet::BitStream bitStream;
+	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+	NetworkPacket packet;
+	packet.messageID = 1;
+	packet.networkObjectID = 2;
+	packet.prefabID = 3;
+	packet.timestamp = 4;
+	packet.clientGUID = SLNet::RakNetGUID(5);
+	packet.ISerializableID = 6;
+	packet.networkBehaviourID = 7;
+	packet.networkVariableID = 8;
+
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bitStream, packet);
+
+	NetworkPacket extractedPacket = NetworkSharedFunctions::getBitStreamData(bitStream);
+
+	EXPECT_EQ(extractedPacket.messageID, 1);
+	EXPECT_EQ(extractedPacket.networkObjectID, 2);
+	EXPECT_EQ(extractedPacket.prefabID, 3);
+	EXPECT_EQ(extractedPacket.timestamp, 4);
+	EXPECT_EQ(extractedPacket.clientGUID, SLNet::RakNetGUID(5));
+	EXPECT_EQ(extractedPacket.ISerializableID, 6);
+	EXPECT_EQ(extractedPacket.networkBehaviourID, 7);
+	EXPECT_EQ(extractedPacket.networkVariableID, 8);
 }
