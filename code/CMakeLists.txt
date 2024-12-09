@@ -131,19 +131,11 @@ if(DOXYGEN_FOUND)
     # Create the output directory if it doesn't exist
     file(MAKE_DIRECTORY "${DOXYGEN_OUTPUT_DIR}")
 
-    # Configure the custom command to run Doxygen
-    add_custom_command(
-        OUTPUT ${DOXYGEN_OUTPUT_DIR}/html/index.html
+    # Create a custom target to invoke the custom command
+    add_custom_target( Doxygen
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
         COMMENT "Generating API documentation with Doxygen"
-        VERBATIM
-    )
-
-    # Create a custom target to invoke the custom command
-    add_custom_target(
-        Doxygen ALL
-        DEPENDS ${DOXYGEN_OUTPUT_DIR}/html/index.html
     )
 else()
     message(FATAL_ERROR "Doxygen is required but was not found on the system.")
