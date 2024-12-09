@@ -16,6 +16,10 @@ class NetworkVariableBase;
 /**
  * @class INetworkBehaviour
  * @brief Base class for network behaviour scripts.
+ *
+ * @note When adding a NetworkVariable to a NetworkBehaviour make sure to call RegisterNetworkVariable(this) in the
+ * NetworkVariable constructor. Also make a copy constructor where you reset mNetworkVariables and add each
+ * NetworkVariable.
  */
 class INetworkBehaviour : public IBehaviourScript
 {
