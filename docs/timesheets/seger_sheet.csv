@@ -65,3 +65,4 @@ Date,Time,Duration(in hours),Activity
 2024-11-29, 12:00, 4.5 , Worked on camera system and merging differnet branches 
 2024-12-03, 09:15, 7.5 , Debug issue with scene changes merged a bunch of code into development and worked a small bit on Camera functionality
 2024-12-04, 09:00, 8   , Handled prs into development; Worked with ronan on demo level; added camera functionality showcase to the demo level; worked on the camera system with ordered camera rendering 
+2024-12-05, 09:00, 7   , Handled prs into development; Worked with ronan on demo level; added camera letterboxing functionality and background rendering.
