@@ -57,13 +57,6 @@ To build the project with debug options enabled, follow these steps:
     cmake --build . -- -j$(nproc)
 ```
 
-# How to Run the Program
-
-To run the program, use the following command:
-```sh
-    cmake --build . --target run -- -j$(nproc)
-```
-
 # How to Run the Program with Valgrind
 To run the program with valgrind, use the following command:
 ```sh
