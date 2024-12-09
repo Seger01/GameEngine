@@ -1,3 +1,9 @@
+/**
+ * @file RenderSystem.h
+ * @brief Defines the RenderSystem class, responsible for managing and rendering game objects, scenes, and graphical
+ * elements.
+ */
+
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
@@ -11,6 +17,13 @@
 #include "Sprite.h"
 #include "Window.h"
 
+/**
+ * @class RenderSystem
+ * @brief Handles rendering of game objects, scenes, and various graphical elements.
+ *
+ * This class manages a collection of game objects, interacts with the Renderer and Window classes,
+ * and provides functionality to render scenes and graphical components efficiently.
+ */
 class RenderSystem
 {
 public:
@@ -60,16 +73,16 @@ private:
 	int getHighestLayer(const Scene& aScene) const;
 
 private:
-	std::vector<std::reference_wrapper<GameObject>> mObjects;
-	std::unique_ptr<Renderer> mRenderer;
-	std::unique_ptr<Window> mWindow;
+	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< Collection of game objects managed by the system.
+	std::unique_ptr<Renderer> mRenderer;					  ///< Renderer instance for handling graphical output.
+	std::unique_ptr<Window> mWindow;						  ///< Window instance for displaying rendered content.
 
-	Point mAspectRatio;
+	Point mAspectRatio; ///< Aspect ratio for rendering.
 
-	int WindowWidth;
-	int WindowHeight;
+	int WindowWidth;  ///< Width of the rendering window.
+	int WindowHeight; ///< Height of the rendering window.
 
-	Color mBackgroundColor;
+	Color mBackgroundColor; ///< Background color for rendering.
 };
 
 #endif
