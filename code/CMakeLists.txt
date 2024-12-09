@@ -18,9 +18,6 @@ option(ENABLE_DEBUG "Enable debug mode" OFF)
 # Option to enable or disable building tests
 option(ENABLE_TESTS "Enable building tests" OFF)
 
-# Option to enable or disable building the testGame
-option(ENABLE_TESTGAME "Enable building the testGame" OFF)
-
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
     message("Debug mode enabled")
@@ -109,11 +106,6 @@ set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlo
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
-
-if(ENABLE_TESTGAME)
-    # Add the testGame subdirectory
-    add_subdirectory(testGame)
-endif()
 
 if(ENABLE_TESTS)
     # Add the test subdirectory
