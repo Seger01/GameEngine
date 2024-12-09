@@ -1,9 +1,13 @@
+/**
+ * @file AudioManager.cpp
+ *
+ * @brief This file contains the implementation of the AudioManager class
+ */
 #include "AudioManager.h"
 #include "AudioSource.h"
-#include "EngineBravo.h"
+#include "GameObject.h"
 #include "IAudioFacade.h"
 #include "MixerFacade.h"
-#include "Scene.h"
 #include <stdexcept>
 
 /**
@@ -123,8 +127,16 @@ void AudioManager::loadSound(const AudioSource& aAudio)
 	}
 }
 
+/**
+ * @brief Clear all sounds from memory
+ */
 void AudioManager::clearSounds() { getFacade().unloadAll(); }
 
+/**
+ * @brief Add a game object to the list of objects that have audio sources
+ *
+ * @param aObject The game object to add
+ */
 void AudioManager::addObject(GameObject& aObject)
 {
 	auto it = std::find_if(mObjects.begin(), mObjects.end(),
@@ -139,6 +151,12 @@ void AudioManager::addObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Remove a game object from the list of objects that have audio sources. If the object is not in the list,
+ * nothing is done.
+ *
+ * @param aObject The game object to remove
+ */
 void AudioManager::removeObject(GameObject& aObject)
 {
 	auto it =
@@ -152,4 +170,7 @@ void AudioManager::removeObject(GameObject& aObject)
 
 const std::vector<std::reference_wrapper<GameObject>>& AudioManager::getObjects() const { return mObjects; }
 
+/**
+ * @brief Clear all objects from the list of objects that have audio sources
+ */
 void AudioManager::clearObjects() { mObjects.clear(); }
