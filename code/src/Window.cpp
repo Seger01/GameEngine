@@ -56,6 +56,12 @@ Vector2 Window::getSize()
 }
 
 /**
+ * @brief Sets the size of the window.
+ * @param aSize The new size of the window.
+ */
+void Window::setSize(Vector2 aSize) { SDL_SetWindowSize(mWindow, aSize.x, aSize.y); }
+
+/**
  * @brief Sets the window to fullscreen mode.
  */
 void Window::setFullScreen()

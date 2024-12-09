@@ -26,6 +26,7 @@ public:
 	void showWindow();
 
 	Vector2 getSize();
+	void setSize(Vector2 aSize);
 
 	void setFullScreen();
 	void setFloating();
