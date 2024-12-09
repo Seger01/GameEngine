@@ -100,21 +100,21 @@ protected:
 TEST_F(RenderSystemTest, RenderLayer_NoExceptions)
 {
 	Camera camera;
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check that no exception is thrown
+	ASSERT_NO_THROW(mRenderSystem->renderLayer(*mScene, 0, camera, Rect())); // Check that no exception is thrown
 }
 
 TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer)
 {
 	Camera camera;
 	// Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check for exceptions when an invalid
-																			// layer is
+	ASSERT_NO_THROW(mRenderSystem->renderLayer(*mScene, 0, camera, Rect())); // Check for exceptions when an invalid
+																			 // layer is
 	//                                                         // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions)
 {
-	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem->render(*mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getRenderer()); }
