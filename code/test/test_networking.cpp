@@ -131,6 +131,20 @@ TEST_F(NetworkObjectTest, CopyConstructor)
 	EXPECT_EQ(copyNo.getClientGUID(), clientID);
 }
 
+TEST_F(NetworkObjectTest, CopyAssignment)
+{
+	NetworkObject no;
+	no.setOwner(true);
+	SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
+	no.setClientGUID(clientID);
+
+	NetworkObject assignedNo;
+	assignedNo = no;
+
+	EXPECT_TRUE(assignedNo.isOwner());
+	EXPECT_EQ(assignedNo.getClientGUID(), clientID);
+}
+
 TEST_F(NetworkObjectTest, MoveConstructor)
 {
 	NetworkObject no;
