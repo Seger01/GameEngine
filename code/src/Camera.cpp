@@ -11,7 +11,8 @@
  */
 Camera::Camera()
 	: GameObject(), mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
-	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0)
+	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0), mIsShaking(false), mShakeOffset(Vector2(0, 0)),
+	  mShakeStartTime(0), mShakeDuration(0), mShakeMagnitude(0)
 {
 }
 
