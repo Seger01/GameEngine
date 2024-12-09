@@ -9,9 +9,9 @@
  * @param aTag The tag of the sprite
  */
 
-Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect, std::string aTag)
-	: Component{aTag}, mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect),
-	  mTransform(Transform()), mFlipX(false), mFlipY(false), mLayer(0), mColorFilter(Color(255, 255, 255, 255))
+Sprite::Sprite(const Texture& aTexture, int aWidth, int aHeight, const Rect& aSourceRect, const std::string& aTag)
+	: Component(aTag), mTexture(aTexture), mWidth(aWidth), mHeight(aHeight), mSourceRect(aSourceRect), mLayer(0),
+	  mColorFilter(Color(255, 255, 255, 255)), mFlipX(false), mFlipY(false), mTransform(Transform())
 {
 }
 
@@ -19,36 +19,13 @@ Sprite::Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect, std
  * @brief Sprite class copy constructor
  * @param other The Sprite object to copy
  */
+
 Sprite::Sprite(const Sprite& other)
 	: Component(other),			// Copy base class members
-	  mTexture(other.mTexture), // Shallow copy texture pointer
-	  mTransform(other.mTransform), mSourceRect(other.mSourceRect), mSprite(other.mSprite), mWidth(other.mWidth),
-	  mHeight(other.mHeight), mFlipX(other.mFlipX), mFlipY(other.mFlipY), mLayer(other.mLayer),
-	  mColorFilter(other.mColorFilter)
+	  mTexture(other.mTexture), // Copy the texture reference
+	  mTransform(other.mTransform), mSourceRect(other.mSourceRect), mWidth(other.mWidth), mHeight(other.mHeight),
+	  mFlipX(other.mFlipX), mFlipY(other.mFlipY), mLayer(other.mLayer), mColorFilter(other.mColorFilter)
 {
-}
-
-/**
- * @brief Sprite class move constructor
- * @param other The Sprite object to move
- */
-Sprite& Sprite::operator=(const Sprite& other)
-{
-	if (this == &other)
-		return *this;
-
-	Component::operator=(other); // Copy base class members
-	mTexture = other.mTexture;	 // Shallow copy texture pointer
-	mTransform = other.mTransform;
-	mSourceRect = other.mSourceRect;
-	mSprite = other.mSprite;
-	mWidth = other.mWidth;
-	mHeight = other.mHeight;
-	mFlipX = other.mFlipX;
-	mFlipY = other.mFlipY;
-	mLayer = other.mLayer;
-
-	return *this;
 }
 
 /**
@@ -57,12 +34,11 @@ Sprite& Sprite::operator=(const Sprite& other)
  */
 Sprite::Sprite(Sprite&& other) noexcept
 	: Component(std::move(other)), // Move base class members
-	  mTexture(other.mTexture),	   // Transfer texture pointer
-	  mTransform(std::move(other.mTransform)), mSourceRect(std::move(other.mSourceRect)),
-	  mSprite(std::move(other.mSprite)), mWidth(other.mWidth), mHeight(other.mHeight), mFlipX(other.mFlipX),
-	  mFlipY(other.mFlipY), mLayer(other.mLayer)
+	  mTexture(other.mTexture),	   // Move texture reference (no need to nullify)
+	  mTransform(std::move(other.mTransform)), mSourceRect(std::move(other.mSourceRect)), mWidth(other.mWidth),
+	  mHeight(other.mHeight), mFlipX(other.mFlipX), mFlipY(other.mFlipY), mLayer(other.mLayer)
 {
-	other.mTexture = nullptr; // Nullify moved-from texture pointer
+	// No need to nullify mTexture as it's a reference
 }
 
 /**
@@ -75,19 +51,19 @@ Sprite& Sprite::operator=(Sprite&& other) noexcept
 	if (this == &other)
 		return *this;
 
-	Component::operator=(std::move(other)); // Move base class members
-	mTexture = other.mTexture;				// Transfer texture pointer
+	// Move base class members
+	Component::operator=(std::move(other));
+
+	// Do not move the texture reference, it will stay as is
 	mTransform = std::move(other.mTransform);
 	mSourceRect = std::move(other.mSourceRect);
-	mSprite = std::move(other.mSprite);
 	mWidth = other.mWidth;
 	mHeight = other.mHeight;
 	mFlipX = other.mFlipX;
 	mFlipY = other.mFlipY;
 	mLayer = other.mLayer;
 
-	other.mTexture = nullptr; // Nullify moved-from texture pointer
-
+	// Return the current object
 	return *this;
 }
 
@@ -109,7 +85,7 @@ std::unique_ptr<Component> Sprite::clone() const { return std::make_unique<Sprit
  * @brief Get the texture of the sprite
  * @return The texture of the sprite
  */
-Texture* Sprite::getTexture() const { return mTexture; }
+const Texture& Sprite::getTexture() const { return mTexture; }
 
 /**
  * @brief Get the relative position of the sprite
@@ -121,19 +97,19 @@ Transform Sprite::getRelativePosition() const { return mTransform; }
  * @brief Set the relative position of the sprite
  * @param aNewTransform The new relative position of the sprite
  */
-void Sprite::setRelativePosition(Transform aNewTransform) { mTransform = aNewTransform; }
+void Sprite::setRelativePosition(const Transform& aNewTransform) { mTransform = aNewTransform; }
 
 /**
  * @brief Get the source rectangle of the sprite
  * @return The source rectangle of the sprite
  */
-Rect Sprite::getSource() const { return mSourceRect; }
+const Rect& Sprite::getSource() const { return mSourceRect; }
 
 /**
  * @brief Set the source rectangle of the sprite
  * @param aSourceRect The new source rectangle of the sprite
  */
-void Sprite::setSource(Rect aSourceRect) { mSourceRect = aSourceRect; }
+void Sprite::setSource(const Rect& aSourceRect) { mSourceRect = aSourceRect; }
 
 /**
  * @brief Get the color filter of the sprite
