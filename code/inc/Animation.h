@@ -1,3 +1,8 @@
+/**
+ * @file Animation.h
+ * @brief Animation class header file.
+ */
+
 #pragma once
 
 #include <iostream>
@@ -6,6 +11,10 @@
 
 #include "Sprite.h"
 
+/**
+ * @class Animation
+ * @brief Animation class.
+ */
 class Animation : public Component
 {
 public:

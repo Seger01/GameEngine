@@ -1,3 +1,8 @@
+/**
+ * @file Particle.h
+ * @brief Defines a particle for use in particle emitters.
+ */
+
 #pragma once
 
 #include <vector>
@@ -6,6 +11,10 @@
 #include "Transform.h"
 #include "Vector2.h"
 
+/**
+ * @class Particle
+ * @brief Represents a particle in a particle emitter.
+ */
 class Particle
 {
 public:

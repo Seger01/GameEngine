@@ -1,8 +1,17 @@
+/**
+ * @file Rect.h
+ * @brief Defines the Rect struct.
+ */
+
 #ifndef RECT_H
 #define RECT_H
 
 #include <SDL.h>
 
+/**
+ * @struct Rect
+ * @brief Defines a rectangle.
+ */
 struct Rect
 {
 	int x = 0, y = 0;

@@ -1,3 +1,8 @@
+/**
+ * @file Texture.h
+ * @brief Header file for the Texture class, responsible for managing SDL textures.
+ */
+
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
@@ -5,6 +10,11 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+
+/**
+ * @class Texture
+ * @brief Manages SDL texture.
+ */
 
 class Texture
 {

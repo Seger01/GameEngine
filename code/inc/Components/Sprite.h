@@ -1,3 +1,8 @@
+/**
+ * @file Sprite.h
+ * @brief Sprite class header file.
+ */
+
 #pragma once
 
 #include <string>
@@ -8,6 +13,10 @@
 #include "Texture.h"
 #include "Transform.h"
 
+/**
+ * @class Sprite
+ * @brief Sprite class, used to render textures.
+ */
 class Sprite : public Component
 {
 public:
@@ -55,17 +64,17 @@ public:
 	int getLayer() { return mLayer; }
 
 private:
-	Transform mTransform;
+	Transform mTransform; // Relative position to the parent GameObject
 
-	Texture* mTexture = nullptr;
-	Rect mSourceRect;
-	Color mColorFilter;
+	Texture* mTexture = nullptr; // Pointer to the texture
+	Rect mSourceRect;			 // Source rectangle of the texture
+	Color mColorFilter;			 // Color filter of the sprite
 
-	std::string mSprite;
-	float mWidth = 0;
-	float mHeight = 0;
-	bool mFlipX;
-	bool mFlipY;
+	std::string mSprite; // Tag of the sprite
+	float mWidth = 0;	 // Width of the sprite
+	float mHeight = 0;	 // Height of the sprite
+	bool mFlipX;		 // Whether the sprite should flip horizontally
+	bool mFlipY;		 // Whether the sprite should flip vertically
 
-	int mLayer = 0;
+	int mLayer = 0; // Layer of the sprite
 };
