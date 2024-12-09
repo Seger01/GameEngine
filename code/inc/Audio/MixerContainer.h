@@ -1,9 +1,19 @@
+/**
+ * @file MixerContainer.h
+ *
+ * @brief This file contains the declaration of the MixerContainer class
+ */
 #pragma once
 
 #include <SDL_mixer.h>
 #include <string>
 #include <unordered_map>
 
+/**
+ * @class MixerContainer
+ *
+ * @brief This class is responsible for owning SDL mixer sound effects and music
+ */
 class MixerContainer
 {
 public:
@@ -17,8 +27,8 @@ public:												  // rule of five
 	MixerContainer& operator=(MixerContainer&&);	  // Move assignment operator
 
 public:
-	void addSound(std::string aPath, Mix_Chunk* aSound);
-	Mix_Chunk* getSound(std::string aIndex);
+	void addSound(const std::string& aPath, Mix_Chunk* aSound);
+	Mix_Chunk* getSound(const std::string& aIndex);
 	const Mix_Chunk* getSound(std::string aIndex) const;
 
 	void addMusic(const std::string& aPath, Mix_Music* aMusic);
@@ -30,6 +40,8 @@ public:
 private:
 	/// @brief Map of sound effects. key is the path to the sound
 	std::unordered_map<std::string, Mix_Chunk*> mSfx;
+	/// @brief Path to the music file
 	std::string mMusicPath;
+	/// @brief The music file
 	Mix_Music* mMusic;
 };
