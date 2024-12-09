@@ -7,15 +7,15 @@
 class MapToGraphTest : public ::testing::Test
 {
 protected:
-	void SetUp() override
-	{
-		std::ofstream file("test_map.json");
-		if (!file)
-		{
-			std::cerr << "Error opening file for writing" << std::endl;
-			FAIL() << "Failed to open test_map.json";
-		}
-		file << R"({
+    void SetUp() override
+    {
+        std::ofstream file("test_map.json");
+        if (!file)
+        {
+            std::cerr << "Error opening file for writing" << std::endl;
+            FAIL() << "Failed to open test_map.json";
+        }
+        file << R"({
             "tilesets": [
                 {
                     "firstgid": 1,
@@ -32,6 +32,30 @@ protected:
                                     {"x": 0, "y": 0, "width": 32, "height": 32}
                                 ]
                             }
+                        },
+                        {
+                            "id": 1,
+                            "objectgroup": {
+                                "objects": [
+                                    {"x": 0, "y": 0, "width": 32, "height": 32, "properties": [{"name": "collider", "type": "bool", "value": true}]}
+                                ]
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "objectgroup": {
+                                "objects": [
+                                    {"x": 0, "y": 0, "width": 32, "height": 32}
+                                ]
+                            }
+                        },
+                        {
+                            "id": 3,
+                            "objectgroup": {
+                                "objects": [
+                                    {"x": 0, "y": 0, "width": 32, "height": 32, "properties": [{"name": "collider", "type": "bool", "value": true}]}
+                                ]
+                            }
                         }
                     ]
                 }
@@ -43,43 +67,35 @@ protected:
                     "height": 2,
                     "data": [1, 2, 3, 4],
                     "name": "Graph"
-                },
-                {
-                    "type": "objectgroup",
-                    "objects": [
-                        {"x": 10, "y": 20, "width" : 50, "height" : 50, "properties": [{"name": "isPlayerSpawn", "type": "bool", "value": true}]}
-                    ]
                 }
             ]
         })";
-		file.close();
-	}
+        file.close();
+    }
 
-	void TearDown() override
-	{
-		std::remove("test_map.json");
-	}
+    void TearDown() override
+    {
+        std::remove("test_map.json");
+    }
 };
 
 TEST_F(MapToGraphTest, ConvertToGraph)
 {
-	TileMapParser parser("test_map.json");
-	parser.parse();
+    TileMapParser parser("test_map.json");
+    parser.parse();
 
-	const TileMapData& data = parser.getTileMapData();
+    const TileMapData& data = parser.getTileMapData();
 
-	MapToGraph mapToGraph(data);
-	mapToGraph.convertToGraph();
+    MapToGraph mapToGraph(data);
+    mapToGraph.convertToGraph();
 
-	const auto& adjacencyList = mapToGraph.getAdjacencyList();
+    const auto& adjacencyList = mapToGraph.getAdjacencyList();
 
-	ASSERT_EQ(adjacencyList.size(), 4);
+    ASSERT_EQ(adjacencyList.size(), 2);
 
-	// Check connections for each node
-	EXPECT_EQ(adjacencyList.at(0).size(), 2);
-	EXPECT_EQ(adjacencyList.at(1).size(), 2);
-	EXPECT_EQ(adjacencyList.at(2).size(), 2);
-	EXPECT_EQ(adjacencyList.at(3).size(), 2);
+    // Check connections for each walkable node
+    EXPECT_EQ(adjacencyList.at(0).size(), 1);
+    EXPECT_EQ(adjacencyList.at(2).size(), 1);
 }
 
 TEST_F(MapToGraphTest, NoGraphLayer) {
