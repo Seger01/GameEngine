@@ -50,9 +50,9 @@ protected:
 		mScene->addGameObject(gameObject);
 		mRenderSystem->addObject(*gameObject);
 
-		Sprite* sprite =
-			new Sprite(EngineBravo::getInstance().getResourceManager().loadTexture("enter_the_gungeon_spritesheet.png"),
-					   200, 200, Rect());
+		Sprite* sprite = new Sprite(
+			*EngineBravo::getInstance().getResourceManager().loadTexture("enter_the_gungeon_spritesheet.png"), 200, 200,
+			Rect());
 
 		sprite->setLayer(0);
 
