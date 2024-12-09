@@ -4,6 +4,8 @@
  */
 #include "Camera.h"
 
+#include "Time.h"
+
 /**
  * @brief Constructor. Sets the width and height to 800*600 by default.
  */
@@ -32,9 +34,11 @@ int Camera::getHeight() const { return mHeight; }
  */
 Vector2 Camera::getOrigin() const
 {
+	Vector2 shake = getCurrentShake();
+
 	// Get the centre's offset (half of the total width and height)
 	Vector2 offset{getWidth() / 2.0f, getHeight() / 2.0f};
-	return getTransform().position - offset;
+	return getTransform().position - offset + shake;
 }
 
 void Camera::setViewport(const FRect& viewport) { mViewport = viewport; }
@@ -50,3 +54,45 @@ CameraDebugOverlay& Camera::getDebugOverlayRef() { return mDebugOverlay; }
 void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
 
 uint Camera::getRenderOrder() const { return mRenderOrder; }
+
+Vector2 Camera::getCurrentShake() const
+{
+	Vector2 shakeOffset(0, 0);
+	if (mIsShaking)
+	{
+		float shakeTimeElapsed = Time::ticks - mShakeStartTime;
+
+		// Reduce the shake magnitude over time (optional easing function)
+		float progress = shakeTimeElapsed / mShakeDuration;
+		if (progress >= 1.0f)
+		{
+			// stopShake();
+			return shakeOffset;
+		}
+
+		// Apply random shake offsets (using the magnitude)
+		shakeOffset.x = (rand() % 2 == 0 ? 1 : -1) * mShakeMagnitude * (1.0f - progress);
+		shakeOffset.y = (rand() % 2 == 0 ? 1 : -1) * mShakeMagnitude * (1.0f - progress);
+	}
+	else
+	{
+		shakeOffset = Vector2(0, 0);
+	}
+	return shakeOffset;
+}
+
+void Camera::startShake(float duration, float magnitude)
+{
+	mShakeDuration = duration;
+	mShakeMagnitude = magnitude;
+	mShakeStartTime = Time::ticks;
+	mIsShaking = true;
+}
+
+void Camera::stopShake()
+{
+	mIsShaking = false;
+	mShakeStartTime = 0;
+	mShakeDuration = 0;
+	mShakeMagnitude = 0;
+}
