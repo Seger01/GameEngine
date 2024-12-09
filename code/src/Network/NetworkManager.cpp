@@ -117,23 +117,17 @@ void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab)
 
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
-GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
+GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 {
 	if (!mDefaultPlayerPrefab)
 	{
 		throw std::runtime_error("Player prefab not set.");
 	}
 
-	std::vector<GameObject*> persistantObjects =
-		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-	for (auto object : persistantObjects) // loop trough all persistent objects
+	for (auto object : mObjects)
 	{
-		if (!object->hasComponent<NetworkObject>())
-		{
-			continue;
-		}
-		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-		if (networkObject->getClientID() == playerID) // Check if player already exists
+		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject->getClientGUID() == packet.clientGUID) // Check if player already exists
 		{
 			return nullptr;
 		}
@@ -145,7 +139,12 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 	{
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
-	networkObjects[0]->setClientID(playerID); // Assign unique ID to player
+	networkObjects[0]->setClientGUID(packet.clientGUID); // Assign unique ID to player
+	if (packet.networkObjectID != -1)
+	{
+		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
+	}
+	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
 	networkObjects[0]->setPlayer(true);		  // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
 	return player;
@@ -153,19 +152,12 @@ GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID)
 
 void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 {
-	std::vector<GameObject*> persistantObjects =
-		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-	for (auto object : persistantObjects)
+	for (auto object : mObjects)
 	{
-		if (!object->hasComponent<NetworkObject>())
+		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject->getClientGUID() == playerID)
 		{
-			continue;
-		}
-		NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-		if (networkObject->getClientID() == playerID)
-		{
-			std::cout << "Destroying player with ID: " << playerID.g << std::endl;
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(object);
+			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&object.get());
 			return;
 		}
 	}

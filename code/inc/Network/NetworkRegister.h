@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cstring>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -43,8 +44,9 @@ public:
     // Registers a type with a compile-time ID
     template <typename T> void RegisterType() {
         std::uint32_t typeId = GetCompileTimeTypeId<T>();
-        registry[typeId] = []() { return std::make_unique<T>(); };
-    }
+		std::cout << "Registering type: " << typeId << std::endl;
+		registry[typeId] = []() { return std::make_unique<T>(); };
+	}
 
     // Creates an instance based on the compile-time type ID
     std::unique_ptr<INetworkSerializable> CreateInstance(std::uint32_t typeId) {

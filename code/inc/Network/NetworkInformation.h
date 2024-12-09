@@ -27,9 +27,9 @@ struct NetworkPacket {
     uint16_t prefabID;
     uint64_t timestamp;
     SLNet::RakNetGUID clientGUID;
-    uint8_t ISerializableID;
-    uint8_t networkBehaviourID;
-    uint8_t networkVariableID;
+	uint32_t ISerializableID;
+	uint8_t networkBehaviourID;
+	uint8_t networkVariableID;
 
     NetworkPacket()
         : messageID(0), networkObjectID(-1), prefabID(-1), timestamp(0), clientGUID(SLNet::UNASSIGNED_RAKNET_GUID),

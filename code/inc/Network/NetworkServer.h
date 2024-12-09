@@ -14,26 +14,25 @@
 
 class NetworkServer {
 public:
-    NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
-    void receiveGameState();
-    void sendGameState();
+	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
 	void update();
-
 	bool isConnected() const;
-
-    void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
-    void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
 
 private:
     void handleIncomingPackets();
-    void sendTransform();
-    void handleTransform(SLNet::Packet* aPacket);
-    void handleCustomSerialize(SLNet::Packet* aPacket);
-    void spawnNewPlayer(SLNet::Packet* aPacket);
-    void onClientDisconnected(SLNet::RakNetGUID aClientID);
-    void sendToAllClients(SLNet::BitStream& aBitStream);
-    void sendPackets();
-    void sendCustomSerialize();
+	void sendPackets();
+
+	void sendTransform();
+	void sendCustomSerialize();
+	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
+	void sendPlayerInstantiation(SLNet::RakNetGUID playerID);
+	void spawnNewPlayer(SLNet::Packet* aPacket);
+
+	void onClientDisconnected(SLNet::RakNetGUID aClientID);
+	void handleTransform(SLNet::Packet* aPacket);
+	void handleCustomSerialize(SLNet::Packet* aPacket);
+
+	void sendToAllClients(SLNet::BitStream& aBitStream);
 
 private:
     std::vector<std::reference_wrapper<GameObject>>& mObjects;

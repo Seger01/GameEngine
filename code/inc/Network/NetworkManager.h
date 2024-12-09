@@ -38,7 +38,7 @@ public:
 
 	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
 	GameObject& getDefaultPlayerPrefab() const;
-	GameObject* instantiatePlayer(SLNet::RakNetGUID playerID);
+	GameObject* instantiatePlayer(NetworkPacket packet);
 	void destroyPlayer(SLNet::RakNetGUID playerID);
 
 	void setRole(NetworkRole aRole);
