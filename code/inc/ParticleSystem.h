@@ -1,8 +1,17 @@
+/**
+ * @file ParticleSystem.h
+ * @brief Header file for the ParticleSystem class.
+ */
+
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
 #include "GameObject.h"
 
+/**
+ * @class ParticleSystem
+ * @brief Manages the particle emitters in the game.
+ */
 class ParticleSystem
 {
 public:

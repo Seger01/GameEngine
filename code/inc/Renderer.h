@@ -1,3 +1,8 @@
+/**
+ * @file Renderer.h
+ * @brief Header file for the Renderer class, responsible for rendering textures, shapes, and text.
+ */
+
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -12,6 +17,12 @@
 
 class Animation;
 
+/**
+ * @class Renderer
+ * @brief Handles rendering of textures, shapes, and text.
+ *
+ * This class manages the rendering of textures, shapes, and text on the screen.
+ */
 class Renderer
 {
 public:
@@ -39,9 +50,9 @@ public:
 	SDL_Renderer*& getSDLRenderer();
 
 private:
-	TTF_Font* mFont = nullptr;
+	TTF_Font* mFont = nullptr; /**< The font used for rendering text. */
 
-	SDL_Renderer* mRenderer = nullptr;
+	SDL_Renderer* mRenderer = nullptr; /**< The SDL renderer. */
 };
 
 #endif

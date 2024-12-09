@@ -1,6 +1,15 @@
+/**
+ * @file Vector2.h
+ * @brief Defines the Vector2 struct.
+ */
+
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
+/**
+ * @struct Vector2
+ * @brief Defines a 2D vector.
+ */
 struct Vector2
 {
 	float x;

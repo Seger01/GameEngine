@@ -1,9 +1,18 @@
+/**
+ * @file IBehaviourScript.h
+ * @brief IBehaviourScript class header file.
+ */
+
 #ifndef IBEHAVIOURSCRIPT_H
 #define IBEHAVIOURSCRIPT_H
 
 #include "Component.h"
 #include "GameObject.h"
 
+/**
+ * @class IBehaviourScript
+ * @brief Interface for behaviour scripts.
+ */
 class IBehaviourScript : public Component
 {
 public:
