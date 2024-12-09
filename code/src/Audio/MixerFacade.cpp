@@ -1,3 +1,8 @@
+/**
+ * @file MixerFacade.cpp
+ *
+ * @brief This file contains the implementation of the MixerFacade class
+ */
 #include "MixerFacade.h"
 #include "FSConverter.h"
 #include <SDL2/SDL.h>
@@ -5,6 +10,9 @@
 #include <iostream>
 #include <stdexcept>
 
+/**
+ * @brief Construct a new MixerFacade::MixerFacade object. Initializes SDL and SDL_mixer
+ */
 MixerFacade::MixerFacade() : mChannelCount(MIX_CHANNELS), mLastUsedChannel(0)
 {
 	// Initialize SDL with audio support
@@ -43,6 +51,10 @@ void MixerFacade::loadSound(const std::string& aPath)
 
 /**
  * @brief Load a music file into the mixer container. If the music is already loaded, it is overwritten
+ *
+ * @param aPath The path to the music file. Must be an absolute path.
+ *
+ * @throw std::runtime_error if the music file could not be loaded
  */
 void MixerFacade::loadMusic(const std::string& aPath)
 {
@@ -73,6 +85,8 @@ bool MixerFacade::audioIsLoaded(const std::string& aPath) const
 
 /**
  * @brief Check if any music is loaded
+ *
+ * @return true if music is loaded. False if not.
  */
 bool MixerFacade::musicIsLoaded() const { return mMixerContainer.getMusic() != nullptr; }
 
@@ -125,8 +139,14 @@ void MixerFacade::playMusic(int aVolume)
 	}
 }
 
+/**
+ * @brief Pause the music. If no music is playing, do nothing.
+ */
 void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
 
+/**
+ * @brief Resume the music. If no music is paused, start playing the music from the beginning.
+ */
 void MixerFacade::resumeMusic()
 {
 	if (!Mix_PlayingMusic())
@@ -140,11 +160,11 @@ void MixerFacade::resumeMusic()
 	}
 }
 
-void MixerFacade::stopMusic()
-{
-	Mix_HaltMusic();
-	//	Mix_RewindMusic();
-}
+/**
+ * @brief Stop the music. If no music is playing, do nothing. Calling playMusic after this will start the music from
+ * the beginning.
+ */
+void MixerFacade::stopMusic() { Mix_HaltMusic(); }
 
 /**
  * @brief Check if a sound effect is playing
@@ -172,7 +192,8 @@ bool MixerFacade::isMusicPlaying() const { return Mix_PlayingMusic(); }
  * @brief Convert a direction to an angle. The greater the argument, the further away the sound. This is simulated by
  * increasing the angle, up to a maximum of 90 degrees for the right, and -90 degrees for the left.
  *
- * @param aDirection The direction to convert. Negative is left, positive is right, 0 is center.
+ * @param aDirection The direction to convert. Negative is left, positive is right, 0 is center. Shuold be between -90
+ * and 90. If it is not, it will be clamped to these values.
  *
  * @return The angle of the direction.
  */
