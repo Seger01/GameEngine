@@ -1,7 +1,9 @@
 #include "Network/INetworkBehaviour.h"
 #include "Network/INetworkSerializable.h"
+#include "Network/NetworkClient.h"
 #include "Network/NetworkObject.h"
 #include "Network/NetworkRegister.h"
+#include "Network/NetworkServer.h"
 #include "Network/NetworkSharedFunctions.h"
 #include "Network/NetworkTransform.h"
 #include <gtest/gtest.h>
@@ -115,6 +117,51 @@ TEST_F(NetworkObjectTest, Clone) {
     EXPECT_TRUE(clonedNo->isOwner());
 	EXPECT_EQ(clonedNo->getClientGUID(), clientID);
 }
+
+TEST_F(NetworkObjectTest, CopyConstructor)
+{
+	NetworkObject no;
+	no.setOwner(true);
+	SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
+	no.setClientGUID(clientID);
+
+	NetworkObject copyNo(no);
+
+	EXPECT_TRUE(copyNo.isOwner());
+	EXPECT_EQ(copyNo.getClientGUID(), clientID);
+}
+
+TEST_F(NetworkObjectTest, MoveConstructor)
+{
+	NetworkObject no;
+	no.setOwner(true);
+	SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
+	no.setClientGUID(clientID);
+
+	NetworkObject movedNo(std::move(no));
+
+	EXPECT_TRUE(movedNo.isOwner());
+	EXPECT_EQ(movedNo.getClientGUID(), clientID);
+	EXPECT_FALSE(no.isOwner());
+	EXPECT_EQ(no.getClientGUID(), SLNet::UNASSIGNED_RAKNET_GUID);
+}
+
+TEST_F(NetworkObjectTest, MoveAssignment)
+{
+	NetworkObject no;
+	no.setOwner(true);
+	SLNet::RakNetGUID clientID = SLNet::RakNetGUID(12345);
+	no.setClientGUID(clientID);
+
+	NetworkObject movedNo;
+	movedNo = std::move(no);
+
+	EXPECT_TRUE(movedNo.isOwner());
+	EXPECT_EQ(movedNo.getClientGUID(), clientID);
+	EXPECT_FALSE(no.isOwner());
+	EXPECT_EQ(no.getClientGUID(), SLNet::UNASSIGNED_RAKNET_GUID);
+}
+
 class NetworkBehaviourTest : public ::testing::Test {
 protected:
     void SetUp() override {}
@@ -226,3 +273,49 @@ TEST_F(NetworkSharedFunctionsTest, SetBitStreamNetworkPacket)
 	EXPECT_EQ(extractedPacket.networkBehaviourID, 7);
 	EXPECT_EQ(extractedPacket.networkVariableID, 8);
 }
+
+// class NetworkTest : public ::testing::Test
+// {
+// protected:
+// 	void SetUp() override
+// 	{
+// 		// Set up necessary objects before each test.
+// 		serverObjects = std::vector<std::reference_wrapper<GameObject>>();
+// 		clientObjects = std::vector<std::reference_wrapper<GameObject>>();
+
+// 		server = std::make_unique<NetworkServer>(serverObjects, 60);
+// 		client = std::make_unique<NetworkClient>(clientObjects, 60);
+// 	}
+
+// 	void TearDown() override
+// 	{
+// 		// Clean up after each test.
+// 		server.reset();
+// 		client.reset();
+// 	}
+
+// 	std::unique_ptr<NetworkServer> server;
+// 	std::unique_ptr<NetworkClient> client;
+// 	std::vector<std::reference_wrapper<GameObject>> serverObjects;
+// 	std::vector<std::reference_wrapper<GameObject>> clientObjects;
+// };
+
+// TEST_F(NetworkTest, ServerClientConnection)
+// {
+// 	// Set server address for the client
+// 	client->setServerAddress("127.0.0.1");
+
+// 	// Connect client to server
+// 	client->connectToServer();
+
+// 	// Simulate server and client update loops
+// 	for (int i = 0; i < 100; ++i)
+// 	{
+// 		server->update();
+// 		client->update();
+// 	}
+
+// 	// Verify that the client is connected to the server
+// 	EXPECT_TRUE(client->isConnected());
+// 	EXPECT_TRUE(server->isConnected());
+// }
