@@ -166,7 +166,7 @@ void NetworkClient::sendTransform()
 			Transform transform = gameObject.getTransform();
 			NetworkTransform* networkTransform = gameObject.getComponents<NetworkTransform>()[0];
 			SLNet::BitStream bs;
-			NetworkSharedFunctions::makeBitStream(bs);
+			NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 			NetworkPacket networkPacket;
 			networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
 			networkPacket.networkObjectID = networkObject->getNetworkObjectID();
@@ -202,7 +202,7 @@ void NetworkClient::sendTransform()
 void NetworkClient::sendPlayerInit()
 {
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = mClient->GetMyGUID();
@@ -231,13 +231,8 @@ void NetworkClient::sendCustomSerialize()
 		{
 			for (int i = 0; i < networkBehaviour->GetNetworkVariables().size(); i++)
 			{
-				// if (!networkBehaviour->GetNetworkVariables().at(i).get().isDirty()) // If data is not changed do not
-				// 																	// send it
-				// {
-				// 	continue;
-				// }
 				SLNet::BitStream bs;
-				NetworkSharedFunctions::makeBitStream(bs);
+				NetworkSharedFunctions::reserverNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =

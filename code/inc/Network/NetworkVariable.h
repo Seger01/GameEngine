@@ -19,9 +19,9 @@ class NetworkVariableBase
 {
 public:
 	/**
-	 * @brief Default constructor. Initializes the dirty flag and network variable ID.
+	 * @brief Default constructor. Initializes the network variable ID.
 	 */
-	NetworkVariableBase() : mDirty(false), mNetworkVariableID(-1) {}
+	NetworkVariableBase() : mNetworkVariableID(-1) {}
 
 	/**
 	 * @brief Virtual destructor.
@@ -39,17 +39,6 @@ public:
 	 * @param stream The bit stream to deserialize from.
 	 */
 	virtual void deserialize(SLNet::BitStream& stream) = 0;
-
-	/**
-	 * @brief Checks if the network variable is dirty.
-	 * @return True if the variable is dirty, false otherwise.
-	 */
-	bool isDirty() const { return mDirty; }
-
-	/**
-	 * @brief Sets the dirty flag to false.
-	 */
-	void setClean() { mDirty = false; }
 
 	/**
 	 * @brief Gets the type ID of the network variable.
@@ -70,7 +59,6 @@ public:
 	int getNetworkVariableID() const { return mNetworkVariableID; }
 
 protected:
-	bool mDirty;			///< Indicates if the variable is dirty.
 	int mNetworkVariableID; ///< The network variable ID.
 };
 
@@ -79,7 +67,6 @@ protected:
  * @brief Template class for network variables, providing type-specific serialization.
  *
  * @note The templated type must implement the INetworkSerializable interface.
- * @note The templated type must have a != operator.
  * @tparam INetworkSerializableTemplate The type of the network variable.
  */
 template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase
@@ -112,14 +99,7 @@ public:
 	 * @brief Sets the value of the network variable.
 	 * @param aValue The value to set.
 	 */
-	void setValue(INetworkSerializableTemplate aValue)
-	{
-		if (mValue != aValue)
-		{
-			mValue = aValue;
-			mDirty = true;
-		}
-	}
+	void setValue(INetworkSerializableTemplate aValue) { mValue = aValue; }
 
 	/**
 	 * @brief Serializes the network variable to a bit stream.
