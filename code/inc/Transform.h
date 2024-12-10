@@ -46,6 +46,9 @@ struct Transform
 		);
 	}
 
+	// Overload the / operator
+	Transform operator/(const int& value) { return Transform(position / value, rotation / value, scale / value); }
+
 	// Helper functions to modify the transform
 	void translate(const Vector2& delta)
 	{
