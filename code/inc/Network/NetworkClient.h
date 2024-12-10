@@ -1,20 +1,31 @@
+/**
+ * @file NetworkClient.h
+ * @brief Header file for the NetworkClient class.
+ */
+
 #ifndef NETWORKCLIENT_H
 #define NETWORKCLIENT_H
 
 #include "GameObject.h"
+
+#include <slikenet/peerinterface.h>
+
 #include <chrono>
 #include <memory>
-#include <slikenet/peerinterface.h>
+#include <string>
 #include <vector>
 
+/**
+ * @class NetworkClient
+ * @brief Manages network client operations including connecting to server, sending and receiving packets.
+ */
 class NetworkClient {
 public:
-    NetworkClient(int aTickRate);
+    NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
     ~NetworkClient();
+
     void connectToServer();
-    void sendGameState();
-    void receiveGameState();
-    void update(std::vector<GameObject*>& aGameObjects);
+    void update();
     void discoverServers();
     std::vector<std::string>& getServerAddresses();
     void setServerAddress(std::string aServerAddress);
@@ -22,31 +33,28 @@ public:
 
 private:
     void sendPackets();
-    void requestPlayerInstantiation();
-    void handleIncomingPackets();
+    void sendToServer(SLNet::BitStream& aBitStream);
     void sendTransform();
+    void sendPlayerInit();
+    void sendCustomSerialize();
+
+    void handleIncomingPackets();
     void handleTransform(SLNet::Packet* aPacket);
     void handlePlayerInstantiation(SLNet::Packet* aPacket);
+    void handleCustomSerialize(SLNet::Packet* aPacket);
     void handlePlayerDestruction(SLNet::Packet* aPacket);
-    void sendToServer(SLNet::BitStream& aBitStream);
-    void makeBitStream(SLNet::BitStream& aBitStream, SLNet::MessageID aMessageID);
-    void getBitStreamData(SLNet::BitStream& aBitStream);
-    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp);
-    void getBitStreamData(SLNet::BitStream& aBitStream, SLNet::RakNetGUID& aGUID);
-    void getBitStreamData(SLNet::BitStream& aBitStream, std::chrono::milliseconds::rep& aTimeStamp,
-                          SLNet::RakNetGUID& aGUID);
 
 private:
-    bool mIsConnected;
-    bool mIsConnecting;
-    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient;
-    std::vector<std::string> mServerAddresses;
-    std::string mServerAddress;
-    SLNet::RakNetGUID mServerGUID;
+    bool mIsConnected; ///< Indicates if the client is connected to the server.
+    bool mIsConnecting; ///< Indicates if the client is in the process of connecting to the server.
+    std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)> mClient; ///< RakNet client interface.
+    std::vector<std::string> mServerAddresses; ///< List of discovered server addresses.
+    std::string mServerAddress; ///< Server address to connect to.
+    SLNet::RakNetGUID mServerGUID; ///< GUID of the connected server.
 
-    std::vector<GameObject*>* mGameObjects;
-    int mTickRate;
-    std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime;
+    std::vector<std::reference_wrapper<GameObject>>& mObjects; ///< Reference to a vector of GameObjects.
+    int mTickRate; ///< Tick rate for sending packets.
+    std::chrono::time_point<std::chrono::steady_clock> mLastSendPacketsTime; ///< Last time packets were sent.
 };
 
 #endif // NETWORKCLIENT_H

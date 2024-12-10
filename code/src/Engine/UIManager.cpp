@@ -4,65 +4,163 @@
 #include "Components/IButtonBehaviourScript.h"
 #include "Engine/EngineBravo.h"
 #include "EventManager.h"
+#include "Input.h"
 #include "Scene.h"
 
 UIManager::UIManager() {}
 
 UIManager::~UIManager() {}
 
-void UIManager::init() {
-    EventManager& eventManager = EngineBravo::getInstance().getEventManager();
+void UIManager::init()
+{
+	EventManager& eventManager = EngineBravo::getInstance().getEventManager();
 
-    eventManager.subscribe(std::bind(&UIManager::handleEvent, this, std::placeholders::_1), EventType::MouseButtonDown);
+	eventManager.subscribe(std::bind(&UIManager::handleMouseDownEvent, this, std::placeholders::_1),
+						   EventType::MouseButtonDown);
+	eventManager.subscribe(std::bind(&UIManager::handleMouseUpEvent, this, std::placeholders::_1),
+						   EventType::MouseButtonUp);
 }
 
-void UIManager::handleEvent(const Event& aEvent) { mEventQueue.push_back(aEvent); }
+void UIManager::handleMouseDownEvent(const Event& aEvent) { mMouseDownEventQueue.push_back(aEvent); }
 
-void UIManager::update(Scene* aScene) {
-    for (GameObject* gameObject : aScene->getGameObjects()) {
-        if (dynamic_cast<Button*>(gameObject)) {
-            Button* button = dynamic_cast<Button*>(gameObject);
+void UIManager::handleMouseUpEvent(const Event& aEvent) { mMouseUpEventQueue.push_back(aEvent); }
 
-            Camera& currentCamera = aScene->getActiveCamera();
+void UIManager::update(Scene* aScene)
+{
+	for (GameObject& gameObject : mObjects)
+	{
+		Button& button = dynamic_cast<Button&>(gameObject);
 
-            Vector2 cameraOrigin = currentCamera.getOrigin();
+		Camera* currentCamera = aScene->getCameraWithTag("MainCamera");
 
-            int windowWidth = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().x;
-            int windowHeight = EngineBravo::getInstance().getRenderSystem().getWindow().getSize().y;
+		for (Event event : mMouseDownEventQueue)
+		{
+			Point mouseScreenPos = event.mouse.position;
 
-            int buttonWidth = button->getWidth();
-            int buttonHeight = button->getHeight();
+			Vector2 worldMousePos =
+				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
 
-            Vector2 buttonPosition = button->getTransform().position;
-            Vector2 drawPosition = buttonPosition - cameraOrigin;
+			if (button.interactable())
+			{
+				if (worldMousePos.x >= button.getTransform().position.x &&
+					worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+					worldMousePos.y >= button.getTransform().position.y &&
+					worldMousePos.y <= button.getTransform().position.y + button.getHeight())
+				{
+					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
+					{
+						if (event.type == EventType::MouseButtonDown)
+						{
+							for (IButtonBehaviourScript* buttonBehaviourScript :
+								 button.getComponents<IButtonBehaviourScript>())
+							{
+								buttonBehaviourScript->onButtonPressed();
+								button.activateOnClickCallback();
+							}
+						}
+					}
+				}
+			}
+		}
 
-            drawPosition.x = std::round(drawPosition.x * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
-            drawPosition.y =
-                std::round(drawPosition.y * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
+		for (Event event : mMouseUpEventQueue)
+		{
+			Point mouseScreenPos = event.mouse.position;
 
-            buttonWidth = std::round(buttonWidth * (static_cast<float>(windowWidth) / currentCamera.getWidth()));
+			Vector2 worldMousePos =
+				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
 
-            buttonHeight = std::round(buttonHeight * (static_cast<float>(windowHeight) / currentCamera.getHeight()));
+			if (button.interactable())
+			{
+				if (worldMousePos.x >= button.getTransform().position.x &&
+					worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+					worldMousePos.y >= button.getTransform().position.y &&
+					worldMousePos.y <= button.getTransform().position.y + button.getHeight())
+				{
+					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
+					{
+						if (event.type == EventType::MouseButtonUp)
+						{
+							for (IButtonBehaviourScript* buttonBehaviourScript :
+								 button.getComponents<IButtonBehaviourScript>())
+							{
+								buttonBehaviourScript->onButtonReleased();
+								button.activateOnReleaseCallback();
+							}
+						}
+					}
+				}
+			}
+		}
 
-            for (Event event : mEventQueue) {
-                Point mouseScreenPos = event.mouse.position;
+		Point currentMousePos = Input::getInstance().MousePosition();
 
-                if (button->interactable()) {
-                    if (mouseScreenPos.x >= drawPosition.x && mouseScreenPos.x <= drawPosition.x + buttonWidth &&
-                        mouseScreenPos.y >= drawPosition.y && mouseScreenPos.y <= drawPosition.y + buttonHeight) {
-                        if (button->getComponents<IButtonBehaviourScript>().size() > 0) {
-                            if (event.type == EventType::MouseButtonDown) {
-                                for (IButtonBehaviourScript* buttonBehaviourScript :
-                                     button->getComponents<IButtonBehaviourScript>()) {
-                                    buttonBehaviourScript->onButtonPressed();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+		Vector2 worldMousePos =
+			EngineBravo::getInstance().getRenderSystem().screenToWorldPos(currentMousePos, *currentCamera);
 
-    mEventQueue.clear();
+		if (button.interactable())
+		{
+			if (worldMousePos.x >= button.getTransform().position.x &&
+				worldMousePos.x <= button.getTransform().position.x + button.getWidth() &&
+				worldMousePos.y >= button.getTransform().position.y &&
+				worldMousePos.y <= button.getTransform().position.y + button.getHeight())
+			{
+				if (button.getComponents<IButtonBehaviourScript>().size() > 0)
+				{
+					for (IButtonBehaviourScript* buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
+					{
+						if (!button.isHovered())
+						{
+							buttonBehaviourScript->onButtonHover();
+							button.setHovered(true);
+						}
+					}
+				}
+			}
+			else
+			{
+				if (button.getComponents<IButtonBehaviourScript>().size() > 0)
+				{
+					for (IButtonBehaviourScript* buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
+					{
+						if (button.isHovered())
+						{
+							buttonBehaviourScript->onButtonUnhover();
+							button.setHovered(false);
+						}
+					}
+				}
+			}
+		}
+	}
+	mMouseDownEventQueue.clear();
+	mMouseUpEventQueue.clear();
 }
+
+void UIManager::addObject(GameObject& aObject)
+{
+	auto it = std::find_if(mObjects.begin(), mObjects.end(),
+						   [&aObject](const std::reference_wrapper<GameObject>& wrapper)
+						   {
+							   return &wrapper.get() == &aObject; // Compare addresses
+						   });
+	if (it == mObjects.end())
+	{
+		// Object has not been added yet
+		mObjects.push_back(aObject);
+	}
+}
+
+void UIManager::removeObject(GameObject& aObject)
+{
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
+	if (it != mObjects.end())
+	{
+		mObjects.erase(it, mObjects.end());
+	}
+}
+
+const std::vector<std::reference_wrapper<GameObject>>& UIManager::getObjects() const { return mObjects; }
+
+void UIManager::clearObjects() { mObjects.clear(); }

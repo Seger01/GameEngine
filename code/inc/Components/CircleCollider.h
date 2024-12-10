@@ -1,15 +1,40 @@
-#pragma once
+#ifndef CIRCLE_COLLIDER_H
+#define CIRCLE_COLLIDER_H
 
 #include "Collider.h"
 
 class CircleCollider : public Collider
 {
-    public:
-        CircleCollider();
-        ~CircleCollider();
+public:
+	CircleCollider(float aRadius = 0.0f, std::string aTag = "defaultCircleCollider");
+	~CircleCollider();
 
-        std::unique_ptr<Component> clone() const override;
+	float getRadius() const;
+	void setRadius(float radius);
 
-    private:
-        float mRadius;
+	bool getTrigger() const;
+	void setTrigger(bool isTrigger);
+
+	int getCollideCategory() const;
+	void setCollideCategory(int category);
+
+	std::vector<int> getCollideWithCategory() const;
+	void setCollideWithCategory(std::vector<int> aCollideWith);
+
+	std::unique_ptr<Component> clone() const override;
+
+	bool getIsUpdated();
+	void setIsUpdated(bool aUpdated);
+
+private:
+	std::vector<int> mCollideWithCategory;
+	int mCollideCategory;
+
+	bool mIsTrigger;
+
+	float mRadius;
+
+	bool mIsUpdated;
 };
+
+#endif // CIRCLE_COLLIDER_H

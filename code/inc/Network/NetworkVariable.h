@@ -1,42 +1,146 @@
+/**
+ * @file NetworkVariable.h
+ * @brief Defines the NetworkVariableBase and NetworkVariable classes for network serialization.
+ */
+
 #ifndef NETWORKVARIABLE_H
 #define NETWORKVARIABLE_H
 
-#include <stdexcept> // For std::runtime_error
+#include "Network/INetworkBehaviour.h"
+#include "Network/NetworkInformation.h"
 
-enum class WritePermission
-{
-    ReadOnly,
-    ReadWrite
-};
+#include <stdexcept>
 
-template <typename T>
-class NetworkVariable
+/**
+ * @class NetworkVariableBase
+ * @brief Base class for network variables, providing serialization and dirty state management.
+ */
+class NetworkVariableBase
 {
 public:
-    NetworkVariable(WritePermission aWritePermission);
-    T getValue() const;
-    void setValue(T aValue);
+	/**
+	 * @brief Default constructor. Initializes the dirty flag and network variable ID.
+	 */
+	NetworkVariableBase() : mDirty(false), mNetworkVariableID(-1) {}
 
-private:
-    T mValue;
+	/**
+	 * @brief Virtual destructor.
+	 */
+	virtual ~NetworkVariableBase() = default;
+
+	/**
+	 * @brief Serializes the network variable to a bit stream.
+	 * @param stream The bit stream to serialize to.
+	 */
+	virtual void serialize(SLNet::BitStream& stream) const = 0;
+
+	/**
+	 * @brief Deserializes the network variable from a bit stream.
+	 * @param stream The bit stream to deserialize from.
+	 */
+	virtual void deserialize(SLNet::BitStream& stream) = 0;
+
+	/**
+	 * @brief Checks if the network variable is dirty.
+	 * @return True if the variable is dirty, false otherwise.
+	 */
+	bool isDirty() const { return mDirty; }
+
+	/**
+	 * @brief Sets the dirty flag to false.
+	 */
+	void setClean() { mDirty = false; }
+
+	/**
+	 * @brief Gets the type ID of the network variable.
+	 * @return The type ID.
+	 */
+	virtual uint32_t getTypeId() const = 0;
+
+	/**
+	 * @brief Sets the network variable ID.
+	 * @param aNetworkVariableID The network variable ID to set.
+	 */
+	void setNetworkVariableID(int aNetworkVariableID) { mNetworkVariableID = aNetworkVariableID; }
+
+	/**
+	 * @brief Gets the network variable ID.
+	 * @return The network variable ID.
+	 */
+	int getNetworkVariableID() const { return mNetworkVariableID; }
+
+protected:
+	bool mDirty;			///< Indicates if the variable is dirty.
+	int mNetworkVariableID; ///< The network variable ID.
 };
 
-template <typename T>
-NetworkVariable<T>::NetworkVariable(WritePermission aWritePermission)
+/**
+ * @class NetworkVariable
+ * @brief Template class for network variables, providing type-specific serialization.
+ *
+ * @note The templated type must implement the INetworkSerializable interface.
+ * @note The templated type must have a != operator.
+ * @tparam INetworkSerializableTemplate The type of the network variable.
+ */
+template <typename INetworkSerializableTemplate> class NetworkVariable : public NetworkVariableBase
 {
-    throw std::runtime_error("NetworkVariable::NetworkVariable() not implemented");
-}
+public:
+	/**
+	 * @brief Constructor. Registers the network variable with the owner.
+	 * @param aOwner The owner of the network variable.
+	 * @throws std::runtime_error if the owner is nullptr.
+	 */
+	NetworkVariable(INetworkBehaviour* aOwner) : NetworkVariableBase()
+	{
+		if (aOwner)
+		{
+			aOwner->RegisterNetworkVariable(this);
+		}
+		else
+		{
+			throw std::runtime_error("NetworkVariable::NetworkVariable() aOwner is nullptr");
+		}
+	}
 
-template <typename T>
-T NetworkVariable<T>::getValue() const
-{
-    throw std::runtime_error("NetworkVariable::getValue() not implemented");
-}
+	/**
+	 * @brief Gets the value of the network variable.
+	 * @return The value of the network variable.
+	 */
+	INetworkSerializableTemplate& getValue() { return mValue; }
 
-template <typename T>
-void NetworkVariable<T>::setValue(T aValue)
-{
-    throw std::runtime_error("NetworkVariable::setValue() not implemented");
-}
+	/**
+	 * @brief Sets the value of the network variable.
+	 * @param aValue The value to set.
+	 */
+	void setValue(INetworkSerializableTemplate aValue)
+	{
+		if (mValue != aValue)
+		{
+			mValue = aValue;
+			mDirty = true;
+		}
+	}
+
+	/**
+	 * @brief Serializes the network variable to a bit stream.
+	 * @param stream The bit stream to serialize to.
+	 */
+	void serialize(SLNet::BitStream& stream) const override { mValue.serialize(stream); }
+
+	/**
+	 * @brief Deserializes the network variable from a bit stream.
+	 * @param stream The bit stream to deserialize from.
+	 */
+	void deserialize(SLNet::BitStream& stream) override { mValue.deserialize(stream); }
+
+	/**
+	 * @brief Gets the type ID of the network variable.
+	 * @return The type ID.
+	 */
+	uint32_t getTypeId() const override { return GetTypeId<INetworkSerializableTemplate>(); }
+
+private:
+	INetworkSerializableTemplate mValue; ///< The value of the network variable.
+};
 
 #endif // NETWORKVARIABLE_H

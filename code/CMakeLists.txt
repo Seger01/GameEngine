@@ -18,9 +18,6 @@ option(ENABLE_DEBUG "Enable debug mode" OFF)
 # Option to enable or disable building tests
 option(ENABLE_TESTS "Enable building tests" OFF)
 
-# Option to enable or disable building the testGame
-option(ENABLE_TESTGAME "Enable building the testGame" OFF)
-
 # Set the build type based on the ENABLE_DEBUG option
 if(ENABLE_DEBUG)
     message("Debug mode enabled")
@@ -110,12 +107,28 @@ set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlo
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
 
-if(ENABLE_TESTGAME)
-    # Add the testGame subdirectory
-    add_subdirectory(testGame)
-endif()
-
 if(ENABLE_TESTS)
     # Add the test subdirectory
     add_subdirectory(test)
+endif()
+
+# Add a custom target for Doxygen
+find_package(Doxygen REQUIRED)
+
+if(DOXYGEN_FOUND)
+    # Paths
+    set(DOXYFILE_PATH "${CMAKE_SOURCE_DIR}/../Doxyfile")
+    set(DOXYGEN_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/build/doxygen")
+
+    # Create the output directory if it doesn't exist
+    file(MAKE_DIRECTORY "${DOXYGEN_OUTPUT_DIR}")
+
+    # Create a custom target to invoke the custom command
+    add_custom_target( Doxygen
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..
+        COMMENT "Generating API documentation with Doxygen"
+    )
+else()
+    message(FATAL_ERROR "Doxygen is required but was not found on the system.")
 endif()

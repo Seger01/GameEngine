@@ -14,13 +14,15 @@ interface INetworkBehaviour implements IBehavourScript_Proxy{
     + {abstract} void serverRpc()
     + {abstract} void clientRpc()
     + {abstract} void OnNetworkSpawn()
+
+    - std::vector(NetworkVariableBase*) mNetworkVariables
     
 }
 
 ' Template class for network variables
-class NetworkVariable{
+class NetworkVariable implements NetworkVariableBase{
     + networkVariable(WritePermission)
-    + T Value
+    + <INetworkSerialiazble>(T) Value
     
 }
 
@@ -62,31 +64,13 @@ class NetworkHost {
 '     - mMessageType: string
 ' }
 
-class NetworkSceneManager {
-    + LoadScene()
-    + SyncScene()
-    + UnloadScene()
-}
-
-' class NetworkInputManager {
-'     + CaptureInput()
-'     + SendInput()
-'     + ApplyInputPrediction()
+' class NetworkSceneManager {
+'     + LoadScene()
+'     + SyncScene()
+'     + UnloadScene()
 ' }
 
-' class NetworkReplicationManager {
-'     + ReplicateObjectState()
-'     + SyncWithClients()
-'     + ApplyInterpolation()
-' }
-
-' class AuthorityManager {
-'     + AssignAuthority()
-'     + RequestControl()
-'     - mObjectAuthority: string
-' }
-
-class INetworkSerializable {
+interface INetworkSerializable {
     + {abstract} NetworkSerialize()
     ' + Deserialize()
 }
@@ -100,7 +84,7 @@ NetworkObject *-- "*" INetworkBehaviour
 NetworkObject -- NetworkTransform
 
 INetworkBehaviour <-- NetworkVariable
-INetworkBehaviour <-- INetworkSerializable
+NetworkVariable <-- INetworkSerializable
 
 ' NetworkClient --> NetworkInputManager
 ' NetworkClient --> NetworkMessage
@@ -114,7 +98,7 @@ NetworkHost <-- NetworkServer
 NetworkHost <-- NetworkClient
 
 ' AuthorityManager <-- NetworkObject
-NetworkSceneManager *-- "*" NetworkObject
+' NetworkSceneManager *-- "*" NetworkObject
 
 }
 
@@ -122,7 +106,7 @@ Networking *-- NetworkObject
 Networking *-- "0..1"NetworkClient
 Networking *-- "0..1"NetworkServer
 Networking *-- "0..1"NetworkHost
-Networking *-- NetworkSceneManager
+' Networking *-- NetworkSceneManager
 Networking *-- "1" NetworkObject
 
 @enduml
