@@ -233,8 +233,6 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			float xPivot = 0;
 			float yPivot = 0;
-			float firstOffx = 0;
-			float firstOffy = 0;
 			int i = 0;
 
 			if (gameObject.hasComponent<BoxCollider>())
@@ -249,8 +247,6 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 					{
 						xPivot += boxCollider->getWidth();
 						yPivot += boxCollider->getHeight();
-						// firstOffx = transform.position.x;
-						// firstOffy = transform.position.y;
 					}
 					else
 					{
@@ -274,16 +270,8 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			}
 
 			Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-			if (i > 0)
-			{
-				position.x = position.x - xPivot + firstOffx;
-				position.y = position.y - yPivot + firstOffy;
-			}
-			else
-			{
-				position.x = position.x - xPivot;
-				position.y = position.y - yPivot;
-			}
+			position.x = position.x - xPivot;
+			position.y = position.y - yPivot;
 			float rotation = mWorld.getRotation(rigidBody->getBodyId());
 
 			Transform transform = gameObject.getTransform();
@@ -312,8 +300,6 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 
 				float xPivot = 0;
 				float yPivot = 0;
-				float firstOffx = 0;
-				float firstOffy = 0;
 				int i = 0;
 
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
@@ -327,8 +313,6 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 					{
 						xPivot += boxCollider->getWidth();
 						yPivot += boxCollider->getHeight();
-						// firstOffx = transform.position.x;
-						// firstOffy = transform.position.y;
 					}
 					else
 					{
@@ -345,24 +329,11 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 						}
 						i++;
 					}
-
-					// transform.position.x = transform.position.x + boxCollider->getWidth();
-					// transform.position.y = transform.position.y + boxCollider->getHeight();
-
-					// boxCollider->setTransform(transform);
 				}
 
 				Transform transform = gameObject.getTransform();
-				if (i > 0)
-				{
-					transform.position.x = transform.position.x + xPivot - firstOffx;
-					transform.position.y = transform.position.y + yPivot - firstOffy;
-				}
-				else
-				{
-					transform.position.x = transform.position.x + xPivot;
-					transform.position.y = transform.position.y + yPivot;
-				}
+				transform.position.x = transform.position.x + xPivot;
+				transform.position.y = transform.position.y + yPivot;
 
 				gameObject.setTransform(transform);
 			}
