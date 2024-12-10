@@ -32,9 +32,9 @@ void PhysicsEngine::applyForces()
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
-			// mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
+			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
 			rigidBody->clearForcesBuffer();
-			// rigidBody->clearTorqueBuffer();
+			rigidBody->clearTorqueBuffer();
 
 			if (!rigidBody->getTorqueBuffer().empty())
 			{
@@ -75,7 +75,6 @@ void PhysicsEngine::applyForces()
 					impulseLeft.push_back(Vector2(0, -force));
 					impulseRight.push_back(Vector2(0, force));
 				}
-				std::cout << "X: " << xPivot << " Y: " << yPivot << std::endl;
 				mWorld.applyLinearImpulse(impulseLeft, impulseRight, xPivot, yPivot, rigidBody->getBodyId());
 				rigidBody->clearTorqueBuffer();
 			}
@@ -124,11 +123,9 @@ void PhysicsEngine::setPositions()
 			// float x = (transform.position.x - xPivot) * cos(radians) - (transform.position.y - yPivot) * sin(radians)
 			// + 		  xPivot; float y = (transform.position.x - xPivot) * sin(radians) + (transform.position.y -
 			// yPivot) * cos(radians) + 		  yPivot;
-			//
 			// newPos = Vector2(x, y);
 			//
-
-			mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
+			// mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			//}
 		}
 	}
