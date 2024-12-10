@@ -336,6 +336,10 @@ void RenderSystem::renderLayer(const Scene& aScene, int aLayer, const Camera& ac
 {
 	for (GameObject& gameObject : mObjects)
 	{
+		if (!gameObject.isActive())
+		{
+			continue;
+		}
 		for (auto animation : gameObject.getComponents<Animation>())
 		{
 			if (animation->isActive() && animation->getLayer() == aLayer)
