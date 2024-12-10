@@ -32,9 +32,53 @@ void PhysicsEngine::applyForces()
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
-			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
+			// mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
 			rigidBody->clearForcesBuffer();
-			rigidBody->clearTorqueBuffer();
+			// rigidBody->clearTorqueBuffer();
+
+			if (!rigidBody->getTorqueBuffer().empty())
+			{
+				float xPivot = 0;
+				float yPivot = 0;
+				int i = 0;
+
+				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				{
+					Transform transform = boxCollider->getTransform();
+
+					if (xPivot == 0)
+					{
+						xPivot += boxCollider->getWidth();
+						yPivot += boxCollider->getHeight();
+					}
+					else
+					{
+						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+
+						if (extraWidth < 0)
+						{
+							xPivot += abs(extraWidth);
+						}
+						if (extraHeight < 0)
+						{
+							yPivot += abs(extraHeight);
+						}
+						i++;
+					}
+				}
+				std::vector<Vector2> impulseLeft;
+				std::vector<Vector2> impulseRight;
+
+				for (float force : rigidBody->getTorqueBuffer())
+				{
+					impulseLeft.push_back(Vector2(0, -force));
+					impulseRight.push_back(Vector2(0, force));
+				}
+				std::cout << "X: " << xPivot << " Y: " << yPivot << std::endl;
+				mWorld.applyLinearImpulse(impulseLeft, impulseRight, xPivot, yPivot, rigidBody->getBodyId());
+				rigidBody->clearTorqueBuffer();
+			}
 		}
 	}
 }
@@ -83,10 +127,8 @@ void PhysicsEngine::setPositions()
 			//
 			// newPos = Vector2(x, y);
 			//
-			std::cout << "Pos after calculation: " << newPos.x << " " << newPos.y << std::endl;
 
 			mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
-			std::cout << "Rotation is: " << mWorld.getRotation(rigidBody->getBodyId()) << std::endl;
 			//}
 		}
 	}
@@ -231,51 +273,25 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-			float xPivot = 0;
-			float yPivot = 0;
-			int i = 0;
 
 			if (gameObject.hasComponent<BoxCollider>())
 			{
-				RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
-
-					Transform transform = boxCollider->getTransform();
-
-					if (xPivot == 0)
-					{
-						xPivot += boxCollider->getWidth();
-						yPivot += boxCollider->getHeight();
-					}
-					else
-					{
-						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
-						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
-
-						if (extraWidth < 0)
-						{
-							xPivot += abs(extraWidth);
-						}
-						if (extraHeight < 0)
-						{
-							yPivot += abs(extraHeight);
-						}
-						i++;
-					}
-
 					boxCollider->setWidth(boxCollider->getWidth() * 2);
 					boxCollider->setHeight(boxCollider->getHeight() * 2);
+
+					Transform transform = boxCollider->getTransform();
+					transform.position.x = transform.position.x - boxCollider->getWidth() / 2;
+					transform.position.y = transform.position.y - boxCollider->getHeight() / 2;
+					boxCollider->setTransform(transform);
 				}
 			}
 
 			Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-			position.x = position.x - xPivot;
-			position.y = position.y - yPivot;
 			float rotation = mWorld.getRotation(rigidBody->getBodyId());
 
 			Transform transform = gameObject.getTransform();
-
 			transform.position = position;
 			transform = Transform(Vector2(position.x, position.y));
 
@@ -284,61 +300,137 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			gameObject.setTransform(transform);
 		}
 	}
+	// for (GameObject& gameObject : aGameObjects)
+	// {
+	// 	if (gameObject.hasComponent<RigidBody>())
+	// 	{
+	// 		RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	// 		float xPivot = 0;
+	// 		float yPivot = 0;
+	// 		int i = 0;
+	//
+	// 		if (gameObject.hasComponent<BoxCollider>())
+	// 		{
+	// 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	// 			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+	// 			{
+	//
+	// 				Transform transform = boxCollider->getTransform();
+	//
+	// 				if (xPivot == 0)
+	// 				{
+	// 					xPivot += boxCollider->getWidth();
+	// 					yPivot += boxCollider->getHeight();
+	// 				}
+	// 				else
+	// 				{
+	// 					float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+	// 					float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+	//
+	// 					if (extraWidth < 0)
+	// 					{
+	// 						xPivot += abs(extraWidth);
+	// 					}
+	// 					if (extraHeight < 0)
+	// 					{
+	// 						yPivot += abs(extraHeight);
+	// 					}
+	// 					i++;
+	// 				}
+	//
+	// 				boxCollider->setWidth(boxCollider->getWidth() * 2);
+	// 				boxCollider->setHeight(boxCollider->getHeight() * 2);
+	// 			}
+	// 		}
+	//
+	// 		Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+	// 		position.x = position.x - xPivot;
+	// 		position.y = position.y - yPivot;
+	// 		float rotation = mWorld.getRotation(rigidBody->getBodyId());
+	//
+	// 		Transform transform = gameObject.getTransform();
+	//
+	// 		transform.position = position;
+	// 		transform = Transform(Vector2(position.x, position.y));
+	//
+	// 		transform.rotation = rotation;
+	//
+	// 		gameObject.setTransform(transform);
+	// 	}
+	// }
 }
 
 // Converts GameObjects to Box2D world positions
 void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
-
 	for (GameObject& gameObject : aGameObjects)
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			if (gameObject.hasComponent<BoxCollider>())
 			{
-				RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-
-				float xPivot = 0;
-				float yPivot = 0;
-				int i = 0;
-
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
-
 					boxCollider->setWidth(boxCollider->getWidth() / 2);
 					boxCollider->setHeight(boxCollider->getHeight() / 2);
+
 					Transform transform = boxCollider->getTransform();
-
-					if (xPivot == 0)
-					{
-						xPivot += boxCollider->getWidth();
-						yPivot += boxCollider->getHeight();
-					}
-					else
-					{
-						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
-						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
-
-						if (extraWidth < 0)
-						{
-							xPivot += abs(extraWidth);
-						}
-						if (extraHeight < 0)
-						{
-							yPivot += abs(extraHeight);
-						}
-						i++;
-					}
+					transform.position.x = transform.position.x + boxCollider->getWidth();
+					transform.position.y = transform.position.y + boxCollider->getHeight();
+					boxCollider->setTransform(transform);
 				}
-
-				Transform transform = gameObject.getTransform();
-				transform.position.x = transform.position.x + xPivot;
-				transform.position.y = transform.position.y + yPivot;
-
-				gameObject.setTransform(transform);
 			}
 		}
 	}
+	// for (GameObject& gameObject : aGameObjects)
+	// {
+	// 	if (gameObject.hasComponent<RigidBody>())
+	// 	{
+	// 		if (gameObject.hasComponent<BoxCollider>())
+	// 		{
+	// 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	//
+	// 			float xPivot = 0;
+	// 			float yPivot = 0;
+	// 			int i = 0;
+	//
+	// 			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+	// 			{
+	//
+	// 				boxCollider->setWidth(boxCollider->getWidth() / 2);
+	// 				boxCollider->setHeight(boxCollider->getHeight() / 2);
+	// 				Transform transform = boxCollider->getTransform();
+	//
+	// 				if (xPivot == 0)
+	// 				{
+	// 					xPivot += boxCollider->getWidth();
+	// 					yPivot += boxCollider->getHeight();
+	// 				}
+	// 				else
+	// 				{
+	// 					float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+	// 					float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+	//
+	// 					if (extraWidth < 0)
+	// 					{
+	// 						xPivot += abs(extraWidth);
+	// 					}
+	// 					if (extraHeight < 0)
+	// 					{
+	// 						yPivot += abs(extraHeight);
+	// 					}
+	// 					i++;
+	// 				}
+	// 			}
+	//
+	// 			Transform transform = gameObject.getTransform();
+	// 			transform.position.x = transform.position.x + xPivot;
+	// 			transform.position.y = transform.position.y + yPivot;
+	//
+	// 			gameObject.setTransform(transform);
+	// 		}
+	// 	}
+	// }
 }
 
 void PhysicsEngine::addObject(GameObject& aObject)
