@@ -288,6 +288,54 @@ TEST_F(NetworkSharedFunctionsTest, SetBitStreamNetworkPacket)
 	EXPECT_EQ(extractedPacket.networkVariableID, 8);
 }
 
+class INetworkBehaviourTest : public ::testing::Test
+{
+protected:
+	void SetUp() override
+	{
+		gameObject.addComponent<NetworkObject>();
+		gameObject.addComponent<ConcreteNetworkBehaviour>();
+		behaviour = gameObject.getComponents<INetworkBehaviour>()[0];
+	}
+
+	GameObject gameObject;
+	INetworkBehaviour* behaviour;
+};
+
+TEST_F(INetworkBehaviourTest, GetNetworkBehaviourID)
+{
+	uint8_t id = behaviour->getNetworkBehaviourID();
+	EXPECT_EQ(id, 1);
+}
+
+TEST_F(INetworkBehaviourTest, ServerRpc) { EXPECT_THROW(behaviour->serverRpc(), std::runtime_error); }
+
+TEST_F(INetworkBehaviourTest, ClientRpc) { EXPECT_THROW(behaviour->clientRpc(), std::runtime_error); }
+
+TEST_F(INetworkBehaviourTest, OnNetworkSpawn) { EXPECT_THROW(behaviour->onNetworkSpawn(), std::runtime_error); }
+
+TEST_F(INetworkBehaviourTest, RegisterNetworkVariable)
+{
+	const auto& variables = behaviour->GetNetworkVariables();
+	ASSERT_EQ(variables.size(), 1);
+}
+
+TEST_F(INetworkBehaviourTest, IsOwner)
+{
+	NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
+	networkObject->setOwner(true);
+	EXPECT_TRUE(behaviour->isOwner());
+
+	networkObject->setOwner(false);
+	EXPECT_FALSE(behaviour->isOwner());
+}
+
+TEST_F(INetworkBehaviourTest, Destroy)
+{
+	behaviour->destroy();
+	EXPECT_TRUE(gameObject.getComponents<INetworkBehaviour>().empty());
+}
+
 // class NetworkTest : public ::testing::Test
 // {
 // protected:
