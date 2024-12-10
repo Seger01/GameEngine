@@ -26,36 +26,18 @@ protected:
                     "image": "tileset.png",
                     "tiles": [
                         {
-                            "id": 0,
-                            "objectgroup": {
-                                "objects": [
-                                    {"x": 0, "y": 0, "width": 32, "height": 32}
-                                ]
-                            }
+                            "id": 0
                         },
                         {
                             "id": 1,
-                            "objectgroup": {
-                                "objects": [
-                                    {"x": 0, "y": 0, "width": 32, "height": 32, "properties": [{"name": "collider", "type": "bool", "value": true}]}
-                                ]
-                            }
+                            "properties": [{"name": "collider", "type": "bool", "value": true}]
                         },
                         {
-                            "id": 2,
-                            "objectgroup": {
-                                "objects": [
-                                    {"x": 0, "y": 0, "width": 32, "height": 32}
-                                ]
-                            }
+                            "id": 2
                         },
                         {
                             "id": 3,
-                            "objectgroup": {
-                                "objects": [
-                                    {"x": 0, "y": 0, "width": 32, "height": 32, "properties": [{"name": "collider", "type": "bool", "value": true}]}
-                                ]
-                            }
+                            "properties": [{"name": "collider", "type": "bool", "value": true}]
                         }
                     ]
                 }
@@ -63,9 +45,14 @@ protected:
             "layers": [
                 {
                     "type": "tilelayer",
-                    "width": 2,
-                    "height": 2,
-                    "data": [1, 2, 3, 4],
+                    "width": 4,
+                    "height": 4,
+                    "data": [
+                        0, 2, 0, 0,
+                        2, 0, 2, 0,
+                        0, 2, 0, 2,
+                        0, 0, 2, 0
+                    ],
                     "name": "Graph"
                 }
             ]
@@ -91,11 +78,15 @@ TEST_F(MapToGraphTest, ConvertToGraph)
 
     const auto& adjacencyList = mapToGraph.getAdjacencyList();
 
-    ASSERT_EQ(adjacencyList.size(), 2);
+    ASSERT_EQ(adjacencyList.size(), 6);
 
-    // Check connections for each walkable node
-    EXPECT_EQ(adjacencyList.at(0).size(), 1);
-    EXPECT_EQ(adjacencyList.at(2).size(), 1);
+    // Check connections for each non-zero node
+    EXPECT_EQ(adjacencyList.at(1).size(), 2); // Node 1 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(4).size(), 2); // Node 4 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(6).size(), 3); // Node 6 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(9).size(), 3); // Node 9 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(11).size(), 2); // Node 11 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(14).size(), 2); // Node 14 (Tile ID 2)
 }
 
 TEST_F(MapToGraphTest, NoGraphLayer) {
@@ -115,12 +106,7 @@ TEST_F(MapToGraphTest, NoGraphLayer) {
                 "image": "tileset.png",
                 "tiles": [
                     {
-                        "id": 0,
-                        "objectgroup": {
-                            "objects": [
-                                {"x": 0, "y": 0, "width": 32, "height": 32}
-                            ]
-                        }
+                        "id": 0
                     }
                 ]
             }
@@ -132,13 +118,7 @@ TEST_F(MapToGraphTest, NoGraphLayer) {
                 "height": 2,
                 "data": [1, 2, 3, 4],
                 "name": "Floor"
-            },
-            {  
-                "type": "objectgroup",
-                "objects": [
-                    {"x": 10, "y": 20, "width" : 50, "height" : 50, "properties": [{"name": "isPlayerSpawn", "type": "bool", "value": true}]}
-                ]
-                            }
+            }
         ]
     })";
     file.close();
