@@ -46,6 +46,21 @@ struct Transform
 		);
 	}
 
+	// Overload the != operator for Transform
+	bool operator!=(const Transform& other) const
+	{
+		return position != other.position || rotation != other.rotation || scale != other.scale;
+	}
+
+	// Overload the == operator for Transform
+	bool operator==(const Transform& other) const
+	{
+		return position == other.position && rotation == other.rotation && scale == other.scale;
+	}
+
+	// Overload the / operator
+	Transform operator/(const int& value) { return Transform(position / value, rotation / value, scale / value); }
+
 	// Helper functions to modify the transform
 	void translate(const Vector2& delta)
 	{
