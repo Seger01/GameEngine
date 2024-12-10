@@ -49,9 +49,9 @@ protected:
                     "height": 4,
                     "data": [
                         0, 2, 0, 0,
-                        2, 0, 2, 0,
+                        0, 2, 2, 0,
                         0, 2, 0, 2,
-                        0, 0, 2, 0
+                        0, 0, 2, 2
                     ],
                     "name": "Graph"
                 }
@@ -78,15 +78,16 @@ TEST_F(MapToGraphTest, ConvertToGraph)
 
     const auto& adjacencyList = mapToGraph.getAdjacencyList();
 
-    ASSERT_EQ(adjacencyList.size(), 6);
+    ASSERT_EQ(adjacencyList.size(), 7);
 
     // Check connections for each non-zero node
-    EXPECT_EQ(adjacencyList.at(1).size(), 2); // Node 1 (Tile ID 2)
-    EXPECT_EQ(adjacencyList.at(4).size(), 2); // Node 4 (Tile ID 2)
-    EXPECT_EQ(adjacencyList.at(6).size(), 3); // Node 6 (Tile ID 2)
-    EXPECT_EQ(adjacencyList.at(9).size(), 3); // Node 9 (Tile ID 2)
-    EXPECT_EQ(adjacencyList.at(11).size(), 2); // Node 11 (Tile ID 2)
-    EXPECT_EQ(adjacencyList.at(14).size(), 2); // Node 14 (Tile ID 2)
+    EXPECT_EQ(adjacencyList.at(1).size(), 1); // Node 1
+    EXPECT_EQ(adjacencyList.at(5).size(), 3); // Node 5
+    EXPECT_EQ(adjacencyList.at(6).size(), 1); // Node 6
+    EXPECT_EQ(adjacencyList.at(9).size(), 1); // Node 9
+    EXPECT_EQ(adjacencyList.at(11).size(), 1); // Node 11
+    EXPECT_EQ(adjacencyList.at(14).size(), 1); // Node 14
+    EXPECT_EQ(adjacencyList.at(15).size(), 2); // Node 15
 }
 
 TEST_F(MapToGraphTest, NoGraphLayer) {
