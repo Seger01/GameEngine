@@ -1,0 +1,24 @@
+Minutes 10-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Add audio doxygen, add doxygen cmake target, implement multiplayer demo enemies.
+- Angel: Physics: rotations.
+- Ronan: Improving demo AI. Improving conversion from tile2d to graph.
+- Sean: Testing multiplayer.
+- Seger: Finished camera shake functionality. Helping Angel with physics.
+
+What is going to be done:
+- Siem: implement multiplayer demo enemies.
+- Angel: Continue with physics rotations.
+- Ronan: Demo: add particle and physics room (gravity and collision filters).
+- Sean: Help Siem with multiplayer
+- Seger: Helping Angel with physics.
+
+Roadblocks:
+- Siem:
+- Angel: -
+- Ronan: Requiring physics functionality which is not use on development.
+- Sean: -
+- Seger: -

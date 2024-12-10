@@ -93,3 +93,4 @@ Date,Time,Duration(in hours),Activity
 2024-12-03, 9:15, 7.5, Debug issue with scene changes, update animation to follow code standard, research client-side prediction.
 2024-12-04, 9:15, 7, Fix issue with pausing music, help Sean with multiplayer implementation testing, update particle to follow code standard.
 2024-12-05, 9:15, 7, Debugging networking with Sean
+2024-12-09, 9:15, 7, Add audio doxygen; add doxygen cmake target; implement multiplayer demo enemies.
