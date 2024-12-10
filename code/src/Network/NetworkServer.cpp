@@ -240,6 +240,39 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 }
 
 /**
+ * @brief Sends a spawn prefab message to all clients.
+ * @param aObject The object to spawn.
+ */
+void NetworkServer::sendPrefabSpawn(NetworkObject& aObject)
+{
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB;
+	networkPacket.networkObjectID = aObject.getNetworkObjectID();
+	networkPacket.prefabID = aObject.getPrefabID();
+	networkPacket.SetTimeStampNow();
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+	sendToAllClients(bs);
+}
+
+/**
+ * @brief Sends a despawn message to all clients.
+ * @param aObject The object to despawn.
+ */
+void NetworkServer::sendPrefabDespawn(NetworkObject& aObject)
+{
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::makeBitStream(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB;
+	networkPacket.networkObjectID = aObject.getNetworkObjectID();
+	networkPacket.SetTimeStampNow();
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+	sendToAllClients(bs);
+}
+
+/**
  * @brief Handles incoming transform packets from clients.
  * @param aPacket The packet containing transform data.
  */

@@ -137,8 +137,8 @@ protected:
 
 TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
     auto& registry = NetworkRegister::Instance();
-    // registry.RegisterType<ConcreteNetworkSerializable>();
+    // registry.registerSerializeType<ConcreteNetworkSerializable>();
 
-    std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
+    std::unique_ptr<INetworkSerializable> obj = registry.CreateSerializeInstance(GetTypeId<ConcreteNetworkSerializable>());
     ASSERT_NE(obj, nullptr);
 }

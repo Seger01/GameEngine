@@ -313,6 +313,12 @@ void NetworkClient::handleIncomingPackets()
 		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:
 			handleCustomSerialize(packet);
 			break;
+		case (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB:
+			handleSpawnPrefab(packet);
+			break;
+		case (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB:
+			handleDespawnPrefab(packet);
+			break;
 		default:
 			std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
 			break;
@@ -450,4 +456,33 @@ void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket)
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
+}
+
+/**
+ * @brief Handles prefab spawn packets from the server.
+ * @param aPacket The packet containing prefab spawn data.
+ */
+void NetworkClient::handleSpawnPrefab(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+	GameObject* prefab = EngineBravo::getInstance().getNetworkManager().instantiatePrefab(networkPacket);
+}
+
+/**
+ * @brief Handles prefab despawn packets from the server.
+ * @param aPacket The packet containing prefab despawn data.
+ */
+void NetworkClient::handleDespawnPrefab(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+	for (auto gameObject : mObjects)
+	{
+		if (gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID() == networkPacket.networkObjectID)
+		{
+			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&gameObject.get());
+			break;
+		}
+	}
 }

@@ -4,6 +4,7 @@
  */
 
 #include "Network/NetworkObject.h"
+#include "Engine/EngineBravo.h"
 #include "Network/INetworkBehaviour.h"
 
 int NetworkObject::networkObjectIDCounter = 0;
@@ -14,7 +15,7 @@ int NetworkObject::networkObjectIDCounter = 0;
  */
 NetworkObject::NetworkObject(std::string aTag)
 	: Component{aTag}, mIsOwner(false), mClientGUID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
-	  mNetworkObjectID(networkObjectIDCounter++)
+	  mNetworkObjectID(networkObjectIDCounter++), mPrefabID(-1)
 {
 }
 
@@ -120,6 +121,28 @@ bool NetworkObject::isPlayer() const { return mIsPlayer; }
 int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
 
 /**
+ * @brief Gets the prefab ID.
+ * @return The prefab ID.
+ */
+int NetworkObject::getPrefabID() const { return mPrefabID; }
+
+void NetworkObject::spawn()
+{
+	if (!EngineBravo::getInstance().getNetworkManager().isServer())
+	{
+		throw std::runtime_error("Only the server can spawn network objects");
+	}
+}
+
+void NetworkObject::despawn()
+{
+	if (!EngineBravo::getInstance().getNetworkManager().isServer())
+	{
+		throw std::runtime_error("Only the server can despawn network objects");
+	}
+}
+
+/**
  * @brief Sets the player status.
  * @param aIsPlayer The player status to set.
  */
@@ -130,3 +153,9 @@ void NetworkObject::setPlayer(bool aIsPlayer) { mIsPlayer = aIsPlayer; }
  * @param aNetworkObjectID The network object ID to set.
  */
 void NetworkObject::setNetworkObjectID(int aNetworkObjectID) { mNetworkObjectID = aNetworkObjectID; }
+
+/**
+ * @brief Sets the prefab ID.
+ * @param aPrefabID The prefab ID to set.
+ */
+void NetworkObject::setPrefabID(int aPrefabID) { mPrefabID = aPrefabID; }

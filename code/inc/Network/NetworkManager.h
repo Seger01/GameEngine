@@ -9,6 +9,8 @@
 #include "Network/NetworkClient.h"
 #include "Network/NetworkHost.h"
 #include "Network/NetworkInformation.h"
+#include "Network/NetworkObject.h"
+#include "Network/NetworkRegister.h"
 #include "Network/NetworkServer.h"
 
 #include <memory>
@@ -56,6 +58,9 @@ public:
 	void removeObject(GameObject& aObject);
 	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 	void clearObjects();
+
+	GameObject* instantiate(int aPrefabID, Transform aTransform = Transform());
+	GameObject* instantiatePrefab(NetworkPacket aNetworkPacket);
 
 private:
 	void startServer();
