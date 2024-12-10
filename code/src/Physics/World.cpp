@@ -68,7 +68,7 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 	{
 		b2Polygon polygon =
 			b2MakeOffsetBox(boxCollider->getWidth(), boxCollider->getHeight(),
-							{-boxCollider->getTransform().position.x, -boxCollider->getTransform().position.y},
+							{boxCollider->getTransform().position.x, boxCollider->getTransform().position.y},
 							boxCollider->getRotation());
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = aBodyProxy.getDensity();
@@ -184,7 +184,7 @@ Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
-	std::cout << "Position: " << position.x << ", " << position.y << std::endl;
+	// std::cout << "Position: " << position.x << ", " << position.y << std::endl;
 	return position;
 }
 

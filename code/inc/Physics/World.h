@@ -19,6 +19,8 @@ public:
 	int createWorld(Vector2 aGravity);
 	void resetWorld();
 
+	b2WorldId getWorldID() { return mWorldID; }
+
 	void executeWorldStep(float step, int subStep);
 
 	void updateBodyPosition(BodyProxy& aBodyProxy, BodyID aBodyID);

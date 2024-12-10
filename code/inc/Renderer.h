@@ -1,10 +1,13 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <vector>
+
 #include <SDL.h>
 #include <SDL_ttf.h>
 
 #include "Color.h"
+#include "Point.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -25,9 +28,12 @@ public:
 	void renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
 					   bool aFlipY, float aRotation, Color aColor);
 
-	void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill);
+	void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill,
+					  Point aRotationalCenter = Point{0, 0});
 
 	void drawCircle(Vector2 center, int radius, Color aColor, bool aFill);
+
+	void renderPolygon(const std::vector<Vector2>& vertices, const Color& color, bool filled);
 
 	void renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY);
 

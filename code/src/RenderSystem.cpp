@@ -16,12 +16,245 @@
 #include "Time.h"
 #include "UIObject.h"
 
+b2DebugDraw debugDraw;
+RenderSystem* renderSystem;
+Renderer* renderer;
+
+void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)
+{
+	// Convert color from b2HexColor to Renderer Color
+	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+
+	// Draw edges between consecutive vertices
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		Vector2 start(vertices[i].x, vertices[i].y);
+		Vector2 end(vertices[(i + 1) % vertexCount].x, vertices[(i + 1) % vertexCount].y);
+
+		// renderer->renderLine(start, end, renderColor);
+	}
+}
+
+// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
+// 						  b2HexColor color, void* context)
+// {
+// 	std::cout << "DrawSolidPolygonImpl" << std::endl;
+// 	// Assume solid polygon is a rectangle for this implementation
+// 	if (vertexCount == 4) // Check if it's a rectangle
+// 	{
+// 		Vector2 location(vertices[0].x, vertices[0].y); // Top-left corner
+// 		float width = vertices[2].x - vertices[0].x;
+// 		float height = vertices[2].y - vertices[0].y;
+//
+// 		// Convert color from b2HexColor to Renderer Color
+// 		Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+//
+// 		location.x = location.x + transform.p.x;
+// 		location.y = location.y + transform.p.y;
+//
+// 		// Render the rectangle
+// 		std::cout << "Render Pos: " << location.x << ", " << location.y << std::endl;
+// 		renderer->renderSquare(location, static_cast<int>(width), static_cast<int>(height), 0.0f, renderColor, true);
+// 	}
+// 	else
+// 	{
+// 		std::cout << "gotten polygon not a rectangle" << std::endl;
+// 	}
+// }
+void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
+						  b2HexColor color, void* context)
+{
+	// Convert color from b2HexColor to Renderer Color
+	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+
+	// Create a vector to store transformed vertices
+	std::vector<Vector2> transformedVertices;
+	transformedVertices.reserve(vertexCount);
+
+	// Transform all vertices by the b2Transform
+	for (int i = 0; i < vertexCount; ++i)
+	{
+		// Apply the transform to each vertex
+		b2Vec2 transformedVertex = b2Mul(transform.p, vertices[i]);
+		transformedVertices.emplace_back(transformedVertex.x, transformedVertex.y);
+	}
+
+	// Render the polygon using the renderer
+	renderer->renderPolygon(transformedVertices, renderColor, true);
+}
+
+void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context)
+{
+	// Convert color from b2HexColor to Renderer Color
+	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+
+	// Render the circle outline
+	renderer->drawCircle(Vector2(center.x, center.y), static_cast<int>(radius), renderColor, false);
+}
+
+void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context)
+{
+	// Convert color from b2HexColor to Renderer Color
+	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+
+	// Use the position from the transform
+	Vector2 center(transform.p.x, transform.p.y);
+
+	// Render the filled circle
+	renderer->drawCircle(center, static_cast<int>(radius), renderColor, true);
+}
+
+// void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context) {}
+//
+// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
+// 						  b2HexColor color, void* context)
+// {
+// }
+//
+// void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context) {}
+//
+// void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context) {}
+
+// void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)
+// {
+// 	Renderer* renderer = static_cast<Renderer*>(context);
+// 	if (!renderer || vertexCount < 2)
+// 		return;
+//
+// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+//
+// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
+//
+// 	for (int i = 0; i < vertexCount; ++i)
+// 	{
+// 		const b2Vec2& start = vertices[i];
+// 		const b2Vec2& end = vertices[(i + 1) % vertexCount]; // Wrap around to the first vertex
+// 		SDL_RenderDrawLine(renderer->getSDLRenderer(), static_cast<int>(start.x), static_cast<int>(start.y),
+// 						   static_cast<int>(end.x), static_cast<int>(end.y));
+// 	}
+// }
+//
+// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
+// 						  b2HexColor color, void* context)
+// {
+// 	Renderer* renderer = static_cast<Renderer*>(context);
+// 	if (!renderer || vertexCount < 3)
+// 		return;
+//
+// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
+//
+// 	// Use a triangulation method to draw a filled polygon
+// 	for (int i = 1; i < vertexCount - 1; ++i)
+// 	{
+// 		SDL_Point points[3] = {{static_cast<int>(vertices[0].x + transform.p.x), static_cast<int>(vertices[0].y)},
+// 							   {static_cast<int>(vertices[i].x + transform.p.x), static_cast<int>(vertices[i].y)},
+// 							   {static_cast<int>(vertices[i + 1].x), static_cast<int>(vertices[i + 1].y)}};
+// 		SDL_RenderDrawLines(renderer->getSDLRenderer(), points, 3);
+// 	}
+// }
+//
+// void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context)
+// {
+// 	Renderer* renderer = static_cast<Renderer*>(context);
+// 	if (!renderer)
+// 		return;
+//
+// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
+//
+// 	int x = static_cast<int>(radius);
+// 	int y = 0;
+// 	int decisionOver2 = 1 - x; // Decision variable for the midpoint circle algorithm
+//
+// 	while (x >= y)
+// 	{
+// 		// Draw the circle's eight symmetrical points
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + x, center.y + y);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + y, center.y + x);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - y, center.y + x);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - x, center.y + y);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - x, center.y - y);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - y, center.y - x);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + y, center.y - x);
+// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + x, center.y - y);
+//
+// 		y++;
+// 		if (decisionOver2 <= 0)
+// 		{
+// 			decisionOver2 += 2 * y + 1; // Update decision variable
+// 		}
+// 		else
+// 		{
+// 			x--;
+// 			decisionOver2 += 2 * (y - x) + 1;
+// 		}
+// 	}
+// }
+//
+// void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context)
+// {
+// 	Renderer* renderer = static_cast<Renderer*>(context);
+// 	if (!renderer)
+// 		return;
+//
+// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
+// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
+//
+// 	b2Vec2 center = transform.p; // Assuming `transform.p` is the circle center
+//
+// 	for (int w = -static_cast<int>(radius); w <= static_cast<int>(radius); ++w)
+// 	{
+// 		for (int h = -static_cast<int>(radius); h <= static_cast<int>(radius); ++h)
+// 		{
+// 			if (w * w + h * h <= radius * radius)
+// 			{
+// 				SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + w, center.y + h);
+// 			}
+// 		}
+// 	}
+// }
+
+// Add more callback implementations as needed...
+
+// Initialize the b2DebugDraw struct
+void InitializeDebugDraw(b2DebugDraw* debugDraw, void* userContext)
+{
+	debugDraw->DrawPolygon = DrawPolygonImpl;
+	debugDraw->DrawSolidPolygon = DrawSolidPolygonImpl;
+	debugDraw->DrawCircle = DrawCircleImpl;
+	debugDraw->DrawSolidCircle = DrawSolidCircleImpl;
+
+	// Assign other function pointers similarly...
+
+	// Initialize options
+	debugDraw->useDrawingBounds = false;
+	debugDraw->drawShapes = true;
+	debugDraw->drawJoints = true;
+	debugDraw->drawJointExtras = false;
+	debugDraw->drawAABBs = false;
+	debugDraw->drawMass = false;
+	debugDraw->drawContacts = false;
+	debugDraw->drawGraphColors = false;
+	debugDraw->drawContactNormals = false;
+	debugDraw->drawContactImpulses = false;
+	debugDraw->drawFrictionImpulses = false;
+
+	// Initialize context
+	debugDraw->context = userContext;
+}
+
 RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio(Point{16, 9})
 {
 	mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
 	mRenderer = std::make_unique<Renderer>(*mWindow);
 
 	mBackgroundColor = Color(255, 255, 255);
+
+	// Initialize the debug draw
+	InitializeDebugDraw(&debugDraw, this);
+	renderSystem = this;
+	renderer = mRenderer.get();
 
 	return;
 }
@@ -348,6 +581,10 @@ void RenderSystem::render(Scene* aScene)
 		renderForCamera(aScene, *camera, screenViewPort);
 	}
 
+	// b2WorldId worldId = EngineBravo::getInstance().getPhysicsManager().getPhysicsEngine().getWorld().getWorldID();
+	//
+	// b2World_Draw(worldId, &debugDraw);
+
 	mRenderer->show();
 }
 
@@ -365,8 +602,19 @@ void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenVi
 }
 
 void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
-								Camera& aCurrentCamera, Rect aScreenViewPort)
+								Camera& aCurrentCamera, Rect aScreenViewPort, Point aRotationalCenter)
 {
+
+	std::cout << "Received Position: " << aPosition.x << ", " << aPosition.y << std::endl;
+	std::cout << "Received Width: " << aWidth << std::endl;
+	std::cout << "Received Height: " << aHeight << std::endl;
+	std::cout << "Received Rotation: " << aRotation << std::endl;
+	// std::cout << "Received Color: " << aColor.r << ", " << aColor.g << ", " << aColor.b << std::endl;
+	// std::cout << "Received Filled: " << aFilled << std::endl;
+	// std::cout << "Received Camera: " << aCurrentCamera.getOrigin().x << ", " << aCurrentCamera.getOrigin().y <<
+	// std::endl; std::cout << "Received Screen Viewport: " << aScreenViewPort.x << ", " << aScreenViewPort.y << ", " <<
+	// aScreenViewPort.w << ", " << aScreenViewPort.h << std::endl;
+	std::cout << "Received Rotational Center: " << aRotationalCenter.x << ", " << aRotationalCenter.y << std::endl;
 
 	Vector2 squarePosition = aPosition;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
@@ -379,8 +627,17 @@ void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, floa
 	int squareWidth = std::round(aWidth * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 	int squareHeight = std::round(aHeight * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
+	aRotationalCenter.x = std::round(aRotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	aRotationalCenter.y = std::round(aRotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+
+	std::cout << "Calculated position: " << drawPosition.x << ", " << drawPosition.y << std::endl;
+	std::cout << "Calculated width: " << squareWidth << std::endl;
+	std::cout << "Calculated height: " << squareHeight << std::endl;
+	std::cout << "Calculated rotation: " << aRotation << std::endl;
+	std::cout << "Calculated rotational center: " << aRotationalCenter.x << ", " << aRotationalCenter.y << std::endl;
+
 	// Render
-	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled);
+	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled, aRotationalCenter);
 }
 
 void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
@@ -428,14 +685,23 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 		{
 			if (gameObject->hasComponent<BoxCollider>())
 			{
+				int counter = 0;
 				for (auto boxCollider : gameObject->getComponents<BoxCollider>())
 				{
+					Vector2 relativeBoxPosition = boxCollider->getTransform().position;
+
 					Vector2 boxColliderWorldPos =
 						gameObject->getTransform().position + boxCollider->getTransform().position;
 
-					renderSquare(boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
-								 gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
-								 aScreenViewPort);
+					std::cout << "square: " << counter << std::endl;
+					counter++;
+					renderSquare(
+						boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
+						gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera, aScreenViewPort,
+						Point{static_cast<int>(-relativeBoxPosition.x), static_cast<int>(-relativeBoxPosition.y)});
+					// renderSquare(boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
+					// 			 gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
+					// 			 aScreenViewPort, Point{0, 0});
 				}
 			}
 			if (gameObject->hasComponent<CircleCollider>())

@@ -5,6 +5,7 @@
 
 #include "Animation.h"
 #include "FSConverter.h"
+#include "Point.h"
 #include "Rect.h"
 #include "Renderer.h"
 #include "Window.h"
@@ -58,6 +59,46 @@ Renderer::~Renderer()
 	TTF_Quit();
 }
 
+void Renderer::renderPolygon(const std::vector<Vector2>& vertices, const Color& color, bool filled)
+{
+	if (vertices.size() < 3)
+	{
+		// Polygons must have at least 3 vertices
+		return;
+	}
+
+	// Set the drawing color
+	SDL_SetRenderDrawColor(mRenderer, color.r, color.g, color.b, color.a);
+
+	if (filled)
+	{
+		// For filled polygons, use a triangulation approach (e.g., fan triangulation).
+		for (size_t i = 1; i < vertices.size() - 1; ++i)
+		{
+			// Draw a triangle for each set of vertices
+			SDL_Point points[3] = {{static_cast<int>(vertices[0].x), static_cast<int>(vertices[0].y)},
+								   {static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y)},
+								   {static_cast<int>(vertices[i + 1].x), static_cast<int>(vertices[i + 1].y)}};
+
+			SDL_RenderDrawLines(mRenderer, points, 3);
+		}
+	}
+	else
+	{
+		// For non-filled polygons, draw lines between consecutive vertices and close the loop
+		for (size_t i = 0; i < vertices.size(); ++i)
+		{
+			Vector2 start = vertices[i];
+			Vector2 end = vertices[(i + 1) % vertices.size()]; // Wrap around to the first vertex
+			SDL_RenderDrawLine(mRenderer, static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x),
+							   static_cast<int>(end.y));
+		}
+	}
+
+	// Reset the renderer color to its default (e.g., white)
+	SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
+}
+
 void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
 							 bool aFlipX, bool aFlipY, float aRotation, Color aColor)
 {
@@ -99,18 +140,21 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
 		flip = SDL_FLIP_VERTICAL;
 	}
 
+	SDL_Point center = {0, 0}; // Rotation center
+
 	// Render the texture with flipping and rotation
 	SDL_RenderCopyEx(mRenderer,		   // The renderer associated with the texture
 					 sdlTexture,	   // The texture to render
 					 sourceRect.get(), // The source rectangle (nullptr means the entire texture)
 					 &dstRect,		   // The destination rectangle
 					 aRotation,		   // The angle of rotation (in degrees)
-					 nullptr,		   // The point around which to rotate (nullptr means center)
+					 &center,		   // The point around which to rotate (nullptr means center)
 					 flip			   // The flipping mode
 	);
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill)
+void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill,
+							Point aRotationalCenter)
 {
 	// Create a rectangle to define the size and position
 	SDL_Rect rect;
@@ -172,7 +216,7 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 		SDL_SetRenderTarget(mRenderer, nullptr);
 
 		// Render the texture with rotation
-		SDL_Point center = {aWidth / 2, aHeight / 2}; // Rotation center
+		SDL_Point center = {aRotationalCenter.x, aRotationalCenter.y}; // Rotation center
 		SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, rotation, &center, SDL_FLIP_NONE);
 
 		// Destroy the temporary texture
