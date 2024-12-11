@@ -22,6 +22,18 @@ INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag),
 }
 
 /**
+ * @brief Copy constructor.
+ *
+ * @param other The INetworkBehaviour to copy.
+ */
+INetworkBehaviour::INetworkBehaviour(const INetworkBehaviour& other)
+	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet),
+	  mNetworkBehaviourID(other.mNetworkBehaviourID)
+{
+	mNetworkVariables.clear();
+}
+
+/**
  * @brief Placeholder for server RPC implementation.
  *
  * @throws std::runtime_error Always throws as this function is not implemented.

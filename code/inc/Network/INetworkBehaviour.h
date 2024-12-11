@@ -26,6 +26,7 @@ class INetworkBehaviour : public IBehaviourScript
 public:
 	INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
 	virtual ~INetworkBehaviour() = default;
+	INetworkBehaviour(const INetworkBehaviour& other);
 
 	virtual void serverRpc();
 	virtual void clientRpc();
