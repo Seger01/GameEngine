@@ -30,7 +30,8 @@ public:
 
 	void setPositions();
 	void applyForces();
-	void setBodyVelocity(Vector2 aVelocity, GameObject& aGameObject);
+	void setLinearBodyVelocity(Vector2 aVelocity, GameObject& aGameObject);
+	void setAngularBodyVelocity(float aVelocity, GameObject& aGameObject);
 
 	std::vector<GameObject*> getgameObjects() const;
 	float getStep() const;

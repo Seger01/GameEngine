@@ -97,13 +97,13 @@ void RigidBody::setGravityScale(float aGravityScale)
 	mGravityScale = aGravityScale;
 }
 
-Vector2 RigidBody::getVelocity() const { return mVelocity; }
+Vector2 RigidBody::getLinearVelocity() const { return mLinearVelocity; }
 
-void RigidBody::setVelocity(Vector2 aVelocity)
-{
-	mIsUpdated = true;
-	mVelocity = aVelocity;
-}
+void RigidBody::setLinearVelocity(Vector2 aVelocity) { mLinearVelocity = aVelocity; }
+
+float RigidBody::getAngularVelocity() const { return mAngularVelocity; }
+
+void RigidBody::setAngularVelocity(float aAngularVelocity) { mAngularVelocity = aAngularVelocity; }
 
 void RigidBody::setBodyType(BodyType aBodyType)
 {

@@ -205,18 +205,30 @@ void World::setGravity(Vector2 aGravity)
 	b2World_SetGravity(mWorldID, {aGravity.x, aGravity.y});
 }
 
-void World::setVelocity(Vector2 aVelocity, BodyID aBodyID)
+void World::setLinearVelocity(Vector2 aVelocity, BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	b2Vec2 velocity = {aVelocity.x, aVelocity.y};
 	b2Body_SetLinearVelocity(bodyID, velocity);
 }
 
-Vector2 World::getVelocity(BodyID aBodyID)
+Vector2 World::getLinearVelocity(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyID);
 	return {velocity.x, velocity.y};
+}
+
+void World::setAngularVelocity(float aVelocity, BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	b2Body_SetAngularVelocity(bodyID, aVelocity);
+}
+
+float World::getAngularVelocity(BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	return b2Body_GetAngularVelocity(bodyID);
 }
 
 Vector2 World::getGravity() { return mGravity; }

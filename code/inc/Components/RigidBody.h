@@ -49,8 +49,11 @@ public:
 	float getGravityScale() const;
 	void setGravityScale(float aGravityScale);
 
-	Vector2 getVelocity() const;
-	void setVelocity(Vector2 aVelocity);
+	Vector2 getLinearVelocity() const;
+	void setLinearVelocity(Vector2 aVelocity);
+
+	float getAngularVelocity() const;
+	void setAngularVelocity(float aAngularVelocity);
 
 	void setBodyType(BodyType aBodyType);
 	BodyType getBodyType() const;
@@ -90,7 +93,8 @@ private:
 	float mMass = 0;
 	float mGravityScale = 0;
 
-	Vector2 mVelocity;
+	Vector2 mLinearVelocity;
+	float mAngularVelocity;
 
 	BodyID mBodyID;
 

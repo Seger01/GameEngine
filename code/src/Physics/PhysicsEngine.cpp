@@ -57,9 +57,13 @@ void PhysicsEngine::setPositions()
 			{
 				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			}
-			if (rigidBody->getVelocity() != mWorld.getVelocity(rigidBody->getBodyId()))
+			if (rigidBody->getLinearVelocity() != mWorld.getLinearVelocity(rigidBody->getBodyId()))
 			{
-				mWorld.setVelocity(rigidBody->getVelocity(), rigidBody->getBodyId());
+				mWorld.setLinearVelocity(rigidBody->getLinearVelocity(), rigidBody->getBodyId());
+			}
+			if (rigidBody->getAngularVelocity() != mWorld.getAngularVelocity(rigidBody->getBodyId()))
+			{
+				mWorld.setAngularVelocity(rigidBody->getAngularVelocity(), rigidBody->getBodyId());
 			}
 		}
 	}
@@ -158,15 +162,6 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID)
 	return nullptr;
 }
 
-void PhysicsEngine::setBodyVelocity(Vector2 aVelocity, GameObject& aGameObject)
-{
-	if (aGameObject.hasComponent<RigidBody>())
-	{
-		RigidBody* rigidBody = aGameObject.getComponents<RigidBody>()[0];
-		mWorld.setVelocity(aVelocity, rigidBody->getBodyId());
-	}
-}
-
 // Updates flags for gameObjects rigidbodies and collider shapes
 void PhysicsEngine::updateFlags()
 {
@@ -216,7 +211,8 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-			rigidBody->setVelocity(mWorld.getVelocity(rigidBody->getBodyId()));
+			rigidBody->setLinearVelocity(mWorld.getLinearVelocity(rigidBody->getBodyId()));
+			rigidBody->setAngularVelocity(mWorld.getAngularVelocity(rigidBody->getBodyId()));
 			if (gameObject.hasComponent<BoxCollider>())
 			{
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
