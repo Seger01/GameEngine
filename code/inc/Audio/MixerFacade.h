@@ -1,9 +1,20 @@
+/**
+ * @file MixerFacade.h
+ *
+ * @brief This file contains the declaration of the MixerFacade class
+ */
 #pragma once
 
 #include "IAudioFacade.h"
 #include "MixerContainer.h"
 #include <SDL_mixer.h>
 
+/**
+ * @class MixerFacade
+ *
+ * @brief This class is responsible for interacting with the SDL mixer library, and performing all audio operations
+ * (such as playing, stopping and loading)
+ */
 class MixerFacade : public IAudioFacade
 {
 public:
@@ -29,7 +40,10 @@ public:
 	int findAvailableChannel();
 
 private:
+	/// @brief The number of channels to use. Defaults to 8.
 	const unsigned mChannelCount;
-	unsigned mLastUsedChannel; // to help with finding the next available channel
+	/// @brief The last channel on which a sound effect was played. To help with finding the next available channel
+	unsigned mLastUsedChannel;
+	/// @brief The container for all sound effects and music
 	MixerContainer mMixerContainer;
 };

@@ -1,3 +1,9 @@
+/**
+ * @file RenderSystem.h
+ * @brief Defines the RenderSystem class, responsible for managing and rendering game objects, scenes, and graphical
+ * elements.
+ */
+
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
@@ -11,22 +17,30 @@
 #include "Sprite.h"
 #include "Window.h"
 
+/**
+ * @class RenderSystem
+ * @brief Handles rendering of game objects, scenes, and various graphical elements.
+ *
+ * This class manages a collection of game objects, interacts with the Renderer and Window classes,
+ * and provides functionality to render scenes and graphical components efficiently.
+ */
 class RenderSystem
 {
 public:
 	RenderSystem();
 
-	void setAspectRatio(Point aAspectRatio);
-	Point getAspectRatio();
+	void setAspectRatio(const Point& aAspectRatio);
+	Point getAspectRatio() const;
 
-	void renderLayer(Scene* aScene, int aLayer, Camera& aCurrentCamera, Rect aScreenViewPort);
-	void render(Scene* aScene);
+	void renderLayer(const Scene& aScene, int aLayer, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const;
+	void render(const Scene& aScene) const;
 
 	Renderer& getRenderer();
 	Window& getWindow();
 
-	bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight, Vector2 aScale);
-	Vector2 screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera);
+	bool getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
+					 const Vector2& aScale) const;
+	Vector2 screenToWorldPos(const Point& aScreenpos, const Camera& aCurrentCamera) const;
 
 public:
 	void addObject(GameObject& aObject);
@@ -36,36 +50,39 @@ public:
 	void clearObjects();
 
 private:
-	void renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort);
-	void renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation, Rect aScreenViewPort);
-	void renderParticle(Camera& aCurrentCamera, Particle& aParticle, Rect aScreenViewPort);
-	void renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor, Vector2 aScale,
-					Rect aScreenViewPort);
-	void renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
-					  Camera& aCurrentCamera, Rect aScreenViewPort);
-	void renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
-					  Rect aScreenViewPort);
+	void renderSprite(const Camera& aCurrentCamera, const GameObject& aGameObject, const Sprite& aSprite,
+					  const Rect& aScreenViewPort) const;
+	void renderAnimation(const Camera& aCurrentCamera, const GameObject& aGameObject, const Animation& aAnimation,
+						 const Rect& aScreenViewPort) const;
+	void renderParticle(const Camera& aCurrentCamera, const Particle& aParticle, const Rect& aScreenViewPort) const;
+	void renderText(const Camera& aCurrentCamera, const std::string& aText, const Vector2& aLocation,
+					const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const;
+	void renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
+					  const Color& aColor, bool aFilled, const Camera& aCurrentCamera,
+					  const Rect& aScreenViewPort) const;
+	void renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
+					  const Camera& aCurrentCamera, const Rect& aScreenViewPort) const;
 
-	void renderForCamera(Scene* aScene, Camera& camera, Rect aScreenViewPort);
+	void renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const;
 
-	void renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort);
+	void renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const;
 
-	void sortCamerasByRenderOrder(std::vector<Camera*>& aCameras);
+	void sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const;
 
-	int getLowestLayer(Scene* aScene);
-	int getHighestLayer(Scene* aScene);
+	int getLowestLayer(const Scene& aScene) const;
+	int getHighestLayer(const Scene& aScene) const;
 
 private:
-	std::vector<std::reference_wrapper<GameObject>> mObjects;
-	std::unique_ptr<Renderer> mRenderer;
-	std::unique_ptr<Window> mWindow;
+	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< Collection of game objects managed by the system.
+	std::unique_ptr<Renderer> mRenderer;					  ///< Renderer instance for handling graphical output.
+	std::unique_ptr<Window> mWindow;						  ///< Window instance for displaying rendered content.
 
-	Point mAspectRatio;
+	Point mAspectRatio; ///< Aspect ratio for rendering.
 
-	int WindowWidth;
-	int WindowHeight;
+	int WindowWidth;  ///< Width of the rendering window.
+	int WindowHeight; ///< Height of the rendering window.
 
-	Color mBackgroundColor;
+	Color mBackgroundColor; ///< Background color for rendering.
 };
 
 #endif

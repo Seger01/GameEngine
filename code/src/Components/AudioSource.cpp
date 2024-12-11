@@ -1,15 +1,32 @@
+/**
+ * @file AudioSource.cpp
+ *
+ * @brief This file contains the implementation of the AudioSource class
+ */
 #include "AudioSource.h"
 #include "EngineBravo.h"
 #include "FSConverter.h"
 #include <iostream>
 #include <stdexcept>
 
-AudioSource::AudioSource(std::string aPath, bool aIsMusic, std::string aTag)
+/**
+ * @brief Construct a new AudioSource::AudioSource object. Sets the volume to the default value (50)
+ *
+ * @param aPath The path to the audio file. Must be relative to the resources folder.
+ * @param aIsMusic Whether the audio source is music. Defaults to false.
+ * @param aTag The tag of the audio source. Defaults to "defaultAudioSource".
+ */
+AudioSource::AudioSource(const std::string& aPath, bool aIsMusic, const std::string& aTag)
 	: Component(aTag), mPlayOnAwake{false}, mLoop{false}, mIsMusic(aIsMusic), mVolume{DEFAULT_VOLUME}, mXCoord{0}
 {
 	mFileName = FSConverter().getResourcePath(aPath);
 }
 
+/**
+ * @brief Play this audio source
+ *
+ * @param aLooping Whether the audio source should loop. Defaults to false.
+ */
 void AudioSource::play(bool aLooping)
 {
 	setLooping(aLooping);
@@ -48,6 +65,11 @@ void AudioSource::setVolume(unsigned aVolume)
 
 unsigned AudioSource::getVolume() const { return mVolume; }
 
+/**
+ * @brief Set the direction of the audio source
+ *
+ * @param aXCoord The direction of the audio source. Must be between mMinXDirection and mMaxXDirection
+ */
 void AudioSource::setXDirection(int aXCoord)
 {
 	std::cout << "Setting X direction to " << aXCoord << std::endl;
@@ -69,6 +91,12 @@ void AudioSource::setXDirection(int aXCoord)
 	}
 }
 
+/**
+ * @brief Set the direction of the audio source
+ *
+ * @param aListenerX The x coordinate of the listener
+ * @param aSourceX The x coordinate of the source
+ */
 void AudioSource::setXDirection(int aListenerX, int aSourceX)
 {
 	int xCoord = aSourceX - aListenerX;

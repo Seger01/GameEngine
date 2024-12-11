@@ -1,3 +1,8 @@
+/**
+ * @file Time.cpp
+ * @brief Time class implementation file.
+ */
+
 #include "Time.h"
 
 // Initialize static members

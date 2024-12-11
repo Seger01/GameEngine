@@ -1,44 +1,53 @@
+/**
+ * @file INetworkBehaviour.h
+ * @brief Defines the INetworkBehaviour class for network-related behaviour scripts.
+ */
+
 #ifndef NETWORKBEHAVIOUR_H
 #define NETWORKBEHAVIOUR_H
 
 #include "Components/IBehaviourScript.h"
-#include "EngineBravo.h"
-#include "Network/NetworkObject.h"
-#include "Network/NetworkVariable.h"
 
-#include <functional>
-#include <stdexcept>
+#include <string>
 #include <vector>
 
 class NetworkVariableBase;
 
-class INetworkBehaviour : public IBehaviourScript {
+/**
+ * @class INetworkBehaviour
+ * @brief Base class for network behaviour scripts.
+ *
+ * @note When adding a NetworkVariable to a NetworkBehaviour make sure to call RegisterNetworkVariable(this) in the
+ * NetworkVariable constructor. Also make a copy constructor where you reset mNetworkVariables and add each
+ * NetworkVariable.
+ */
+class INetworkBehaviour : public IBehaviourScript
+{
 public:
-    INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
-    virtual ~INetworkBehaviour() = default;
+	INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
+	virtual ~INetworkBehaviour() = default;
 
-    virtual void serverRpc();
-    virtual void clientRpc();
-    virtual void OnNetworkSpawn();
+	virtual void serverRpc();
+	virtual void clientRpc();
+	virtual void onNetworkSpawn();
 
-    void RegisterNetworkVariable(NetworkVariableBase* variable);
+	void RegisterNetworkVariable(NetworkVariableBase* variable);
+	std::vector<std::reference_wrapper<NetworkVariableBase>> GetNetworkVariables();
 
-    std::vector<NetworkVariableBase*> GetNetworkVariables();
+	bool isOwner();
 
-    bool isOwner();
+	void destroy();
 
-    void destroy();
-    int getNetworkBehaviourID() const;
-
-private:
-    bool mIsOwner;
-    bool mIsOwnerSet;
-    int mNetworkBehaviourID;
-    static int networkBehaviourIDCounter;
-    std::vector<NetworkVariableBase*> mNetworkVariables;
+	uint8_t getNetworkBehaviourID() const;
 
 private:
-    friend class NetworkObject;
+	bool mIsOwner;						  ///< Indicates if the current object is the owner.
+	bool mIsOwnerSet;					  ///< Indicates if the owner status has been set.
+	uint8_t mNetworkBehaviourID;		  ///< The network behaviour ID.
+	static int networkBehaviourIDCounter; ///< Counter for generating unique network behaviour IDs.
+
+protected:
+	std::vector<std::reference_wrapper<NetworkVariableBase>> mNetworkVariables; ///< List of network variables.
 };
 
 #endif // NETWORKBEHAVIOUR_H

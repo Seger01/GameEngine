@@ -1,7 +1,17 @@
+/**
+ * @file IAudioFacade.h
+ *
+ * @brief This file contains the declaration of the IAudioFacade interface
+ */
 #pragma once
 
 #include <string>
 
+/**
+ * @class IAudioFacade
+ *
+ * @brief This class is an interface for an audio library, acting as a facade for the audio system
+ */
 class IAudioFacade
 {
 public:

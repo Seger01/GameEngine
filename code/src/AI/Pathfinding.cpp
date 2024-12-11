@@ -95,3 +95,33 @@ std::vector<int> Pathfinding::reconstructPath(const std::unordered_map<int, int>
     std::reverse(path.begin(), path.end());
     return path;
 }
+
+/**
+ * @brief Get the adjacency list
+ * 
+ * @return std::unordered_map<int, std::vector<int>> 
+ */
+std::unordered_map<int, std::vector<int>> Pathfinding::getAdjacencyList() const
+{
+    return mAdjacencyList;
+}
+
+/**
+ * @brief Get the map width
+ * 
+ * @return int 
+ */
+int Pathfinding::getMapWidth() const
+{
+    return mMapWidth;
+}
+
+/**
+ * @brief Get the map height
+ * 
+ * @return int 
+ */
+int Pathfinding::getMapHeight() const
+{
+    return mMapHeight;
+}

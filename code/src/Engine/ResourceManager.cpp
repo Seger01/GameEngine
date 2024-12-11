@@ -1,3 +1,8 @@
+/**
+ * @file ResourceManager.cpp
+ * @brief ResourceManager class implementation file.
+ */
+
 #include "ResourceManager.h"
 
 #include <iostream>
@@ -5,10 +10,20 @@
 #include "Animation.h"
 #include "FSConverter.h"
 
+/**
+ * @brief ResourceManager class default constructor
+ */
 ResourceManager::ResourceManager() : mRenderer(nullptr) {}
 
+/**
+ * @brief ResourceManager class constructor
+ * @param aRenderer The renderer to use
+ */
 ResourceManager::ResourceManager(Renderer* aRenderer) : mRenderer(aRenderer) {}
 
+/**
+ * @brief ResourceManager class destructor
+ */
 ResourceManager::~ResourceManager()
 {
 	for (auto& texture : mTextureMap)
@@ -18,8 +33,17 @@ ResourceManager::~ResourceManager()
 	mTextureMap.clear();
 }
 
+/**
+ * @brief Set the renderer to use
+ * @param aRenderer The renderer to use
+ */
 void ResourceManager::setRenderer(Renderer* aRenderer) { mRenderer = aRenderer; }
 
+/**
+ * @brief Load a texture from a PNG file
+ * @param aPngPath The path to the PNG file
+ * @return A pointer to the loaded texture
+ */
 Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 {
 	if (mRenderer == nullptr)
@@ -56,16 +80,28 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 	return texturePtr;
 }
 
+/**
+ * @brief Create a sprite from a sprite definition
+ * @param aSpriteDef The sprite definition
+ * @return A pointer to the created sprite
+ */
 Sprite* ResourceManager::createSprite(SpriteDef aSpriteDef)
 {
 	Sprite* createdSprite = nullptr;
 
 	createdSprite =
-		new Sprite(loadTexture(aSpriteDef.texturePath), aSpriteDef.width, aSpriteDef.height, aSpriteDef.sourceRect);
+		new Sprite(*loadTexture(aSpriteDef.texturePath), aSpriteDef.width, aSpriteDef.height, aSpriteDef.sourceRect);
 
 	return createdSprite;
 }
 
+/**
+ * @brief Load an animation from a vector of sprite definitions
+ * @param aSpriteDefs The sprite definitions
+ * @param aTimeBetweenFrames The time between each frame in milliseconds
+ * @param aIsLooping Whether the animation should loop
+ * @return A pointer to the loaded animation
+ */
 Animation* ResourceManager::loadAnimation(std::vector<SpriteDef> aSpriteDefs, int aTimeBetweenFrames, bool aIsLooping)
 {
 	std::vector<std::reference_wrapper<Sprite>> animationFrames;

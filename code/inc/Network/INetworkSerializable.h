@@ -32,9 +32,17 @@ public:
      */
     virtual ~INetworkSerializable() = default;
 
-    virtual void serialize(SLNet::BitStream& stream) const = 0;
+	/**
+	 * @brief Serializes the object to a bit stream.
+	 * @param stream The bit stream to serialize to.
+	 */
+	virtual void serialize(SLNet::BitStream& stream) const = 0;
 
-    virtual void deserialize(SLNet::BitStream& stream) = 0;
+	/**
+	 * @brief Deserializes the object from a bit stream.
+	 * @param stream The bit stream to deserialize from.
+	 */
+	virtual void deserialize(SLNet::BitStream& stream) = 0;
 };
 
 #endif // INETWORKSERIALIZABLE_H

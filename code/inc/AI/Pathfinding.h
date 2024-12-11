@@ -18,6 +18,9 @@ class Pathfinding
 public:
 	Pathfinding(const std::unordered_map<int, std::vector<int>>& aAdjacencyList, int aMapWidth, int aMapHeight);
 	std::vector<int> findPath(int aStart, int aGoal) const;
+	std::unordered_map<int, std::vector<int>> getAdjacencyList() const;
+	int getMapWidth() const;
+	int getMapHeight() const;
 
 private:
 	double distance(int aNodeA, int aNodeB) const;

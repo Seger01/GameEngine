@@ -137,8 +137,14 @@
 
     \item Favor smart pointers over traditional pointers.
     
-    \item Apply doxygen comments to all files, classes, structs, enums and function implementations in the .h or .cpp files.
-
+    \item All files must contain Doxygen comments.
+        \subitem Every file must contain a file tag.
+        \subitem Every class must contain a class tag.
+        \subitem Every function must contain a function tag, with the exeception of setters and getters that are trivial. 
+        \subitem Every function argument must be documented. 
+        \subitem Every return value must be documented.
+        \subitem Every exception must be documented.
+ 
 \end{enumerate}
 
 \end{document}
