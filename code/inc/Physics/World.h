@@ -41,6 +41,7 @@ public:
 	void setRotation(float aRotation, BodyID aBodyID);
 	void applyRotationalImpusle(std::vector<float> aTorque, BodyProxy& aBodyProxy, float aImpulse, BodyID aBodyID);
 	void setGravity(Vector2 aGravity);
+	void setVelocity(Vector2 aVelocity, BodyID aBodyID);
 
 	void scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale);
 

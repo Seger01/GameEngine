@@ -152,6 +152,15 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID)
 	return nullptr;
 }
 
+void PhysicsEngine::setBodyVelocity(Vector2 aVelocity, GameObject& aGameObject)
+{
+	if (aGameObject.hasComponent<RigidBody>())
+	{
+		RigidBody* rigidBody = aGameObject.getComponents<RigidBody>()[0];
+		mWorld.setVelocity(aVelocity, rigidBody->getBodyId());
+	}
+}
+
 // Updates flags for gameObjects rigidbodies and collider shapes
 void PhysicsEngine::updateFlags()
 {
