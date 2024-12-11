@@ -1,0 +1,19 @@
+@startuml
+
+partition "gameloop" {
+    "Update Scenes" --> "Update GameObject additions & component updates"
+    note right
+        Own the objects, and is
+        responsible for removing them
+    end note
+    "Update GameObject additions & component updates" --> "Update additions"
+    "Update additions" --> "Update physics"
+    "Update physics" --> "Update render"
+    note right
+        Requires new objects 
+        to be added but soon-to-be
+        removed objects to still exist
+    end note
+    "Update render" --> "Update removals"
+}
+@enduml
