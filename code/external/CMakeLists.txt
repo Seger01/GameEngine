@@ -105,7 +105,7 @@ set(SDL2IMAGE_PNG_SAVE OFF CACHE BOOL "Add PNG save support" FORCE)
 # Set options for Box2D
 set(BOX2D_SANITIZE OFF CACHE BOOL "Enable sanitizers for some builds" FORCE)
 set(BOX2D_AVX2 OFF CACHE BOOL "Enable AVX2 (faster)" FORCE)
-set(BOX2D_SAMPLES OFF CACHE BOOL "Build the Box2D samples" FORCE) # Enable these if you need samples in poc for Box2D
+set(BOX2D_SAMPLES ON CACHE BOOL "Build the Box2D samples" FORCE) # Enable these if you need samples in poc for Box2D
 set(BOX2D_BENCHMARKS OFF CACHE BOOL "Build the Box2D benchmarks" FORCE)
 set(BOX2D_DOCS OFF CACHE BOOL "Build the Box2D documentation" FORCE)
 set(BOX2D_PROFILE OFF CACHE BOOL "Enable profiling with Tracy" FORCE)

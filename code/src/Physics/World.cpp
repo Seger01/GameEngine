@@ -1,10 +1,6 @@
 #include "Physics/World.h"
-#include "BoxCollider.h"
-#include "CircleCollider.h"
-#include "Vector2.h"
 #include "box2d/box2d.h"
-#include "box2d/collision.h"
-#include "box2d/types.h"
+#include "box2d/math_functions.h"
 #include <cmath>
 #include <math.h>
 
@@ -60,6 +56,8 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
 	BodyID convertedBodyID = {bodyID.index1, bodyID.revision, bodyID.world0};
 	return convertedBodyID;
 }
+
+void World::applyRotationalImpusle(std::vector<float> aTorque, BodyProxy& aBodyProxy, float aImpulse, BodyID aBodyID) {}
 
 void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 {
@@ -124,6 +122,16 @@ void World::deleteBody(BodyID aBodyID)
 	}
 }
 
+void World::scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+
+	for (int i = 0; i < aBodyProxy.getBoxColliders().size(); i++)
+	{
+		BoxCollider* boxCollider = aBodyProxy.getBoxColliders().at(i);
+	}
+}
+
 void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
@@ -143,6 +151,24 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 	}
 }
 
+void World::applyLinearImpulse(std::vector<Vector2> aImpulseLeft, std::vector<Vector2> aImpulseRight, float aWidth,
+							   float aHeight, BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	for (int i = 0; i < aImpulseLeft.size(); i++)
+	{
+		b2Vec2 impulseLeft = {aImpulseLeft[i].x, aImpulseLeft[i].y};
+		b2Vec2 impulseRight = {aImpulseRight[i].x, aImpulseRight[i].y};
+
+		b2Vec2 pos = b2Body_GetPosition(bodyID);
+		b2Vec2 midLeft = {pos.x, pos.y + aHeight};
+		b2Vec2 midRight = {pos.x + aWidth, pos.y + aHeight};
+
+		b2Body_ApplyLinearImpulse(bodyID, impulseLeft, midLeft, true);
+		b2Body_ApplyLinearImpulse(bodyID, impulseRight, midRight, true);
+	}
+}
+
 void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);
@@ -151,21 +177,27 @@ void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 	rot.s = sin(radians);
 	rot.c = cos(radians);
 
-	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
+	// b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
+	// std::cout << "Position: " << position.x << ", " << position.y << std::endl;
 	return position;
 }
 
 float World::getRotation(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
-	float radians = atan2(b2Body_GetRotation(bodyID).s, b2Body_GetRotation(bodyID).c);
-	return radians * (180.0f / M_PI);
+
+	if (b2Body_IsValid(bodyID))
+	{
+		float radians = atan2(b2Body_GetRotation(bodyID).s, b2Body_GetRotation(bodyID).c);
+		return radians * (180.0f / M_PI);
+	}
+	return 0;
 }
 
 void World::setGravity(Vector2 aGravity)
