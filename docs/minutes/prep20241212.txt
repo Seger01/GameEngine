@@ -1,5 +1,7 @@
 Today: showing off design patterns and algorithms.
 
+Note for Siem: mention that I am not presented during class next monday.
+
 Design patterns:
 1.  Engine is singleton, various systems have private constructors, but are not publicly accessible. (Angel)
 2.  Facade for audio (Siem)
