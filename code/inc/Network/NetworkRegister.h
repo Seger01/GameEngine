@@ -91,7 +91,6 @@ public:
 	{
 		static_assert(std::is_base_of<INetworkSerializable, T>::value, "Type must derive from INetworkSerializable");
 		std::uint32_t typeId = GetCompileTimeTypeId<T>();
-		std::cout << "Registering type: " << typeId << std::endl;
 		mSerializeRegistry[typeId] = []() { return std::make_unique<T>(); };
 	}
 
@@ -103,7 +102,6 @@ public:
 	{
 		static_assert(std::is_base_of<INetworkPrefab, T>::value, "Type must derive from INetworkPrefab");
 		std::uint32_t typeId = GetCompileTimeTypeId<T>();
-		std::cout << "Registering enemy type: " << typeId << std::endl;
 		mPrefabRegistry[typeId] = []() { return std::make_unique<T>(); };
 	}
 
