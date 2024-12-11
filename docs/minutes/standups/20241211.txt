@@ -1,0 +1,24 @@
+Minutes 11-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: 
+- Angel: Work on physics rotation.
+- Ronan: Work on demo map to graph conversion. Fixed issue with graph tests.
+- Sean: Multiplayer: spawning prefab objects.
+- Seger: Help angel with physics rotation.
+
+What is going to be done:
+- Siem:
+- Angel: Verify that physics rotation works. Physics scalimg. Doxygen for physics.
+- Ronan: Demo: fix small issues with demo gravity. Implement particles in demo.
+- Sean: Testing spawning prefab objects over network.
+- Seger: Verify that physics rotation works. Help Ronan with particles for demo.
+
+Roadblocks:
+- Siem:
+- Angel: -
+- Ronan: Requiring physics functionality which is not use on development.
+- Sean: Issues with network.
+- Seger: -
