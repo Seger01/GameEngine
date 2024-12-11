@@ -177,14 +177,13 @@ void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 	rot.s = sin(radians);
 	rot.c = cos(radians);
 
-	// b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
+	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
-	// std::cout << "Position: " << position.x << ", " << position.y << std::endl;
 	return position;
 }
 
@@ -204,6 +203,32 @@ void World::setGravity(Vector2 aGravity)
 {
 	mGravity = aGravity;
 	b2World_SetGravity(mWorldID, {aGravity.x, aGravity.y});
+}
+
+void World::setLinearVelocity(Vector2 aVelocity, BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	b2Vec2 velocity = {aVelocity.x, aVelocity.y};
+	b2Body_SetLinearVelocity(bodyID, velocity);
+}
+
+Vector2 World::getLinearVelocity(BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyID);
+	return {velocity.x, velocity.y};
+}
+
+void World::setAngularVelocity(float aVelocity, BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	b2Body_SetAngularVelocity(bodyID, aVelocity);
+}
+
+float World::getAngularVelocity(BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	return b2Body_GetAngularVelocity(bodyID);
 }
 
 Vector2 World::getGravity() { return mGravity; }

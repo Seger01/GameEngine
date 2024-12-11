@@ -5,6 +5,7 @@
 #include "IBehaviourScript.h"
 #include "Physics/BodyProxy.h"
 #include "RigidBody.h"
+#include "Vector2.h"
 #include "World.h"
 #include "WorldID.h"
 #include <functional>
@@ -29,6 +30,8 @@ public:
 
 	void setPositions();
 	void applyForces();
+	void setLinearBodyVelocity(Vector2 aVelocity, GameObject& aGameObject);
+	void setAngularBodyVelocity(float aVelocity, GameObject& aGameObject);
 
 	std::vector<GameObject*> getgameObjects() const;
 	float getStep() const;
