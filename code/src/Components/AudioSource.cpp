@@ -72,7 +72,6 @@ unsigned AudioSource::getVolume() const { return mVolume; }
  */
 void AudioSource::setXDirection(int aXCoord)
 {
-	std::cout << "Setting X direction to " << aXCoord << std::endl;
 	if (aXCoord < mMinXDirection)
 	{
 		std::cerr << "X coordinate must be greater than or equal to " << mMinXDirection << ". Setting to "
