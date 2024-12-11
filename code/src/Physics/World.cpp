@@ -221,77 +221,73 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 
 void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
 {
-	if (!aBodyProxy.getBoxColliders().empty())
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	int size = aBodyProxy.getBoxColliders().size() + aBodyProxy.getCircleColliders().size();
+
+	b2ShapeId shapeArray[size];
+
+	b2Body_GetShapes(bodyID, shapeArray, size);
+	int boxcounter = 0;
+	int circlecounter = 0;
+	for (int i = 0; i < size; i++)
 	{
-
-		b2BodyId bodyID = convertToB2BodyID(aBodyID);
-		int size = aBodyProxy.getBoxColliders().size() + aBodyProxy.getCircleColliders().size();
-
-		b2ShapeId shapeArray[size];
-
-		b2Body_GetShapes(bodyID, shapeArray, size);
-		int boxcounter = 0;
-		int circlecounter = 0;
-		for (int i = 0; i < size; i++)
+		b2ShapeType shapeType = b2Shape_GetType(shapeArray[i]);
+		if (shapeType == b2_polygonShape)
 		{
-			b2ShapeType shapeType = b2Shape_GetType(shapeArray[i]);
-			if (shapeType == b2_polygonShape)
+			if (aBodyProxy.getBoxColliders().at(boxcounter) != nullptr)
 			{
-				if (aBodyProxy.getBoxColliders().at(boxcounter) != nullptr)
+				BoxCollider* tempBoxCollider = aBodyProxy.getBoxColliders().at(boxcounter);
+				b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
+				b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
+				b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
+
+				if (b2Shape_IsSensor(shapeArray[i]) != tempBoxCollider->isTrigger())
 				{
-					BoxCollider* tempBoxCollider = aBodyProxy.getBoxColliders().at(boxcounter);
-					b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
-					b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
-					b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
-
-					if (b2Shape_IsSensor(shapeArray[i]) != tempBoxCollider->isTrigger())
-					{
-						b2DestroyShape(shapeArray[i]);
-						createShape(aBodyProxy, aBodyID);
-					}
-
-					uint16_t maskBits = 0;
-					for (int category : tempBoxCollider->getCollideWithCategory())
-					{
-						maskBits |= (1 << category); // Generate the bitmask
-					}
-
-					b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
-					tempFilter.maskBits = maskBits;
-					tempFilter.categoryBits = (1 << tempBoxCollider->getCollideCategory());
-
-					b2Shape_SetFilter(shapeArray[i], tempFilter);
-					boxcounter++;
+					b2DestroyShape(shapeArray[i]);
+					createShape(aBodyProxy, aBodyID);
 				}
+
+				uint16_t maskBits = 0;
+				for (int category : tempBoxCollider->getCollideWithCategory())
+				{
+					maskBits |= (1 << category); // Generate the bitmask
+				}
+
+				b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
+				tempFilter.maskBits = maskBits;
+				tempFilter.categoryBits = (1 << tempBoxCollider->getCollideCategory());
+
+				b2Shape_SetFilter(shapeArray[i], tempFilter);
+				boxcounter++;
 			}
-			else if (shapeType == b2_circleShape)
+		}
+		else if (shapeType == b2_circleShape)
+		{
+			if (aBodyProxy.getCircleColliders().at(i) != nullptr)
 			{
-				if (aBodyProxy.getCircleColliders().at(i) != nullptr)
+				CircleCollider* tempCircleCollider = aBodyProxy.getCircleColliders().at(circlecounter);
+				b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
+				b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
+				b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
+
+				if (b2Shape_IsSensor(shapeArray[i]) != tempCircleCollider->getIsTrigger())
 				{
-					CircleCollider* tempCircleCollider = aBodyProxy.getCircleColliders().at(circlecounter);
-					b2Shape_SetDensity(shapeArray[i], aBodyProxy.getDensity());
-					b2Shape_SetFriction(shapeArray[i], aBodyProxy.getFriction());
-					b2Shape_SetRestitution(shapeArray[i], aBodyProxy.getRestitution());
-
-					if (b2Shape_IsSensor(shapeArray[i]) != tempCircleCollider->getIsTrigger())
-					{
-						b2DestroyShape(shapeArray[i]);
-						createShape(aBodyProxy, aBodyID);
-					}
-
-					uint16_t maskBits = 0;
-					for (int category : tempCircleCollider->getCollideWithCategory())
-					{
-						maskBits |= (1 << category); // Generate the bitmask
-					}
-
-					b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
-					tempFilter.maskBits = maskBits;
-					tempFilter.categoryBits = (1 << tempCircleCollider->getCollideCategory());
-
-					b2Shape_SetFilter(shapeArray[i], tempFilter);
-					circlecounter++;
+					b2DestroyShape(shapeArray[i]);
+					createShape(aBodyProxy, aBodyID);
 				}
+
+				uint16_t maskBits = 0;
+				for (int category : tempCircleCollider->getCollideWithCategory())
+				{
+					maskBits |= (1 << category); // Generate the bitmask
+				}
+
+				b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
+				tempFilter.maskBits = maskBits;
+				tempFilter.categoryBits = (1 << tempCircleCollider->getCollideCategory());
+
+				b2Shape_SetFilter(shapeArray[i], tempFilter);
+				circlecounter++;
 			}
 		}
 	}

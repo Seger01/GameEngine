@@ -127,6 +127,8 @@ void PhysicsEngine::createBodies()
 
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
 
+void PhysicsEngine::setGravity(Vector2 aGravity) { mWorld.setGravity(aGravity); }
+
 World& PhysicsEngine::getWorld() { return mWorld; }
 
 // Checks and returns GameObject if BodyID exists within world
