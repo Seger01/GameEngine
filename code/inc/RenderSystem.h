@@ -58,8 +58,8 @@ private:
 	void renderText(const Camera& aCurrentCamera, const std::string& aText, const Vector2& aLocation,
 					const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const;
 	void renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
-					  const Color& aColor, bool aFilled, const Camera& aCurrentCamera,
-					  const Rect& aScreenViewPort) const;
+					  const Color& aColor, bool aFilled, const Camera& aCurrentCamera, const Rect& aScreenViewPort,
+					  const Point& aRotationalCenter = {0, 0}) const;
 	void renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
 					  const Camera& aCurrentCamera, const Rect& aScreenViewPort) const;
 

@@ -10,6 +10,7 @@
 
 #include "Animation.h"
 #include "FSConverter.h"
+#include "Point.h"
 #include "Rect.h"
 #include "Renderer.h"
 #include "Window.h"
@@ -125,13 +126,15 @@ void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, c
 		flip = SDL_FLIP_VERTICAL;
 	}
 
+	SDL_Point center = {0, 0}; // Rotation center
+
 	// Render the texture with flipping and rotation
 	SDL_RenderCopyEx(mRenderer,		   // The renderer associated with the texture
 					 sdlTexture,	   // The texture to render
 					 sourceRect.get(), // The source rectangle (nullptr means the entire texture)
 					 &dstRect,		   // The destination rectangle
 					 aRotation,		   // The angle of rotation (in degrees)
-					 nullptr,		   // The point around which to rotate (nullptr means center)
+					 &center,		   // The point around which to rotate (nullptr means center)
 					 flip			   // The flipping mode
 	);
 }
@@ -146,7 +149,7 @@ void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, c
  * @param aFill Whether to fill the square.
  */
 void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
-							const Color& aColor, const bool aFill) const
+							const Color& aColor, const bool aFill, const Point& aRotationalCenter) const
 {
 	// Create a rectangle to define the size and position
 	SDL_Rect rect;
@@ -208,7 +211,7 @@ void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const in
 		SDL_SetRenderTarget(mRenderer, nullptr);
 
 		// Render the texture with rotation
-		SDL_Point center = {aWidth / 2, aHeight / 2}; // Rotation center
+		SDL_Point center = {aRotationalCenter.x, aRotationalCenter.y}; // Rotation center
 		SDL_RenderCopyEx(mRenderer, texture, nullptr, &rect, rotation, &center, SDL_FLIP_NONE);
 
 		// Destroy the temporary texture
