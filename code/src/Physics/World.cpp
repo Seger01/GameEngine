@@ -177,14 +177,13 @@ void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 	rot.s = sin(radians);
 	rot.c = cos(radians);
 
-	// b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
+	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
-	// std::cout << "Position: " << position.x << ", " << position.y << std::endl;
 	return position;
 }
 
