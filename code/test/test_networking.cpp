@@ -246,7 +246,7 @@ protected:
 TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
 {
 	SLNet::BitStream bitStream;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bitStream);
 
 	NetworkPacket packet = NetworkSharedFunctions::getBitStreamData(bitStream);
 
@@ -263,7 +263,7 @@ TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
 TEST_F(NetworkSharedFunctionsTest, SetBitStreamNetworkPacket)
 {
 	SLNet::BitStream bitStream;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bitStream);
 	NetworkPacket packet;
 	packet.messageID = 1;
 	packet.networkObjectID = 2;
