@@ -1,3 +1,8 @@
+/**
+ * @file Renderer.h
+ * @brief Header file for the Renderer class, responsible for rendering textures, shapes, and text.
+ */
+
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -15,36 +20,42 @@
 
 class Animation;
 
+/**
+ * @class Renderer
+ * @brief Handles rendering of textures, shapes, and text.
+ *
+ * This class manages the rendering of textures, shapes, and text on the screen.
+ */
 class Renderer
 {
 public:
 	Renderer(Window& window);
 	~Renderer();
 
-	void clear(Color aColor);
-	void show();
-	void setViewport(Rect& viewport);
+	void clear(const Color& aColor) const;
+	void show() const;
+	void setViewport(const Rect& viewport) const;
 
-	void renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
-					   bool aFlipY, float aRotation, Color aColor);
+	void renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation, const int aWidth,
+					   const int aHeight, const bool aFlipX, const bool aFlipY, const float aRotation,
+					   const Color& aColor) const;
 
-	void renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill,
-					  Point aRotationalCenter = Point{0, 0});
+	void renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
+					  const Color& aColor, const bool aFill, const Point& aRotationalCenter = {0, 0}) const;
 
-	void drawCircle(Vector2 center, int radius, Color aColor, bool aFill);
+	void drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const;
 
-	void renderPolygon(const std::vector<Vector2>& vertices, const Color& color, bool filled);
+	void renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
+					const float scaleY) const;
 
-	void renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY);
-
-	bool calculateTextSize(const std::string& font, const std::string& text, int& width, int& height);
+	bool calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) const;
 
 	SDL_Renderer*& getSDLRenderer();
 
 private:
-	TTF_Font* mFont = nullptr;
+	TTF_Font* mFont = nullptr; /**< The font used for rendering text. */
 
-	SDL_Renderer* mRenderer = nullptr;
+	SDL_Renderer* mRenderer = nullptr; /**< The SDL renderer. */
 };
 
 #endif

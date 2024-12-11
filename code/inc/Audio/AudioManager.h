@@ -1,3 +1,8 @@
+/**
+ * @file AudioManager.h
+ *
+ * @brief This file contains the declaration of the AudioManager class
+ */
 #pragma once
 
 #include "AudioSource.h"
@@ -7,6 +12,11 @@
 
 class GameObject;
 
+/**
+ * @class AudioManager
+ *
+ * @brief This class is responsible for owning and playing audio sources
+ */
 class AudioManager
 {
 public:
@@ -31,6 +41,8 @@ public:
 	void clearObjects();
 
 private:
+	/// @brief References to all game objects with audio sources. Is regulated by calls to addObject and removeObject
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	/// @brief The facade that will be used to interact with the audio system.
 	std::unique_ptr<IAudioFacade> mFacade;
 };

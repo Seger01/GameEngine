@@ -78,7 +78,7 @@ void EngineBravo::run()
 
 		mParticleSystem.update();
 
-		mRenderSystem.render(mSceneManager.getCurrentScene());
+		mRenderSystem.render(*mSceneManager.getCurrentScene());
 
 		mNetworkManager.update();
 		limitFrameRate(mFrameRateLimit);
@@ -159,6 +159,10 @@ void EngineBravo::startBehaviourScripts()
 		auto gameObjects = currentScene->getGameObjects();
 		for (auto& gameObject : gameObjects)
 		{
+			if (!gameObject->isActive())
+			{
+				continue;
+			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
 				if (behaviourScript->hasScriptStarted())
@@ -184,6 +188,10 @@ void EngineBravo::runBehaviourScripts()
 	{
 		for (auto& gameObject : currentScene->getGameObjects())
 		{
+			if (!gameObject->isActive())
+			{
+				continue;
+			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
 				behaviourScript->onUpdate();

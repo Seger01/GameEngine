@@ -1,249 +1,25 @@
+/**
+ * @file RenderSystem.cpp
+ * @brief Implementation of the RenderSystem class responsible for rendering various game objects and elements.
+ */
+
 #include "RenderSystem.h"
 
-#include <iostream>
+#include <cmath>
 #include <memory>
 
 #include "Animation.h"
 #include "BoxCollider.h"
-#include "Button.h"
+#include "CircleCollider.h"
 #include "Color.h"
-#include "EngineBravo.h"
 #include "ParticleEmitter.h"
-#include "SDL_timer.h"
-#include "ScopedTimer.h"
 #include "Sprite.h"
 #include "Text.h"
 #include "Time.h"
-#include "UIObject.h"
 
-b2DebugDraw debugDraw;
-RenderSystem* renderSystem;
-Renderer* renderer;
-
-void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)
-{
-	// Convert color from b2HexColor to Renderer Color
-	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-
-	// Draw edges between consecutive vertices
-	for (int i = 0; i < vertexCount; ++i)
-	{
-		Vector2 start(vertices[i].x, vertices[i].y);
-		Vector2 end(vertices[(i + 1) % vertexCount].x, vertices[(i + 1) % vertexCount].y);
-
-		// renderer->renderLine(start, end, renderColor);
-	}
-}
-
-// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
-// 						  b2HexColor color, void* context)
-// {
-// 	std::cout << "DrawSolidPolygonImpl" << std::endl;
-// 	// Assume solid polygon is a rectangle for this implementation
-// 	if (vertexCount == 4) // Check if it's a rectangle
-// 	{
-// 		Vector2 location(vertices[0].x, vertices[0].y); // Top-left corner
-// 		float width = vertices[2].x - vertices[0].x;
-// 		float height = vertices[2].y - vertices[0].y;
-//
-// 		// Convert color from b2HexColor to Renderer Color
-// 		Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-//
-// 		location.x = location.x + transform.p.x;
-// 		location.y = location.y + transform.p.y;
-//
-// 		// Render the rectangle
-// 		std::cout << "Render Pos: " << location.x << ", " << location.y << std::endl;
-// 		renderer->renderSquare(location, static_cast<int>(width), static_cast<int>(height), 0.0f, renderColor, true);
-// 	}
-// 	else
-// 	{
-// 		std::cout << "gotten polygon not a rectangle" << std::endl;
-// 	}
-// }
-void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
-						  b2HexColor color, void* context)
-{
-	// Convert color from b2HexColor to Renderer Color
-	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-
-	// Create a vector to store transformed vertices
-	std::vector<Vector2> transformedVertices;
-	transformedVertices.reserve(vertexCount);
-
-	// Transform all vertices by the b2Transform
-	for (int i = 0; i < vertexCount; ++i)
-	{
-		// Apply the transform to each vertex
-		b2Vec2 transformedVertex = b2Mul(transform.p, vertices[i]);
-		transformedVertices.emplace_back(transformedVertex.x, transformedVertex.y);
-	}
-
-	// Render the polygon using the renderer
-	renderer->renderPolygon(transformedVertices, renderColor, true);
-}
-
-void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context)
-{
-	// Convert color from b2HexColor to Renderer Color
-	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-
-	// Render the circle outline
-	renderer->drawCircle(Vector2(center.x, center.y), static_cast<int>(radius), renderColor, false);
-}
-
-void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context)
-{
-	// Convert color from b2HexColor to Renderer Color
-	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-
-	// Use the position from the transform
-	Vector2 center(transform.p.x, transform.p.y);
-
-	// Render the filled circle
-	renderer->drawCircle(center, static_cast<int>(radius), renderColor, true);
-}
-
-// void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context) {}
-//
-// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
-// 						  b2HexColor color, void* context)
-// {
-// }
-//
-// void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context) {}
-//
-// void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context) {}
-
-// void DrawPolygonImpl(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)
-// {
-// 	Renderer* renderer = static_cast<Renderer*>(context);
-// 	if (!renderer || vertexCount < 2)
-// 		return;
-//
-// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-//
-// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
-//
-// 	for (int i = 0; i < vertexCount; ++i)
-// 	{
-// 		const b2Vec2& start = vertices[i];
-// 		const b2Vec2& end = vertices[(i + 1) % vertexCount]; // Wrap around to the first vertex
-// 		SDL_RenderDrawLine(renderer->getSDLRenderer(), static_cast<int>(start.x), static_cast<int>(start.y),
-// 						   static_cast<int>(end.x), static_cast<int>(end.y));
-// 	}
-// }
-//
-// void DrawSolidPolygonImpl(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius,
-// 						  b2HexColor color, void* context)
-// {
-// 	Renderer* renderer = static_cast<Renderer*>(context);
-// 	if (!renderer || vertexCount < 3)
-// 		return;
-//
-// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
-//
-// 	// Use a triangulation method to draw a filled polygon
-// 	for (int i = 1; i < vertexCount - 1; ++i)
-// 	{
-// 		SDL_Point points[3] = {{static_cast<int>(vertices[0].x + transform.p.x), static_cast<int>(vertices[0].y)},
-// 							   {static_cast<int>(vertices[i].x + transform.p.x), static_cast<int>(vertices[i].y)},
-// 							   {static_cast<int>(vertices[i + 1].x), static_cast<int>(vertices[i + 1].y)}};
-// 		SDL_RenderDrawLines(renderer->getSDLRenderer(), points, 3);
-// 	}
-// }
-//
-// void DrawCircleImpl(b2Vec2 center, float radius, b2HexColor color, void* context)
-// {
-// 	Renderer* renderer = static_cast<Renderer*>(context);
-// 	if (!renderer)
-// 		return;
-//
-// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
-//
-// 	int x = static_cast<int>(radius);
-// 	int y = 0;
-// 	int decisionOver2 = 1 - x; // Decision variable for the midpoint circle algorithm
-//
-// 	while (x >= y)
-// 	{
-// 		// Draw the circle's eight symmetrical points
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + x, center.y + y);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + y, center.y + x);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - y, center.y + x);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - x, center.y + y);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - x, center.y - y);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x - y, center.y - x);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + y, center.y - x);
-// 		SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + x, center.y - y);
-//
-// 		y++;
-// 		if (decisionOver2 <= 0)
-// 		{
-// 			decisionOver2 += 2 * y + 1; // Update decision variable
-// 		}
-// 		else
-// 		{
-// 			x--;
-// 			decisionOver2 += 2 * (y - x) + 1;
-// 		}
-// 	}
-// }
-//
-// void DrawSolidCircleImpl(b2Transform transform, float radius, b2HexColor color, void* context)
-// {
-// 	Renderer* renderer = static_cast<Renderer*>(context);
-// 	if (!renderer)
-// 		return;
-//
-// 	Color renderColor{(Uint8)((color >> 16) & 0xFF), (Uint8)((color >> 8) & 0xFF), (Uint8)(color & 0xFF), 255};
-// 	SDL_SetRenderDrawColor(renderer->getSDLRenderer(), renderColor.r, renderColor.g, renderColor.b, 255);
-//
-// 	b2Vec2 center = transform.p; // Assuming `transform.p` is the circle center
-//
-// 	for (int w = -static_cast<int>(radius); w <= static_cast<int>(radius); ++w)
-// 	{
-// 		for (int h = -static_cast<int>(radius); h <= static_cast<int>(radius); ++h)
-// 		{
-// 			if (w * w + h * h <= radius * radius)
-// 			{
-// 				SDL_RenderDrawPoint(renderer->getSDLRenderer(), center.x + w, center.y + h);
-// 			}
-// 		}
-// 	}
-// }
-
-// Add more callback implementations as needed...
-
-// Initialize the b2DebugDraw struct
-void InitializeDebugDraw(b2DebugDraw* debugDraw, void* userContext)
-{
-	debugDraw->DrawPolygon = DrawPolygonImpl;
-	debugDraw->DrawSolidPolygon = DrawSolidPolygonImpl;
-	debugDraw->DrawCircle = DrawCircleImpl;
-	debugDraw->DrawSolidCircle = DrawSolidCircleImpl;
-
-	// Assign other function pointers similarly...
-
-	// Initialize options
-	debugDraw->useDrawingBounds = false;
-	debugDraw->drawShapes = true;
-	debugDraw->drawJoints = true;
-	debugDraw->drawJointExtras = false;
-	debugDraw->drawAABBs = false;
-	debugDraw->drawMass = false;
-	debugDraw->drawContacts = false;
-	debugDraw->drawGraphColors = false;
-	debugDraw->drawContactNormals = false;
-	debugDraw->drawContactImpulses = false;
-	debugDraw->drawFrictionImpulses = false;
-
-	// Initialize context
-	debugDraw->context = userContext;
-}
-
+/**
+ * @brief Constructor for the RenderSystem class. Initializes the window, renderer, and default settings.
+ */
 RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio(Point{16, 9})
 {
 	mWindow = std::make_unique<Window>(WindowWidth, WindowHeight);
@@ -251,59 +27,83 @@ RenderSystem::RenderSystem() : WindowWidth(800), WindowHeight(450), mAspectRatio
 
 	mBackgroundColor = Color(255, 255, 255);
 
-	// Initialize the debug draw
-	InitializeDebugDraw(&debugDraw, this);
-	renderSystem = this;
-	renderer = mRenderer.get();
-
 	return;
 }
 
-void RenderSystem::setAspectRatio(Point aAspectRatio) { mAspectRatio = aAspectRatio; }
+/**
+ * @brief Sets the aspect ratio for the rendering system.
+ * @param aAspectRatio The new aspect ratio as a Point.
+ */
+void RenderSystem::setAspectRatio(const Point& aAspectRatio) { mAspectRatio = aAspectRatio; }
 
-Point RenderSystem::getAspectRatio() { return mAspectRatio; }
+/**
+ * @brief Retrieves the current aspect ratio of the rendering system.
+ * @return The aspect ratio as a Point.
+ */
+Point RenderSystem::getAspectRatio() const { return mAspectRatio; }
 
-void RenderSystem::renderSprite(Camera& aCurrentCamera, GameObject* aGameObject, Sprite* aSprite, Rect aScreenViewPort)
+/**
+ * @brief Renders a Sprite component of a GameObject.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aGameObject The GameObject to which the Sprite belongs.
+ * @param aSprite The Sprite component to render.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& aGameObject, const Sprite& aSprite,
+								const Rect& aScreenViewPort) const
 {
-	Vector2 texturePosition = aGameObject->getTransform().position + aSprite->getRelativePosition().position;
+	Vector2 texturePosition = aGameObject.getTransform().position + aSprite.getRelativePosition().position;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = texturePosition - cameraOrigin;
 
-	// SDL_Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
-	// 					   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
-	//
-	// SDL_Rect spriteRect = {static_cast<int>(drawPosition.x), static_cast<int>(drawPosition.y), aSprite->getWidth(),
-	// 					   aSprite->getHeight()};
+	Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
+					   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
 
-	// // Perform culling: check if the sprite is outside the camera's view
-	// if (!SDL_HasIntersection(&cameraRect, &spriteRect))
-	// {
-	// 	return; // Skip rendering
-	// }
+	Rect spriteRect = {static_cast<int>(texturePosition.x), static_cast<int>(texturePosition.y), aSprite.getWidth(),
+					   aSprite.getHeight()};
+
+	if (!cameraRect.intersects(spriteRect))
+	{
+		return;
+	}
 
 	// Adjust draw position and size to the viewport
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
-	int spriteWidth = std::round(aSprite->getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
-	int spriteHeight = std::round(aSprite->getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+	int spriteWidth = std::round(aSprite.getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int spriteHeight = std::round(aSprite.getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
 	// Render
-	mRenderer->renderTexture(*aSprite->getTexture(), aSprite->getSource(), drawPosition, spriteWidth, spriteHeight,
-							 aSprite->getFlipX(), aSprite->getFlipY(),
-							 aGameObject->getTransform().rotation + aSprite->getRelativePosition().rotation,
-							 aSprite->getColorFilter());
+	mRenderer->renderTexture(aSprite.getTexture(), aSprite.getSource(), drawPosition, spriteWidth, spriteHeight,
+							 aSprite.getFlipX(), aSprite.getFlipY(),
+							 aGameObject.getTransform().rotation + aSprite.getRelativePosition().rotation,
+							 aSprite.getColorFilter());
 }
 
-void RenderSystem::renderAnimation(Camera& aCurrentCamera, GameObject* aGameObject, Animation* aAnimation,
-								   Rect aScreenViewPort)
+/**
+ * @brief Renders an Animation component of a GameObject.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aGameObject The GameObject to which the Animation belongs.
+ * @param aAnimation The Animation component to render.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderAnimation(const Camera& aCurrentCamera, const GameObject& aGameObject,
+								   const Animation& aAnimation, const Rect& aScreenViewPort) const
 {
-	Sprite& currentFrame = aAnimation->getCurrentFrame();
+	const Sprite& currentFrame = aAnimation.getCurrentFrame();
 
-	renderSprite(aCurrentCamera, aGameObject, &currentFrame, aScreenViewPort);
+	renderSprite(aCurrentCamera, aGameObject, currentFrame, aScreenViewPort);
 }
 
-void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, Rect aScreenViewPort)
+/**
+ * @brief Renders a Particle instance.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aParticle The Particle to render.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderParticle(const Camera& aCurrentCamera, const Particle& aParticle,
+								  const Rect& aScreenViewPort) const
 {
 	float particleWidth = aParticle.getSize().x;
 	float particleHeight = aParticle.getSize().y;
@@ -326,8 +126,17 @@ void RenderSystem::renderParticle(Camera& aCurrentCamera, Particle& aParticle, R
 							aParticle.getRotation(), aParticle.getColor(), true);
 }
 
-void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, Vector2 aLocation, Color aColor,
-							  Vector2 aScale, Rect aScreenViewPort)
+/**
+ * @brief Renders text on the screen.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aText The text to render.
+ * @param aLocation The position of the text.
+ * @param aColor The color of the text.
+ * @param aScale The scale of the text.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderText(const Camera& aCurrentCamera, const std::string& aText, const Vector2& aLocation,
+							  const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const
 {
 	float scaleX = aScale.x * (aScreenViewPort.w / static_cast<float>(aCurrentCamera.getWidth()));
 	float scaleY = aScale.y * (aScreenViewPort.h / static_cast<float>(aCurrentCamera.getHeight()));
@@ -341,8 +150,17 @@ void RenderSystem::renderText(Camera& aCurrentCamera, const std::string& aText, 
 	mRenderer->renderText(aText, drawPosition, aColor, scaleX, scaleY);
 }
 
+/**
+ * @brief Retrieves the size of a text string.
+ * @param aFont The font to use.
+ * @param aText The text to measure.
+ * @param aWidth The width of the text.
+ * @param aHeight The height of the text.
+ * @param aScale The scale of the text.
+ * @return True if the text size was successfully retrieved, false otherwise.
+ */
 bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
-							   Vector2 aScale)
+							   const Vector2& aScale) const
 {
 	if (!mRenderer->calculateTextSize(aFont, aText, aWidth, aHeight))
 	{
@@ -355,7 +173,13 @@ bool RenderSystem::getTextSize(const std::string& aFont, const std::string& aTex
 	return true;
 }
 
-Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
+/**
+ * @brief Converts a screen position to a world position.
+ * @param aScreenpos The screen position to convert.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @return The world position as a Vector2.
+ */
+Vector2 RenderSystem::screenToWorldPos(const Point& aScreenpos, const Camera& aCurrentCamera) const
 {
 	Vector2 screenPos{static_cast<float>(aScreenpos.x), static_cast<float>(aScreenpos.y)};
 	FRect viewport = aCurrentCamera.getViewport();
@@ -396,10 +220,15 @@ Vector2 RenderSystem::screenToWorldPos(Point aScreenpos, Camera& aCurrentCamera)
 	return worldPos;
 }
 
-int RenderSystem::getLowestLayer(Scene* aScene)
+/**
+ * @brief Function that finds the lowest layer in the scene.
+ * @param aScene The scene to search.
+ * @return The lowest layer as an integer.
+ */
+int RenderSystem::getLowestLayer(const Scene& aScene) const
 {
 	int lowestLayer = 0;
-	for (auto& gameObject : aScene->getGameObjects())
+	for (auto& gameObject : aScene.getGameObjects())
 	{
 		if (gameObject->hasComponent<Sprite>())
 		{
@@ -443,10 +272,15 @@ int RenderSystem::getLowestLayer(Scene* aScene)
 	return lowestLayer;
 }
 
-int RenderSystem::getHighestLayer(Scene* aScene)
+/**
+ * @brief Function that finds the highest layer in the scene.
+ * @param aScene The scene to search.
+ * @return The highest layer as an integer.
+ */
+int RenderSystem::getHighestLayer(const Scene& aScene) const
 {
 	int highestLayer = 0;
-	for (auto& gameObject : aScene->getGameObjects())
+	for (auto& gameObject : aScene.getGameObjects())
 	{
 		if (gameObject->hasComponent<Sprite>())
 		{
@@ -490,22 +324,34 @@ int RenderSystem::getHighestLayer(Scene* aScene)
 	return highestLayer;
 }
 
-void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, Rect aScreenViewPort)
+/**
+ * @brief Renders all objects in a specific layer.
+ * @param aScene The scene to render.
+ * @param aLayer The layer to render.
+ * @param activeCamera The active camera rendering the scene.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderLayer(const Scene& aScene, int aLayer, const Camera& activeCamera,
+							   const Rect& aScreenViewPort) const
 {
 	for (GameObject& gameObject : mObjects)
 	{
+		if (!gameObject.isActive())
+		{
+			continue;
+		}
 		for (auto animation : gameObject.getComponents<Animation>())
 		{
 			if (animation->isActive() && animation->getLayer() == aLayer)
 			{
-				renderAnimation(activeCamera, &gameObject, animation, aScreenViewPort);
+				renderAnimation(activeCamera, gameObject, *animation, aScreenViewPort);
 			}
 		}
 		for (auto sprite : gameObject.getComponents<Sprite>())
 		{
 			if (sprite->isActive() && sprite->getLayer() == aLayer)
 			{
-				renderSprite(activeCamera, &gameObject, sprite, aScreenViewPort);
+				renderSprite(activeCamera, gameObject, *sprite, aScreenViewPort);
 			}
 		}
 		for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
@@ -530,24 +376,33 @@ void RenderSystem::renderLayer(Scene* aScene, int aLayer, Camera& activeCamera, 
 	}
 }
 
-void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras)
+/**
+ * @brief Sorts the cameras by render order.
+ * @param aCameras The cameras to sort.
+ */
+void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const
 {
 	std::sort(aCameras.begin(), aCameras.end(),
 			  [](Camera* a, Camera* b) { return a->getRenderOrder() < b->getRenderOrder(); });
 }
 
-void RenderSystem::render(Scene* aScene)
+/**
+ * @brief Renders the scene.
+ * @param aScene The scene to render.
+ */
+void RenderSystem::render(const Scene& aScene) const
 {
 	mRenderer->clear(mBackgroundColor);
 
 	// Get all active cameras
-	std::vector<Camera*> cameras = aScene->getCameras();
+	std::vector<Camera*> cameras = aScene.getCameras();
 
 	// Sort cameras by render order
 	sortCamerasByRenderOrder(cameras);
 
 	for (Camera* camera : cameras)
 	{
+		camera->update();
 
 		FRect cameraViewport = camera->getViewport();
 
@@ -581,14 +436,16 @@ void RenderSystem::render(Scene* aScene)
 		renderForCamera(aScene, *camera, screenViewPort);
 	}
 
-	// b2WorldId worldId = EngineBravo::getInstance().getPhysicsManager().getPhysicsEngine().getWorld().getWorldID();
-	//
-	// b2World_Draw(worldId, &debugDraw);
-
 	mRenderer->show();
 }
 
-void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenViewPort)
+/**
+ * @brief Renders the scene for a specific camera.
+ * @param aScene The scene to render.
+ * @param camera The camera to render the scene for.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const
 {
 	int lowestLayer = getLowestLayer(aScene);
 	int highestLayer = getHighestLayer(aScene);
@@ -601,21 +458,21 @@ void RenderSystem::renderForCamera(Scene* aScene, Camera& camera, Rect aScreenVi
 	renderDebugInfo(aScene, camera, aScreenViewPort);
 }
 
-void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, float aRotation, Color aColor, bool aFilled,
-								Camera& aCurrentCamera, Rect aScreenViewPort, Point aRotationalCenter)
+/**
+ * @brief Renders a square on the screen.
+ * @param aPosition The position of the square.
+ * @param aWidth The width of the square.
+ * @param aHeight The height of the square.
+ * @param aRotation The rotation of the square.
+ * @param aColor The color of the square.
+ * @param aFilled Whether the square is filled or not.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
+								const Color& aColor, bool aFilled, const Camera& aCurrentCamera,
+								const Rect& aScreenViewPort, const Point& aRotationalCenter) const
 {
-
-	std::cout << "Received Position: " << aPosition.x << ", " << aPosition.y << std::endl;
-	std::cout << "Received Width: " << aWidth << std::endl;
-	std::cout << "Received Height: " << aHeight << std::endl;
-	std::cout << "Received Rotation: " << aRotation << std::endl;
-	// std::cout << "Received Color: " << aColor.r << ", " << aColor.g << ", " << aColor.b << std::endl;
-	// std::cout << "Received Filled: " << aFilled << std::endl;
-	// std::cout << "Received Camera: " << aCurrentCamera.getOrigin().x << ", " << aCurrentCamera.getOrigin().y <<
-	// std::endl; std::cout << "Received Screen Viewport: " << aScreenViewPort.x << ", " << aScreenViewPort.y << ", " <<
-	// aScreenViewPort.w << ", " << aScreenViewPort.h << std::endl;
-	std::cout << "Received Rotational Center: " << aRotationalCenter.x << ", " << aRotationalCenter.y << std::endl;
-
 	Vector2 squarePosition = aPosition;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = squarePosition - cameraOrigin;
@@ -627,21 +484,27 @@ void RenderSystem::renderSquare(Vector2 aPosition, int aWidth, int aHeight, floa
 	int squareWidth = std::round(aWidth * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 	int squareHeight = std::round(aHeight * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
-	aRotationalCenter.x = std::round(aRotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
-	aRotationalCenter.y = std::round(aRotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
-
-	std::cout << "Calculated position: " << drawPosition.x << ", " << drawPosition.y << std::endl;
-	std::cout << "Calculated width: " << squareWidth << std::endl;
-	std::cout << "Calculated height: " << squareHeight << std::endl;
-	std::cout << "Calculated rotation: " << aRotation << std::endl;
-	std::cout << "Calculated rotational center: " << aRotationalCenter.x << ", " << aRotationalCenter.y << std::endl;
+	Point scaledRotationalCenter;
+	scaledRotationalCenter.x = std::round(aRotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	scaledRotationalCenter.y =
+		std::round(aRotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
 	// Render
-	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled, aRotationalCenter);
+	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled,
+							scaledRotationalCenter);
 }
 
-void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, bool aFilled, Camera& aCurrentCamera,
-								Rect aScreenViewPort)
+/**
+ * @brief Renders a circle on the screen.
+ * @param aPosition The position of the circle.
+ * @param aRadius The radius of the circle.
+ * @param aColor The color of the circle.
+ * @param aFilled Whether the circle is filled or not.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
+								const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
 
 	Vector2 circlePosition = aPosition;
@@ -658,14 +521,20 @@ void RenderSystem::renderCircle(Vector2 aPosition, float aRadius, Color aColor, 
 	mRenderer->drawCircle(drawPosition, radius, aColor, aFilled);
 }
 
-void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect aScreenViewPort)
+/**
+ * @brief Renders debug information on the screen.
+ * @param aScene The scene to render.
+ * @param aCurrentCamera The active camera rendering the scene.
+ * @param aScreenViewPort The viewport of the screen.
+ */
+void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
 	if (Time::deltaTime == 0)
 	{
 		return;
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().showFPS)
+	if (aCurrentCamera.getDebugOverlay().showFPS)
 	{
 		int fps = 1.0f / Time::deltaTime;
 
@@ -674,18 +543,17 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().renderCameraViewport)
+	if (aCurrentCamera.getDebugOverlay().renderCameraViewport)
 	{
 		mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
 	}
 
-	if (aCurrentCamera.getDebugOverlayRef().renderColliders)
+	if (aCurrentCamera.getDebugOverlay().renderColliders)
 	{
-		for (auto& gameObject : aScene->getGameObjects())
+		for (auto& gameObject : aScene.getGameObjects())
 		{
 			if (gameObject->hasComponent<BoxCollider>())
 			{
-				int counter = 0;
 				for (auto boxCollider : gameObject->getComponents<BoxCollider>())
 				{
 					Vector2 relativeBoxPosition = boxCollider->getTransform().position;
@@ -693,15 +561,10 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 					Vector2 boxColliderWorldPos =
 						gameObject->getTransform().position + boxCollider->getTransform().position;
 
-					std::cout << "square: " << counter << std::endl;
-					counter++;
 					renderSquare(
 						boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
 						gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera, aScreenViewPort,
 						Point{static_cast<int>(-relativeBoxPosition.x), static_cast<int>(-relativeBoxPosition.y)});
-					// renderSquare(boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
-					// 			 gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
-					// 			 aScreenViewPort, Point{0, 0});
 				}
 			}
 			if (gameObject->hasComponent<CircleCollider>())
@@ -719,10 +582,22 @@ void RenderSystem::renderDebugInfo(Scene* aScene, Camera& aCurrentCamera, Rect a
 	}
 }
 
+/**
+ * @brief Retrieves the renderer.
+ * @return The renderer.
+ */
 Renderer& RenderSystem::getRenderer() { return *mRenderer; }
 
+/**
+ * @brief Retrieves the window.
+ * @return The window.
+ */
 Window& RenderSystem::getWindow() { return *mWindow; }
 
+/**
+ * @brief adds object to the render system.
+ * @param aObject The object to add.
+ */
 void RenderSystem::addObject(GameObject& aObject)
 {
 	auto it = std::find_if(mObjects.begin(), mObjects.end(),
@@ -737,6 +612,10 @@ void RenderSystem::addObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Removes object from the render system.
+ * @param aObject The object to remove.
+ */
 void RenderSystem::removeObject(GameObject& aObject)
 {
 	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
@@ -747,6 +626,13 @@ void RenderSystem::removeObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Retrieves all objects in the render system.
+ * @return A vector of GameObject references.
+ */
 const std::vector<std::reference_wrapper<GameObject>>& RenderSystem::getObjects() const { return mObjects; }
 
+/**
+ * @brief Clears all objects from the render system.
+ */
 void RenderSystem::clearObjects() { mObjects.clear(); }

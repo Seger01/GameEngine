@@ -1,5 +1,15 @@
+/**
+ * @file NetworkHost.cpp
+ * @brief The file contains the implementation of the NetworkHost class.
+ */
 #include "Network/NetworkHost.h"
 
+/**
+ * @brief Constructs a new NetworkHost object.
+ * 
+ * @param aObjects A vector of GameObject references to be managed by the network host.
+ * @param aTickRate The tick rate for the network updates.
+ */
 NetworkHost::NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate)
 {
 	mServer = std::make_unique<NetworkServer>(aObjects, aTickRate);
@@ -8,6 +18,9 @@ NetworkHost::NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjec
 	mClient->connectToServer();
 }
 
+/**
+ * @brief Updates the network host, including both server and client.
+ */
 void NetworkHost::update()
 {
 	if (mServer)

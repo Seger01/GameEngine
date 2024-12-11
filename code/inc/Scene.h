@@ -20,13 +20,13 @@ public:
 	void requestGameObjectRemoval(GameObject* object);
 	GameObject& getGameObject(int id);
 
-	std::vector<Camera*> getCameras();
+	std::vector<Camera*> getCameras() const;
 	Camera* getCameraWithTag(const std::string& tag);
 
 	int getID();
 	std::string getName();
 
-	std::vector<GameObject*> getGameObjects();
+	std::vector<GameObject*> getGameObjects() const;
 	std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
 
 	void addPersistentGameObject(GameObject* object);

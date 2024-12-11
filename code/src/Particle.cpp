@@ -1,8 +1,28 @@
+/**
+ * @file Particle.cpp
+ * @brief Implementation of the Particle class.
+ */
+
 #include "Particle.h"
 
 #include <iostream>
 
 #include "Time.h"
+
+/**
+ * @brief Constructor for the Particle class.
+ * @param aPosition The initial position of the particle.
+ * @param aVelocity The initial velocity of the particle.
+ * @param aAcceleration The acceleration of the particle.
+ * @param aLifeTime The initial life time of the particle.
+ * @param aMaxLifeTime The maximum life time of the particle.
+ * @param aSize The initial size of the particle.
+ * @param aSizeShift The size shift of the particle.
+ * @param aRotation The initial rotation of the particle.
+ * @param aAngularVelocity The initial angular velocity of the particle.
+ * @param aAngularAcceleration The angular acceleration of the particle.
+ * @param aColorGradient The color gradient of the particle.
+ */
 
 Particle::Particle(const Vector2& aPosition, const Vector2& aVelocity, float aAcceleration, int aLifeTime,
 				   int aMaxLifeTime, const Vector2& aSize, const Vector2& aSizeShift, float aRotation,
@@ -15,6 +35,9 @@ Particle::Particle(const Vector2& aPosition, const Vector2& aVelocity, float aAc
 	mLifeTimeRemainingSec = static_cast<double>(aLifeTime) / 1000;
 }
 
+/**
+ * @brief Updates the particle's position, velocity, size, rotation, and color.
+ */
 void Particle::update()
 {
 	mPosition.x += mVelocity.x * Time::deltaTime;
@@ -51,14 +74,34 @@ void Particle::update()
 	mAngularVelocity += mAngularAcceleration * Time::deltaTime;
 }
 
+/**
+ * @brief Gets the position of the particle.
+ * @return The position of the particle.
+ */
 Vector2 Particle::getPosition() const { return mPosition; }
 
+/**
+ * @brief Gets the life time of the particle.
+ * @return The life time of the particle.
+ */
 float Particle::getLifeTime() const { return mLifeTimeRemainingSec; }
 
+/**
+ * @brief Gets the size of the particle.
+ * @return The size of the particle.
+ */
 Vector2 Particle::getSize() const { return mSize; }
 
+/**
+ * @brief Gets the rotation of the particle.
+ * @return The rotation of the particle.
+ */
 float Particle::getRotation() const { return mRotation; }
 
+/**
+ * @brief Gets the color of the particle.
+ * @return The color of the particle.
+ */
 Color Particle::getColor() const
 {
 	if (mColorGradient.size() == 0)
@@ -77,6 +120,10 @@ Color Particle::getColor() const
 	return mColorGradient[0];
 }
 
+/**
+ * @brief Calculates the color of the particle based on the color gradient.
+ * @return The color of the particle.
+ */
 Color Particle::calculateColor() const
 {
 	if (mInterpolateColor)
@@ -89,6 +136,10 @@ Color Particle::calculateColor() const
 	}
 }
 
+/**
+ * @brief Calculates the interpolated color of the particle.
+ * @return The interpolated color of the particle.
+ */
 Color Particle::calculateInterpolatedColor() const
 {
 	// Calculate the percentage of life time remaining
@@ -121,6 +172,10 @@ Color Particle::calculateInterpolatedColor() const
 	return interpolatedColor;
 }
 
+/**
+ * @brief Gets the nearest color in the color gradient.
+ * @return The nearest color in the color gradient.
+ */
 Color Particle::getNearestColor() const
 {
 	// Calculate the percentage of life time remaining

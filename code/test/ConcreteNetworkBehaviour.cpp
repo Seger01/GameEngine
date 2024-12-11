@@ -1,9 +1,5 @@
 #include "ConcreteNetworkBehaviour.h"
 
-void ConcreteNetworkBehaviour::OnNetworkSpawn() {
-    // Do something
-}
-
 void ConcreteNetworkBehaviour::onStart() {
     ConcreteNetworkSerializable serializable;
     serializable.setValue(20);

@@ -1,8 +1,17 @@
+/**
+ * @file Time.h
+ * @brief Time class for handling the ticks and the delta time of the game.
+ */
+
 #ifndef TIME_H
 #define TIME_H
 
 #include <chrono>
 
+/**
+ * @class Time
+ * @brief Class for handling the ticks and the delta time of the game.
+ */
 class Time
 {
 public:

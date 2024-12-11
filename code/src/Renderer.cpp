@@ -1,3 +1,8 @@
+/**
+ * @file Renderer.cpp
+ * @brief Implementation of the Renderer class, responsible for rendering textures, shapes, and text.
+ */
+
 #include <iostream>
 
 #include <SDL_render.h>
@@ -10,6 +15,10 @@
 #include "Renderer.h"
 #include "Window.h"
 
+/**
+ * @brief Constructor for the Renderer class. Initializes the renderer and font.
+ * @param window The window to render to.
+ */
 Renderer::Renderer(Window& window)
 {
 	// Create renderer
@@ -48,6 +57,9 @@ Renderer::Renderer(Window& window)
 	mFont = font;
 }
 
+/**
+ * @brief Destructor for the Renderer class. Frees the renderer and font.
+ */
 Renderer::~Renderer()
 {
 	SDL_DestroyRenderer(this->mRenderer);
@@ -59,48 +71,22 @@ Renderer::~Renderer()
 	TTF_Quit();
 }
 
-void Renderer::renderPolygon(const std::vector<Vector2>& vertices, const Color& color, bool filled)
-{
-	if (vertices.size() < 3)
-	{
-		// Polygons must have at least 3 vertices
-		return;
-	}
+/**
+ * @brief Renders a texture to the screen.
+ * @param aTexture The texture to render.
+ * @param aSourceRect The source rectangle of the texture.
+ * @param aLocation The location to render the texture.
+ * @param aWidth The width of the texture.
+ * @param aHeight The height of the texture.
+ * @param aFlipX Whether to flip the texture horizontally.
+ * @param aFlipY Whether to flip the texture vertically.
+ * @param aRotation The rotation of the texture.
+ * @param aColor The color of the texture.
+ */
 
-	// Set the drawing color
-	SDL_SetRenderDrawColor(mRenderer, color.r, color.g, color.b, color.a);
-
-	if (filled)
-	{
-		// For filled polygons, use a triangulation approach (e.g., fan triangulation).
-		for (size_t i = 1; i < vertices.size() - 1; ++i)
-		{
-			// Draw a triangle for each set of vertices
-			SDL_Point points[3] = {{static_cast<int>(vertices[0].x), static_cast<int>(vertices[0].y)},
-								   {static_cast<int>(vertices[i].x), static_cast<int>(vertices[i].y)},
-								   {static_cast<int>(vertices[i + 1].x), static_cast<int>(vertices[i + 1].y)}};
-
-			SDL_RenderDrawLines(mRenderer, points, 3);
-		}
-	}
-	else
-	{
-		// For non-filled polygons, draw lines between consecutive vertices and close the loop
-		for (size_t i = 0; i < vertices.size(); ++i)
-		{
-			Vector2 start = vertices[i];
-			Vector2 end = vertices[(i + 1) % vertices.size()]; // Wrap around to the first vertex
-			SDL_RenderDrawLine(mRenderer, static_cast<int>(start.x), static_cast<int>(start.y), static_cast<int>(end.x),
-							   static_cast<int>(end.y));
-		}
-	}
-
-	// Reset the renderer color to its default (e.g., white)
-	SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
-}
-
-void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight,
-							 bool aFlipX, bool aFlipY, float aRotation, Color aColor)
+void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation,
+							 const int aWidth, const int aHeight, const bool aFlipX, const bool aFlipY,
+							 const float aRotation, const Color& aColor) const
 {
 	// Get the SDL_Texture from the Texture class
 	SDL_Texture* sdlTexture = aTexture.getSDLTexture();
@@ -153,8 +139,17 @@ void Renderer::renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocat
 	);
 }
 
-void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float rotation, Color aColor, bool aFill,
-							Point aRotationalCenter)
+/**
+ * @brief Renders a square to the screen.
+ * @param aLocation The location of the square.
+ * @param aWidth The width of the square.
+ * @param aHeight The height of the square.
+ * @param rotation The rotation of the square.
+ * @param aColor The color of the square.
+ * @param aFill Whether to fill the square.
+ */
+void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
+							const Color& aColor, const bool aFill, const Point& aRotationalCenter) const
 {
 	// Create a rectangle to define the size and position
 	SDL_Rect rect;
@@ -224,29 +219,14 @@ void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, float ro
 	}
 }
 
-// void Renderer::renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill)
-// {
-// 	SDL_Rect rect;
-// 	rect.x = aLocation.x;
-// 	rect.y = aLocation.y;
-// 	rect.w = aWidth;
-// 	rect.h = aHeight;
-//
-// 	if (aColor.a != 255)
-// 		SDL_SetRenderDrawBlendMode(mRenderer, SDL_BLENDMODE_BLEND);
-//
-// 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
-// 	if (aFill)
-// 	{
-// 		SDL_RenderFillRect(mRenderer, &rect);
-// 	}
-// 	else
-// 	{
-// 		SDL_RenderDrawRect(mRenderer, &rect);
-// 	}
-// }
-
-void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
+/**
+ * @brief Draws a circle to the screen.
+ * @param center The center of the circle.
+ * @param radius The radius of the circle.
+ * @param aColor The color of the circle.
+ * @param aFill Whether to fill the circle.
+ */
+void Renderer::drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const
 {
 	// Set the render color
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
@@ -300,7 +280,16 @@ void Renderer::drawCircle(Vector2 center, int radius, Color aColor, bool aFill)
 	}
 }
 
-void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aColor, float scaleX, float scaleY)
+/**
+ * @brief Renders text to the screen.
+ * @param aText The text to render.
+ * @param aLocation The location to render the text.
+ * @param aColor The color of the text.
+ * @param scaleX The horizontal scale of the text.
+ * @param scaleY The vertical scale of the text.
+ */
+void Renderer::renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
+						  const float scaleY) const
 {
 	// Determine if text is fully opaque
 	bool isOpaque = (aColor.a == 255);
@@ -361,7 +350,15 @@ void Renderer::renderText(const std::string& aText, Vector2 aLocation, Color aCo
 	SDL_FreeSurface(surface);
 }
 
-bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height)
+/**
+ * @brief Calculates the size of a text string.
+ * @param font The font to use.
+ * @param text The text to measure.
+ * @param width The width of the text.
+ * @param height The height of the text.
+ * @return True if the text size was successfully calculated, false otherwise.
+ */
+bool Renderer::calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) const
 {
 	if (TTF_SizeText(mFont, text.c_str(), &width, &height) == 0)
 	{
@@ -374,18 +371,33 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	}
 }
 
-void Renderer::setViewport(Rect& viewport)
+/**
+ * @brief Sets the viewport of the renderer.
+ * @param viewport The viewport to set.
+ */
+void Renderer::setViewport(const Rect& viewport) const
 {
 	SDL_Rect rect = ((SDL_Rect)viewport);
 	SDL_RenderSetViewport(mRenderer, &rect);
 }
 
-void Renderer::clear(Color aColor)
+/**
+ * @brief Clears the renderer with a specified color.
+ * @param aColor The color to clear the renderer with.
+ */
+void Renderer::clear(const Color& aColor) const
 {
 	SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 	SDL_RenderClear(mRenderer);
 }
 
-void Renderer::show() { SDL_RenderPresent(mRenderer); }
+/**
+ * @brief Presents the renderer to the screen.
+ */
+void Renderer::show() const { SDL_RenderPresent(mRenderer); }
 
+/**
+ * @brief Retrieves the SDL renderer.
+ * @return The SDL renderer.
+ */
 SDL_Renderer*& Renderer::getSDLRenderer() { return mRenderer; }
