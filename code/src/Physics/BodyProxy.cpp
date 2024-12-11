@@ -14,11 +14,12 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	}
 
 	mPosition = aGameObject.get().getTransform().position;
+	mRotation = aGameObject.get().getTransform().rotation;
 	mHasGravity = rigidBody->getHasGravity();
 	mIsMoveableByForce = rigidBody->getIsMoveableByForce();
 	mCanRotate = rigidBody->getCanRotate();
 	mDensity = rigidBody->getDensity();
-	mFriction = rigidBody->getFriction();
+	mFriction = 5.0f;
 	mRestitution = rigidBody->getRestitution();
 	mMass = rigidBody->getMass();
 	mGravityScale = rigidBody->getGravityScale();
@@ -32,8 +33,8 @@ BodyProxy::~BodyProxy() {}
 
 void BodyProxy::processBodyType()
 {
-	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mFriction == 0 && mRestitution == 0 &&
-		mMass == 0 && mGravityScale == 0)
+	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mRestitution == 0 && mMass == 0 &&
+		mGravityScale == 0)
 	{
 		mBodyType = BodyType::STATIC;
 	}
@@ -70,3 +71,5 @@ Vector2 BodyProxy::getPosition() const { return mPosition; }
 std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 
 std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
+
+float BodyProxy::getRotation() const { return mRotation; }

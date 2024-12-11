@@ -21,6 +21,7 @@ public:
 	void processBodyType();
 
 	Vector2 getPosition() const;
+	float getRotation() const;
 
 	bool getHasGravity() const;
 	bool getIsMoveableByForce() const;
@@ -44,6 +45,7 @@ public:
 
 private:
 	Vector2 mPosition;
+	float mRotation;
 
 	bool mHasGravity;
 	bool mIsMoveableByForce;

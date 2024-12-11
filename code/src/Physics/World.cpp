@@ -46,10 +46,17 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
 	}
 
 	bodyDef.position = (b2Vec2){aBodyProxy.getPosition().x, aBodyProxy.getPosition().y};
+	float radians = aBodyProxy.getRotation() * (M_PI / 180.0f);
+	b2Rot rot;
+	rot.s = sin(radians);
+	rot.c = cos(radians);
+	bodyDef.rotation = rot;
 	bodyDef.gravityScale = aBodyProxy.getGravityScale();
 	bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
 	bodyDef.linearDamping = aBodyProxy.getLinearDamping();
 	bodyDef.angularDamping = aBodyProxy.getAngularDamping();
+	bodyDef.allowFastRotation = true;
+	bodyDef.isAwake = true;
 	b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 	createShape(aBodyProxy, {bodyID.index1, bodyID.revision, bodyID.world0});
 
@@ -99,6 +106,8 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
 		shapeDef.density = aBodyProxy.getDensity();
 		shapeDef.friction = aBodyProxy.getFriction();
 		shapeDef.restitution = aBodyProxy.getRestitution();
+		shapeDef.forceContactCreation = true;
+		shapeDef.enablePreSolveEvents = true;
 		shapeDef.isSensor = circleCollider->getIsTrigger();
 
 		uint16_t maskBits = 0;
