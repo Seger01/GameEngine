@@ -212,6 +212,13 @@ void World::setVelocity(Vector2 aVelocity, BodyID aBodyID)
 	b2Body_SetLinearVelocity(bodyID, velocity);
 }
 
+Vector2 World::getVelocity(BodyID aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyID);
+	return {velocity.x, velocity.y};
+}
+
 Vector2 World::getGravity() { return mGravity; }
 
 std::vector<std::pair<int, int>> World::getContactEvents()

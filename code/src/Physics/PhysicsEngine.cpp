@@ -1,5 +1,6 @@
 #include "Physics/PhysicsEngine.h"
 #include "CircleCollider.h"
+#include "RigidBody.h"
 #include <algorithm>
 
 PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
@@ -56,6 +57,10 @@ void PhysicsEngine::setPositions()
 			{
 				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			}
+			if (rigidBody->getVelocity() != mWorld.getVelocity(rigidBody->getBodyId()))
+			{
+				mWorld.setVelocity(rigidBody->getVelocity(), rigidBody->getBodyId());
+			}
 		}
 	}
 }
@@ -94,6 +99,7 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 
 			if (gameObjectB->hasComponent<IBehaviourScript>())
 			{
+
 				if (gameObjectB->hasComponent<IBehaviourScript>())
 				{
 					std::vector<IBehaviourScript*> behaviourScript = gameObjectB->getComponents<IBehaviourScript>();
@@ -210,7 +216,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-
+			rigidBody->setVelocity(mWorld.getVelocity(rigidBody->getBodyId()));
 			if (gameObject.hasComponent<BoxCollider>())
 			{
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
