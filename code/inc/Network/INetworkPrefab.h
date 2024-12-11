@@ -11,6 +11,7 @@
 /**
  * @class INetworkPrefab
  * @brief Interface for network enemy prefabs.
+ * @note when making a derived class always use REGISTER_NETWORK_PREFAB(Derived) in the cpp file.
  */
 class INetworkPrefab
 {

@@ -20,6 +20,7 @@
 #include <unordered_map>
 
 class INetworkSerializable;
+class INetworkPrefab;
 
 /**
  * @brief A simple compile-time hash function (FNV-1a Hash).
@@ -157,7 +158,7 @@ private:
 		return true;                                                                                                   \
 	}()
 
-#define REGISTER_NETWORK_ENEMY(T)                                                                                      \
+#define REGISTER_NETWORK_PREFAB(T)                                                                                     \
 	static bool T##_registered = []                                                                                    \
 	{                                                                                                                  \
 		NetworkRegister::Instance().registerPrefabType<T>();                                                           \
