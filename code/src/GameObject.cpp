@@ -20,6 +20,8 @@ GameObject::~GameObject()
 		child->setParent(nullptr);
 	}
 	mChildren.clear();
+
+	mComponents.resize(0);
 }
 
 // Copy constructor
@@ -101,7 +103,7 @@ void GameObject::addComponent(Component* aComponent)
 	{
 		aComponent->setGameObjectParent(this);
 		mComponents.push_back(std::unique_ptr<Component>(aComponent));
-		// EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
 	}
 }
 

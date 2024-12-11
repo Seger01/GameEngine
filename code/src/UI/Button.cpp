@@ -2,7 +2,21 @@
 
 Button::Button() : UIObject(), mWidth(0), mHeight(0), mInteractable(true), mOnClickCallback(nullptr), mHovered(false) {}
 
-Button::~Button() {}
+Button::~Button()
+{
+	if (mParent)
+	{
+		mParent->removeChild(this);
+	}
+
+	for (auto child : mChildren)
+	{
+		child->setParent(nullptr);
+	}
+	mChildren.clear();
+
+	mComponents.resize(0);
+}
 
 void Button::setOnClickCallback(const std::function<void()>& callback) { mOnClickCallback = callback; }
 

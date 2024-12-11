@@ -221,107 +221,75 @@ Vector2 RenderSystem::screenToWorldPos(const Point& aScreenpos, const Camera& aC
 }
 
 /**
- * @brief Function that finds the lowest layer in the scene.
- * @param aScene The scene to search.
- * @return The lowest layer as an integer.
+ * @brief Updates the layer range based on the object's layer.
+ * @param aObject The object to update the layer range for.
  */
-int RenderSystem::getLowestLayer(const Scene& aScene) const
-{
-	int lowestLayer = 0;
-	for (auto& gameObject : aScene.getGameObjects())
-	{
-		if (gameObject->hasComponent<Sprite>())
-		{
-			for (auto sprite : gameObject->getComponents<Sprite>())
-			{
-				if (sprite->getLayer() < lowestLayer)
-				{
-					lowestLayer = sprite->getLayer();
-				}
-			}
-		}
-		if (gameObject->hasComponent<Animation>())
-		{
-			for (auto animation : gameObject->getComponents<Animation>())
-			{
-				if (animation->getLayer() < lowestLayer)
-				{
-					lowestLayer = animation->getLayer();
-				}
-			}
-		}
-		if (gameObject->hasComponent<ParticleEmitter>())
-		{
-			for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>())
-			{
-				if (particleEmitter->getLayer() < lowestLayer)
-				{
-					lowestLayer = particleEmitter->getLayer();
-				}
-			}
-		}
-		if (typeid(*gameObject) == typeid(Text))
-		{
-			Text& text = dynamic_cast<Text&>(*gameObject);
-			if (text.getLayer() < lowestLayer)
-			{
-				lowestLayer = text.getLayer();
-			}
-		}
-	}
-	return lowestLayer;
-}
-
-/**
- * @brief Function that finds the highest layer in the scene.
- * @param aScene The scene to search.
- * @return The highest layer as an integer.
- */
-int RenderSystem::getHighestLayer(const Scene& aScene) const
+void RenderSystem::updateLayerRange(GameObject& aObject)
 {
 	int highestLayer = 0;
-	for (auto& gameObject : aScene.getGameObjects())
+	int lowestLayer = 0;
+	if (aObject.hasComponent<Sprite>())
 	{
-		if (gameObject->hasComponent<Sprite>())
+		for (auto sprite : aObject.getComponents<Sprite>())
 		{
-			for (auto sprite : gameObject->getComponents<Sprite>())
+			if (sprite->getLayer() > highestLayer)
 			{
-				if (sprite->getLayer() > highestLayer)
-				{
-					highestLayer = sprite->getLayer();
-				}
+				highestLayer = sprite->getLayer();
 			}
-		}
-		if (gameObject->hasComponent<Animation>())
-		{
-			for (auto animation : gameObject->getComponents<Animation>())
+			if (sprite->getLayer() < lowestLayer)
 			{
-				if (animation->getLayer() > highestLayer)
-				{
-					highestLayer = animation->getLayer();
-				}
-			}
-		}
-		if (gameObject->hasComponent<ParticleEmitter>())
-		{
-			for (auto particleEmitter : gameObject->getComponents<ParticleEmitter>())
-			{
-				if (particleEmitter->getLayer() > highestLayer)
-				{
-					highestLayer = particleEmitter->getLayer();
-				}
-			}
-		}
-		if (typeid(*gameObject) == typeid(Text))
-		{
-			Text& text = dynamic_cast<Text&>(*gameObject);
-			if (text.getLayer() > highestLayer)
-			{
-				highestLayer = text.getLayer();
+				lowestLayer = sprite->getLayer();
 			}
 		}
 	}
-	return highestLayer;
+	if (aObject.hasComponent<Animation>())
+	{
+		for (auto animation : aObject.getComponents<Animation>())
+		{
+			if (animation->getLayer() > highestLayer)
+			{
+				highestLayer = animation->getLayer();
+			}
+			if (animation->getLayer() < lowestLayer)
+			{
+				lowestLayer = animation->getLayer();
+			}
+		}
+	}
+	if (aObject.hasComponent<ParticleEmitter>())
+	{
+		for (auto particleEmitter : aObject.getComponents<ParticleEmitter>())
+		{
+			if (particleEmitter->getLayer() > highestLayer)
+			{
+				highestLayer = particleEmitter->getLayer();
+			}
+			if (particleEmitter->getLayer() < lowestLayer)
+			{
+				lowestLayer = particleEmitter->getLayer();
+			}
+		}
+	}
+	if (typeid(aObject) == typeid(Text))
+	{
+		Text& text = dynamic_cast<Text&>(aObject);
+		if (text.getLayer() > highestLayer)
+		{
+			highestLayer = text.getLayer();
+		}
+		if (text.getLayer() < lowestLayer)
+		{
+			lowestLayer = text.getLayer();
+		}
+	}
+	if (highestLayer > this->mHighestLayer)
+	{
+		this->mHighestLayer = highestLayer;
+	}
+	if (lowestLayer < this->mLowestLayer)
+	{
+		this->mLowestLayer = lowestLayer;
+	}
 }
 
 /**
@@ -340,31 +308,38 @@ void RenderSystem::renderLayer(const Scene& aScene, int aLayer, const Camera& ac
 		{
 			continue;
 		}
-		for (auto animation : gameObject.getComponents<Animation>())
+		if (gameObject.hasComponent<Animation>())
 		{
-			if (animation->isActive() && animation->getLayer() == aLayer)
+			for (auto animation : gameObject.getComponents<Animation>())
 			{
-				renderAnimation(activeCamera, gameObject, *animation, aScreenViewPort);
-			}
-		}
-		for (auto sprite : gameObject.getComponents<Sprite>())
-		{
-			if (sprite->isActive() && sprite->getLayer() == aLayer)
-			{
-				renderSprite(activeCamera, gameObject, *sprite, aScreenViewPort);
-			}
-		}
-		for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
-		{
-			if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer)
-			{
-				for (auto& particle : particleEmitter->getParticles())
+				if (animation->isActive() && animation->getLayer() == aLayer)
 				{
-					renderParticle(activeCamera, particle, aScreenViewPort);
+					renderAnimation(activeCamera, gameObject, *animation, aScreenViewPort);
 				}
 			}
 		}
-		if (typeid(gameObject) == typeid(Text))
+		if (gameObject.hasComponent<Sprite>())
+		{
+			for (auto sprite : gameObject.getComponents<Sprite>())
+			{
+				if (sprite->isActive() && sprite->getLayer() == aLayer)
+				{
+					renderSprite(activeCamera, gameObject, *sprite, aScreenViewPort);
+				}
+			}
+		}
+		if (gameObject.hasComponent<ParticleEmitter>())
+			for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
+			{
+				if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer)
+				{
+					for (auto& particle : particleEmitter->getParticles())
+					{
+						renderParticle(activeCamera, particle, aScreenViewPort);
+					}
+				}
+			}
+		if (dynamic_cast<Text*>(&gameObject))
 		{
 			Text& text = dynamic_cast<Text&>(gameObject);
 			if (text.isActive() && text.getLayer() == aLayer)
@@ -447,10 +422,10 @@ void RenderSystem::render(const Scene& aScene) const
  */
 void RenderSystem::renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const
 {
-	int lowestLayer = getLowestLayer(aScene);
-	int highestLayer = getHighestLayer(aScene);
+	// int lowestLayer = getLowestLayer(aScene);
+	// int highestLayer = getHighestLayer(aScene);
 
-	for (int layer = lowestLayer; layer <= highestLayer; ++layer)
+	for (int layer = mLowestLayer; layer <= mHighestLayer; ++layer)
 	{
 		renderLayer(aScene, layer, camera, aScreenViewPort);
 	}
@@ -609,6 +584,7 @@ void RenderSystem::addObject(GameObject& aObject)
 	{
 		// Object has not been added yet
 		mObjects.push_back(aObject);
+		updateLayerRange(aObject);
 	}
 }
 

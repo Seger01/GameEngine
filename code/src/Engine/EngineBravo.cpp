@@ -13,6 +13,7 @@
 #include "NetworkObject.h"
 #include "ParticleEmitter.h"
 #include "Renderer.h"
+#include "ScopedTimer.h"
 #include "Sprite.h"
 #include "Text.h"
 #include "box2d/box2d.h"
@@ -77,10 +78,10 @@ void EngineBravo::run()
 		mPhysicsManager.updatePhysicsEngine();
 
 		mParticleSystem.update();
-
 		mRenderSystem.render(*mSceneManager.getCurrentScene());
 
 		mNetworkManager.update();
+
 		limitFrameRate(mFrameRateLimit);
 
 		mUpdateQueue.updateRemovals();
