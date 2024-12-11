@@ -125,7 +125,7 @@ void PhysicsEngine::setPositions()
 			// yPivot) * cos(radians) + 		  yPivot;
 			// newPos = Vector2(x, y);
 			//
-			// mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
+			mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
 			//}
 		}
 	}

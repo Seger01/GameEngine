@@ -32,8 +32,8 @@ BodyProxy::~BodyProxy() {}
 
 void BodyProxy::processBodyType()
 {
-	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mFriction == 0 && mRestitution == 0 &&
-		mMass == 0 && mGravityScale == 0)
+	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mRestitution == 0 && mMass == 0 &&
+		mGravityScale == 0)
 	{
 		mBodyType = BodyType::STATIC;
 	}

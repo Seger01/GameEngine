@@ -62,6 +62,9 @@ void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& 
 	Rect spriteRect = {static_cast<int>(texturePosition.x), static_cast<int>(texturePosition.y), aSprite.getWidth(),
 					   aSprite.getHeight()};
 
+	Point rotationalCenter = {static_cast<int>(-aSprite.getRelativePosition().position.x),
+							  static_cast<int>(-aSprite.getRelativePosition().position.y)};
+
 	if (!cameraRect.intersects(spriteRect))
 	{
 		return;
@@ -74,11 +77,14 @@ void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& 
 	int spriteWidth = std::round(aSprite.getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 	int spriteHeight = std::round(aSprite.getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
+	rotationalCenter.x = std::round(rotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	rotationalCenter.y = std::round(rotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+
 	// Render
 	mRenderer->renderTexture(aSprite.getTexture(), aSprite.getSource(), drawPosition, spriteWidth, spriteHeight,
 							 aSprite.getFlipX(), aSprite.getFlipY(),
 							 aGameObject.getTransform().rotation + aSprite.getRelativePosition().rotation,
-							 aSprite.getColorFilter());
+							 aSprite.getColorFilter(), rotationalCenter);
 }
 
 /**
