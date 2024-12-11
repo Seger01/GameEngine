@@ -48,7 +48,7 @@ enum class WritePermission { ReadOnly, ReadWrite };
 struct NetworkPacket {
 	SLNet::MessageID messageID;	  ///< The message ID of the packet.
 	uint16_t networkObjectID;	  ///< The network object ID.
-	uint16_t prefabID;			  ///< The prefab ID.
+	uint32_t prefabID;			  ///< The prefab ID.
 	uint64_t timestamp;			  ///< The timestamp of the packet.
 	SLNet::RakNetGUID clientGUID; ///< The GUID of the client.
 	uint32_t ISerializableID;	  ///< The serializable ID.

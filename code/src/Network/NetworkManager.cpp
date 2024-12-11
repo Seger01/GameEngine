@@ -223,7 +223,6 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	{
 		networkObjects[0]->setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
 	}
-	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
 	networkObjects[0]->setPlayer(true);		  // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
 	return player;
@@ -386,6 +385,7 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 		prefab->setTransform(aTransform);
 	}
 	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(prefab);
+	mServer->sendPrefabSpawn(*prefab->getComponents<NetworkObject>()[0]);
 	return prefab;
 }
 

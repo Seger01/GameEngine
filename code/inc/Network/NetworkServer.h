@@ -22,6 +22,7 @@ class NetworkObject;
  * @brief Manages the server-side networking for the game.
  */
 class NetworkServer {
+friend class NetworkManager;
 public:
 	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
 	void update();

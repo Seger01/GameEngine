@@ -309,6 +309,7 @@ void NetworkClient::handleIncomingPackets()
 			handleCustomSerialize(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB:
+			std::cout << "Received spawn prefab packet\n";
 			handleSpawnPrefab(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB:
