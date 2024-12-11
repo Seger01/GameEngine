@@ -51,7 +51,7 @@ struct NetworkPacket {
 	uint16_t prefabID;			  ///< The prefab ID.
 	uint64_t timestamp;			  ///< The timestamp of the packet.
 	SLNet::RakNetGUID clientGUID; ///< The GUID of the client.
-	uint16_t ISerializableID;	  ///< The serializable ID.
+	uint32_t ISerializableID;	  ///< The serializable ID.
 	uint8_t networkBehaviourID;	  ///< The network behaviour ID.
 	uint8_t networkVariableID;	  ///< The network variable ID.
 
