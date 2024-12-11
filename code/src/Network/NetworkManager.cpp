@@ -374,6 +374,7 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 	{
 		NetworkObject* networkObject = prefab->getComponents<NetworkObject>()[0];
 		networkObject->setPrefabID(aPrefabID);
+		networkObject->setOwner(true);
 	}
 	else
 	{
