@@ -1,0 +1,24 @@
+Minutes 03-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Improved positional audio.
+- Angel: Updated / improved physics tests. Looked at issues with object deletion.
+- Ronan: Tilemapparser: objects are now generic instead of hardcoded.
+- Sean: Porting multiplayer demo to bullet bravo.
+- Seger: Started work on demo game.
+
+What is going to be done:
+- Siem: ?
+- Angel: Fix error with deleting objects. Finish physics tests.
+- Ronan: Fix issues with updated Tilemapparser. Work on demo game.
+- Sean: Figuring out how to run single and multiplayer instance of the game simultaneously.
+- Seger: Merge camera functionality.
+
+Roadblocks:
+- Siem:
+- Angel: Physics segfaulting.
+- Ronan: -
+- Sean: -
+- Seger: Working environment difficulties.

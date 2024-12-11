@@ -1,4 +1,6 @@
 #include "Physics/PhysicsEngine.h"
+#include "CircleCollider.h"
+#include <algorithm>
 
 PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
 
@@ -33,6 +35,49 @@ void PhysicsEngine::applyForces()
 			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
 			rigidBody->clearForcesBuffer();
 			rigidBody->clearTorqueBuffer();
+
+			if (!rigidBody->getTorqueBuffer().empty())
+			{
+				float xPivot = 0;
+				float yPivot = 0;
+				int i = 0;
+
+				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				{
+					Transform transform = boxCollider->getTransform();
+
+					if (xPivot == 0)
+					{
+						xPivot += boxCollider->getWidth();
+						yPivot += boxCollider->getHeight();
+					}
+					else
+					{
+						float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+						float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+
+						if (extraWidth < 0)
+						{
+							xPivot += abs(extraWidth);
+						}
+						if (extraHeight < 0)
+						{
+							yPivot += abs(extraHeight);
+						}
+						i++;
+					}
+				}
+				std::vector<Vector2> impulseLeft;
+				std::vector<Vector2> impulseRight;
+
+				for (float force : rigidBody->getTorqueBuffer())
+				{
+					impulseLeft.push_back(Vector2(0, -force));
+					impulseRight.push_back(Vector2(0, force));
+				}
+				mWorld.applyLinearImpulse(impulseLeft, impulseRight, xPivot, yPivot, rigidBody->getBodyId());
+				rigidBody->clearTorqueBuffer();
+			}
 		}
 	}
 }
@@ -42,18 +87,46 @@ void PhysicsEngine::setPositions()
 {
 	for (GameObject& gameObject : mObjects)
 	{
-		if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<BoxCollider>())
+		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 			Transform transform = gameObject.getTransform();
 
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
 
-			if (newPos != mWorld.getPosition(rigidBody->getBodyId()) ||
-				transform.rotation != mWorld.getRotation(rigidBody->getBodyId()))
-			{
-				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
-			}
+			// if (newPos != mWorld.getPosition(rigidBody->getBodyId()) ||
+			// 	transform.rotation != mWorld.getRotation(rigidBody->getBodyId()))
+			// {
+			//
+
+			// for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			// {
+			//
+			// 	if (xPivot == 0)
+			// 	{
+			// 		xPivot += boxCollider->getWidth();
+			// 		yPivot += boxCollider->getHeight();
+			// 	}
+			// 	else
+			// 	{
+			// 		xPivot += xPivot - boxCollider->getWidth() + transform.position.x;
+			// 		yPivot += yPivot - boxCollider->getHeight() + transform.position.y;
+			// 	}
+			// }
+			//
+			// float relativeX = transform.position.x + xPivot;
+			//
+			// float relativeY = transform.position.y + yPivot;
+			//
+			// float radians = mWorld.getRotation(rigidBody->getBodyId()) * (M_PI / 180.0f);
+			//
+			// float x = (transform.position.x - xPivot) * cos(radians) - (transform.position.y - yPivot) * sin(radians)
+			// + 		  xPivot; float y = (transform.position.x - xPivot) * sin(radians) + (transform.position.y -
+			// yPivot) * cos(radians) + 		  yPivot;
+			// newPos = Vector2(x, y);
+			//
+			// mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
+			//}
 		}
 	}
 }
@@ -110,16 +183,13 @@ void PhysicsEngine::createBodies()
 {
 	for (GameObject& gameObject : mObjects)
 	{
-
 		if (gameObject.hasComponent<RigidBody>())
 		{
 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
 
 			if (rigidBody->getBodyId().bodyID == -1)
 			{
-
 				BodyProxy bodyProxy = BodyProxy(gameObject);
-
 				BodyID bodyID = mWorld.createBody(bodyProxy);
 				rigidBody->setBodyId(bodyID);
 			}
@@ -128,6 +198,8 @@ void PhysicsEngine::createBodies()
 }
 
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
+
+void PhysicsEngine::setGravity(Vector2 aGravity) { mWorld.setGravity(aGravity); }
 
 World& PhysicsEngine::getWorld() { return mWorld; }
 
@@ -161,13 +233,14 @@ void PhysicsEngine::updateFlags()
 			RigidBody* body = mObjects.at(i).get().getComponents<RigidBody>()[0];
 			BodyID bodyID = mObjects.at(i).get().getComponents<RigidBody>()[0]->getBodyId();
 			BodyProxy bodyProxy = BodyProxy(mObjects.at(i));
+			mWorld.setBodyActivity(mObjects.at(i).get().getComponents<RigidBody>().at(0)->isActive(), bodyID);
 
 			if (body->getIsUpdated())
 			{
 				mWorld.updateBodyProperties(bodyProxy, bodyID);
-
 				body->setIsUpdated(false);
 			}
+
 			for (int i = 0; i < bodyProxy.getBoxColliders().size(); i++)
 			{
 				if (bodyProxy.getBoxColliders().at(i)->getIsUpdated())
@@ -178,7 +251,15 @@ void PhysicsEngine::updateFlags()
 				}
 			}
 
-			mWorld.setBodyActivity(mObjects.at(i).get().getComponents<RigidBody>().at(0)->isActive(), bodyID);
+			for (int i = 0; i < bodyProxy.getCircleColliders().size(); i++)
+			{
+				if (bodyProxy.getCircleColliders().at(i)->getIsUpdated())
+				{
+					mWorld.updateShapeProperties(bodyProxy, bodyID);
+					bodyProxy.getCircleColliders().at(i)->setIsUpdated(false);
+					break;
+				}
+			}
 		}
 	}
 }
@@ -194,13 +275,6 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 
 			if (gameObject.hasComponent<BoxCollider>())
 			{
-				Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-				Transform transform = gameObject.getTransform();
-				float rotation = mWorld.getRotation(rigidBody->getBodyId());
-				transform.position = position;
-
-				transform = Transform(Vector2(position.x, position.y));
-
 				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
 				{
 					boxCollider->setWidth(boxCollider->getWidth() * 2);
@@ -211,38 +285,151 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 					transform.position.y = transform.position.y - boxCollider->getHeight() / 2;
 					boxCollider->setTransform(transform);
 				}
-
-				transform.rotation = rotation;
-
-				gameObject.setTransform(transform);
 			}
+
+			Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+			float rotation = mWorld.getRotation(rigidBody->getBodyId());
+
+			Transform transform = gameObject.getTransform();
+			transform.position = position;
+			transform = Transform(Vector2(position.x, position.y));
+
+			transform.rotation = rotation;
+
+			gameObject.setTransform(transform);
 		}
 	}
+	// for (GameObject& gameObject : aGameObjects)
+	// {
+	// 	if (gameObject.hasComponent<RigidBody>())
+	// 	{
+	// 		RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	// 		float xPivot = 0;
+	// 		float yPivot = 0;
+	// 		int i = 0;
+	//
+	// 		if (gameObject.hasComponent<BoxCollider>())
+	// 		{
+	// 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	// 			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+	// 			{
+	//
+	// 				Transform transform = boxCollider->getTransform();
+	//
+	// 				if (xPivot == 0)
+	// 				{
+	// 					xPivot += boxCollider->getWidth();
+	// 					yPivot += boxCollider->getHeight();
+	// 				}
+	// 				else
+	// 				{
+	// 					float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+	// 					float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+	//
+	// 					if (extraWidth < 0)
+	// 					{
+	// 						xPivot += abs(extraWidth);
+	// 					}
+	// 					if (extraHeight < 0)
+	// 					{
+	// 						yPivot += abs(extraHeight);
+	// 					}
+	// 					i++;
+	// 				}
+	//
+	// 				boxCollider->setWidth(boxCollider->getWidth() * 2);
+	// 				boxCollider->setHeight(boxCollider->getHeight() * 2);
+	// 			}
+	// 		}
+	//
+	// 		Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
+	// 		position.x = position.x - xPivot;
+	// 		position.y = position.y - yPivot;
+	// 		float rotation = mWorld.getRotation(rigidBody->getBodyId());
+	//
+	// 		Transform transform = gameObject.getTransform();
+	//
+	// 		transform.position = position;
+	// 		transform = Transform(Vector2(position.x, position.y));
+	//
+	// 		transform.rotation = rotation;
+	//
+	// 		gameObject.setTransform(transform);
+	// 	}
+	// }
 }
 
 // Converts GameObjects to Box2D world positions
 void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
-
 	for (GameObject& gameObject : aGameObjects)
 	{
-		if (gameObject.hasComponent<RigidBody>() && gameObject.hasComponent<BoxCollider>())
+		if (gameObject.hasComponent<RigidBody>())
 		{
-			Transform transform = gameObject.getTransform();
-			BoxCollider* boxCollider = gameObject.getComponents<BoxCollider>()[0];
-
-			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+			if (gameObject.hasComponent<BoxCollider>())
 			{
-				boxCollider->setWidth(boxCollider->getWidth() / 2);
-				boxCollider->setHeight(boxCollider->getHeight() / 2);
+				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				{
+					boxCollider->setWidth(boxCollider->getWidth() / 2);
+					boxCollider->setHeight(boxCollider->getHeight() / 2);
 
-				Transform transform = boxCollider->getTransform();
-				transform.position.x = transform.position.x + boxCollider->getWidth();
-				transform.position.y = transform.position.y + boxCollider->getHeight();
-				boxCollider->setTransform(transform);
+					Transform transform = boxCollider->getTransform();
+					transform.position.x = transform.position.x + boxCollider->getWidth();
+					transform.position.y = transform.position.y + boxCollider->getHeight();
+					boxCollider->setTransform(transform);
+				}
 			}
 		}
 	}
+	// for (GameObject& gameObject : aGameObjects)
+	// {
+	// 	if (gameObject.hasComponent<RigidBody>())
+	// 	{
+	// 		if (gameObject.hasComponent<BoxCollider>())
+	// 		{
+	// 			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+	//
+	// 			float xPivot = 0;
+	// 			float yPivot = 0;
+	// 			int i = 0;
+	//
+	// 			for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+	// 			{
+	//
+	// 				boxCollider->setWidth(boxCollider->getWidth() / 2);
+	// 				boxCollider->setHeight(boxCollider->getHeight() / 2);
+	// 				Transform transform = boxCollider->getTransform();
+	//
+	// 				if (xPivot == 0)
+	// 				{
+	// 					xPivot += boxCollider->getWidth();
+	// 					yPivot += boxCollider->getHeight();
+	// 				}
+	// 				else
+	// 				{
+	// 					float extraWidth = xPivot - boxCollider->getWidth() + transform.position.x;
+	// 					float extraHeight = yPivot - boxCollider->getHeight() + transform.position.y;
+	//
+	// 					if (extraWidth < 0)
+	// 					{
+	// 						xPivot += abs(extraWidth);
+	// 					}
+	// 					if (extraHeight < 0)
+	// 					{
+	// 						yPivot += abs(extraHeight);
+	// 					}
+	// 					i++;
+	// 				}
+	// 			}
+	//
+	// 			Transform transform = gameObject.getTransform();
+	// 			transform.position.x = transform.position.x + xPivot;
+	// 			transform.position.y = transform.position.y + yPivot;
+	//
+	// 			gameObject.setTransform(transform);
+	// 		}
+	// 	}
+	// }
 }
 
 void PhysicsEngine::addObject(GameObject& aObject)

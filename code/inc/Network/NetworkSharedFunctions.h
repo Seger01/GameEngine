@@ -16,14 +16,9 @@
  */
 class NetworkSharedFunctions {
 public:
-private:
-    friend class NetworkServer;
-    friend class NetworkClient;
+	static void reserverNetworkPacketBits(SLNet::BitStream& aBitStream);
 
-private:
-    static void makeBitStream(SLNet::BitStream& aBitStream);
-
-    static NetworkPacket getBitStreamData(SLNet::BitStream& aBitStream);
+	static NetworkPacket getBitStreamData(SLNet::BitStream& aBitStream);
     static void setBitStreamNetworkPacket(SLNet::BitStream& aBitStream, const NetworkPacket& aNetworkPacket);
 };
 

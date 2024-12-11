@@ -1,0 +1,8 @@
+Today: showing off design patterns and algorithms.
+
+Design patterns:
+1.  Facade for audio
+2.  ??
+
+Algorithms:
+1.  ??

@@ -9,23 +9,6 @@
 MapToGraph::MapToGraph(const TileMapData& aTileMapData)
 	: mTileMapData(aTileMapData), mDirections{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
 {
-	preprocessWalkableTiles();
-}
-
-/**
- * @brief Preprocess walkable tiles
- * @details This function processes the walkable tiles in the tilemap data and stores them in a set.
- */
-//
-void MapToGraph::preprocessWalkableTiles()
-{
-	for (const auto& [tileID, tileInfo] : mTileMapData.mTileInfoMap)
-	{
-		if (tileInfo.mColliders.empty())
-		{
-			mWalkableTiles.insert(tileID);
-		}
-	}
 }
 
 /**
@@ -61,12 +44,11 @@ void MapToGraph::convertToGraph()
 	{
 		for (size_t col = 0; col < (*graphLayer)[row].size(); ++col)
 		{
-			if (!isWalkableTile((*graphLayer)[row][col]))
+			if ((*graphLayer)[row][col] != 0)
 			{
-				continue;
+				int currentNode = calculateNodeIndex(row, col, (*graphLayer)[row].size());
+				connectAdjacentNodes(currentNode, row, col, graphLayer);
 			}
-			int currentNode = calculateNodeIndex(row, col, (*graphLayer)[row].size());
-			connectAdjacentNodes(currentNode, row, col, graphLayer);
 		}
 	}
 }
@@ -82,7 +64,7 @@ void MapToGraph::convertToGraph()
 int MapToGraph::calculateNodeIndex(size_t aRow, size_t aCol, size_t aWidth) const { return aRow * aWidth + aCol; }
 
 /**
- * @brief Connects adjacent walkable nodes
+ * @brief Connects adjacent non-zero nodes
  *
  * @param aCurrentNode
  * @param aRow
@@ -92,34 +74,27 @@ int MapToGraph::calculateNodeIndex(size_t aRow, size_t aCol, size_t aWidth) cons
 void MapToGraph::connectAdjacentNodes(int aCurrentNode, size_t aRow, size_t aCol,
 									  const std::vector<std::vector<int>>* aLayer)
 {
-	std::unordered_set<int> uniqueAdjacentNodes;
-
 	for (const auto& [dx, dy] : mDirections)
 	{
-		size_t newRow = aRow + dy;
-		size_t newCol = aCol + dx;
+		// Calculate newRow and newCol
+		int newRow = static_cast<int>(aRow) + dy;
+		int newCol = static_cast<int>(aCol) + dx;
 
-		if (newRow < aLayer->size() && newCol < (*aLayer)[newRow].size() && isWalkableTile((*aLayer)[newRow][newCol]))
+		// Ensure the new position is within bounds
+		if (newRow < 0 || newRow >= static_cast<int>(aLayer->size()) || newCol < 0 ||
+			newCol >= static_cast<int>((*aLayer)[newRow].size()))
+		{
+			continue;
+		}
+
+		// Check if the adjacent tile is non-zero
+		if ((*aLayer)[newRow][newCol] != 0)
 		{
 			int adjacentNode = calculateNodeIndex(newRow, newCol, (*aLayer)[newRow].size());
-
-			if (uniqueAdjacentNodes.find(adjacentNode) == uniqueAdjacentNodes.end())
-			{
-				addEdge(aCurrentNode, adjacentNode);
-				uniqueAdjacentNodes.insert(adjacentNode);
-			}
+			addEdge(aCurrentNode, adjacentNode);
 		}
 	}
 }
-
-/**
- * @brief Checks if a tile is walkable
- *
- * @param aTileID
- * @return true
- * @return false
- */
-bool MapToGraph::isWalkableTile(int tileID) const { return mWalkableTiles.find(tileID) != mWalkableTiles.end(); }
 
 /**
  * @brief Add an edge between two nodes
@@ -129,9 +104,11 @@ bool MapToGraph::isWalkableTile(int tileID) const { return mWalkableTiles.find(t
  */
 void MapToGraph::addEdge(int aFrom, int aTo)
 {
+	// Ensure we have entries for both nodes
 	auto& fromConnections = mAdjacencyList[aFrom];
 	auto& toConnections = mAdjacencyList[aTo];
 
+	// Add edge only if it doesn't already exist
 	if (std::find(fromConnections.begin(), fromConnections.end(), aTo) == fromConnections.end())
 	{
 		fromConnections.push_back(aTo);

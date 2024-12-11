@@ -5,15 +5,17 @@
 #include "Network/NetworkSharedFunctions.h"
 
 /**
- * @brief Creates a bit stream from a network packet.
+ * @brief Reserves the network packet bits in the bit stream.
  *
- * @param aBitStream The bit stream to be created.
+ * @note clears the bit stream
+ * @param aBitStream The bit stream to reserve the bits in.
  */
-void NetworkSharedFunctions::makeBitStream(SLNet::BitStream& aBitStream) {
-    NetworkPacket networkPacket;
-    aBitStream.Reset();
-    aBitStream.Write(networkPacket.messageID);
-    aBitStream.Write(networkPacket.networkObjectID);
+void NetworkSharedFunctions::reserverNetworkPacketBits(SLNet::BitStream& aBitStream)
+{
+	NetworkPacket networkPacket;
+	aBitStream.Reset();
+	aBitStream.Write(networkPacket.messageID);
+	aBitStream.Write(networkPacket.networkObjectID);
     aBitStream.Write(networkPacket.prefabID);
     aBitStream.Write(networkPacket.timestamp);
     aBitStream.Write(networkPacket.clientGUID);

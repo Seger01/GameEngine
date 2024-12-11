@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 
+#include "box2d/types.h"
 #include "slikenet/sleep.h"
 
 #include "Animation.h"
@@ -14,6 +15,8 @@
 #include "Renderer.h"
 #include "Sprite.h"
 #include "Text.h"
+#include "box2d/box2d.h"
+#include "box2d/math_functions.h"
 
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
@@ -41,6 +44,7 @@ void EngineBravo::initialize()
 	mUIManager.init();
 
 	mPhysicsManager.startPhysicsEngine(Vector2(0, 0.0f));
+
 	return;
 }
 
@@ -97,8 +101,8 @@ void EngineBravo::handleEvent(const Event& aEvent)
 	}
 }
 
-// function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next frame
-// if it renders too quickly
+// function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next
+// frame if it renders too quickly
 void EngineBravo::limitFrameRate(int aFrameRate)
 {
 	// Minimum time per frame in milliseconds
@@ -155,6 +159,10 @@ void EngineBravo::startBehaviourScripts()
 		auto gameObjects = currentScene->getGameObjects();
 		for (auto& gameObject : gameObjects)
 		{
+			if (!gameObject->isActive())
+			{
+				continue;
+			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
 				if (behaviourScript->hasScriptStarted())
@@ -180,6 +188,10 @@ void EngineBravo::runBehaviourScripts()
 	{
 		for (auto& gameObject : currentScene->getGameObjects())
 		{
+			if (!gameObject->isActive())
+			{
+				continue;
+			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
 				behaviourScript->onUpdate();

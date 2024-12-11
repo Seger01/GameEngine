@@ -6,10 +6,13 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <vector>
+
 #include <SDL.h>
 #include <SDL_ttf.h>
 
 #include "Color.h"
+#include "Point.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -38,7 +41,7 @@ public:
 					   const Color& aColor) const;
 
 	void renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
-					  const Color& aColor, const bool aFill) const;
+					  const Color& aColor, const bool aFill, const Point& aRotationalCenter = {0, 0}) const;
 
 	void drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const;
 

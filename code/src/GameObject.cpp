@@ -101,7 +101,7 @@ void GameObject::addComponent(Component* aComponent)
 	{
 		aComponent->setGameObjectParent(this);
 		mComponents.push_back(std::unique_ptr<Component>(aComponent));
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
+		// EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
 	}
 }
 
@@ -128,7 +128,17 @@ void GameObject::setTag(const std::string& tag) { mTag = tag; }
 
 std::string GameObject::getTag() { return mTag; }
 
-void GameObject::setActive(bool isActive) { mIsActive = isActive; }
+/**
+ * @brief Sets the active state of the GameObject and all its children.
+ */
+void GameObject::setActive(bool isActive)
+{
+	mIsActive = isActive;
+	for (auto child : mChildren)
+	{
+		child->setActive(isActive);
+	}
+}
 
 bool GameObject::isActive() { return mIsActive; }
 
