@@ -71,6 +71,7 @@ void NetworkClient::connectToServer()
 	{
 		throw std::runtime_error("Failed to start connection attempt");
 	}
+	mIsConnecting = true;
 }
 
 /**

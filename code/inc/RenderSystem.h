@@ -69,8 +69,9 @@ private:
 
 	void sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const;
 
-	int getLowestLayer(const Scene& aScene) const;
-	int getHighestLayer(const Scene& aScene) const;
+	// int getLowestLayer(const Scene& aScene) const;
+	// int getHighestLayer(const Scene& aScene) const;
+	void updateLayerRange(GameObject& aObject);
 
 private:
 	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< Collection of game objects managed by the system.
@@ -81,6 +82,9 @@ private:
 
 	int WindowWidth;  ///< Width of the rendering window.
 	int WindowHeight; ///< Height of the rendering window.
+
+	int mLowestLayer;  ///< Lowest layer in the scene.
+	int mHighestLayer; ///< Highest layer in the scene.
 
 	Color mBackgroundColor; ///< Background color for rendering.
 };
