@@ -66,3 +66,6 @@ Date,Time,Duration(in hours),Activity
 2024-12-03, 09:15, 7.5 , Debug issue with scene changes merged a bunch of code into development and worked a small bit on Camera functionality
 2024-12-04, 09:00, 8   , Handled prs into development; Worked with ronan on demo level; added camera functionality showcase to the demo level; worked on the camera system with ordered camera rendering 
 2024-12-05, 09:00, 7   , Handled prs into development; Worked with ronan on demo level; added camera letterboxing functionality and background rendering.
+2024-12-09, 09:15, 7   , Added code standard and doxygen to rendersystem, renderer and camera
+2024-12-10, 09:15, 7   , Added camera shake to camera system and 
+2024-12-11, 09:15, 7.5 , Fixed angels physics
