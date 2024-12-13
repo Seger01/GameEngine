@@ -48,12 +48,12 @@ public:
 	void removeChild(GameObject* child);
 	std::vector<GameObject*> getChildren();
 
-	std::vector<Component*> getComponentsWithTag(const std::string& tag) const;
+	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& tag) const;
 
 	// Templated functions
 	template <typename T> bool hasComponent() const
 	{
-		for (const auto& component : mComponents)
+		for (const std::unique_ptr<Component>& component : mComponents)
 		{
 			if (dynamic_cast<T*>(component.get()) != nullptr)
 			{
@@ -63,25 +63,25 @@ public:
 		return false;
 	}
 
-	template <typename T> std::vector<T*> getComponents() const
+	template <typename T> std::vector<std::reference_wrapper<T>> getComponents() const
 	{
-		std::vector<T*> componentsOfType;
-		for (const auto& component : mComponents)
+		std::vector<std::reference_wrapper<T>> componentsOfType;
+		for (const std::unique_ptr<Component>& component : mComponents)
 		{
 			if (T* casted = dynamic_cast<T*>(component.get()))
 			{
-				componentsOfType.push_back(casted);
+				componentsOfType.push_back(*casted);
 			}
 		}
 		return componentsOfType;
 	}
 
-	template <typename T> std::vector<T*> getComponentsWithTag(const std::string& tag) const
+	template <typename T> std::vector<std::reference_wrapper<T>> getComponentsWithTag(const std::string& tag) const
 	{
-		std::vector<T*> componentsWithTag;
-		for (const auto& component : mComponents)
+		std::vector<std::reference_wrapper<T>> componentsWithTag;
+		for (const T& component : mComponents)
 		{
-			if (component->getTag() == tag)
+			if (component.getTag() == tag)
 			{
 				if (T* castedComponent = dynamic_cast<T*>(component.get()))
 				{

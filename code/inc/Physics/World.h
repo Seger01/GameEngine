@@ -42,7 +42,6 @@ public:
 	void applyRotationalImpusle(std::vector<float> aTorque, BodyProxy& aBodyProxy, float aImpulse, BodyID aBodyID);
 	void setGravity(Vector2 aGravity);
 
-	void scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale);
 	void setLinearVelocity(Vector2 aVelocity, BodyID aBodyID);
 	Vector2 getLinearVelocity(BodyID aBodyID);
 

@@ -236,43 +236,43 @@ void RenderSystem::updateLayerRange(GameObject& aObject)
 	int lowestLayer = 0;
 	if (aObject.hasComponent<Sprite>())
 	{
-		for (auto sprite : aObject.getComponents<Sprite>())
+		for (Sprite& sprite : aObject.getComponents<Sprite>())
 		{
-			if (sprite->getLayer() > highestLayer)
+			if (sprite.getLayer() > highestLayer)
 			{
-				highestLayer = sprite->getLayer();
+				highestLayer = sprite.getLayer();
 			}
-			if (sprite->getLayer() < lowestLayer)
+			if (sprite.getLayer() < lowestLayer)
 			{
-				lowestLayer = sprite->getLayer();
+				lowestLayer = sprite.getLayer();
 			}
 		}
 	}
 	if (aObject.hasComponent<Animation>())
 	{
-		for (auto animation : aObject.getComponents<Animation>())
+		for (Animation& animation : aObject.getComponents<Animation>())
 		{
-			if (animation->getLayer() > highestLayer)
+			if (animation.getLayer() > highestLayer)
 			{
-				highestLayer = animation->getLayer();
+				highestLayer = animation.getLayer();
 			}
-			if (animation->getLayer() < lowestLayer)
+			if (animation.getLayer() < lowestLayer)
 			{
-				lowestLayer = animation->getLayer();
+				lowestLayer = animation.getLayer();
 			}
 		}
 	}
 	if (aObject.hasComponent<ParticleEmitter>())
 	{
-		for (auto particleEmitter : aObject.getComponents<ParticleEmitter>())
+		for (ParticleEmitter& particleEmitter : aObject.getComponents<ParticleEmitter>())
 		{
-			if (particleEmitter->getLayer() > highestLayer)
+			if (particleEmitter.getLayer() > highestLayer)
 			{
-				highestLayer = particleEmitter->getLayer();
+				highestLayer = particleEmitter.getLayer();
 			}
-			if (particleEmitter->getLayer() < lowestLayer)
+			if (particleEmitter.getLayer() < lowestLayer)
 			{
-				lowestLayer = particleEmitter->getLayer();
+				lowestLayer = particleEmitter.getLayer();
 			}
 		}
 	}
@@ -316,30 +316,30 @@ void RenderSystem::renderLayer(const Scene& aScene, int aLayer, const Camera& ac
 		}
 		if (gameObject.hasComponent<Animation>())
 		{
-			for (auto animation : gameObject.getComponents<Animation>())
+			for (Animation& animation : gameObject.getComponents<Animation>())
 			{
-				if (animation->isActive() && animation->getLayer() == aLayer)
+				if (animation.isActive() && animation.getLayer() == aLayer)
 				{
-					renderAnimation(activeCamera, gameObject, *animation, aScreenViewPort);
+					renderAnimation(activeCamera, gameObject, animation, aScreenViewPort);
 				}
 			}
 		}
 		if (gameObject.hasComponent<Sprite>())
 		{
-			for (auto sprite : gameObject.getComponents<Sprite>())
+			for (Sprite& sprite : gameObject.getComponents<Sprite>())
 			{
-				if (sprite->isActive() && sprite->getLayer() == aLayer)
+				if (sprite.isActive() && sprite.getLayer() == aLayer)
 				{
-					renderSprite(activeCamera, gameObject, *sprite, aScreenViewPort);
+					renderSprite(activeCamera, gameObject, sprite, aScreenViewPort);
 				}
 			}
 		}
 		if (gameObject.hasComponent<ParticleEmitter>())
-			for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
+			for (ParticleEmitter& particleEmitter : gameObject.getComponents<ParticleEmitter>())
 			{
-				if (particleEmitter->isActive() && particleEmitter->getLayer() == aLayer)
+				if (particleEmitter.isActive() && particleEmitter.getLayer() == aLayer)
 				{
-					for (auto& particle : particleEmitter->getParticles())
+					for (auto& particle : particleEmitter.getParticles())
 					{
 						renderParticle(activeCamera, particle, aScreenViewPort);
 					}
@@ -535,27 +535,27 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 		{
 			if (gameObject->hasComponent<BoxCollider>())
 			{
-				for (auto boxCollider : gameObject->getComponents<BoxCollider>())
+				for (BoxCollider& boxCollider : gameObject->getComponents<BoxCollider>())
 				{
-					Vector2 relativeBoxPosition = boxCollider->getTransform().position;
+					Vector2 relativeBoxPosition = boxCollider.getTransform().position;
 
 					Vector2 boxColliderWorldPos =
-						gameObject->getTransform().position + boxCollider->getTransform().position;
+						gameObject->getTransform().position + boxCollider.getTransform().position;
 
 					renderSquare(
-						boxColliderWorldPos, boxCollider->getWidth(), boxCollider->getHeight(),
+						boxColliderWorldPos, boxCollider.getWidth(), boxCollider.getHeight(),
 						gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera, aScreenViewPort,
 						Point{static_cast<int>(-relativeBoxPosition.x), static_cast<int>(-relativeBoxPosition.y)});
 				}
 			}
 			if (gameObject->hasComponent<CircleCollider>())
 			{
-				for (auto circleCollider : gameObject->getComponents<CircleCollider>())
+				for (CircleCollider& circleCollider : gameObject->getComponents<CircleCollider>())
 				{
 					Vector2 circleColliderWorldPos =
-						gameObject->getTransform().position + circleCollider->getTransform().position;
+						gameObject->getTransform().position + circleCollider.getTransform().position;
 
-					renderCircle(circleColliderWorldPos, circleCollider->getRadius(), Color(0, 0, 255), false,
+					renderCircle(circleColliderWorldPos, circleCollider.getRadius(), Color(0, 0, 255), false,
 								 aCurrentCamera, aScreenViewPort);
 				}
 			}

@@ -51,10 +51,10 @@ void UIManager::update(Scene* aScene)
 					{
 						if (event.type == EventType::MouseButtonDown)
 						{
-							for (IButtonBehaviourScript* buttonBehaviourScript :
+							for (IButtonBehaviourScript& buttonBehaviourScript :
 								 button.getComponents<IButtonBehaviourScript>())
 							{
-								buttonBehaviourScript->onButtonPressed();
+								buttonBehaviourScript.onButtonPressed();
 								button.activateOnClickCallback();
 							}
 						}
@@ -81,10 +81,10 @@ void UIManager::update(Scene* aScene)
 					{
 						if (event.type == EventType::MouseButtonUp)
 						{
-							for (IButtonBehaviourScript* buttonBehaviourScript :
+							for (IButtonBehaviourScript& buttonBehaviourScript :
 								 button.getComponents<IButtonBehaviourScript>())
 							{
-								buttonBehaviourScript->onButtonReleased();
+								buttonBehaviourScript.onButtonReleased();
 								button.activateOnReleaseCallback();
 							}
 						}
@@ -107,11 +107,11 @@ void UIManager::update(Scene* aScene)
 			{
 				if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 				{
-					for (IButtonBehaviourScript* buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
+					for (IButtonBehaviourScript& buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
 					{
 						if (!button.isHovered())
 						{
-							buttonBehaviourScript->onButtonHover();
+							buttonBehaviourScript.onButtonHover();
 							button.setHovered(true);
 						}
 					}
@@ -121,11 +121,11 @@ void UIManager::update(Scene* aScene)
 			{
 				if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 				{
-					for (IButtonBehaviourScript* buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
+					for (IButtonBehaviourScript& buttonBehaviourScript : button.getComponents<IButtonBehaviourScript>())
 					{
 						if (button.isHovered())
 						{
-							buttonBehaviourScript->onButtonUnhover();
+							buttonBehaviourScript.onButtonUnhover();
 							button.setHovered(false);
 						}
 					}

@@ -1,6 +1,8 @@
 #include "Physics/PhysicsEngine.h"
 #include "CircleCollider.h"
+#include "RigidBody.h"
 #include <algorithm>
+#include <functional>
 
 PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
 
@@ -30,11 +32,11 @@ void PhysicsEngine::applyForces()
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-			mWorld.applyLinearForce(rigidBody->getForcesBuffer(), rigidBody->getBodyId());
-			mWorld.applyTorque(rigidBody->getTorqueBuffer(), rigidBody->getBodyId());
-			rigidBody->clearForcesBuffer();
-			rigidBody->clearTorqueBuffer();
+			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
+			mWorld.applyLinearForce(rigidBody.getForcesBuffer(), rigidBody.getBodyId());
+			mWorld.applyTorque(rigidBody.getTorqueBuffer(), rigidBody.getBodyId());
+			rigidBody.clearForcesBuffer();
+			rigidBody.clearTorqueBuffer();
 		}
 	}
 }
@@ -46,22 +48,22 @@ void PhysicsEngine::setPositions()
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
 			Transform transform = gameObject.getTransform();
 
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
-			if (newPos.x != mWorld.getPosition(rigidBody->getBodyId()).x ||
-				newPos.y != mWorld.getPosition(rigidBody->getBodyId()).y)
+			if (newPos.x != mWorld.getPosition(rigidBody.getBodyId()).x ||
+				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y)
 			{
-				mWorld.setPosition(newPos, transform.rotation, rigidBody->getBodyId());
+				mWorld.setPosition(newPos, transform.rotation, rigidBody.getBodyId());
 			}
-			if (rigidBody->getLinearVelocity() != mWorld.getLinearVelocity(rigidBody->getBodyId()))
+			if (rigidBody.getLinearVelocity() != mWorld.getLinearVelocity(rigidBody.getBodyId()))
 			{
-				mWorld.setLinearVelocity(rigidBody->getLinearVelocity(), rigidBody->getBodyId());
+				mWorld.setLinearVelocity(rigidBody.getLinearVelocity(), rigidBody.getBodyId());
 			}
-			if (rigidBody->getAngularVelocity() != mWorld.getAngularVelocity(rigidBody->getBodyId()))
+			if (rigidBody.getAngularVelocity() != mWorld.getAngularVelocity(rigidBody.getBodyId()))
 			{
-				mWorld.setAngularVelocity(rigidBody->getAngularVelocity(), rigidBody->getBodyId());
+				mWorld.setAngularVelocity(rigidBody.getAngularVelocity(), rigidBody.getBodyId());
 			}
 		}
 	}
@@ -88,10 +90,11 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 
 			if (gameObjectA->hasComponent<IBehaviourScript>())
 			{
-				std::vector<IBehaviourScript*> behaviourScript = gameObjectA->getComponents<IBehaviourScript>();
+				std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
+					gameObjectA->getComponents<IBehaviourScript>();
 				for (int i = 0; i < behaviourScript.size(); i++)
 				{
-					behaviourScript.at(i)->onCollide(gameObjectB);
+					behaviourScript.at(i).get().onCollide(gameObjectB);
 				}
 			}
 		}
@@ -103,10 +106,11 @@ void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBo
 			{
 				if (gameObjectB->hasComponent<IBehaviourScript>())
 				{
-					std::vector<IBehaviourScript*> behaviourScript = gameObjectB->getComponents<IBehaviourScript>();
+					std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
+						gameObjectB->getComponents<IBehaviourScript>();
 					for (int i = 0; i < behaviourScript.size(); i++)
 					{
-						behaviourScript.at(i)->onCollide(gameObjectA);
+						behaviourScript.at(i).get().onCollide(gameObjectA);
 					}
 				}
 			}
@@ -121,13 +125,13 @@ void PhysicsEngine::createBodies()
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
+			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
 
-			if (rigidBody->getBodyId().bodyID == -1)
+			if (rigidBody.getBodyId().bodyID == -1)
 			{
 				BodyProxy bodyProxy = BodyProxy(gameObject);
 				BodyID bodyID = mWorld.createBody(bodyProxy);
-				rigidBody->setBodyId(bodyID);
+				rigidBody.setBodyId(bodyID);
 			}
 		}
 	}
@@ -146,10 +150,10 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID)
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			std::vector<RigidBody*> rigidBodies = gameObject.getComponents<RigidBody>();
+			std::vector<std::reference_wrapper<RigidBody>> rigidBodies = gameObject.getComponents<RigidBody>();
 			if (!rigidBodies.empty())
 			{
-				if (rigidBodies[0]->getBodyId().bodyID == aID)
+				if (rigidBodies[0].get().getBodyId().bodyID == aID)
 				{
 					return &gameObject;
 				}
@@ -166,33 +170,33 @@ void PhysicsEngine::updateFlags()
 	{
 		if (mObjects.at(i).get().hasComponent<RigidBody>())
 		{
-			RigidBody* body = mObjects.at(i).get().getComponents<RigidBody>()[0];
-			BodyID bodyID = mObjects.at(i).get().getComponents<RigidBody>()[0]->getBodyId();
+			RigidBody& body = mObjects.at(i).get().getComponents<RigidBody>()[0];
+			BodyID bodyID = mObjects.at(i).get().getComponents<RigidBody>()[0].get().getBodyId();
 			BodyProxy bodyProxy = BodyProxy(mObjects.at(i));
-			mWorld.setBodyActivity(mObjects.at(i).get().getComponents<RigidBody>().at(0)->isActive(), bodyID);
+			mWorld.setBodyActivity(mObjects.at(i).get().getComponents<RigidBody>().at(0).get().isActive(), bodyID);
 
-			if (body->getIsUpdated())
+			if (body.getIsUpdated())
 			{
 				mWorld.updateBodyProperties(bodyProxy, bodyID);
-				body->setIsUpdated(false);
+				body.setIsUpdated(false);
 			}
 
 			for (int i = 0; i < bodyProxy.getBoxColliders().size(); i++)
 			{
-				if (bodyProxy.getBoxColliders().at(i)->getIsUpdated())
+				if (bodyProxy.getBoxColliders().at(i).get().getIsUpdated())
 				{
 					mWorld.updateShapeProperties(bodyProxy, bodyID);
-					bodyProxy.getBoxColliders().at(i)->setIsUpdated(false);
+					bodyProxy.getBoxColliders().at(i).get().setIsUpdated(false);
 					break;
 				}
 			}
 
 			for (int i = 0; i < bodyProxy.getCircleColliders().size(); i++)
 			{
-				if (bodyProxy.getCircleColliders().at(i)->getIsUpdated())
+				if (bodyProxy.getCircleColliders().at(i).get().getIsUpdated())
 				{
 					mWorld.updateShapeProperties(bodyProxy, bodyID);
-					bodyProxy.getCircleColliders().at(i)->setIsUpdated(false);
+					bodyProxy.getCircleColliders().at(i).get().setIsUpdated(false);
 					break;
 				}
 			}
@@ -207,25 +211,25 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			RigidBody* rigidBody = gameObject.getComponents<RigidBody>()[0];
-			rigidBody->setLinearVelocity(mWorld.getLinearVelocity(rigidBody->getBodyId()));
-			rigidBody->setAngularVelocity(mWorld.getAngularVelocity(rigidBody->getBodyId()));
+			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
+			rigidBody.setLinearVelocity(mWorld.getLinearVelocity(rigidBody.getBodyId()));
+			rigidBody.setAngularVelocity(mWorld.getAngularVelocity(rigidBody.getBodyId()));
 			if (gameObject.hasComponent<BoxCollider>())
 			{
-				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				for (BoxCollider& boxCollider : gameObject.getComponents<BoxCollider>())
 				{
-					boxCollider->setWidth(boxCollider->getWidth() * 2);
-					boxCollider->setHeight(boxCollider->getHeight() * 2);
+					boxCollider.setWidth(boxCollider.getWidth() * 2);
+					boxCollider.setHeight(boxCollider.getHeight() * 2);
 
-					Transform transform = boxCollider->getTransform();
-					transform.position.x = transform.position.x - boxCollider->getWidth() / 2;
-					transform.position.y = transform.position.y - boxCollider->getHeight() / 2;
-					boxCollider->setTransform(transform);
+					Transform transform = boxCollider.getTransform();
+					transform.position.x = transform.position.x - boxCollider.getWidth() / 2;
+					transform.position.y = transform.position.y - boxCollider.getHeight() / 2;
+					boxCollider.setTransform(transform);
 				}
 			}
 
-			Vector2 position = mWorld.getPosition(rigidBody->getBodyId());
-			float rotation = mWorld.getRotation(rigidBody->getBodyId());
+			Vector2 position = mWorld.getPosition(rigidBody.getBodyId());
+			float rotation = mWorld.getRotation(rigidBody.getBodyId());
 
 			Transform transform = gameObject.getTransform();
 			transform.position = position;
@@ -247,15 +251,15 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 		{
 			if (gameObject.hasComponent<BoxCollider>())
 			{
-				for (BoxCollider* boxCollider : gameObject.getComponents<BoxCollider>())
+				for (BoxCollider& boxCollider : gameObject.getComponents<BoxCollider>())
 				{
-					boxCollider->setWidth(boxCollider->getWidth() / 2);
-					boxCollider->setHeight(boxCollider->getHeight() / 2);
+					boxCollider.setWidth(boxCollider.getWidth() / 2);
+					boxCollider.setHeight(boxCollider.getHeight() / 2);
 
-					Transform transform = boxCollider->getTransform();
-					transform.position.x = transform.position.x + boxCollider->getWidth();
-					transform.position.y = transform.position.y + boxCollider->getHeight();
-					boxCollider->setTransform(transform);
+					Transform transform = boxCollider.getTransform();
+					transform.position.x = transform.position.x + boxCollider.getWidth();
+					transform.position.y = transform.position.y + boxCollider.getHeight();
+					boxCollider.setTransform(transform);
 				}
 			}
 		}
@@ -282,8 +286,8 @@ void PhysicsEngine::removeObject(GameObject& aObject)
 	{
 		if (&it->get() == &aObject)
 		{
-			mWorld.deleteBody(it->get().getComponents<RigidBody>()[0]->getBodyId());
-			it->get().getComponents<RigidBody>()[0]->setBodyId({-1, 0, 0});
+			mWorld.deleteBody(it->get().getComponents<RigidBody>()[0].get().getBodyId());
+			it->get().getComponents<RigidBody>()[0].get().setBodyId({-1, 0, 0});
 			mObjects.erase(it);
 			break;
 		}
@@ -298,9 +302,9 @@ void PhysicsEngine::clearObjects()
 	{
 		if (gameObject.hasComponent<RigidBody>())
 		{
-			mWorld.deleteBody(gameObject.getComponents<RigidBody>()[0]->getBodyId());
+			mWorld.deleteBody(gameObject.getComponents<RigidBody>()[0].get().getBodyId());
 
-			gameObject.getComponents<RigidBody>()[0]->setBodyId({-1, 0, 0});
+			gameObject.getComponents<RigidBody>()[0].get().setBodyId({-1, 0, 0});
 		}
 	}
 	mObjects.clear();

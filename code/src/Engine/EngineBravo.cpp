@@ -166,12 +166,12 @@ void EngineBravo::startBehaviourScripts()
 			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
-				if (behaviourScript->hasScriptStarted())
+				if (behaviourScript.get().hasScriptStarted())
 				{
 					continue;
 				}
-				behaviourScript->onStart();
-				behaviourScript->setScriptStarted(true);
+				behaviourScript.get().onStart();
+				behaviourScript.get().setScriptStarted(true);
 			}
 		}
 	}
@@ -195,7 +195,7 @@ void EngineBravo::runBehaviourScripts()
 			}
 			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
 			{
-				behaviourScript->onUpdate();
+				behaviourScript.get().onUpdate();
 			}
 		}
 	}

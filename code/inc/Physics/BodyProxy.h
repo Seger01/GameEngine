@@ -40,8 +40,8 @@ public:
 
 	bool getCanCollide() const;
 
-	std::vector<BoxCollider*> getBoxColliders() const;
-	std::vector<CircleCollider*> getCircleColliders() const;
+	std::vector<std::reference_wrapper<BoxCollider>> getBoxColliders() const;
+	std::vector<std::reference_wrapper<CircleCollider>> getCircleColliders() const;
 
 private:
 	Vector2 mPosition;
@@ -63,8 +63,8 @@ private:
 	float mMass;
 	float mGravityScale;
 
-	std::vector<BoxCollider*> mBoxColliders;
-	std::vector<CircleCollider*> mCircleColliders;
+	std::vector<std::reference_wrapper<BoxCollider>> mBoxColliders;
+	std::vector<std::reference_wrapper<CircleCollider>> mCircleColliders;
 };
 
 #endif // BODYPROXY_H
