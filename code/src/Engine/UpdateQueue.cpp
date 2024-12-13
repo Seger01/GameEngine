@@ -24,8 +24,12 @@ void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
 	std::vector<std::reference_wrapper<GameObject>> currObjects =
 		EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjects();
-	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
-	if (currObjectsIt == currObjects.end())
+	auto itCurr = std::find_if(currObjects.begin(), currObjects.end(),
+							   [&aGameObject](const std::reference_wrapper<GameObject>& wrapper)
+							   {
+								   return &wrapper.get() == &aGameObject; // Compare addresses
+							   });
+	if (itCurr == currObjects.end())
 	{
 		return; // aGameObject is not in currObjects, so return early
 	}
