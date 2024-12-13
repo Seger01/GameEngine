@@ -20,7 +20,7 @@
  */
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
-	auto currObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
+	auto currObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjects();
 	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
 	if (currObjectsIt == currObjects.end())
 	{
@@ -121,7 +121,7 @@ void UpdateQueue::updateAdditions()
 void UpdateQueue::updateRemovals()
 {
 	for (GameObject* gameObject :
-		 EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjectsToBeRemoved())
+		 EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjectsToBeRemoved())
 	{
 		// Scene manager: does not use a list of game objects
 		// Render system

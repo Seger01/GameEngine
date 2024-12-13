@@ -59,6 +59,8 @@ void EngineBravo::run()
 
 	mRenderSystem.getWindow().showWindow();
 
+	mSceneManager.update();
+
 	while (mRunning)
 	{
 		Time::update();
@@ -75,13 +77,10 @@ void EngineBravo::run()
 
 		mUpdateQueue.updateAdditions();
 
-		{
-
-			mPhysicsManager.updatePhysicsEngine();
-		}
+		mPhysicsManager.updatePhysicsEngine();
 
 		mParticleSystem.update();
-		mRenderSystem.render(*mSceneManager.getCurrentScene());
+		mRenderSystem.render(mSceneManager.getCurrentScene());
 
 		mNetworkManager.update();
 
@@ -152,54 +151,41 @@ Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts()
 {
-	Scene* currentScene = mSceneManager.getCurrentScene();
-	if (currentScene == nullptr)
-	{
-		std::cout << "retrieved scene is nullptr" << std::endl;
-	}
+	Scene& currentScene = mSceneManager.getCurrentScene();
 
-	if (currentScene)
+	auto gameObjects = currentScene.getGameObjects();
+	for (auto& gameObject : gameObjects)
 	{
-		auto gameObjects = currentScene->getGameObjects();
-		for (auto& gameObject : gameObjects)
+		if (!gameObject->isActive())
 		{
-			if (!gameObject->isActive())
+			continue;
+		}
+		for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+		{
+			if (behaviourScript->hasScriptStarted())
 			{
 				continue;
 			}
-			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
-			{
-				if (behaviourScript->hasScriptStarted())
-				{
-					continue;
-				}
-				behaviourScript->onStart();
-				behaviourScript->setScriptStarted(true);
-			}
+			behaviourScript->onStart();
+			behaviourScript->setScriptStarted(true);
 		}
 	}
 }
 
 void EngineBravo::runBehaviourScripts()
 {
-	Scene* currentScene = mSceneManager.getCurrentScene();
-	if (currentScene == nullptr)
-	{
-		std::cout << "retrieved scene is nullptr" << std::endl;
-	}
+	Scene& currentScene = mSceneManager.getCurrentScene();
 
-	if (currentScene)
+	auto gameObjects = currentScene.getGameObjects();
+	for (auto& gameObject : gameObjects)
 	{
-		for (auto& gameObject : currentScene->getGameObjects())
+		if (!gameObject->isActive())
 		{
-			if (!gameObject->isActive())
-			{
-				continue;
-			}
-			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
-			{
-				behaviourScript->onUpdate();
-			}
+			continue;
+		}
+		for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+		{
+			behaviourScript->onUpdate();
 		}
 	}
 }

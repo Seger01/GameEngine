@@ -224,8 +224,8 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 		networkObjects[0]->setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
 	}
 	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
-	networkObjects[0]->setPlayer(true);		  // Mark as player
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
+	networkObjects[0]->setPlayer(true); // Mark as player
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
 	return player;
 }
 
@@ -240,7 +240,7 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
 		if (networkObject->getClientGUID() == playerID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&object.get());
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&object.get());
 			return;
 		}
 	}
@@ -302,13 +302,16 @@ void NetworkManager::startClient()
  * @brief Starts the host.
  * @throws std::runtime_error If the server or client is already running, or if the host is already running.
  */
-void NetworkManager::startHost() {
-    if (mServer || mClient) {
-        throw std::runtime_error("Cannot start host when server or client is already running");
-    }
-    if (mHost) {
-        throw std::runtime_error("Host is already running");
-    }
+void NetworkManager::startHost()
+{
+	if (mServer || mClient)
+	{
+		throw std::runtime_error("Cannot start host when server or client is already running");
+	}
+	if (mHost)
+	{
+		throw std::runtime_error("Host is already running");
+	}
 	mHost = std::make_unique<NetworkHost>(mObjects, mTickRate);
 }
 
@@ -336,9 +339,8 @@ void NetworkManager::addObject(GameObject& aObject)
  */
 void NetworkManager::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());

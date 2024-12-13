@@ -134,7 +134,7 @@ std::vector<Camera*> Scene::getCameras() const
 	return cameras;
 }
 
-Camera* Scene::getCameraWithTag(const std::string& tag)
+Camera* Scene::getCameraWithTag(const std::string& tag) const
 {
 	for (const auto& obj : mGameObjects)
 	{
