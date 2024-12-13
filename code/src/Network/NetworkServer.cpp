@@ -217,11 +217,11 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 	auto persistantObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
 	for (auto player : persistantObjects)
 	{
-		if (!player->hasComponent<NetworkObject>())
+		if (!player.get().hasComponent<NetworkObject>())
 		{
 			continue;
 		}
-		auto networkObject = player->getComponents<NetworkObject>()[0];
+		auto networkObject = player.get().getComponents<NetworkObject>()[0];
 		if (networkObject.get().getClientGUID() != playerID)
 		{
 			continue;
@@ -387,11 +387,11 @@ void NetworkServer::spawnPlayerForNewClient(SLNet::RakNetGUID playerID)
 	auto persistantObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
 	for (auto player : persistantObjects)
 	{
-		if (!player->hasComponent<NetworkObject>())
+		if (!player.get().hasComponent<NetworkObject>())
 		{
 			continue;
 		}
-		auto networkObject = player->getComponents<NetworkObject>()[0];
+		auto networkObject = player.get().getComponents<NetworkObject>()[0];
 		networkPacket.clientGUID = networkObject.get().getClientGUID();
 		networkPacket.networkObjectID = networkObject.get().getNetworkObjectID();
 		networkPacket.SetTimeStampNow();

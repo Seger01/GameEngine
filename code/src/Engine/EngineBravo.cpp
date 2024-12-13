@@ -160,11 +160,11 @@ void EngineBravo::startBehaviourScripts()
 		auto gameObjects = currentScene->getGameObjects();
 		for (auto& gameObject : gameObjects)
 		{
-			if (!gameObject->isActive())
+			if (!gameObject.get().isActive())
 			{
 				continue;
 			}
-			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 			{
 				if (behaviourScript.get().hasScriptStarted())
 				{
@@ -189,11 +189,11 @@ void EngineBravo::runBehaviourScripts()
 	{
 		for (auto& gameObject : currentScene->getGameObjects())
 		{
-			if (!gameObject->isActive())
+			if (!gameObject.get().isActive())
 			{
 				continue;
 			}
-			for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 			{
 				behaviourScript.get().onUpdate();
 			}

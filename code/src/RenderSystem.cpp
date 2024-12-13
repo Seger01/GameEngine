@@ -533,27 +533,28 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 	{
 		for (auto& gameObject : aScene.getGameObjects())
 		{
-			if (gameObject->hasComponent<BoxCollider>())
+			if (gameObject.get().hasComponent<BoxCollider>())
 			{
-				for (BoxCollider& boxCollider : gameObject->getComponents<BoxCollider>())
+				for (BoxCollider& boxCollider : gameObject.get().getComponents<BoxCollider>())
 				{
 					Vector2 relativeBoxPosition = boxCollider.getTransform().position;
 
 					Vector2 boxColliderWorldPos =
-						gameObject->getTransform().position + boxCollider.getTransform().position;
+						gameObject.get().getTransform().position + boxCollider.getTransform().position;
 
 					renderSquare(
 						boxColliderWorldPos, boxCollider.getWidth(), boxCollider.getHeight(),
-						gameObject->getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera, aScreenViewPort,
+						gameObject.get().getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
+						aScreenViewPort,
 						Point{static_cast<int>(-relativeBoxPosition.x), static_cast<int>(-relativeBoxPosition.y)});
 				}
 			}
-			if (gameObject->hasComponent<CircleCollider>())
+			if (gameObject.get().hasComponent<CircleCollider>())
 			{
-				for (CircleCollider& circleCollider : gameObject->getComponents<CircleCollider>())
+				for (CircleCollider& circleCollider : gameObject.get().getComponents<CircleCollider>())
 				{
 					Vector2 circleColliderWorldPos =
-						gameObject->getTransform().position + circleCollider.getTransform().position;
+						gameObject.get().getTransform().position + circleCollider.getTransform().position;
 
 					renderCircle(circleColliderWorldPos, circleCollider.getRadius(), Color(0, 0, 255), false,
 								 aCurrentCamera, aScreenViewPort);

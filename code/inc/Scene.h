@@ -3,6 +3,7 @@
 
 #include "Camera.h"
 #include "GameObject.h"
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -26,15 +27,15 @@ public:
 	int getID();
 	std::string getName();
 
-	std::vector<GameObject*> getGameObjects() const;
-	std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
+	std::vector<std::reference_wrapper<GameObject>> getGameObjects() const;
+	std::vector<std::reference_wrapper<GameObject>> getGameObjectsWithTag(const std::string& tag);
 
 	void addPersistentGameObject(GameObject* object);
-	std::vector<GameObject*>& getPersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>>& getPersistentGameObjects();
 	void clearPersistentGameObjects();
 	void releasePersistentGameObjects();
 
-	std::vector<GameObject*> getGameObjectsToBeRemoved();
+	std::vector<std::reference_wrapper<GameObject>> getGameObjectsToBeRemoved();
 
 private:
 	Scene(std::string aSceneName, int aSceneID);
@@ -44,8 +45,8 @@ private:
 
 private:
 	std::vector<std::unique_ptr<GameObject>> mGameObjects;
-	std::vector<GameObject*> mPersistentGameObjects;
-	std::vector<GameObject*> mGameObjectsToRemove;
+	std::vector<std::reference_wrapper<GameObject>> mPersistentGameObjects;
+	std::vector<std::reference_wrapper<GameObject>> mGameObjectsToRemove;
 
 	int mActiveCameraIndex;
 	std::string mSceneName;
