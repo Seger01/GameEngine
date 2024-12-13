@@ -1,5 +1,6 @@
 #include "GameObject.h"
 
+#include <functional>
 #include <iostream>
 #include <memory>
 
@@ -186,14 +187,14 @@ void GameObject::removeChild(GameObject* child)
 
 std::vector<GameObject*> GameObject::getChildren() { return mChildren; }
 
-std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag) const
+std::vector<std::reference_wrapper<Component>> GameObject::getComponentsWithTag(const std::string& tag) const
 {
-	std::vector<Component*> componentsWithTag;
+	std::vector<std::reference_wrapper<Component>> componentsWithTag;
 	for (const auto& component : mComponents)
 	{
 		if (component->getTag() == tag)
 		{
-			componentsWithTag.push_back(component.get());
+			componentsWithTag.push_back(*component);
 		}
 	}
 	return componentsWithTag;

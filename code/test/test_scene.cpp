@@ -37,8 +37,8 @@ TEST_F(SceneTest, AddAndGetGameObjects)
 
 	auto gameObjects = scene->getGameObjects();
 	EXPECT_EQ(gameObjects.size(), 2);
-	EXPECT_EQ(gameObjects[0]->getID(), 1);
-	EXPECT_EQ(gameObjects[1]->getID(), 2);
+	EXPECT_EQ(gameObjects[0].get().getID(), 1);
+	EXPECT_EQ(gameObjects[1].get().getID(), 2);
 }
 
 // Test retrieving GameObjects by tag
@@ -60,10 +60,10 @@ TEST_F(SceneTest, GetGameObjectsByTag)
 	auto enemies = scene->getGameObjectsWithTag("Enemy");
 
 	EXPECT_EQ(players.size(), 1);
-	EXPECT_EQ(players[0]->getID(), 1);
+	EXPECT_EQ(players[0].get().getID(), 1);
 
 	EXPECT_EQ(enemies.size(), 1);
-	EXPECT_EQ(enemies[0]->getID(), 2);
+	EXPECT_EQ(enemies[0].get().getID(), 2);
 }
 
 // Test removing GameObjects

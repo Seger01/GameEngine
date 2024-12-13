@@ -12,9 +12,11 @@ class MockButtonBehaviourScript : public IButtonBehaviourScript
 {
 public:
 	MockButtonBehaviourScript() : IButtonBehaviourScript() {}
+
 	bool buttonPressed = false;
 
 	void onButtonPressed() override { buttonPressed = true; }
+
 	void onButtonReleased() override {}
 
 	std::unique_ptr<Component> clone() const override { return std::make_unique<MockButtonBehaviourScript>(*this); }
@@ -71,7 +73,7 @@ TEST_F(UIManagerTest, Update_InteractsWithButton)
 
 	// MockButtonBehaviourScript* buttonBehaviour = new MockButtonBehaviourScript();
 	button->addComponent<MockButtonBehaviourScript>();
-	MockButtonBehaviourScript* buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
+	MockButtonBehaviourScript& buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
 
 	mScene->addGameObject(button);
 
@@ -81,10 +83,10 @@ TEST_F(UIManagerTest, Update_InteractsWithButton)
 
 	// Update UIManager to process the event
 	// mUIManager->update(mScene);
-	buttonBehaviour->buttonPressed = true;
+	buttonBehaviour.buttonPressed = true;
 
 	// Verify that button's onButtonPressed was triggered
-	ASSERT_TRUE(buttonBehaviour->buttonPressed);
+	ASSERT_TRUE(buttonBehaviour.buttonPressed);
 }
 
 TEST_F(UIManagerTest, Update_OutsideButtonBounds_NoInteraction)
@@ -96,7 +98,7 @@ TEST_F(UIManagerTest, Update_OutsideButtonBounds_NoInteraction)
 	button->setHeight(30);
 
 	button->addComponent<MockButtonBehaviourScript>();
-	MockButtonBehaviourScript* buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
+	MockButtonBehaviourScript& buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
 
 	mScene->addGameObject(button);
 
@@ -108,7 +110,7 @@ TEST_F(UIManagerTest, Update_OutsideButtonBounds_NoInteraction)
 	mUIManager->update(mScene);
 
 	// Verify that button's onButtonPressed was NOT triggered
-	ASSERT_FALSE(buttonBehaviour->buttonPressed);
+	ASSERT_FALSE(buttonBehaviour.buttonPressed);
 }
 
 TEST_F(UIManagerTest, Init_SubscribesToEventManager)

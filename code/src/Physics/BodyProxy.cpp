@@ -1,8 +1,9 @@
 #include "Physics/BodyProxy.h"
+#include <functional>
 
 BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 {
-	RigidBody* rigidBody = aGameObject.get().getComponents<RigidBody>().at(0);
+	RigidBody& rigidBody = aGameObject.get().getComponents<RigidBody>().at(0);
 
 	if (aGameObject.get().hasComponent<BoxCollider>())
 	{
@@ -14,16 +15,17 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	}
 
 	mPosition = aGameObject.get().getTransform().position;
-	mHasGravity = rigidBody->getHasGravity();
-	mIsMoveableByForce = rigidBody->getIsMoveableByForce();
-	mCanRotate = rigidBody->getCanRotate();
-	mDensity = rigidBody->getDensity();
-	mFriction = rigidBody->getFriction();
-	mRestitution = rigidBody->getRestitution();
-	mMass = rigidBody->getMass();
-	mGravityScale = rigidBody->getGravityScale();
-	mLinearDamping = rigidBody->getLinearDamping();
-	mAngularDamping = rigidBody->getAngularDamping();
+	mRotation = aGameObject.get().getTransform().rotation;
+	mHasGravity = rigidBody.getHasGravity();
+	mIsMoveableByForce = rigidBody.getIsMoveableByForce();
+	mCanRotate = rigidBody.getCanRotate();
+	mDensity = rigidBody.getDensity();
+	mFriction = rigidBody.getFriction();
+	mRestitution = rigidBody.getRestitution();
+	mMass = rigidBody.getMass();
+	mGravityScale = rigidBody.getGravityScale();
+	mLinearDamping = rigidBody.getLinearDamping();
+	mAngularDamping = rigidBody.getAngularDamping();
 
 	processBodyType();
 }
@@ -65,8 +67,12 @@ float BodyProxy::getMass() const { return mMass; }
 
 float BodyProxy::getGravityScale() const { return mGravityScale; }
 
+std::vector<std::reference_wrapper<GameObject>> mObjects;
+
 Vector2 BodyProxy::getPosition() const { return mPosition; }
 
-std::vector<BoxCollider*> BodyProxy::getBoxColliders() const { return mBoxColliders; }
+std::vector<std::reference_wrapper<BoxCollider>> BodyProxy::getBoxColliders() const { return mBoxColliders; }
 
-std::vector<CircleCollider*> BodyProxy::getCircleColliders() const { return mCircleColliders; }
+std::vector<std::reference_wrapper<CircleCollider>> BodyProxy::getCircleColliders() const { return mCircleColliders; }
+
+float BodyProxy::getRotation() const { return mRotation; }

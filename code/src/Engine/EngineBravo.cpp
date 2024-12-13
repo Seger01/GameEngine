@@ -156,18 +156,18 @@ void EngineBravo::startBehaviourScripts()
 	auto gameObjects = currentScene.getGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
-		if (!gameObject->isActive())
+		if (!gameObject.get().isActive())
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 		{
-			if (behaviourScript->hasScriptStarted())
+			if (behaviourScript.get().hasScriptStarted())
 			{
 				continue;
 			}
-			behaviourScript->onStart();
-			behaviourScript->setScriptStarted(true);
+			behaviourScript.get().onStart();
+			behaviourScript.get().setScriptStarted(true);
 		}
 	}
 }
@@ -179,13 +179,13 @@ void EngineBravo::runBehaviourScripts()
 	auto gameObjects = currentScene.getGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
-		if (!gameObject->isActive())
+		if (!gameObject.get().isActive())
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject->getComponents<IBehaviourScript>())
+		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 		{
-			behaviourScript->onUpdate();
+			behaviourScript.get().onUpdate();
 		}
 	}
 }

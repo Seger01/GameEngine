@@ -1,5 +1,6 @@
 #include "Engine/SceneManager.h"
 #include "EngineBravo.h"
+#include <functional>
 
 SceneManager::SceneManager() : mCurrentSceneIndex(-1), mNewSceneName(""), mNewSceneID(-1), mScenes{} {}
 
@@ -127,7 +128,7 @@ void SceneManager::loadScene(int index)
 		currentScene->releasePersistentGameObjects();
 	}
 
-	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> persistentGameObjects = currentScene->getPersistentGameObjects();
 
 	currentScene->clearPersistentGameObjects();
 
@@ -140,9 +141,9 @@ void SceneManager::loadScene(int index)
 
 	for (auto& object : persistentGameObjects)
 	{
-		currentScene->addPersistentGameObject(object);
+		currentScene->addPersistentGameObject(&object.get());
 		// Add the object to the update list
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
 	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }
@@ -158,7 +159,7 @@ void SceneManager::loadScene(const std::string& sceneName)
 		currentScene->releasePersistentGameObjects();
 	}
 
-	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> persistentGameObjects = currentScene->getPersistentGameObjects();
 
 	currentScene->clearPersistentGameObjects();
 
@@ -177,13 +178,13 @@ void SceneManager::loadScene(const std::string& sceneName)
 
 	for (auto& object : persistentGameObjects)
 	{
-		currentScene->addPersistentGameObject(object);
+		currentScene->addPersistentGameObject(&object.get());
 		// Add the object to the update list
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
-	for (GameObject* object : currentScene->getGameObjects())
+	for (GameObject& object : currentScene->getGameObjects())
 	{
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
 	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }

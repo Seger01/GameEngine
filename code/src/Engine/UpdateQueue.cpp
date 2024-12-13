@@ -11,6 +11,8 @@
 #include "NetworkObject.h"
 #include "ParticleEmitter.h"
 #include "Text.h"
+#include <functional>
+#include <vector>
 
 /**
  * @brief Adds a game object to the list of objects to be updated. If the object is already in the list, it is not added
@@ -20,12 +22,12 @@
  */
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
-	auto currObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> currObjects =
+		EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjects();
 	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
 	if (currObjectsIt == currObjects.end())
 	{
-		// Object is not in the scene, do not add it
-		return;
+		return; // aGameObject is not in currObjects, so return early
 	}
 
 	auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
@@ -120,25 +122,25 @@ void UpdateQueue::updateAdditions()
  */
 void UpdateQueue::updateRemovals()
 {
-	for (GameObject* gameObject :
+	for (GameObject& gameObject :
 		 EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjectsToBeRemoved())
 	{
 		// Scene manager: does not use a list of game objects
 		// Render system
-		EngineBravo::getInstance().getRenderSystem().removeObject(*gameObject);
+		EngineBravo::getInstance().getRenderSystem().removeObject(gameObject);
 		// Resource manager: does not use a list of game objects
 		// Particle system
-		EngineBravo::getInstance().getParticleSystem().removeObject(*gameObject);
+		EngineBravo::getInstance().getParticleSystem().removeObject(gameObject);
 		// Network manager:
-		EngineBravo::getInstance().getNetworkManager().removeObject(*gameObject);
+		EngineBravo::getInstance().getNetworkManager().removeObject(gameObject);
 		// Event manager: does not use a list of game objects
 		// Save game manager: does not use a list of game objects
 		// Audio manager
-		EngineBravo::getInstance().getAudioManager().removeObject(*gameObject);
+		EngineBravo::getInstance().getAudioManager().removeObject(gameObject);
 		// UI manager
-		EngineBravo::getInstance().getUIManager().removeObject(*gameObject);
+		EngineBravo::getInstance().getUIManager().removeObject(gameObject);
 		// Physics manager
-		EngineBravo::getInstance().getPhysicsManager().getPhysicsEngine().removeObject(*gameObject);
+		EngineBravo::getInstance().getPhysicsManager().getPhysicsEngine().removeObject(gameObject);
 	}
 }
 

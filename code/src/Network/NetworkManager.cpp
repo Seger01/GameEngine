@@ -201,8 +201,8 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 
 	for (auto object : mObjects)
 	{
-		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientGUID() == packet.clientGUID) // Check if player already exists
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == packet.clientGUID) // Check if player already exists
 		{
 			return nullptr;
 		}
@@ -214,17 +214,18 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	{
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
-	networkObjects[0]->setClientGUID(packet.clientGUID); // Assign unique ID to player
+	networkObjects[0].get().setClientGUID(packet.clientGUID); // Assign unique ID to player
 	if (packet.networkObjectID != UINT16_MAX)
 	{
-		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
+		networkObjects[0].get().setNetworkObjectID(packet.networkObjectID);
 	}
 	else
 	{
-		networkObjects[0]->setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
+		networkObjects[0].get().setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
 	}
-	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
-	networkObjects[0]->setPlayer(true); // Mark as player
+	std::cout << "Player instantiated with network object ID: " << networkObjects[0].get().getNetworkObjectID()
+			  << std::endl;
+	networkObjects[0].get().setPlayer(true); // Mark as player
 	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
 	return player;
 }
@@ -237,8 +238,8 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 {
 	for (auto object : mObjects)
 	{
-		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientGUID() == playerID)
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == playerID)
 		{
 			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&object.get());
 			return;
