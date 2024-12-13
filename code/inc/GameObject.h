@@ -39,6 +39,7 @@ public:
 	bool isActive();
 
 	Transform getTransform() const;
+	Transform& getTransformRef();
 	void setTransform(Transform aNewTransform);
 
 	void setParent(GameObject* parent);

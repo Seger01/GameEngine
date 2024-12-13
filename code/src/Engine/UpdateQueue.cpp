@@ -23,13 +23,9 @@
 void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
 	std::vector<std::reference_wrapper<GameObject>> currObjects =
-		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
-	auto itCurr = std::find_if(currObjects.begin(), currObjects.end(),
-							   [&aGameObject](const std::reference_wrapper<GameObject>& wrapper)
-							   {
-								   return &wrapper.get() == &aGameObject; // Compare addresses
-							   });
-	if (itCurr == currObjects.end())
+		EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjects();
+	auto currObjectsIt = std::find(currObjects.begin(), currObjects.end(), &aGameObject);
+	if (currObjectsIt == currObjects.end())
 	{
 		return; // aGameObject is not in currObjects, so return early
 	}
@@ -127,7 +123,7 @@ void UpdateQueue::updateAdditions()
 void UpdateQueue::updateRemovals()
 {
 	for (GameObject& gameObject :
-		 EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjectsToBeRemoved())
+		 EngineBravo::getInstance().getSceneManager().getCurrentScene().getGameObjectsToBeRemoved())
 	{
 		// Scene manager: does not use a list of game objects
 		// Render system

@@ -226,7 +226,7 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	std::cout << "Player instantiated with network object ID: " << networkObjects[0].get().getNetworkObjectID()
 			  << std::endl;
 	networkObjects[0].get().setPlayer(true); // Mark as player
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
 	return player;
 }
 
@@ -241,7 +241,7 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
 		if (networkObject.getClientGUID() == playerID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&object.get());
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&object.get());
 			return;
 		}
 	}

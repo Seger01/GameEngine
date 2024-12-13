@@ -25,13 +25,13 @@ void UIManager::handleMouseDownEvent(const Event& aEvent) { mMouseDownEventQueue
 
 void UIManager::handleMouseUpEvent(const Event& aEvent) { mMouseUpEventQueue.push_back(aEvent); }
 
-void UIManager::update(Scene* aScene)
+void UIManager::update(const Scene& aScene)
 {
 	for (GameObject& gameObject : mObjects)
 	{
 		Button& button = dynamic_cast<Button&>(gameObject);
 
-		Camera* currentCamera = aScene->getCameraWithTag("MainCamera");
+		Camera* currentCamera = aScene.getCameraWithTag("MainCamera");
 
 		for (Event event : mMouseDownEventQueue)
 		{

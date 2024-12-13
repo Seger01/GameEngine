@@ -59,6 +59,8 @@ void EngineBravo::run()
 
 	mRenderSystem.getWindow().showWindow();
 
+	mSceneManager.update();
+
 	while (mRunning)
 	{
 		Time::update();
@@ -78,7 +80,7 @@ void EngineBravo::run()
 		mPhysicsManager.updatePhysicsEngine();
 
 		mParticleSystem.update();
-		mRenderSystem.render(*mSceneManager.getCurrentScene());
+		mRenderSystem.render(mSceneManager.getCurrentScene());
 
 		mNetworkManager.update();
 
@@ -149,54 +151,41 @@ Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts()
 {
-	Scene* currentScene = mSceneManager.getCurrentScene();
-	if (currentScene == nullptr)
-	{
-		std::cout << "retrieved scene is nullptr" << std::endl;
-	}
+	Scene& currentScene = mSceneManager.getCurrentScene();
 
-	if (currentScene)
+	auto gameObjects = currentScene.getGameObjects();
+	for (auto& gameObject : gameObjects)
 	{
-		auto gameObjects = currentScene->getGameObjects();
-		for (auto& gameObject : gameObjects)
+		if (!gameObject.get().isActive())
 		{
-			if (!gameObject.get().isActive())
+			continue;
+		}
+		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		{
+			if (behaviourScript.get().hasScriptStarted())
 			{
 				continue;
 			}
-			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
-			{
-				if (behaviourScript.get().hasScriptStarted())
-				{
-					continue;
-				}
-				behaviourScript.get().onStart();
-				behaviourScript.get().setScriptStarted(true);
-			}
+			behaviourScript.get().onStart();
+			behaviourScript.get().setScriptStarted(true);
 		}
 	}
 }
 
 void EngineBravo::runBehaviourScripts()
 {
-	Scene* currentScene = mSceneManager.getCurrentScene();
-	if (currentScene == nullptr)
-	{
-		std::cout << "retrieved scene is nullptr" << std::endl;
-	}
+	Scene& currentScene = mSceneManager.getCurrentScene();
 
-	if (currentScene)
+	auto gameObjects = currentScene.getGameObjects();
+	for (auto& gameObject : gameObjects)
 	{
-		for (auto& gameObject : currentScene->getGameObjects())
+		if (!gameObject.get().isActive())
 		{
-			if (!gameObject.get().isActive())
-			{
-				continue;
-			}
-			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
-			{
-				behaviourScript.get().onUpdate();
-			}
+			continue;
+		}
+		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		{
+			behaviourScript.get().onUpdate();
 		}
 	}
 }

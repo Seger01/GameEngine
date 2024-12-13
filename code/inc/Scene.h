@@ -22,7 +22,7 @@ public:
 	GameObject& getGameObject(int id);
 
 	std::vector<Camera*> getCameras() const;
-	Camera* getCameraWithTag(const std::string& tag);
+	Camera* getCameraWithTag(const std::string& tag) const;
 
 	int getID();
 	std::string getName();
