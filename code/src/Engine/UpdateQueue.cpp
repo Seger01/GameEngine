@@ -24,13 +24,14 @@ void UpdateQueue::addToUpdateObjects(GameObject& aGameObject)
 {
 	std::vector<std::reference_wrapper<GameObject>> currObjects =
 		EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
-	const std::reference_wrapper<GameObject> ref(aGameObject);
-	auto iter = std::find(currObjects.begin(), currObjects.end(), ref);
-
-	if (iter == currObjects.end())
+	auto itCurr = std::find_if(currObjects.begin(), currObjects.end(),
+							   [&aGameObject](const std::reference_wrapper<GameObject>& wrapper)
+							   {
+								   return &wrapper.get() == &aGameObject; // Compare addresses
+							   });
+	if (itCurr == currObjects.end())
 	{
-		// Object is not in the scene, do not add it
-		return;
+		return; // aGameObject is not in currObjects, so return early
 	}
 
 	auto it = std::find_if(mUpdateObjects.begin(), mUpdateObjects.end(),
