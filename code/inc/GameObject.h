@@ -79,13 +79,13 @@ public:
 	template <typename T> std::vector<std::reference_wrapper<T>> getComponentsWithTag(const std::string& tag) const
 	{
 		std::vector<std::reference_wrapper<T>> componentsWithTag;
-		for (const T& component : mComponents)
+		for (const std::unique_ptr<Component>& component : mComponents)
 		{
-			if (component.getTag() == tag)
+			if (component->getTag() == tag)
 			{
 				if (T* castedComponent = dynamic_cast<T*>(component.get()))
 				{
-					componentsWithTag.push_back(castedComponent);
+					componentsWithTag.push_back(*castedComponent);
 				}
 			}
 		}
