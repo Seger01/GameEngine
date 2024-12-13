@@ -19,7 +19,7 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	mIsMoveableByForce = rigidBody->getIsMoveableByForce();
 	mCanRotate = rigidBody->getCanRotate();
 	mDensity = rigidBody->getDensity();
-	mFriction = 5.0f;
+	mFriction = rigidBody->getFriction();
 	mRestitution = rigidBody->getRestitution();
 	mMass = rigidBody->getMass();
 	mGravityScale = rigidBody->getGravityScale();

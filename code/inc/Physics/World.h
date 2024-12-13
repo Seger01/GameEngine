@@ -43,6 +43,11 @@ public:
 	void setGravity(Vector2 aGravity);
 
 	void scaleShape(BodyProxy& aBodyProxy, BodyID aBodyID, float aScale);
+	void setLinearVelocity(Vector2 aVelocity, BodyID aBodyID);
+	Vector2 getLinearVelocity(BodyID aBodyID);
+
+	float getAngularVelocity(BodyID aBodyID);
+	void setAngularVelocity(float aVelocity, BodyID aBodyID);
 
 	Vector2 getPosition(BodyID aBodyID);
 	std::vector<float> getShapeWidths(BodyProxy& aBodyProxy, BodyID aBodyID);
