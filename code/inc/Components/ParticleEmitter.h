@@ -30,8 +30,9 @@ class ParticleEmitter : public Component
 {
 public:
 	ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs,
-					Vector2 aSize, Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
-					std::vector<Color> aColorGradient, std::string aTag = "defaultParticleEmitter");
+					Vector2 aSize, Vector2 aEndSize, std::vector<Color> aColorGradient, float aRotation = 0.0f,
+					float angularVelocity = 0.0f, float angularAcceleration = 0.0f,
+					std::string aTag = "defaultParticleEmitter");
 
 	~ParticleEmitter();
 

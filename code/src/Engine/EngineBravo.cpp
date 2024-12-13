@@ -75,7 +75,10 @@ void EngineBravo::run()
 
 		mUpdateQueue.updateAdditions();
 
-		mPhysicsManager.updatePhysicsEngine();
+		{
+
+			mPhysicsManager.updatePhysicsEngine();
+		}
 
 		mParticleSystem.update();
 		mRenderSystem.render(*mSceneManager.getCurrentScene());

@@ -153,6 +153,8 @@ Transform GameObject::getTransform() const
 	return mTransform;
 }
 
+Transform& GameObject::getTransformRef() { return mTransform; }
+
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
 
 void GameObject::setParent(GameObject* parent)

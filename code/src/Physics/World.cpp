@@ -177,7 +177,7 @@ void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 	rot.s = sin(radians);
 	rot.c = cos(radians);
 
-	// b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
+	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
 Vector2 World::getPosition(BodyID aBodyID)
