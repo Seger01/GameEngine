@@ -1,62 +1,80 @@
+/**
+ * @file Sprite.h
+ * @brief Sprite class header file.
+ */
+
 #pragma once
 
 #include <string>
 
+#include "Color.h"
 #include "Component.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"
 
-class Sprite : public Component {
+/**
+ * @class Sprite
+ * @brief Sprite class, used to render textures.
+ */
+class Sprite : public Component
+{
 public:
-    Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect());
-    ~Sprite();
+	Sprite(const Texture& aTexture, int aWidth, int aHeight, const Rect& aSourceRect = Rect(),
+		   const std::string& aTag = "defaultSprite");
+	~Sprite();
 
-    // Rule of Five
-    Sprite(const Sprite& other);                // Copy constructor
-    Sprite& operator=(const Sprite& other);     // Copy assignment operator
-    Sprite(Sprite&& other) noexcept;            // Move constructor
-    Sprite& operator=(Sprite&& other) noexcept; // Move assignment operator
+	// Rule of Five
+	Sprite(const Sprite& other);				// Copy constructor
+	Sprite& operator=(const Sprite& other);		// Copy assignment operator
+	Sprite(Sprite&& other) noexcept;			// Move constructor
+	Sprite& operator=(Sprite&& other) noexcept; // Move assignment operator
 
-    // Override the clone method
-    std::unique_ptr<Component> clone() const override;
+	// Override the clone method
+	std::unique_ptr<Component> clone() const override;
 
-    Texture* getTexture();
+	const Texture& getTexture() const;
 
-    Transform getRelativePosition();
-    void setRelativePosition(Transform aNewTransform);
+	Transform getRelativePosition() const;
+	void setRelativePosition(const Transform& aNewTransform);
 
-    Rect getSource();
-    void setSource(Rect aSourceRect);
+	const Rect& getSource() const;
+	void setSource(const Rect& aSourceRect);
 
-    void setFlipX(bool state) { mFlipX = state; }
-    bool getFlipX() { return mFlipX; }
+	Color getColorFilter() const;
+	void setColorFilter(Color aColor);
 
-    void setFlipY(bool state) { mFlipY = state; }
-    bool getFlipY() { return mFlipY; }
+	void setFlipX(bool state) { mFlipX = state; }
 
-    void setWidth(int aWidth) { mWidth = aWidth; }
-    int getWidth() { return mWidth; }
+	bool getFlipX() const { return mFlipX; }
 
-    void setHeight(int aHeight) { mHeight = aHeight; }
-    int getHeight() { return mHeight; }
+	void setFlipY(bool state) { mFlipY = state; }
 
-    void setLayer(int aLayer) { mLayer = aLayer; }
-    int getLayer() { return mLayer; }
+	bool getFlipY() const { return mFlipY; }
+
+	void setWidth(int aWidth) { mWidth = aWidth; }
+
+	int getWidth() const { return mWidth; }
+
+	void setHeight(int aHeight) { mHeight = aHeight; }
+
+	int getHeight() const { return mHeight; }
+
+	void setLayer(int aLayer) { mLayer = aLayer; }
+
+	int getLayer() { return mLayer; }
 
 private:
-    Texture* mTexture = nullptr;
-    Transform mTransform;
+	Transform mTransform; // Relative position to the parent GameObject
 
-    Rect mSourceRect;
+	const Texture& mTexture; // Pointer to the texture
+	Rect mSourceRect;		 // Source rectangle of the texture
+	Color mColorFilter;		 // Color filter of the sprite
 
-    std::string mSprite;
-    float mWidth = 0;
-    float mHeight = 0;
-    //??? mColor;
-    //??? mColor;
-    bool mFlipX;
-    bool mFlipY;
+	float mWidth = 0;  // Width of the sprite
+	float mHeight = 0; // Height of the sprite
+	bool mFlipX;	   // Whether the sprite should flip horizontally
+	bool mFlipY;	   // Whether the sprite should flip vertically
 
-    int mLayer = 0;
+	int mLayer = 0; // Layer of the sprite
 };

@@ -26,13 +26,7 @@ protected:
         scene->addGameObject(gameObject);
     }
 
-    void TearDown() override {
-        // delete particleSystem;
-        // delete scene;
-        // delete gameObject;
-        EngineBravo::getInstance().getSceneManager().removeScene("Particle System Test Scene");
-        // ParticleEmitter cleanup is managed by GameObject's destructor
-    }
+    void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("Particle System Test Scene"); }
 };
 
 TEST_F(ParticleSystemTest, Update_ActiveGameObjectAndEmitter) {
@@ -41,7 +35,7 @@ TEST_F(ParticleSystemTest, Update_ActiveGameObjectAndEmitter) {
     emitter->setActive(true);
 
     // Call update and verify emitter's update method is invoked
-    EXPECT_NO_THROW(particleSystem->update(scene));
+    EXPECT_NO_THROW(particleSystem->update());
 }
 
 TEST_F(ParticleSystemTest, Update_InactiveGameObject) {
@@ -49,7 +43,7 @@ TEST_F(ParticleSystemTest, Update_InactiveGameObject) {
     gameObject->setActive(false);
 
     // Update ParticleSystem - emitter update should not be called
-    EXPECT_NO_THROW(particleSystem->update(scene));
+    EXPECT_NO_THROW(particleSystem->update());
 }
 
 TEST_F(ParticleSystemTest, Update_InactiveEmitter) {
@@ -58,7 +52,7 @@ TEST_F(ParticleSystemTest, Update_InactiveEmitter) {
     emitter->setActive(false);
 
     // Update ParticleSystem - inactive emitter should not be updated
-    EXPECT_NO_THROW(particleSystem->update(scene));
+    EXPECT_NO_THROW(particleSystem->update());
 }
 
 TEST_F(ParticleSystemTest, Update_MultipleEmitters) {
@@ -73,7 +67,7 @@ TEST_F(ParticleSystemTest, Update_MultipleEmitters) {
     additionalEmitter->setActive(true);
 
     // Update ParticleSystem
-    EXPECT_NO_THROW(particleSystem->update(scene));
+    EXPECT_NO_THROW(particleSystem->update());
 }
 
 TEST_F(ParticleSystemTest, Update_NoEmitters) {
@@ -82,5 +76,5 @@ TEST_F(ParticleSystemTest, Update_NoEmitters) {
     gameObject->removeComponent(emitterComponent);
 
     // Update ParticleSystem - should handle gracefully with no emitters
-    EXPECT_NO_THROW(particleSystem->update(scene));
+    EXPECT_NO_THROW(particleSystem->update());
 }

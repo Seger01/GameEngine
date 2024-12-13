@@ -1,3 +1,8 @@
+/**
+ * @file ParticleEmitter.h
+ * @brief ParticleEmitter class header file.
+ */
+
 #ifndef PARTICLEEMITTER_H
 #define PARTICLEEMITTER_H
 
@@ -6,68 +11,79 @@
 #include "Component.h"
 #include "Particle.h"
 
-enum EmitterMode {
-    Continuous,
-    Burst,
+/**
+ * @class ParticleEmitter
+ * @brief Class for emitting particles.
+ */
+enum EmitterMode
+{
+	Continuous,
+	Burst,
 };
 
-class ParticleEmitter : public Component {
+/**
+ * @class ParticleEmitter
+ * @brief Class for emitting particles.
+ */
+
+class ParticleEmitter : public Component
+{
 public:
-    ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs,
-                    Vector2 aSize, Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
-                    std::vector<Color> aColorGradient);
+	ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs, int aMaxLifeTimeMs,
+					Vector2 aSize, Vector2 aEndSize, float aRotation, float angularVelocity, float angularAcceleration,
+					std::vector<Color> aColorGradient, std::string aTag = "defaultParticleEmitter");
 
-    ~ParticleEmitter();
+	~ParticleEmitter();
 
-    std::unique_ptr<Component> clone() const override;
+	std::unique_ptr<Component> clone() const override;
 
-    void update();
+	void update();
 
-    void burst(int aAmount);
+	void burst(int aAmount);
 
-    void setRelativeTransform(Transform aTransform);
-    Transform& getRelativeTransform();
+	void setRelativeTransform(Transform aTransform);
+	Transform& getRelativeTransform();
 
-    void setParticlesPerSecond(int aParticlesPerSecond);
-    void setAngle(int aMinAngle, int aMaxAngle);
+	void setParticlesPerSecond(int aParticlesPerSecond);
+	void setAngle(int aMinAngle, int aMaxAngle);
 
-    int getMinAngle();
-    int getMaxAngle();
+	int getMinAngle();
+	int getMaxAngle();
 
-    std::vector<Particle>& getParticles();
+	std::vector<Particle>& getParticles();
 
-    void setLayer(int aLayer);
-    int getLayer();
-
-private:
-    void spawnParticle();
-
-    Vector2 generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle);
+	void setLayer(int aLayer);
+	int getLayer();
 
 private:
-    Transform mRelativeTransform;
+	void spawnParticle();
 
-    int mParticlesPerSecond;
-    std::vector<Particle> mParticles;
+	Vector2 generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle);
 
-    EmitterMode mEmitterMode;
+private:
+	Transform mRelativeTransform; // Relative transform of the particle emitter
 
-    int mMinAngle;
-    int mMaxAngle;
+	int mParticlesPerSecond;		  // Amount of particles to spawn per second
+	std::vector<Particle> mParticles; // Vector of particles
 
-    int mMinLifeTimeMs;
-    int mMaxLifeTimeMs;
+	EmitterMode mEmitterMode; // Mode of the emitter
 
-    float mVelocity;
-    float mAcceleration;
-    Vector2 mSize;
-    Vector2 mEndSize;
-    float mRotation;
-    float mAngularVelocity;
-    float mAngularAcceleration;
-    std::vector<Color> mColorGradient;
+	int mMinAngle; // Min angle of the particles
+	int mMaxAngle; // Max angle of the particles
 
-    int mLayer = 0;
+	int mMinLifeTimeMs; // Min lifetime of the particles
+	int mMaxLifeTimeMs; // Max lifetime of the particles
+
+	float mVelocity;				   // Velocity of the particles
+	float mAcceleration;			   // Acceleration of the particles
+	Vector2 mSize;					   // Size of the particles
+	Vector2 mEndSize;				   // End size of the particles
+	float mRotation;				   // Rotation of the particles
+	float mAngularVelocity;			   // Angular velocity of the particles
+	float mAngularAcceleration;		   // Angular acceleration of the particles
+	std::vector<Color> mColorGradient; // Color gradient of the particles
+
+	int mLayer = 0; // Layer of the particles
 };
 
 #endif // PARTICLEEMITTER_H

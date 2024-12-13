@@ -1,0 +1,24 @@
+Minutes 09-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Fixing multiplayer issues with custom network packets.
+- Angel: Finished circle collider functionality.
+- Ronan: Finish up demo work.
+- Sean: Fixing multiplayer issues with custom network packets.
+- Seger: Camera: letterbox functionality, updating ui to work with letterboxing. Code standard for render system.
+
+What is going to be done:
+- Siem: Add Doxygen target. Multiplayer demo: add enemies.
+- Angel: Physics scaling, fixing collider rotation.
+- Ronan: Demo: work on physics and particle rooms.
+- Sean: Update code to follow code standard, update design
+- Seger: Add doxygen to render system. Add camera shake.
+
+Roadblocks:
+- Siem:
+- Angel: -
+- Ronan: Issues with physics scaling.
+- Sean: -
+- Seger: -
