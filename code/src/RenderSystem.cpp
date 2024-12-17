@@ -52,30 +52,35 @@ Point RenderSystem::getAspectRatio() const { return mAspectRatio; }
 void RenderSystem::renderSprite(const Camera& aCurrentCamera, const GameObject& aGameObject, const Sprite& aSprite,
 								const Rect& aScreenViewPort) const
 {
+	Vector2 objectScale = (aGameObject.getTransform().scale * aSprite.getRelativePosition().scale);
 	Vector2 texturePosition = aGameObject.getTransform().position + aSprite.getRelativePosition().position;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
 	Vector2 drawPosition = texturePosition - cameraOrigin;
 
-	Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
-					   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
+	{ // some basic culling
+		Rect cameraRect = {static_cast<int>(cameraOrigin.x), static_cast<int>(cameraOrigin.y),
+						   static_cast<int>(aCurrentCamera.getWidth()), static_cast<int>(aCurrentCamera.getHeight())};
 
-	Rect spriteRect = {static_cast<int>(texturePosition.x), static_cast<int>(texturePosition.y), aSprite.getWidth(),
-					   aSprite.getHeight()};
+		Rect spriteRect = {static_cast<int>(texturePosition.x), static_cast<int>(texturePosition.y),
+						   static_cast<int>(aSprite.getWidth()), static_cast<int>(aSprite.getHeight())};
 
-	Point rotationalCenter = {static_cast<int>(-aSprite.getRelativePosition().position.x),
-							  static_cast<int>(-aSprite.getRelativePosition().position.y)};
-
-	if (!cameraRect.intersects(spriteRect))
-	{
-		return;
+		if (!cameraRect.intersects(spriteRect))
+		{
+			return;
+		}
 	}
 
 	// Adjust draw position and size to the viewport
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
-	int spriteWidth = std::round(aSprite.getWidth() * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
-	int spriteHeight = std::round(aSprite.getHeight() * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+	int spriteWidth =
+		std::round((aSprite.getWidth() * objectScale.x) * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int spriteHeight =
+		std::round((aSprite.getHeight() * objectScale.y) * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+
+	Point rotationalCenter = {static_cast<int>(-aSprite.getRelativePosition().position.x * objectScale.x),
+							  static_cast<int>(-aSprite.getRelativePosition().position.y * objectScale.y)};
 
 	rotationalCenter.x = std::round(rotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	rotationalCenter.y = std::round(rotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
