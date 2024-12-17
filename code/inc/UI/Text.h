@@ -36,7 +36,6 @@ private:
 	std::string mFont;
 	Color mColor;
 	Vector2 mScale;
-	//??? mAlignment;
 };
 
 #endif // TEXT_H
