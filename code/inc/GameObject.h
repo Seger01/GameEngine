@@ -27,16 +27,16 @@ public:
 	void removeComponent(Component* component);
 
 	void setID(int id);
-	int getID();
+	int getID() const;
 
 	void setName(const std::string& name);
-	std::string getName();
+	std::string getName() const;
 
 	void setTag(const std::string& tag);
 	std::string getTag() const;
 
 	void setActive(bool isActive);
-	bool isActive();
+	bool isActive() const;
 
 	Transform getTransform() const;
 	Transform& getTransformRef();
@@ -48,7 +48,7 @@ public:
 
 	void addChild(GameObject& child);
 	void removeChild(GameObject& child);
-	std::vector<std::reference_wrapper<GameObject>> getChildren();
+	std::vector<std::reference_wrapper<GameObject>> getChildren() const;
 
 	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& tag) const;
 
@@ -95,11 +95,11 @@ public:
 	}
 
 	// Templated addComponent function
-	template <typename T, typename... Args> T* addComponent(Args&&... args)
+	template <typename T, typename... Args> T& addComponent(Args&&... args)
 	{
 		T* rawPtr = new T(std::forward<Args>(args)...);
 		addComponent(rawPtr);
-		return rawPtr;
+		return *rawPtr;
 	}
 
 protected:

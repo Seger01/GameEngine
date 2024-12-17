@@ -13,12 +13,12 @@ GameObject::~GameObject()
 {
 	if (mParent)
 	{
-		mParent->removeChild(this);
+		mParent->removeChild(*this);
 	}
 
-	for (auto child : mChildren)
+	for (GameObject& child : mChildren)
 	{
-		child->setParent(nullptr);
+		child.removeParent();
 	}
 	mChildren.clear();
 
@@ -100,12 +100,9 @@ GameObject& GameObject::operator=(GameObject&& other) noexcept
 
 void GameObject::addComponent(Component* aComponent)
 {
-	if (aComponent)
-	{
-		aComponent->setGameObjectParent(this);
-		mComponents.push_back(std::unique_ptr<Component>(aComponent));
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
-	}
+	aComponent->setGameObjectParent(this);
+	mComponents.push_back(std::unique_ptr<Component>(aComponent));
+	EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*this);
 }
 
 void GameObject::removeComponent(Component* component)
@@ -121,11 +118,11 @@ void GameObject::removeComponent(Component* component)
 
 void GameObject::setID(int id) { mID = id; }
 
-int GameObject::getID() { return mID; }
+int GameObject::getID() const { return mID; }
 
 void GameObject::setName(const std::string& name) { mName = name; }
 
-std::string GameObject::getName() { return mName; }
+std::string GameObject::getName() const { return mName; }
 
 void GameObject::setTag(const std::string& tag) { mTag = tag; }
 
@@ -137,13 +134,13 @@ std::string GameObject::getTag() const { return mTag; }
 void GameObject::setActive(bool isActive)
 {
 	mIsActive = isActive;
-	for (auto child : mChildren)
+	for (GameObject& child : mChildren)
 	{
-		child->setActive(isActive);
+		child.setActive(isActive);
 	}
 }
 
-bool GameObject::isActive() { return mIsActive; }
+bool GameObject::isActive() const { return mIsActive; }
 
 Transform GameObject::getTransform() const
 {
@@ -164,34 +161,40 @@ Transform& GameObject::getTransformRef() { return mTransform; }
 
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
 
-void GameObject::setParent(GameObject* parent)
+void GameObject::setParent(GameObject& parent)
 {
 	if (mParent)
 	{
-		mParent->removeChild(this);
+		mParent->removeChild(*this);
 	}
-	if (parent)
-	{
-		mParent = parent;
-		mParent->addChild(this);
-	}
-	return;
+	mParent = &parent;
+	mParent->addChild(*this);
 }
 
-GameObject* GameObject::getParent() { return mParent; }
+void GameObject::removeParent() { mParent = nullptr; }
 
-void GameObject::addChild(GameObject* child) { mChildren.push_back(child); }
-
-void GameObject::removeChild(GameObject* child)
+GameObject& GameObject::getParent()
 {
-	auto it = std::remove(mChildren.begin(), mChildren.end(), child);
+	if (mParent == nullptr)
+	{
+		throw std::runtime_error("Parent is null");
+	}
+	return *mParent;
+}
+
+void GameObject::addChild(GameObject& child) { mChildren.push_back(child); }
+
+void GameObject::removeChild(GameObject& child)
+{
+	auto it = std::remove_if(mChildren.begin(), mChildren.end(),
+							 [&child](std::reference_wrapper<GameObject>& ref) { return &ref.get() == &child; });
 	if (it != mChildren.end())
 	{
 		mChildren.erase(it, mChildren.end());
 	}
 }
 
-std::vector<GameObject*> GameObject::getChildren() { return mChildren; }
+std::vector<std::reference_wrapper<GameObject>> GameObject::getChildren() const { return mChildren; }
 
 std::vector<std::reference_wrapper<Component>> GameObject::getComponentsWithTag(const std::string& tag) const
 {
