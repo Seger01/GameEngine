@@ -1,3 +1,7 @@
+/**
+ * @file MapToGraph.h
+ * @brief This file contains the declaration of the MapToGraph class
+ */
 #pragma once
 
 #include "TileMapParser.h"
@@ -34,7 +38,12 @@ private:
 	void addEdge(int aFrom, int aTo);
 
 private:
+	/// @brief The tilemap data.
 	const TileMapData& mTileMapData;
+
+	/// @brief The adjacency list representing the graph.
 	std::unordered_map<int, std::vector<int>> mAdjacencyList;
+
+	/// @brief The directions to in which nodes can be connected.
 	const std::vector<std::pair<int, int>> mDirections;
 };

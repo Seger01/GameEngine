@@ -38,7 +38,7 @@ public:
 
 	void renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation, const int aWidth,
 					   const int aHeight, const bool aFlipX, const bool aFlipY, const float aRotation,
-					   const Color& aColor) const;
+					   const Color& aColor, const Point& aRotationalCenter = {0, 0}) const;
 
 	void renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
 					  const Color& aColor, const bool aFill, const Point& aRotationalCenter = {0, 0}) const;

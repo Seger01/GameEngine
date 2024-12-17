@@ -23,7 +23,7 @@ void ParticleSystem::update()
 		{
 			for (auto particleEmitter : gameObject.getComponents<ParticleEmitter>())
 			{
-				particleEmitter->update();
+				particleEmitter.get().update();
 			}
 		}
 	}

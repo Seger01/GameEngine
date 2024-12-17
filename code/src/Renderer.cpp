@@ -86,7 +86,7 @@ Renderer::~Renderer()
 
 void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation,
 							 const int aWidth, const int aHeight, const bool aFlipX, const bool aFlipY,
-							 const float aRotation, const Color& aColor) const
+							 const float aRotation, const Color& aColor, const Point& aRotationalCenter) const
 {
 	// Get the SDL_Texture from the Texture class
 	SDL_Texture* sdlTexture = aTexture.getSDLTexture();
@@ -126,7 +126,7 @@ void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, c
 		flip = SDL_FLIP_VERTICAL;
 	}
 
-	SDL_Point center = {0, 0}; // Rotation center
+	SDL_Point center = {aRotationalCenter.x, aRotationalCenter.y}; // Rotation center
 
 	// Render the texture with flipping and rotation
 	SDL_RenderCopyEx(mRenderer,		   // The renderer associated with the texture

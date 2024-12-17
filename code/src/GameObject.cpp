@@ -1,5 +1,6 @@
 #include "GameObject.h"
 
+#include <functional>
 #include <iostream>
 #include <memory>
 
@@ -20,6 +21,8 @@ GameObject::~GameObject()
 		child->setParent(nullptr);
 	}
 	mChildren.clear();
+
+	mComponents.resize(0);
 }
 
 // Copy constructor
@@ -126,7 +129,7 @@ std::string GameObject::getName() { return mName; }
 
 void GameObject::setTag(const std::string& tag) { mTag = tag; }
 
-std::string GameObject::getTag() { return mTag; }
+std::string GameObject::getTag() const { return mTag; }
 
 /**
  * @brief Sets the active state of the GameObject and all its children.
@@ -146,10 +149,18 @@ Transform GameObject::getTransform() const
 {
 	if (mParent)
 	{
-		return mParent->getTransform() + mTransform;
+		Transform parentTransform = mParent->getTransform();
+
+		parentTransform.position += mTransform.position;
+		parentTransform.rotation += mTransform.rotation;
+		parentTransform.scale = parentTransform.scale * mTransform.scale;
+
+		return parentTransform;
 	}
 	return mTransform;
 }
+
+Transform& GameObject::getTransformRef() { return mTransform; }
 
 void GameObject::setTransform(Transform aNewTransform) { mTransform = aNewTransform; }
 
@@ -182,14 +193,14 @@ void GameObject::removeChild(GameObject* child)
 
 std::vector<GameObject*> GameObject::getChildren() { return mChildren; }
 
-std::vector<Component*> GameObject::getComponentsWithTag(const std::string& tag) const
+std::vector<std::reference_wrapper<Component>> GameObject::getComponentsWithTag(const std::string& tag) const
 {
-	std::vector<Component*> componentsWithTag;
+	std::vector<std::reference_wrapper<Component>> componentsWithTag;
 	for (const auto& component : mComponents)
 	{
 		if (component->getTag() == tag)
 		{
-			componentsWithTag.push_back(component.get());
+			componentsWithTag.push_back(*component);
 		}
 	}
 	return componentsWithTag;

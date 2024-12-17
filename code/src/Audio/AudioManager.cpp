@@ -100,11 +100,11 @@ void AudioManager::wake()
 	for (GameObject& gameObject : mObjects)
 	{
 		// Iterate through all audio sources in the object
-		for (AudioSource* component : gameObject.getComponents<AudioSource>())
+		for (AudioSource& component : gameObject.getComponents<AudioSource>())
 		{
-			if (component->getPlayOnWake())
+			if (component.getPlayOnWake())
 			{
-				play(*component);
+				play(component);
 			}
 		}
 	}
@@ -151,7 +151,7 @@ void AudioManager::addObject(GameObject& aObject)
 	}
 }
 
-/**
+/*
  * @brief Remove a game object from the list of objects that have audio sources. If the object is not in the list,
  * nothing is done.
  *
@@ -159,9 +159,8 @@ void AudioManager::addObject(GameObject& aObject)
  */
 void AudioManager::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
