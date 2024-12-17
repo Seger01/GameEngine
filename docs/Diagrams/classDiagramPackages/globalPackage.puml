@@ -56,11 +56,13 @@ class Color{
 }
 
 class FSConverter {
-    + FSConverter(string) : FSConverter
-    + getResourcePath(const std::string& resourceName, bool aCheckExists = false) : string
-    - findResourcesFolder() : string
-    - executablePath() : string
-    - resourceDir : string
+    + FSConverter(std::string aResourceDir = "") : FSConverter
+    + getResourcePath(const std::string& aResourceName, bool aCheckExists = false) const : std::string
+
+    - findResourcesFolder() const : std::string
+    - executablePath() const : std::string
+    - mResourceDir : std::string
+    - mCachedResourceDir : static std::string
 }
 }
 @enduml
