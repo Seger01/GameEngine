@@ -1,5 +1,9 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+/**
+ * @file GameObject.h
+ *
+ * @brief Contains the defintionn of the GameObject class.
+ */
+#pragma once
 
 #include "Component.h"
 #include "Transform.h"
@@ -11,6 +15,12 @@
 #include <typeinfo>
 #include <vector>
 
+/**
+ * @class GameObject
+ *
+ * @brief Represents a game object in the game world. Is the base of everything that should be seen or heard in the
+ * game.
+ */
 class GameObject
 {
 public:
@@ -53,6 +63,13 @@ public:
 	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& tag) const;
 
 	// Templated functions
+	/**
+	 * @brief Checks if the GameObject has a component of type T.
+	 *
+	 * @tparam T The type of the component to check for.
+	 *
+	 * @return True if the GameObject has a component of type T, false otherwise.
+	 */
 	template <typename T> bool hasComponent() const
 	{
 		for (const std::unique_ptr<Component>& component : mComponents)
@@ -65,6 +82,13 @@ public:
 		return false;
 	}
 
+	/**
+	 * @brief Gets the components of type T from the GameObject.
+	 *
+	 * @tparam T The type of the component to get.
+	 *
+	 * @return A vector of references to the components of type T.
+	 */
 	template <typename T> std::vector<std::reference_wrapper<T>> getComponents() const
 	{
 		std::vector<std::reference_wrapper<T>> componentsOfType;
@@ -78,6 +102,14 @@ public:
 		return componentsOfType;
 	}
 
+	/**
+	 * @brief Gets all components with a specific tag.
+	 *
+	 * @tparam T The type of the component to get.
+	 * @param tag The tag to search for.
+	 *
+	 * @return A vector of references to the components with the specified tag.
+	 */
 	template <typename T> std::vector<std::reference_wrapper<T>> getComponentsWithTag(const std::string& tag) const
 	{
 		std::vector<std::reference_wrapper<T>> componentsWithTag;
@@ -94,7 +126,14 @@ public:
 		return componentsWithTag;
 	}
 
-	// Templated addComponent function
+	/**
+	 * @brief Adds a component of type T to the GameObject.
+	 *
+	 * @tparam T The type of the component to add.
+	 * @param args The arguments to pass to the constructor of the component.
+	 *
+	 * @return A reference to the added component.
+	 */
 	template <typename T, typename... Args> T& addComponent(Args&&... args)
 	{
 		T* rawPtr = new T(std::forward<Args>(args)...);
@@ -103,16 +142,23 @@ public:
 	}
 
 protected:
+	/// @brief The parent of the GameObject. Nullptr if there is no parent. Not posessive.
 	GameObject* mParent;
+	/// @brief The children of the GameObject.
 	std::vector<std::reference_wrapper<GameObject>> mChildren;
 
+	/// @brief The components of the GameObject. Possessive.
 	std::vector<std::unique_ptr<Component>> mComponents;
+	/// @brief The transform of the GameObject. Is not part of the mComponents vector, because it is a mandatory
+	/// component.
 	Transform mTransform;
 
+	/// @brief The ID of the GameObject.
 	int mID;
+	/// @brief The name of the GameObject.
 	std::string mName;
+	/// @brief The tag of the GameObject.
 	std::string mTag;
+	/// @brief The active state of the GameObject. When the GameObject is not active, it is not used in any way.
 	bool mIsActive;
 };
-
-#endif
