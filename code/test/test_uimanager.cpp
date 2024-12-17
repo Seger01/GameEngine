@@ -26,7 +26,7 @@ class UIManagerTest : public ::testing::Test
 {
 protected:
 	UIManager* mUIManager;
-	Scene* mScene;
+	Scene& mScene{EngineBravo::getInstance().getSceneManager().createScene("UI Test Scene", 2)};
 	EventManager* mEventManager;
 
 	void SetUp() override
@@ -36,15 +36,14 @@ protected:
 		mEventManager = &engineBravo.getEventManager();
 		mUIManager->init();
 
-		mScene = engineBravo.getSceneManager().createScene("UI Test Scene", 2);
-		ASSERT_NE(mScene, nullptr);
+		// /mScene = engineBravo.getSceneManager().createScene("UI Test Scene", 2);
 
 		// int cameraID = mScene->addCamera();
 		// mScene->setActiveCamera(cameraID);
 		Camera* camera = new Camera();
 		camera->setTag("MainCamera");
 
-		mScene->addGameObject(camera);
+		mScene.addGameObject(camera);
 	}
 
 	void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("UI Test Scene"); }
@@ -75,7 +74,7 @@ TEST_F(UIManagerTest, Update_InteractsWithButton)
 	button->addComponent<MockButtonBehaviourScript>();
 	MockButtonBehaviourScript& buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
 
-	mScene->addGameObject(button);
+	mScene.addGameObject(button);
 
 	// Create a mouse click event within button bounds
 	Event mouseClickEvent{EventType::MouseButtonDown, {500, 360}};
@@ -100,7 +99,7 @@ TEST_F(UIManagerTest, Update_OutsideButtonBounds_NoInteraction)
 	button->addComponent<MockButtonBehaviourScript>();
 	MockButtonBehaviourScript& buttonBehaviour = button->getComponents<MockButtonBehaviourScript>()[0];
 
-	mScene->addGameObject(button);
+	mScene.addGameObject(button);
 
 	// Create a mouse click event outside button bounds
 	Event mouseClickEvent{EventType::MouseButtonDown, {100, 150}};

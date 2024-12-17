@@ -47,18 +47,18 @@ TEST_F(PhysicsTest, BodyProxy)
 	std::vector<std::reference_wrapper<GameObject>> gameObjects;
 	GameObject* gameObject = new GameObject();
 	gameObject->addComponent<RigidBody>();
-	RigidBody* rigidBody = gameObject->getComponents<RigidBody>()[0];
+	RigidBody& rigidBody = gameObject->getComponents<RigidBody>()[0].get();
 
-	rigidBody->setCanRotate(false);
-	rigidBody->setHasGravity(false);
-	rigidBody->setIsMoveableByForce(true);
-	rigidBody->setDensity(1.0f);
-	rigidBody->setFriction(0.6f);
-	rigidBody->setRestitution(0.0f);
-	rigidBody->setGravityScale(0.0f);
-	rigidBody->setMass(5.0f);
-	rigidBody->setLinearDamping(0.5f);
-	rigidBody->setAngularDamping(0.5f);
+	rigidBody.setCanRotate(false);
+	rigidBody.setHasGravity(false);
+	rigidBody.setIsMoveableByForce(true);
+	rigidBody.setDensity(1.0f);
+	rigidBody.setFriction(0.6f);
+	rigidBody.setRestitution(0.0f);
+	rigidBody.setGravityScale(0.0f);
+	rigidBody.setMass(5.0f);
+	rigidBody.setLinearDamping(0.5f);
+	rigidBody.setAngularDamping(0.5f);
 
 	Transform transform;
 	transform.position = {0.0f, 0.0f};
@@ -119,30 +119,30 @@ TEST_F(PhysicsTest, updateloop)
 	gameObject->addComponent<CircleCollider>();
 
 	// set values for rigidbody
-	RigidBody* rigidBody = gameObject->getComponents<RigidBody>().at(0);
-	rigidBody->setIsMoveableByForce(true);
-	rigidBody->setDensity(1.0f);
-	rigidBody->setFriction(0.6f);
-	rigidBody->setRestitution(0.0f);
+	RigidBody& rigidBody = gameObject->getComponents<RigidBody>().at(0).get();
+	rigidBody.setIsMoveableByForce(true);
+	rigidBody.setDensity(1.0f);
+	rigidBody.setFriction(0.6f);
+	rigidBody.setRestitution(0.0f);
 
-	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setWidth(10);
-	boxCollider->setHeight(10);
+	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0].get();
+	boxCollider.setWidth(10);
+	boxCollider.setHeight(10);
 
-	CircleCollider* circleCollider = gameObject->getComponents<CircleCollider>()[0];
-	circleCollider->setRadius(10);
+	CircleCollider& circleCollider = gameObject->getComponents<CircleCollider>()[0].get();
+	circleCollider.setRadius(10);
 
-	ASSERT_EQ(rigidBody->getBodyId().bodyID, -1);
+	ASSERT_EQ(rigidBody.getBodyId().bodyID, -1);
 
 	mPhysicsEngine.addObject(*gameObject);
 
 	mPhysicsEngine.update();
 
 	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
-	RigidBody* tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
+	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0).get();
 
-	std::cout << tempRigidBody->getBodyId().bodyID << std::endl;
-	ASSERT_EQ(rigidBody->getBodyId().bodyID, 1);
+	std::cout << tempRigidBody.getBodyId().bodyID << std::endl;
+	ASSERT_EQ(rigidBody.getBodyId().bodyID, 1);
 }
 
 TEST_F(PhysicsTest, TranslationStep) {}
@@ -157,15 +157,15 @@ TEST_F(PhysicsTest, UpdateFlag)
 	// gameObject->addComponent<CircleCollider>();
 
 	// set values for rigidbody
-	RigidBody* rigidBody = gameObject->getComponents<RigidBody>().at(0);
-	rigidBody->setIsMoveableByForce(true);
-	rigidBody->setDensity(1.0f);
-	rigidBody->setFriction(0.6f);
-	rigidBody->setRestitution(0.0f);
+	RigidBody& rigidBody = gameObject->getComponents<RigidBody>().at(0);
+	rigidBody.setIsMoveableByForce(true);
+	rigidBody.setDensity(1.0f);
+	rigidBody.setFriction(0.6f);
+	rigidBody.setRestitution(0.0f);
 
-	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setWidth(10);
-	boxCollider->setHeight(10);
+	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider.setWidth(10);
+	boxCollider.setHeight(10);
 
 	// CircleCollider* circleCollider = gameObject->getComponents<CircleCollider>()[0];
 	// circleCollider->setRadius(10);
@@ -174,7 +174,7 @@ TEST_F(PhysicsTest, UpdateFlag)
 
 	mPhysicsEngine.update();
 
-	b2BodyId bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody->getBodyId());
+	b2BodyId bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
 	b2ShapeId shapeArray[gameObject->getComponents<BoxCollider>().size()];
 
 	b2Body_GetShapes(bodyID, shapeArray, gameObject->getComponents<BoxCollider>().size());
@@ -186,10 +186,10 @@ TEST_F(PhysicsTest, UpdateFlag)
 
 	// Change filter values
 	boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setCollideCategory(4);
-	boxCollider->setCollideWithCategory({5, 6, 7});
+	boxCollider.setCollideCategory(4);
+	boxCollider.setCollideWithCategory({5, 6, 7});
 	mPhysicsEngine.update();
-	bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody->getBodyId());
+	bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
 	b2ShapeId shapeArray2[gameObject->getComponents<BoxCollider>().size()];
 	b2Body_GetShapes(bodyID, shapeArray2, gameObject->getComponents<BoxCollider>().size());
 
@@ -208,27 +208,27 @@ TEST_F(PhysicsTest, PositionTranslate)
 	gameObject->addComponent<BoxCollider>();
 
 	// set values for rigidbody
-	RigidBody* rigidBody = gameObject->getComponents<RigidBody>().at(0);
-	rigidBody->setIsMoveableByForce(true);
-	rigidBody->setDensity(1.0f);
-	rigidBody->setFriction(0.6f);
-	rigidBody->setRestitution(0.0f);
+	RigidBody& rigidBody = gameObject->getComponents<RigidBody>().at(0);
+	rigidBody.setIsMoveableByForce(true);
+	rigidBody.setDensity(1.0f);
+	rigidBody.setFriction(0.6f);
+	rigidBody.setRestitution(0.0f);
 
-	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setWidth(10);
-	boxCollider->setHeight(10);
+	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider.setWidth(10);
+	boxCollider.setHeight(10);
 
 	mPhysicsEngine.addObject(*gameObject);
 
 	mPhysicsEngine.update();
 
 	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
-	RigidBody* tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
+	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
 
 	// Check if position is correctly translated
-	ASSERT_EQ(tempRigidBody->getBodyId().bodyID, 1);
+	ASSERT_EQ(tempRigidBody.getBodyId().bodyID, 1);
 	ASSERT_EQ(tempObject.get().getTransform().position,
-			  mPhysicsEngine.getWorld().getPosition(tempRigidBody->getBodyId()));
+			  mPhysicsEngine.getWorld().getPosition(tempRigidBody.getBodyId()));
 }
 
 TEST_F(PhysicsTest, testcollide)
@@ -258,11 +258,11 @@ TEST_F(PhysicsTest, testcollide)
 	Transform transform;
 	transform.position = {0.0f, 0.0f};
 	gameObject->addComponent<BoxCollider>();
-	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setWidth(8);	// 16
-	boxCollider->setHeight(25); // 25
-	boxCollider->setTransform(transform);
-	gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, 1));
+	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider.setWidth(8);   // 16
+	boxCollider.setHeight(25); // 25
+	boxCollider.setTransform(transform);
+	gameObject->getComponents<RigidBody>().at(0).get().addForce(Vector2(0, 1));
 
 	Transform transform2;
 	transform2.position = {0.0f, 0.0f};
@@ -379,13 +379,13 @@ TEST_F(PhysicsTest, remove)
 	Transform transform;
 	transform.position = {0.0f, 0.0f};
 	gameObject->addComponent<BoxCollider>();
-	BoxCollider* boxCollider = gameObject->getComponents<BoxCollider>()[0];
-	boxCollider->setWidth(8);	// 16
-	boxCollider->setHeight(25); // 25
-	boxCollider->setTransform(transform);
-	gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
-	gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
-	gameObject->getComponents<RigidBody>().at(0)->addForce(Vector2(0, -200));
+	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider.setWidth(8);   // 16
+	boxCollider.setHeight(25); // 25
+	boxCollider.setTransform(transform);
+	gameObject->getComponents<RigidBody>().at(0).get().addForce(Vector2(0, -200));
+	gameObject->getComponents<RigidBody>().at(0).get().addForce(Vector2(0, -200));
+	gameObject->getComponents<RigidBody>().at(0).get().addForce(Vector2(0, -200));
 
 	Transform transform2;
 	transform2.position = {0.0f, 0.0f};
@@ -399,26 +399,26 @@ TEST_F(PhysicsTest, remove)
 
 	gameObject2->addComponent<BoxCollider>();
 
-	BoxCollider* boxCollider2 = gameObject2->getComponents<BoxCollider>()[0];
-	boxCollider2->setWidth(8);
-	boxCollider2->setHeight(25);
-	boxCollider2->setTransform(transform2);
+	BoxCollider& boxCollider2 = gameObject2->getComponents<BoxCollider>()[0];
+	boxCollider2.setWidth(8);
+	boxCollider2.setHeight(25);
+	boxCollider2.setTransform(transform2);
 
-	RigidBody* rigidBody2 = new RigidBody();
+	RigidBody& rigidBody2 = *(new RigidBody());
 
-	rigidBody2->setCanRotate(false);
-	rigidBody2->setHasGravity(false);
-	rigidBody2->setIsMoveableByForce(true);
-	rigidBody2->setDensity(1.0f);
-	rigidBody2->setFriction(0.6f);
-	rigidBody2->setRestitution(0.0f);
-	rigidBody2->setGravityScale(0.0f);
-	rigidBody2->setMass(5.0f);
-	rigidBody2->setLinearDamping(0.5f);
-	rigidBody2->setAngularDamping(0.5f);
-	rigidBody2->setActive(false);
+	rigidBody2.setCanRotate(false);
+	rigidBody2.setHasGravity(false);
+	rigidBody2.setIsMoveableByForce(true);
+	rigidBody2.setDensity(1.0f);
+	rigidBody2.setFriction(0.6f);
+	rigidBody2.setRestitution(0.0f);
+	rigidBody2.setGravityScale(0.0f);
+	rigidBody2.setMass(5.0f);
+	rigidBody2.setLinearDamping(0.5f);
+	rigidBody2.setAngularDamping(0.5f);
+	rigidBody2.setActive(false);
 
-	gameObject2->addComponent(rigidBody2);
+	gameObject2->addComponent(&rigidBody2);
 
 	mPhysicsEngine.addObject(*gameObject);
 	mPhysicsEngine.addObject(*gameObject2);
