@@ -1,3 +1,8 @@
+/**
+ * @file Pathfinding.h
+ * @brief This file contains the declaration of the Pathfinding class
+ */
+
 #pragma once
 
 #include <queue>
@@ -27,7 +32,12 @@ private:
 	std::vector<int> reconstructPath(const std::unordered_map<int, int>& aCameFrom, int aCurrent) const;
 
 private:
+	/// @brief The adjacency list representing the graph gotten from the MapToGraph class.
 	std::unordered_map<int, std::vector<int>> mAdjacencyList;
+
+	/// @brief The width of the map.
 	int mMapWidth;
+
+	/// @brief The height of the map.
 	int mMapHeight;
 };
