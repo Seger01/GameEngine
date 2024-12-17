@@ -19,7 +19,7 @@
  * @class GameObject
  *
  * @brief Represents a game object in the game world. Is the base of everything that should be seen or heard in the
- * game.
+ * game. The GameObject is a container for components, which define the behavior of the GameObject.
  */
 class GameObject
 {
@@ -28,39 +28,39 @@ public:
 	virtual ~GameObject();
 
 	// Rule of Five
-	GameObject(const GameObject& other);				// Copy constructor
-	GameObject& operator=(const GameObject& other);		// Copy assignment operator
-	GameObject(GameObject&& other) noexcept;			// Move constructor
-	GameObject& operator=(GameObject&& other) noexcept; // Move assignment operator
+	GameObject(const GameObject& aOther);				 // Copy constructor
+	GameObject& operator=(const GameObject& aOther);	 // Copy assignment operator
+	GameObject(GameObject&& aOther) noexcept;			 // Move constructor
+	GameObject& operator=(GameObject&& aOther) noexcept; // Move assignment operator
 
 	void addComponent(Component* aComponent);
-	void removeComponent(Component* component);
+	void removeComponent(Component* aComponent);
 
-	void setID(int id);
+	void setID(int aId);
 	int getID() const;
 
-	void setName(const std::string& name);
+	void setName(const std::string& aName);
 	std::string getName() const;
 
-	void setTag(const std::string& tag);
+	void setTag(const std::string& aTag);
 	std::string getTag() const;
 
-	void setActive(bool isActive);
+	void setActive(bool aActive);
 	bool isActive() const;
 
 	Transform getTransform() const;
 	Transform& getTransformRef();
-	void setTransform(Transform aNewTransform);
+	void setTransform(Transform aTransform);
 
-	void setParent(GameObject& parent);
+	void setParent(GameObject& aParent);
 	void removeParent();
 	GameObject& getParent();
 
-	void addChild(GameObject& child);
-	void removeChild(GameObject& child);
+	void addChild(GameObject& aChild);
+	void removeChild(GameObject& aChild);
 	std::vector<std::reference_wrapper<GameObject>> getChildren() const;
 
-	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& tag) const;
+	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& aTag) const;
 
 	// Templated functions
 	/**
@@ -110,12 +110,12 @@ public:
 	 *
 	 * @return A vector of references to the components with the specified tag.
 	 */
-	template <typename T> std::vector<std::reference_wrapper<T>> getComponentsWithTag(const std::string& tag) const
+	template <typename T> std::vector<std::reference_wrapper<T>> getComponentsWithTag(const std::string& aTag) const
 	{
 		std::vector<std::reference_wrapper<T>> componentsWithTag;
 		for (const std::unique_ptr<Component>& component : mComponents)
 		{
-			if (component->getTag() == tag)
+			if (component->getTag() == aTag)
 			{
 				if (T* castedComponent = dynamic_cast<T*>(component.get()))
 				{
