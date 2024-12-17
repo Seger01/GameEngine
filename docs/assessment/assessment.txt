@@ -1,0 +1,18 @@
+Preparation for project assessment on tuesday 14-01
+
+
+1. Showing the various documents:
+-   Standup minutes
+-   Timesheets
+-   Design document
+
+2. showing the code
+-   Class diagram
+-   Code standard
+-   Source code
+-   Doxygen
+
+3. Showing the demo (alongside demo checklist doc!)
+-   Regular demo
+-   Stress test demo
+-   Multiplayer demo
