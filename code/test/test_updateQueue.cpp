@@ -6,7 +6,7 @@
 #include "UIManager.h"
 #include <gtest/gtest.h>
 
-TEST(UpdateQueue, updateAdditions)
+TEST(TestUpdateQueue, updateAdditions)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
 	engineBravo.getUpdateQueue().clearUpdateObjects();
@@ -54,12 +54,13 @@ TEST(UpdateQueue, updateAdditions)
 	ASSERT_EQ(uiManager.getObjects().size(), 0);
 }
 
-TEST(UpdateQueue, updateRemovals)
+TEST(TestUpdateQueue, updateRemovals)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
 	engineBravo.getUpdateQueue().clearUpdateObjects();
 	engineBravo.getUpdateQueue().clearManagerObjects();
 	SceneManager& sceneManager = engineBravo.getSceneManager();
+	sceneManager.removeScene("TestScene");
 	sceneManager.createScene("TestScene");
 	sceneManager.requestSceneChange("TestScene");
 	GameObject* gameObject = new GameObject();
