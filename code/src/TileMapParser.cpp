@@ -1,3 +1,8 @@
+/**
+ * @file TileMapParser.cpp
+ * @brief This file contains the implementation of the TileMapParser class
+ */
+
 #include "TileMapParser.h"
 #include <fstream>
 #include <iostream>
@@ -12,6 +17,10 @@ TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath
 
 /**
  * @brief Parses the JSON file
+ *
+ * @throw std::runtime_error if the file cannot be opened, is empty, or has invalid JSON
+ * @throw std::runtime_error if the JSON is missing 'tilesets' or 'layers'
+ * @throw std::runtime_error if a layer is missing 'type' key
  *
  * @details Parse() reads the JSON file and calls the private storeTileInfo() and storeObjectLayer() methods accordingly
  */
@@ -101,8 +110,8 @@ void TileMapParser::parse()
 
 /**
  * @brief Parses the objects of JSON TileMap Object Layer
- *
  * @param layer
+ * @throw std::runtime_error if 'objects' is missing or not an array
  */
 void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
 {
@@ -153,8 +162,8 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
 
 /**
  * @brief Getter for a tile position
- *
  * @param gID
+ * @throw std::runtime_error if gID is not found in any tileset
  * @return std::pair<int, int>
  */
 std::pair<int, int> TileMapParser::getTilePosition(int gID) const
@@ -180,7 +189,10 @@ std::pair<int, int> TileMapParser::getTilePosition(int gID) const
 
 /**
  * @brief Stores tile information in a map into a TileMapData struct
- *
+ * @throw std::runtime_error if no layers are found in JSON
+ * @throw std::runtime_error if a tile is missing 'objectgroup' key
+ * @throw std::runtime_error if a collider is missing 'x', 'y', 'width', or 'height' keys
+ * @throw std::runtime_error if a collider value is an invalid type
  */
 void TileMapParser::storeTileInfo()
 {
