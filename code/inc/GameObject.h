@@ -50,7 +50,7 @@ public:
 
 	Transform getTransform() const;
 	Transform& getTransformRef();
-	void setTransform(Transform aTransform);
+	void setTransform(const Transform& aTransform);
 
 	void setParent(GameObject& aParent);
 	void removeParent();
