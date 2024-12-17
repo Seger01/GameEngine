@@ -4,10 +4,10 @@ PhysicsManager::PhysicsManager() {}
 
 void PhysicsManager::startPhysicsEngine(Vector2 aGravity)
 {
+	// mPhysicsEngine.setStep(20.0f / 60.0f);
+	mPhysicsEngine.setStep(0.02f);
 
-	mPhysicsEngine.setStep(20.0f / 60.0f);
 	mPhysicsEngine.setSubStep(4);
-
 	mPhysicsEngine.createWorld(aGravity);
 }
 
