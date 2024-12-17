@@ -1,3 +1,8 @@
+/**
+ * @file MapToGraph.cpp
+ * @brief This file contains the implementation of the MapToGraph class
+ */
+
 #include "MapToGraph.h"
 #include <iostream>
 

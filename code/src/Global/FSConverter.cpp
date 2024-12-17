@@ -13,6 +13,7 @@ std::string FSConverter::mCachedResourceDir;
  * @brief Construct a new FSConverter::FSConverter object
  * @details takes an optional string containing the path to the Resources directory.
  * @param aResourceDir
+ * @throw std::runtime_error if the Resources folder is not found
  */
 FSConverter::FSConverter(const std::string& aResourceDir)
 {
@@ -41,7 +42,7 @@ FSConverter::FSConverter(const std::string& aResourceDir)
 
 /**
  * @brief Finds the Resources folder
- *
+ * @throw std::runtime_error if the Resources folder is not found
  * @return std::string
  */
 std::string FSConverter::findResourcesFolder() const
@@ -71,6 +72,7 @@ std::string FSConverter::findResourcesFolder() const
  *
  * @param resourceName
  * @param aCheckExists
+ * @throw std::runtime_error if the resource does not exist
  * @return std::string
  */
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) const
@@ -90,7 +92,7 @@ std::string FSConverter::getResourcePath(const std::string& resourceName, bool a
 
 /**
  * @brief Finds the executable path
- *
+ * @throw std::runtime_error if the executable path is not found
  * @return std::string
  */
 std::string FSConverter::executablePath() const
