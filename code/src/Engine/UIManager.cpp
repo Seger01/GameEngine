@@ -31,7 +31,11 @@ void UIManager::update(const Scene& aScene)
 	{
 		Button& button = dynamic_cast<Button&>(gameObject);
 
-		Camera* currentCamera = aScene.getCameraWithTag("MainCamera");
+		Camera* currentCamera = aScene.getMainCamera();
+		if (currentCamera == nullptr)
+		{
+			return;
+		}
 
 		for (Event event : mMouseDownEventQueue)
 		{

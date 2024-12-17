@@ -11,8 +11,8 @@
  */
 Camera::Camera()
 	: GameObject(), mBackgroundColor(Color(0, 0, 0)), mWidth(800), mHeight(600), mViewport(FRect{0, 0, 1, 1}),
-	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0), mIsShaking(false), mShakeOffset(Vector2(0, 0)),
-	  mShakeStartTime(0), mShakeDuration(0), mShakeMagnitude(0)
+	  mDebugOverlay(CameraDebugOverlay()), mRenderOrder(0), mIsMainCamera(true), mIsShaking(false),
+	  mShakeOffset(Vector2(0, 0)), mShakeStartTime(0), mShakeDuration(0), mShakeMagnitude(0)
 {
 }
 
@@ -53,6 +53,10 @@ CameraDebugOverlay& Camera::getDebugOverlayRef() { return mDebugOverlay; }
 void Camera::setRenderOrder(uint aRenderOrder) { mRenderOrder = aRenderOrder; }
 
 uint Camera::getRenderOrder() const { return mRenderOrder; }
+
+bool Camera::isMainCamera() const { return mIsMainCamera; }
+
+void Camera::setMainCamera(bool aIsMainCamera) { mIsMainCamera = aIsMainCamera; }
 
 void Camera::update()
 {

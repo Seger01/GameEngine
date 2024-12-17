@@ -148,6 +148,19 @@ Camera* Scene::getCameraWithTag(const std::string& tag) const
 	return nullptr;
 }
 
+Camera* Scene::getMainCamera() const
+{
+	for (const auto& obj : mGameObjects)
+	{
+		Camera* camera = dynamic_cast<Camera*>(obj.get());
+		if (camera && camera->isMainCamera())
+		{
+			return camera;
+		}
+	}
+	return nullptr;
+}
+
 void Scene::addPersistentGameObject(GameObject* object)
 {
 	if (object)
