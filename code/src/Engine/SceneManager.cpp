@@ -193,7 +193,6 @@ Scene& SceneManager::getCurrentScene()
 {
 	if (mCurrentSceneIndex <= -1)
 	{
-		std::cerr << "No scene loaded" << std::endl;
 		static Scene emptyScene("Non valid scene", -1);
 		return emptyScene;
 	}

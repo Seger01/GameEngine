@@ -23,6 +23,7 @@ public:
 
 	std::vector<Camera*> getCameras() const;
 	Camera* getCameraWithTag(const std::string& tag) const;
+	Camera* getMainCamera() const;
 
 	int getID();
 	std::string getName();
