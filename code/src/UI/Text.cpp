@@ -9,22 +9,6 @@ Text::Text(const std::string& aText, const std::string& aFont, const Color& aCol
 	mTransform.position = aLocation;
 }
 
-Text::~Text()
-{
-	if (mParent)
-	{
-		mParent->removeChild(this);
-	}
-
-	for (auto child : mChildren)
-	{
-		child->setParent(nullptr);
-	}
-	mChildren.clear();
-
-	mComponents.resize(0);
-}
-
 std::string Text::getText() const { return mText; }
 
 void Text::setText(const std::string& aText) { mText = aText; }

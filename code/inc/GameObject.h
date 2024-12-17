@@ -42,12 +42,13 @@ public:
 	Transform& getTransformRef();
 	void setTransform(Transform aNewTransform);
 
-	void setParent(GameObject* parent);
-	GameObject* getParent();
+	void setParent(GameObject& parent);
+	void removeParent();
+	GameObject& getParent();
 
-	void addChild(GameObject* child);
-	void removeChild(GameObject* child);
-	std::vector<GameObject*> getChildren();
+	void addChild(GameObject& child);
+	void removeChild(GameObject& child);
+	std::vector<std::reference_wrapper<GameObject>> getChildren();
 
 	std::vector<std::reference_wrapper<Component>> getComponentsWithTag(const std::string& tag) const;
 
@@ -103,7 +104,7 @@ public:
 
 protected:
 	GameObject* mParent;
-	std::vector<GameObject*> mChildren;
+	std::vector<std::reference_wrapper<GameObject>> mChildren;
 
 	std::vector<std::unique_ptr<Component>> mComponents;
 	Transform mTransform;
