@@ -10,7 +10,6 @@ public:
 
 	std::unique_ptr<Component> clone() const override;
 
-	// Getter and setter methods for width, height, and rotation
 	float getWidth() const;
 	void setWidth(float width);
 
@@ -33,11 +32,13 @@ public:
 	void setIsUpdated(bool aUpdated);
 
 private:
-	bool mIsTrigger;
 	float mWidth;
 	float mHeight;
 	float mRotation;
-	std::vector<int> mCollideWithCategory;
-	int mCollideCategory;
+
+	bool mIsTrigger;					   /** < Detirmines of the collider is a sensor */
+	std::vector<int> mCollideWithCategory; /** < Category with which shapes the collider can collide */
+	int mCollideCategory;				   /** < Collision category of the shape */
+
 	bool mIsUpdated;
 };

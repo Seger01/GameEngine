@@ -1,6 +1,4 @@
 #include "RigidBody.h"
-#include "Vector2.h"
-#include <iostream>
 
 RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties, std::string aTag)
 	: Component{aTag}, mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),

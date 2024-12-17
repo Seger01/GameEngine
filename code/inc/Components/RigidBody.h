@@ -76,15 +76,15 @@ public:
 private:
 	Transform mTransform;
 
-	bool mIsUpdated;
+	bool mIsUpdated = false;
 	bool mHasGravity = false;
 	bool mIsMoveableByForce = false;
 	bool mCanRotate = false;
 	bool mCanCollide = true;
 	BodyType mBodyType;
 
-	float mLinearDamping = 0;  // reduces linear velocity over time
-	float mAngularDamping = 0; // reduces angular velocity over time
+	float mLinearDamping = 0;  /** < Reduces linear velocity over time */
+	float mAngularDamping = 0; /** < Reduces angular velocity over time */
 
 	float mDensity = 0;
 	float mFriction = 0;

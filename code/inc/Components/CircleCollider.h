@@ -27,12 +27,11 @@ public:
 	void setIsUpdated(bool aUpdated);
 
 private:
-	std::vector<int> mCollideWithCategory;
-	int mCollideCategory;
-
-	bool mIsTrigger;
-
 	float mRadius;
+
+	std::vector<int> mCollideWithCategory; /** < Category with which shapes the collider can collide */
+	int mCollideCategory;				   /** < Collision category of the shape */
+	bool mIsTrigger;					   /** < Determines of the collider is a sensor */
 
 	bool mIsUpdated;
 };
