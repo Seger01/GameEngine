@@ -129,7 +129,7 @@ std::string GameObject::getName() { return mName; }
 
 void GameObject::setTag(const std::string& tag) { mTag = tag; }
 
-std::string GameObject::getTag() { return mTag; }
+std::string GameObject::getTag() const { return mTag; }
 
 /**
  * @brief Sets the active state of the GameObject and all its children.
@@ -149,7 +149,13 @@ Transform GameObject::getTransform() const
 {
 	if (mParent)
 	{
-		return mParent->getTransform() + mTransform;
+		Transform parentTransform = mParent->getTransform();
+
+		parentTransform.position += mTransform.position;
+		parentTransform.rotation += mTransform.rotation;
+		parentTransform.scale = parentTransform.scale * mTransform.scale;
+
+		return parentTransform;
 	}
 	return mTransform;
 }

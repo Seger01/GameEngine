@@ -33,7 +33,7 @@ public:
 	std::string getName();
 
 	void setTag(const std::string& tag);
-	std::string getTag();
+	std::string getTag() const;
 
 	void setActive(bool isActive);
 	bool isActive();
