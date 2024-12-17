@@ -1,0 +1,46 @@
+@startuml tileMapParserPackage
+package TileMapParserPackage {
+struct ColliderData {
+    + x : float
+    + y : float
+    + width : float
+    + height : float
+}
+
+struct TileInfo {
+    + mTilesetName : string
+    + mCoordiantes : std::pair<int, int>
+    + mColliders : std::vector<ColliderData>
+}
+
+struct MapObject {
+    + x : float
+    + y : float 
+    + width : float
+    + height : float
+    + type : std::string
+    + name : std::string
+    + properties : std::unordered_map<std::string, std::string>
+
+}
+
+class TileMapParser {
+    + TIleMapParser(const string& aFilePath): bool
+    + parse() : void
+    + getTilePosition(int gID) const : std::pair<int, int>
+    + getTileMapData() const : const TileMapData& 
+
+    - storeTileInfo() : void
+    - parseObjectLayer(const nlohmann::json& aLayer) : void
+
+    - mFilePath : std::string
+    - mTileMapData : TileMapData
+    - mJsonData : nlohmann::json
+    - mTileSets : std::vector<nlohmann:json>
+}
+
+TileMapParser --> TileInfo
+TileMapParser --> MapObject
+TileInfo --> ColliderData
+}
+@enduml

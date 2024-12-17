@@ -1,0 +1,38 @@
+@startuml aiPackage
+
+package aiPackage {
+    class Pathfinding {
+        + Pathfinding(const std::unordered_map<int, std::vector<int>>& aAdjacencyList, int aMapWidth, int aMapHeight)
+        + findPath(int aStart, int aEnd) const : std::vector<int> 
+        + getAdjacencyList() const : std::unordered_map<int, std::vector<int>>
+        + getMapWidth() const : int
+        + getMapHeight() const : int
+
+        - distance (int aNodeA, int aNodeB) const : double
+        - reconstructPath(const std::unordered_map<int, int>& aCameFrom, int aCurrent) const : std::vector<int>
+
+        - mAdjacencyList : std::unordered_map<int, std::vector<int>>
+        - mMapWidth : int
+        - mMapHeight : int
+    }
+
+    class MapToGraph {
+        + MapToGraph(const TileMapData& aTileMapData)
+        + convertToGraph() : void
+        + getAdjacencyList() const : std::unordered_map<int, std::vector<int>>
+
+        - findGraphLayer() const : const std::vector<std::vector<int>>*
+        - calculateNodeIndex(size_t aRow, size_t aCol, size_t aWidth) const : int
+        - connectAdjacentNodes(int aCurrentNode, size_t aRow, const std::vector<std::vector<int>>* aLayer) : void
+        - addEdge(int aFrom, int aTo) : void
+
+        - mTileMapData : const TileMapData&
+        - mAdjacencyList : std::unordered_map<int, std::vector<int>>
+        - mDirection : const std::vector<std::pair<int, int>>
+    }
+}
+
+
+
+
+@enduml
