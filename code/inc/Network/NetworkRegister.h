@@ -6,8 +6,10 @@
 #ifndef NETWORKREGISTER_H
 #define NETWORKREGISTER_H
 
+#include "Network/INetworkPrefab.h"
 #include "Network/INetworkSerializable.h"
 #include "Network/NetworkInformation.h"
+
 #include <cstdint>
 #include <cstring>
 #include <functional>
@@ -18,6 +20,7 @@
 #include <unordered_map>
 
 class INetworkSerializable;
+class INetworkPrefab;
 
 /**
  * @brief A simple compile-time hash function (FNV-1a Hash).
@@ -25,13 +28,15 @@ class INetworkSerializable;
  * @param length The length of the input string.
  * @return The computed hash value.
  */
-constexpr std::uint32_t CompileTimeHash(const char* str, std::size_t length) {
-    std::uint32_t hash = 2166136261u;
-    for (std::size_t i = 0; i < length; ++i) {
-        hash ^= static_cast<std::uint32_t>(str[i]);
-        hash *= 16777619u;
-    }
-    return hash;
+constexpr std::uint32_t CompileTimeHash(const char* str, std::size_t length)
+{
+	std::uint32_t hash = 2166136261u;
+	for (std::size_t i = 0; i < length; ++i)
+	{
+		hash ^= static_cast<std::uint32_t>(str[i]);
+		hash *= 16777619u;
+	}
+	return hash;
 }
 
 /**
@@ -39,9 +44,10 @@ constexpr std::uint32_t CompileTimeHash(const char* str, std::size_t length) {
  * @tparam T The type for which to get the type ID.
  * @return The compile-time type ID.
  */
-template <typename T> constexpr std::uint32_t GetCompileTimeTypeId() {
-    // Use the type name as a unique key; ensure strlen instead of sizeof
-    return CompileTimeHash(typeid(T).name(), std::strlen(typeid(T).name()));
+template <typename T> constexpr std::uint32_t GetCompileTimeTypeId()
+{
+	// Use the type name as a unique key; ensure strlen instead of sizeof
+	return CompileTimeHash(typeid(T).name(), std::strlen(typeid(T).name()));
 }
 
 /**
@@ -57,46 +63,86 @@ template <typename T> std::uint32_t GetTypeId() { return GetCompileTimeTypeId<T>
 using NetworkSerializableFactory = std::function<std::unique_ptr<INetworkSerializable>()>;
 
 /**
+ * @brief Factory function type for creating instances of INetworkPrefab.
+ */
+using NetworkPrefabFactory = std::function<std::unique_ptr<INetworkPrefab>()>;
+
+/**
  * @brief A registry for network serializable types.
  */
-class NetworkRegister {
+class NetworkRegister
+{
 public:
 	/**
 	 * @brief Gets the singleton instance of the NetworkRegister.
 	 * @return The singleton instance.
 	 */
-	static NetworkRegister& Instance() {
-        static NetworkRegister instance;
-        return instance;
+	static NetworkRegister& Instance()
+	{
+		static NetworkRegister instance;
+		return instance;
 	}
 
 	/**
-	 * @brief Registers a type with a compile-time ID.
+	 * @brief Registers a Serialize type with a compile-time ID.
 	 * @tparam T The type to register.
 	 */
-	template <typename T> void RegisterType() {
-        std::uint32_t typeId = GetCompileTimeTypeId<T>();
-		std::cout << "Registering type: " << typeId << std::endl;
-		registry[typeId] = []() { return std::make_unique<T>(); };
+	template <typename T> void registerSerializeType()
+	{
+		static_assert(std::is_base_of<INetworkSerializable, T>::value, "Type must derive from INetworkSerializable");
+		std::uint32_t typeId = GetCompileTimeTypeId<T>();
+		mSerializeRegistry[typeId] = []() { return std::make_unique<T>(); };
 	}
 
 	/**
-	 * @brief Creates an instance based on the compile-time type ID.
+	 * @brief Registers an EnemyPrefab type with a compile-time ID.
+	 * @tparam T The type to register.
+	 */
+	template <typename T> void registerPrefabType()
+	{
+		static_assert(std::is_base_of<INetworkPrefab, T>::value, "Type must derive from INetworkPrefab");
+		std::uint32_t typeId = GetCompileTimeTypeId<T>();
+		mPrefabRegistry[typeId] = []() { return std::make_unique<T>(); };
+	}
+
+	/**
+	 * @brief Creates an Serialize instance based on the compile-time type ID.
 	 * @param typeId The compile-time type ID.
 	 * @return A unique pointer to the created instance, or nullptr if the type ID is not registered.
 	 */
-	std::unique_ptr<INetworkSerializable> CreateInstance(std::uint32_t typeId) {
-        if (registry.find(typeId) != registry.end()) {
-            return registry[typeId]();
-        }
-        return nullptr;
-    }
+	std::unique_ptr<INetworkSerializable> CreateSerializeInstance(std::uint32_t typeId)
+	{
+		if (mSerializeRegistry.find(typeId) != mSerializeRegistry.end())
+		{
+			return mSerializeRegistry[typeId]();
+		}
+		return nullptr;
+	}
+
+	/**
+	 * @brief Creates an Prefab instance based on the compile-time type ID.
+	 * @param typeId The compile-time type ID.
+	 * @return A unique pointer to the created instance, or nullptr if the type ID is not registered.
+	 */
+	std::unique_ptr<INetworkPrefab> CreatePrefabInstance(std::uint32_t typeId)
+	{
+		if (mPrefabRegistry.find(typeId) != mPrefabRegistry.end())
+		{
+			return mPrefabRegistry[typeId]();
+		}
+		return nullptr;
+	}
 
 private:
 	/**
 	 * @brief The registry mapping type IDs to factory functions.
 	 */
-	std::unordered_map<std::uint32_t, NetworkSerializableFactory> registry;
+	std::unordered_map<std::uint32_t, NetworkSerializableFactory> mSerializeRegistry;
+
+	/**
+	 * @brief The registry mapping enemy IDs to factory functions.
+	 */
+	std::unordered_map<std::uint32_t, NetworkPrefabFactory> mPrefabRegistry;
 };
 
 /**
@@ -104,9 +150,16 @@ private:
  * @param T The type to register.
  */
 #define REGISTER_NETWORK_SERIALIZABLE(T)                                                                               \
-    static bool T##_registered = [] {                                                                                  \
-        NetworkRegister::Instance().RegisterType<T>();                                                                 \
-        return true;                                                                                                   \
-    }()
+	static bool T##_registered = []                                                                                    \
+	{                                                                                                                  \
+		NetworkRegister::Instance().registerSerializeType<T>();                                                        \
+		return true;                                                                                                   \
+	}()
 
+#define REGISTER_NETWORK_PREFAB(T)                                                                                     \
+	static bool T##_registered = []                                                                                    \
+	{                                                                                                                  \
+		NetworkRegister::Instance().registerPrefabType<T>();                                                           \
+		return true;                                                                                                   \
+	}()
 #endif // NETWORKREGISTER_H

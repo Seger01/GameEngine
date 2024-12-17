@@ -133,7 +133,7 @@ void NetworkServer::sendTransform()
 		Transform transform = gameObject.getTransform();
 		NetworkTransform& networkTransform = gameObject.getComponents<NetworkTransform>()[0];
 		SLNet::BitStream bs;
-		NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+		NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 		NetworkPacket networkPacket;
 		NetworkObject& networkObject = gameObject.getComponents<NetworkObject>()[0];
 		networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
@@ -182,7 +182,7 @@ void NetworkServer::sendCustomSerialize()
 			for (int i = 0; i < networkBehaviour.GetNetworkVariables().size(); i++)
 			{
 				SLNet::BitStream bs;
-				NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+				NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =
@@ -209,7 +209,7 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 {
 	std::cout << "Sending player instantiation message to all clients.\n";
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = playerID;
@@ -233,6 +233,39 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 		sendToAllClients(bs);
 		return;
 	}
+}
+
+/**
+ * @brief Sends a spawn prefab message to all clients.
+ * @param aObject The object to spawn.
+ */
+void NetworkServer::sendPrefabSpawn(NetworkObject& aObject)
+{
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB;
+	networkPacket.networkObjectID = aObject.getNetworkObjectID();
+	networkPacket.prefabID = aObject.getPrefabID();
+	networkPacket.SetTimeStampNow();
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+	sendToAllClients(bs);
+}
+
+/**
+ * @brief Sends a despawn message to all clients.
+ * @param aObject The object to despawn.
+ */
+void NetworkServer::sendPrefabDespawn(NetworkObject& aObject)
+{
+	SLNet::BitStream bs;
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
+	NetworkPacket networkPacket;
+	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB;
+	networkPacket.networkObjectID = aObject.getNetworkObjectID();
+	networkPacket.SetTimeStampNow();
+	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+	sendToAllClients(bs);
 }
 
 /**
@@ -311,6 +344,10 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 			  // behaviour ID
 				continue;
 			}
+			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			{ // check network variable ID bounds
+				continue;
+			}
 			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
@@ -348,7 +385,7 @@ void NetworkServer::handleClientDisconnect(SLNet::RakNetGUID clientID)
 	EngineBravo::getInstance().getNetworkManager().destroyPlayer(clientID);
 
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = NetworkMessage::ID_PLAYER_DESTROY;
 	networkPacket.clientGUID = clientID;
@@ -379,7 +416,7 @@ void NetworkServer::spawnPlayerForNewClient(SLNet::RakNetGUID playerID)
 {
 	std::cout << "Sending all players to each client" << std::endl;
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = playerID;

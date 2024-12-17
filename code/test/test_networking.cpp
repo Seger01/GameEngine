@@ -212,13 +212,12 @@ protected:
 	void SetUp() override {}
 };
 
-TEST_F(INetworkSerializableTest, TestSerializableRegistration)
-{
-	auto& registry = NetworkRegister::Instance();
-	registry.RegisterType<ConcreteNetworkSerializable>();
+TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
+    auto& registry = NetworkRegister::Instance();
+    // registry.registerSerializeType<ConcreteNetworkSerializable>();
 
-	std::unique_ptr<INetworkSerializable> obj = registry.CreateInstance(GetTypeId<ConcreteNetworkSerializable>());
-	ASSERT_NE(obj, nullptr);
+    std::unique_ptr<INetworkSerializable> obj = registry.CreateSerializeInstance(GetTypeId<ConcreteNetworkSerializable>());
+    ASSERT_NE(obj, nullptr);
 }
 
 class NetworkInformationTest : public ::testing::Test
@@ -262,7 +261,7 @@ protected:
 TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
 {
 	SLNet::BitStream bitStream;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bitStream);
 
 	NetworkPacket packet = NetworkSharedFunctions::getBitStreamData(bitStream);
 
@@ -279,7 +278,7 @@ TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
 TEST_F(NetworkSharedFunctionsTest, SetBitStreamNetworkPacket)
 {
 	SLNet::BitStream bitStream;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bitStream);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bitStream);
 	NetworkPacket packet;
 	packet.messageID = 1;
 	packet.networkObjectID = 2;
