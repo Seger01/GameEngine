@@ -166,7 +166,7 @@ void Scene::addPersistentGameObject(GameObject* object)
 	if (object)
 	{
 		mGameObjects.push_back(std::unique_ptr<GameObject>(object));
-		mPersistentGameObjects.push_back(object);
+		mPersistentGameObjects.push_back(*object);
 		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
 }

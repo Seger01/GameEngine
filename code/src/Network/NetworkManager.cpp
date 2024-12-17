@@ -223,8 +223,8 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	{
 		networkObjects[0].get().setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
 	}
-	networkObjects[0]->setPlayer(true);		  // Mark as player
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
+	networkObjects[0].get().setPlayer(true); // Mark as player
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
 	return player;
 }
 
@@ -377,9 +377,9 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 	GameObject* prefab = iNetworkprefab->create();
 	if (prefab->hasComponent<NetworkObject>())
 	{
-		NetworkObject* networkObject = prefab->getComponents<NetworkObject>()[0];
-		networkObject->setPrefabID(aPrefabID);
-		networkObject->setOwner(true);
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(aPrefabID);
+		networkObject.setOwner(true);
 	}
 	else
 	{
@@ -390,8 +390,8 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 	{
 		prefab->setTransform(aTransform);
 	}
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(prefab);
-	mServer->sendPrefabSpawn(*prefab->getComponents<NetworkObject>()[0]);
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
+	mServer->sendPrefabSpawn(prefab->getComponents<NetworkObject>()[0]);
 	return prefab;
 }
 
@@ -410,14 +410,14 @@ GameObject* NetworkManager::instantiatePrefab(NetworkPacket aNetworkPacket)
 	GameObject* prefab = iNetworkprefab->create();
 	if (prefab->hasComponent<NetworkObject>())
 	{
-		NetworkObject* networkObject = prefab->getComponents<NetworkObject>()[0];
-		networkObject->setPrefabID(aNetworkPacket.prefabID);
-		networkObject->setNetworkObjectID(aNetworkPacket.networkObjectID);
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(aNetworkPacket.prefabID);
+		networkObject.setNetworkObjectID(aNetworkPacket.networkObjectID);
 	}
 	else
 	{
 		throw std::runtime_error("Prefab does not have a NetworkObject component");
 	}
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(prefab);
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
 	return prefab;
 }

@@ -344,11 +344,11 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 			  // behaviour ID
 				continue;
 			}
-			if (networkBehaviour->GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
 			{ // check network variable ID bounds
 				continue;
 			}
-			if (networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
+			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
 				continue;

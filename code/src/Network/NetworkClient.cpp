@@ -435,11 +435,11 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 			  // behaviour ID
 				continue;
 			}
-			if (networkBehaviour->GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
 			{ // check network variable ID bounds
 				continue;
 			}
-			if (networkBehaviour->GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
+			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
 				continue;
@@ -481,9 +481,9 @@ void NetworkClient::handleDespawnPrefab(SLNet::Packet* aPacket)
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	for (auto gameObject : mObjects)
 	{
-		if (gameObject.get().getComponents<NetworkObject>()[0]->getNetworkObjectID() == networkPacket.networkObjectID)
+		if (gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID() == networkPacket.networkObjectID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&gameObject.get());
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&gameObject.get());
 			break;
 		}
 	}
