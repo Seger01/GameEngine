@@ -8,6 +8,9 @@ PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
 
 PhysicsEngine::~PhysicsEngine() {}
 
+/**
+ * @brief Updates the physics engine
+ */
 void PhysicsEngine::update()
 {
 	convertToBox2D(mObjects);
@@ -25,7 +28,9 @@ void PhysicsEngine::update()
 	executeCollisionScripts(mWorld.getSensorEvents());
 }
 
-// Applies forces from the forces buffer to the bodies in the world
+/**
+ * @brief Applies forces to the bodies in the world
+ */
 void PhysicsEngine::applyForces()
 {
 	for (GameObject& gameObject : mObjects)
@@ -41,7 +46,9 @@ void PhysicsEngine::applyForces()
 	}
 }
 
-// Sets positions of bodies in world if they differ from the GameObject's position
+/**
+ * @brief Sets the positions of the bodies in the world
+ */
 void PhysicsEngine::setPositions()
 {
 	for (GameObject& gameObject : mObjects)
@@ -77,48 +84,46 @@ void PhysicsEngine::setStep(float aStep) { mStep = aStep; }
 
 float PhysicsEngine::getStep() const { return mStep; }
 
+/**
+ * @brief Executes the collision scripts of the game objects
+ * @param aBodyIDs The body IDs of the game objects
+ */
 void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBodyIDs)
 {
 
 	for (int i = 0; i < aBodyIDs.size(); i++)
 	{
-		GameObject* gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
-		GameObject* gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
+		GameObject& gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
+		GameObject& gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
 
-		if (gameObjectA != nullptr)
+		if (gameObjectA.hasComponent<IBehaviourScript>())
 		{
-
-			if (gameObjectA->hasComponent<IBehaviourScript>())
+			std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
+				gameObjectA.getComponents<IBehaviourScript>();
+			for (int i = 0; i < behaviourScript.size(); i++)
 			{
-				std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
-					gameObjectA->getComponents<IBehaviourScript>();
-				for (int i = 0; i < behaviourScript.size(); i++)
-				{
-					behaviourScript.at(i).get().onCollide(gameObjectB);
-				}
+				behaviourScript.at(i).get().onCollide(&gameObjectB);
 			}
 		}
 
-		if (gameObjectB != nullptr)
+		if (gameObjectB.hasComponent<IBehaviourScript>())
 		{
-
-			if (gameObjectB->hasComponent<IBehaviourScript>())
+			if (gameObjectB.hasComponent<IBehaviourScript>())
 			{
-				if (gameObjectB->hasComponent<IBehaviourScript>())
+				std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
+					gameObjectB.getComponents<IBehaviourScript>();
+				for (int i = 0; i < behaviourScript.size(); i++)
 				{
-					std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
-						gameObjectB->getComponents<IBehaviourScript>();
-					for (int i = 0; i < behaviourScript.size(); i++)
-					{
-						behaviourScript.at(i).get().onCollide(gameObjectA);
-					}
+					behaviourScript.at(i).get().onCollide(&gameObjectA);
 				}
 			}
 		}
 	}
 }
 
-// Creates bodies in Box2D world for GameObjects with RigidBody components
+/**
+ * @brief Creates the bodies in the world
+ */
 void PhysicsEngine::createBodies()
 {
 	for (GameObject& gameObject : mObjects)
@@ -137,14 +142,22 @@ void PhysicsEngine::createBodies()
 	}
 }
 
+/**
+ * @brief Creates the world
+ * @param aGravity The gravity of the world
+ */
 void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
 
 void PhysicsEngine::setGravity(Vector2 aGravity) { mWorld.setGravity(aGravity); }
 
 World& PhysicsEngine::getWorld() { return mWorld; }
 
-// Checks and returns GameObject if BodyID exists within world
-GameObject* PhysicsEngine::getGameObjectByID(int aID)
+/**
+ * @brief Gets the game objects
+ * @param aID The ID of the game object
+ * @return The game objects
+ */
+GameObject& PhysicsEngine::getGameObjectByID(int aID)
 {
 	for (GameObject& gameObject : mObjects)
 	{
@@ -155,15 +168,16 @@ GameObject* PhysicsEngine::getGameObjectByID(int aID)
 			{
 				if (rigidBodies[0].get().getBodyId().bodyID == aID)
 				{
-					return &gameObject;
+					return gameObject;
 				}
 			}
 		}
 	}
-	return nullptr;
 }
 
-// Updates flags for gameObjects rigidbodies and collider shapes
+/**
+ * @brief Updates the flags of the game objects in the box2d world
+ */
 void PhysicsEngine::updateFlags()
 {
 	for (int i = 0; i < mObjects.size(); i++)
@@ -204,7 +218,10 @@ void PhysicsEngine::updateFlags()
 	}
 }
 
-// Converts GameObjects from Box2D positions to (local)
+/**
+ * @brief Converts Box2D world positions to engine bravo coords
+ * @param aGameObjects The game objects
+ */
 void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
 	for (GameObject& gameObject : aGameObjects)
@@ -218,12 +235,14 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			{
 				for (BoxCollider& boxCollider : gameObject.getComponents<BoxCollider>())
 				{
+
+					Transform transform = boxCollider.getTransform();
+					transform.position.x = transform.position.x - boxCollider.getWidth();
+					transform.position.y = transform.position.y - boxCollider.getHeight();
+
 					boxCollider.setWidth(boxCollider.getWidth() * 2);
 					boxCollider.setHeight(boxCollider.getHeight() * 2);
 
-					Transform transform = boxCollider.getTransform();
-					transform.position.x = transform.position.x - boxCollider.getWidth() / 2;
-					transform.position.y = transform.position.y - boxCollider.getHeight() / 2;
 					boxCollider.setTransform(transform);
 				}
 			}
@@ -242,7 +261,10 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 	}
 }
 
-// Converts GameObjects to Box2D world positions
+/**
+ * @brief Converts engine bravo coords to Box2D world positions
+ * @param aGameObjects The game objects
+ */
 void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects)
 {
 	for (GameObject& gameObject : aGameObjects)

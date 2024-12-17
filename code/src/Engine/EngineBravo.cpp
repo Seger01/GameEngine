@@ -61,10 +61,14 @@ void EngineBravo::run()
 
 	mSceneManager.update();
 
+	double deltaTime = 0;
 	while (mRunning)
 	{
-		Time::update();
 
+		Time::update();
+		deltaTime += Time::deltaTime;
+
+		std::cout << "Delta time: " << deltaTime << std::endl;
 		mEventManager.handleEvents();
 		input.update();
 
@@ -77,7 +81,14 @@ void EngineBravo::run()
 
 		mUpdateQueue.updateAdditions();
 
-		mPhysicsManager.updatePhysicsEngine();
+		while (deltaTime > 0.02)
+		{
+			mPhysicsManager.updatePhysicsEngine();
+
+			deltaTime -= 0.02;
+		}
+
+		// mPhysicsManager.updatePhysicsEngine();
 
 		mParticleSystem.update();
 		mRenderSystem.render(mSceneManager.getCurrentScene());

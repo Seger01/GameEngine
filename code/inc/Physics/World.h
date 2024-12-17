@@ -34,8 +34,6 @@ public:
 
 	void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
 	void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
-	void applyLinearImpulse(std::vector<Vector2> aImpulseLeft, std::vector<Vector2> aImpulseRight, float aWidth,
-							float aHeight, BodyID aBodyID);
 
 	void setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID);
 	void setRotation(float aRotation, BodyID aBodyID);

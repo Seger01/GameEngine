@@ -32,6 +32,9 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 
 BodyProxy::~BodyProxy() {}
 
+/**
+ * @brief Assigns box2d body type depending on params
+ */
 void BodyProxy::processBodyType()
 {
 	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mRestitution == 0 && mMass == 0 &&

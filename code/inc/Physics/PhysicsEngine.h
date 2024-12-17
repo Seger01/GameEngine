@@ -30,12 +30,12 @@ public:
 	void setPositions();
 	void applyForces();
 
-	std::vector<GameObject*> getgameObjects() const;
+	std::vector<std::reference_wrapper<GameObject>> getgameObjects() const;
 	float getStep() const;
 	float getSubStep() const;
 	void setGravity(Vector2 aGravity);
 	World& getWorld();
-	GameObject* getGameObjectByID(int aID);
+	GameObject& getGameObjectByID(int aID);
 
 	void executeCollisionScripts(std::vector<std::pair<int, int>>);
 

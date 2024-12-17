@@ -149,24 +149,6 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 	}
 }
 
-void World::applyLinearImpulse(std::vector<Vector2> aImpulseLeft, std::vector<Vector2> aImpulseRight, float aWidth,
-							   float aHeight, BodyID aBodyID)
-{
-	b2BodyId bodyID = convertToB2BodyID(aBodyID);
-	for (int i = 0; i < aImpulseLeft.size(); i++)
-	{
-		b2Vec2 impulseLeft = {aImpulseLeft[i].x, aImpulseLeft[i].y};
-		b2Vec2 impulseRight = {aImpulseRight[i].x, aImpulseRight[i].y};
-
-		b2Vec2 pos = b2Body_GetPosition(bodyID);
-		b2Vec2 midLeft = {pos.x, pos.y + aHeight};
-		b2Vec2 midRight = {pos.x + aWidth, pos.y + aHeight};
-
-		b2Body_ApplyLinearImpulse(bodyID, impulseLeft, midLeft, true);
-		b2Body_ApplyLinearImpulse(bodyID, impulseRight, midRight, true);
-	}
-}
-
 void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);

@@ -4,9 +4,8 @@ PhysicsManager::PhysicsManager() {}
 
 void PhysicsManager::startPhysicsEngine(Vector2 aGravity)
 {
-	float timeStep = 20.0f / 60.0f;
 
-	mPhysicsEngine.setStep(timeStep);
+	mPhysicsEngine.setStep(20.0f / 60.0f);
 	mPhysicsEngine.setSubStep(4);
 
 	mPhysicsEngine.createWorld(aGravity);
