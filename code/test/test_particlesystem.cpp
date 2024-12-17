@@ -79,8 +79,8 @@ TEST_F(ParticleSystemTest, Update_MultipleEmitters)
 TEST_F(ParticleSystemTest, Update_NoEmitters)
 {
 	// Remove all emitters from GameObject
-	ParticleEmitter* emitterComponent = gameObject->getComponents<ParticleEmitter>()[0];
-	gameObject->removeComponent(emitterComponent);
+	ParticleEmitter& emitterComponent = gameObject->getComponents<ParticleEmitter>()[0];
+	gameObject->removeComponent(&emitterComponent);
 
 	// Update ParticleSystem - should handle gracefully with no emitters
 	EXPECT_NO_THROW(particleSystem->update());

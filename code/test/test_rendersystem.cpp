@@ -17,18 +17,15 @@ class RenderSystemTest : public ::testing::Test
 {
 protected:
 	// You can initialize common resources here
-	RenderSystem* mRenderSystem;
-	Scene& mScene;
+	RenderSystem& mRenderSystem{EngineBravo::getInstance().getRenderSystem()};
+	Scene& mScene{EngineBravo::getInstance().getSceneManager().createScene("Test Scene", 1)};
 
 	void SetUp() override
 	{
 		// Initialize the RenderSystem and necessary components
 		EngineBravo& engineBravo = EngineBravo::getInstance();
-		mRenderSystem = &engineBravo.getRenderSystem();
 
-		engineBravo.getResourceManager().setRenderer(&mRenderSystem->getRenderer());
-
-		mScene = engineBravo.getSceneManager().createScene("Test Scene", 1);
+		engineBravo.getResourceManager().setRenderer(&(mRenderSystem.getRenderer()));
 
 		Camera* camera = new Camera();
 		camera->setTag("MainCamera");
@@ -39,11 +36,11 @@ protected:
 
 		mScene.addGameObject(camera);
 
-		mRenderSystem->addObject(*camera);
+		mRenderSystem.addObject(*camera);
 
 		GameObject* gameObject = new GameObject();
 		mScene.addGameObject(gameObject);
-		mRenderSystem->addObject(*gameObject);
+		mRenderSystem.addObject(*gameObject);
 
 		Sprite* sprite = new Sprite(
 			*EngineBravo::getInstance().getResourceManager().loadTexture("enter_the_gungeon_spritesheet.png"), 200, 200,
@@ -56,7 +53,7 @@ protected:
 
 		text->addComponent(sprite);
 		mScene.addGameObject(text);
-		mRenderSystem->addObject(*text);
+		mRenderSystem.addObject(*text);
 
 		Animation* playerIdleBackAnimation = nullptr;
 
@@ -96,69 +93,69 @@ protected:
 	{
 		// Clean up
 		EngineBravo::getInstance().getSceneManager().removeScene("Test Scene");
-		mRenderSystem->clearObjects();
+		mRenderSystem.clearObjects();
 	}
 };
 
 TEST_F(RenderSystemTest, RenderLayer_NoExceptions)
 {
 	Camera camera;
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check that no exception is thrown
+	ASSERT_NO_THROW(mRenderSystem.renderLayer(mScene, 0, camera, Rect())); // Check that no exception is thrown
 }
 
 TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer)
 {
 	Camera camera;
 	// Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check for exceptions when an invalid
-																			// layer is
+	ASSERT_NO_THROW(mRenderSystem.renderLayer(mScene, 0, camera, Rect())); // Check for exceptions when an invalid
+																		   // layer is
 	//                                                         // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions)
 {
-	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem.render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, Render_LetterBox)
 {
-	mRenderSystem->setAspectRatio(Point{1, 1});
+	mRenderSystem.setAspectRatio(Point{1, 1});
 
-	mRenderSystem->getWindow().setSize(Vector2(100, 1000));
+	mRenderSystem.getWindow().setSize(Vector2(100, 1000));
 
-	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem.render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, Render_PillarBox)
 {
-	mRenderSystem->setAspectRatio(Point{1, 1});
-	Point get = mRenderSystem->getAspectRatio();
+	mRenderSystem.setAspectRatio(Point{1, 1});
+	Point get = mRenderSystem.getAspectRatio();
 
-	mRenderSystem->getWindow().setSize(Vector2(1000, 100));
+	mRenderSystem.getWindow().setSize(Vector2(1000, 100));
 
-	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem.render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, ScreenToWorldPos)
 {
 	ASSERT_NO_THROW(
-		mRenderSystem->screenToWorldPos(Point{100, 100}, mScene.getCameraWithTag("MainCamera"))); // Ensure no
+		mRenderSystem.screenToWorldPos(Point{100, 100}, *mScene.getCameraWithTag("MainCamera"))); // Ensure no
 																								  // exception is
 																								  // thrown during
 																								  // rendering
 }
 
-TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getRenderer()); }
+TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem.getRenderer()); }
 
 TEST_F(RenderSystemTest, GetWindow_NoExceptions)
 {
-	ASSERT_NO_THROW(mRenderSystem->getWindow());
-	mRenderSystem->getWindow().showWindow();
+	ASSERT_NO_THROW(mRenderSystem.getWindow());
+	mRenderSystem.getWindow().showWindow();
 
-	mRenderSystem->getWindow().showWindow();
+	mRenderSystem.getWindow().showWindow();
 
-	mRenderSystem->getWindow().setFloating();
-	// mRenderSystem->getWindow().toggleFullFloating();
+	mRenderSystem.getWindow().setFloating();
+	// mRenderSystem.getWindow().toggleFullFloating();
 }
 
 TEST_F(RenderSystemTest, GetTextSize_CorrectSize)
@@ -166,8 +163,8 @@ TEST_F(RenderSystemTest, GetTextSize_CorrectSize)
 	// Test that the text size is correct
 	int height = 0, width = 0;
 
-	// ASSERT_TRUE(mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1)));
-	bool res = mRenderSystem->getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1));
+	// ASSERT_TRUE(mRenderSystem.getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1)));
+	bool res = mRenderSystem.getTextSize("undefined", "Hello, World!", width, height, Vector2(1, 1));
 
 	ASSERT_EQ(res, 1);
 
