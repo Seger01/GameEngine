@@ -9,11 +9,11 @@
 class SceneTest : public ::testing::Test
 {
 protected:
-	void SetUp() override { scene = EngineBravo::getInstance().getSceneManager().createScene("TestScene", 1); }
+	void SetUp() override {}
 
 	void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("TestScene"); }
 
-	Scene* scene;
+	Scene& scene { EngineBravo::getInstance().getSceneManager().createScene("TestScene", 1); };
 };
 
 // Test creation of Scene

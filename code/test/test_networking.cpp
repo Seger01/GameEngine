@@ -311,7 +311,7 @@ protected:
 	{
 		gameObject.addComponent<NetworkObject>();
 		gameObject.addComponent<ConcreteNetworkBehaviour>();
-		behaviour = gameObject.getComponents<INetworkBehaviour>()[0];
+		behaviour = &gameObject.getComponents<INetworkBehaviour>()[0].get();
 	}
 
 	GameObject gameObject;
@@ -338,11 +338,11 @@ TEST_F(INetworkBehaviourTest, RegisterNetworkVariable)
 
 TEST_F(INetworkBehaviourTest, IsOwner)
 {
-	NetworkObject* networkObject = gameObject.getComponents<NetworkObject>()[0];
-	networkObject->setOwner(true);
+	NetworkObject& networkObject = gameObject.getComponents<NetworkObject>()[0];
+	networkObject.setOwner(true);
 	EXPECT_TRUE(behaviour->isOwner());
 
-	networkObject->setOwner(false);
+	networkObject.setOwner(false);
 	EXPECT_FALSE(behaviour->isOwner());
 }
 

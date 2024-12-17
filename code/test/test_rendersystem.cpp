@@ -82,8 +82,9 @@ protected:
 		gameObject->addComponent(playerIdleBackAnimation);
 
 		ParticleEmitter* particleEmitter = new ParticleEmitter(
-			EmitterMode::Burst, 10, 0.0f, 100, 1000, Vector2(5, 5), Vector2(0, 0), 0.0f, 0.0f, 0.0f,
-			{Color(255, 49, 3, 170), Color(255, 100, 3, 150), Color(0, 0, 0, 90), Color(0, 0, 0, 90)});
+			EmitterMode::Burst, 10, 0.0f, 100, 1000, Vector2(5, 5), Vector2(0, 0),
+			{Color(255, 49, 3, 170), Color(255, 100, 3, 150), Color(0, 0, 0, 90), Color(0, 0, 0, 90)}, 0.0f, 0.0f,
+			0.0f);
 
 		particleEmitter->setParticlesPerSecond(100);
 		gameObject->addComponent(particleEmitter);
@@ -102,21 +103,21 @@ protected:
 TEST_F(RenderSystemTest, RenderLayer_NoExceptions)
 {
 	Camera camera;
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(*mScene, 0, camera, Rect())); // Check that no exception is thrown
+	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check that no exception is thrown
 }
 
 TEST_F(RenderSystemTest, RenderLayer_OutOfBoundsLayer)
 {
 	Camera camera;
 	// Test renderLayer with a layer that might be out of bounds (e.g. a high layer that doesn't exist)
-	ASSERT_NO_THROW(mRenderSystem->renderLayer(*mScene, 0, camera, Rect())); // Check for exceptions when an invalid
-																			 // layer is
+	ASSERT_NO_THROW(mRenderSystem->renderLayer(mScene, 0, camera, Rect())); // Check for exceptions when an invalid
+																			// layer is
 	//                                                         // passed
 }
 
 TEST_F(RenderSystemTest, Render_NoExceptions)
 {
-	ASSERT_NO_THROW(mRenderSystem->render(*mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, Render_LetterBox)
@@ -125,7 +126,7 @@ TEST_F(RenderSystemTest, Render_LetterBox)
 
 	mRenderSystem->getWindow().setSize(Vector2(100, 1000));
 
-	ASSERT_NO_THROW(mRenderSystem->render(*mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, Render_PillarBox)
@@ -135,16 +136,16 @@ TEST_F(RenderSystemTest, Render_PillarBox)
 
 	mRenderSystem->getWindow().setSize(Vector2(1000, 100));
 
-	ASSERT_NO_THROW(mRenderSystem->render(*mScene)); // Ensure no exception is thrown during rendering
+	ASSERT_NO_THROW(mRenderSystem->render(mScene)); // Ensure no exception is thrown during rendering
 }
 
 TEST_F(RenderSystemTest, ScreenToWorldPos)
 {
 	ASSERT_NO_THROW(
-		mRenderSystem->screenToWorldPos(Point{100, 100}, *mScene->getCameraWithTag("MainCamera"))); // Ensure no
-																									// exception is
-																									// thrown during
-																									// rendering
+		mRenderSystem->screenToWorldPos(Point{100, 100}, mScene.getCameraWithTag("MainCamera"))); // Ensure no
+																								  // exception is
+																								  // thrown during
+																								  // rendering
 }
 
 TEST_F(RenderSystemTest, GetRenderer_NoExceptions) { ASSERT_NO_THROW(mRenderSystem->getRenderer()); }

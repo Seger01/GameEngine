@@ -26,7 +26,7 @@ class UIManagerTest : public ::testing::Test
 {
 protected:
 	UIManager* mUIManager;
-	Scene* mScene;
+	Scene& mScene { EngineBravo::getInstance().getSceneManager().createScene("UI Test Scene", 2); };
 	EventManager* mEventManager;
 
 	void SetUp() override
@@ -36,7 +36,7 @@ protected:
 		mEventManager = &engineBravo.getEventManager();
 		mUIManager->init();
 
-		mScene = engineBravo.getSceneManager().createScene("UI Test Scene", 2);
+		// /mScene = engineBravo.getSceneManager().createScene("UI Test Scene", 2);
 		ASSERT_NE(mScene, nullptr);
 
 		// int cameraID = mScene->addCamera();
@@ -44,7 +44,7 @@ protected:
 		Camera* camera = new Camera();
 		camera->setTag("MainCamera");
 
-		mScene->addGameObject(camera);
+		mScene.addGameObject(camera);
 	}
 
 	void TearDown() override { EngineBravo::getInstance().getSceneManager().removeScene("UI Test Scene"); }
