@@ -18,7 +18,7 @@ class RenderSystemTest : public ::testing::Test
 protected:
 	// You can initialize common resources here
 	RenderSystem* mRenderSystem;
-	Scene* mScene;
+	Scene& mScene;
 
 	void SetUp() override
 	{
@@ -30,11 +30,6 @@ protected:
 
 		mScene = engineBravo.getSceneManager().createScene("Test Scene", 1);
 
-		if (mScene == nullptr)
-		{
-			throw std::runtime_error("Failed to create scene");
-		}
-
 		Camera* camera = new Camera();
 		camera->setTag("MainCamera");
 
@@ -42,12 +37,12 @@ protected:
 		camera->setWidth(16 * 30);
 		camera->setHeight(9 * 30);
 
-		mScene->addGameObject(camera);
+		mScene.addGameObject(camera);
 
 		mRenderSystem->addObject(*camera);
 
 		GameObject* gameObject = new GameObject();
-		mScene->addGameObject(gameObject);
+		mScene.addGameObject(gameObject);
 		mRenderSystem->addObject(*gameObject);
 
 		Sprite* sprite = new Sprite(
@@ -60,7 +55,7 @@ protected:
 			new Text("Hello, World!", "undefined", Color(255, 255, 255, 255), Vector2(400, 400), Vector2(1, 1));
 
 		text->addComponent(sprite);
-		mScene->addGameObject(text);
+		mScene.addGameObject(text);
 		mRenderSystem->addObject(*text);
 
 		Animation* playerIdleBackAnimation = nullptr;
