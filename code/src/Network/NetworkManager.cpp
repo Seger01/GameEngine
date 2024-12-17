@@ -363,6 +363,10 @@ void NetworkManager::clearObjects() { mObjects.clear(); }
  */
 GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 {
+	if (!isServer())
+	{
+		throw std::runtime_error("Only server may call instantiate");
+	}
 	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(aPrefabID);
 	if (!iNetworkprefab)
 	{
