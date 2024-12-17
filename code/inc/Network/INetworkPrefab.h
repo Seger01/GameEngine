@@ -22,7 +22,7 @@ public:
 	/**
 	 * @brief Creates a new GameObject instance.
 	 */
-	virtual GameObject* create() = 0;
+	virtual GameObject* createEnemyPrefab() = 0;
 
 	/**
 	 * @brief Gets the prefab ID.

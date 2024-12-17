@@ -374,7 +374,7 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 	{
 		throw std::runtime_error("Prefab not found");
 	}
-	GameObject* prefab = iNetworkprefab->create();
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
 	if (prefab->hasComponent<NetworkObject>())
 	{
 		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
@@ -407,7 +407,7 @@ GameObject* NetworkManager::instantiatePrefab(NetworkPacket aNetworkPacket)
 	{
 		throw std::runtime_error("Prefab not found");
 	}
-	GameObject* prefab = iNetworkprefab->create();
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
 	if (prefab->hasComponent<NetworkObject>())
 	{
 		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
