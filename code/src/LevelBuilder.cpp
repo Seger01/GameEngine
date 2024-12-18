@@ -16,6 +16,7 @@
  *
  * @param scene
  * @param tileMapData
+ * @throw runtime_error if scene is null
  */
 void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
 {
@@ -60,7 +61,7 @@ void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
  * @param mapObject
  * @param tileMapData
  */
-void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData)
+void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData) const
 {
 	std::vector<MapObject> enemySpawns;
 	for (const auto& spawnPoint : tileMapData.mMapObjects)
@@ -88,7 +89,7 @@ void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, con
  * @param scene
  * @param mapObject
  */
-void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObject)
+void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObject) const
 {
 	GameObject* levelEndObject = new GameObject;
 	levelEndObject->setName("LevelEndTrigger");
@@ -105,7 +106,7 @@ void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObjec
  * @param gameObject
  * @param mapObject
  */
-void LevelBuilder::addTriggerCollider(GameObject* gameObject, const MapObject& mapObject)
+void LevelBuilder::addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) const
 {
 	BoxCollider* boxCollider = new BoxCollider();
 	Transform transform;
@@ -129,7 +130,7 @@ void LevelBuilder::addTriggerCollider(GameObject* gameObject, const MapObject& m
  * @param tileMapData
  * @throw runtime_error if tile not found in tileInfoMap
  */
-void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData)
+void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData) const
 {
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
@@ -170,7 +171,7 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
  * @param isGraphLayer
  */
 void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex,
-							  bool isDoorsLayer, bool isGraphLayer)
+							  bool isDoorsLayer, bool isGraphLayer) const
 {
 	EngineBravo& engine = EngineBravo::getInstance();
 

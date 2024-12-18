@@ -28,9 +28,9 @@ public:
     void createLevel(Scene* scene, const TileMapData& tileMapData);
 
 private:
-    void createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData);
-    void createLevelEndTrigger(Scene* scene, const MapObject& mapObject);
-    void createTileLayers(Scene* scene, const TileMapData& tileMapData);
-    void createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex, bool isDoorsLayer, bool isGraphLayer);
-    void addTriggerCollider(GameObject* gameObject, const MapObject& mapObject);
+    void createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData) const;
+    void createLevelEndTrigger(Scene* scene, const MapObject& mapObject) const;
+    void createTileLayers(Scene* scene, const TileMapData& tileMapData) const;
+    void createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex, bool isDoorsLayer, bool isGraphLayer) const;
+    void addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) const;
 };
