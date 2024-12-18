@@ -42,10 +42,8 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 {
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
-		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
 		bool isGraphLayer = false;
 
-		// Check if the layer has custom properties and if isGraphLayer is set
 		auto layerPropertiesIt = tileMapData.mLayerProperties.find(tileMapData.mLayerNames[layerIndex]);
 		if (layerPropertiesIt != tileMapData.mLayerProperties.end())
 		{
@@ -66,7 +64,7 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 					auto it = tileMapData.mTileInfoMap.find(tile);
 					if (it != tileMapData.mTileInfoMap.end())
 					{
-						createTile(scene, it->second, layerIndex, rowIndex, colIndex, isDoorsLayer, isGraphLayer);
+						createTile(scene, it->second, tileMapData.mLayerNames[layerIndex], layerIndex, rowIndex, colIndex, isGraphLayer);
 					}
 					else
 					{
@@ -89,8 +87,8 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
  * @param isDoorsLayer
  * @param isGraphLayer
  */
-void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex,
-							  bool isDoorsLayer, bool isGraphLayer) const
+void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex, int rowIndex, int colIndex,
+							  bool isGraphLayer) const
 {
 	EngineBravo& engine = EngineBravo::getInstance();
 
@@ -123,10 +121,6 @@ void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerI
 		boxCollider->setHeight(collider.mHeight + 0.1f);
 		boxCollider->setCollideCategory(1);
 		boxCollider->setCollideWithCategory({1, 2, 3});
-		if (isDoorsLayer)
-		{
-			boxCollider->setActive(false);
-		}
 		gameObject->addComponent(boxCollider);
 	}
 
@@ -134,20 +128,11 @@ void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerI
 	{
 		RigidBody* rigidBody = new RigidBody();
 		rigidBody->setTransform(objectTransform);
-		if (isDoorsLayer)
-		{
-			if (rigidBody != nullptr)
-			{
-				rigidBody->setActive(false);
-			}
-		}
 		rigidBody->setFriction(1.0f);
 		gameObject->addComponent(rigidBody);
 		gameObject->setName("Tile");
 	}
-	if (isDoorsLayer)
-	{
-		gameObject->setTag("Door");
-	}
+
+	gameObject->setTag(layerName);
 	scene->addGameObject(gameObject);
 }

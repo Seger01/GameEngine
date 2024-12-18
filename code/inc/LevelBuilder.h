@@ -31,6 +31,6 @@ private:
     void createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData) const;
     void createLevelEndTrigger(Scene* scene, const MapObject& mapObject) const;
     void createTileLayers(Scene* scene, const TileMapData& tileMapData) const;
-    void createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex, bool isDoorsLayer, bool isGraphLayer) const;
+    void createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex, int rowIndex, int colIndex, bool isGraphLayer) const;
     void addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) const;
 };
