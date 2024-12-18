@@ -2,7 +2,7 @@
 
 World::World() {}
 
-World::World(Vector2 aGravity)
+World::World(const Vector2& aGravity)
 {
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	mGravity = aGravity;
@@ -22,7 +22,7 @@ void World::executeWorldStep(float aStep, int aSubStep) { b2World_Step(mWorldID,
  * @param aBodyProxy The body proxy containg body data
  * @return The body ID
  */
-BodyID World::createBody(BodyProxy& aBodyProxy)
+BodyID World::createBody(const BodyProxy& aBodyProxy)
 {
 	b2BodyDef bodyDef = b2DefaultBodyDef();
 
@@ -60,7 +60,7 @@ BodyID World::createBody(BodyProxy& aBodyProxy)
  * @param aBodyProxy The body proxy containing the shape data
  * @param aBodyID The body ID which the shape is created in
  */
-void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
+void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 {
 
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
@@ -120,7 +120,7 @@ void World::createShape(BodyProxy& aBodyProxy, BodyID aBodyID)
  * @param aBodyProxy The body proxy containing the new position
  * @param aBodyID The body ID to update
  */
-void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
+void World::updateBodyProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
@@ -135,7 +135,7 @@ void World::updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
  * @param aBodyProxy The shape flags
  * @param aBodyID The body ID of the body containing the shapes
  */
-void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
+void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	int size = aBodyProxy.getBoxColliders().size() + aBodyProxy.getCircleColliders().size();
@@ -223,7 +223,7 @@ void World::updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID)
  * @brief Deletes a body from the box2d world
  * @param aBodyID The body ID to delete
  */
-void World::deleteBody(BodyID aBodyID)
+void World::deleteBody(const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	if (b2Body_IsValid(bodyID))
@@ -237,7 +237,7 @@ void World::deleteBody(BodyID aBodyID)
  * @param aForce The force to apply
  * @param aBodyID The body
  */
-void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID)
+void World::applyLinearForce(const std::vector<Vector2>& aForce, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	for (int i = 0; i < aForce.size(); i++)
@@ -252,7 +252,7 @@ void World::applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID)
  * @param aTorque The torque to apply
  * @param aBodyID The body
  */
-void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
+void World::applyTorque(const std::vector<float>& aTorque, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	for (int torqueBufferIndex = 0; torqueBufferIndex < aTorque.size(); torqueBufferIndex++)
@@ -261,14 +261,14 @@ void World::applyTorque(std::vector<float> aTorque, BodyID aBodyID)
 	}
 }
 
-Vector2 World::getPosition(BodyID aBodyID)
+Vector2 World::getPosition(const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	Vector2 position = {b2Body_GetPosition(bodyID).x, b2Body_GetPosition(bodyID).y};
 	return position;
 }
 
-float World::getRotation(BodyID aBodyID)
+float World::getRotation(const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 
@@ -280,7 +280,7 @@ float World::getRotation(BodyID aBodyID)
 	return 0;
 }
 
-void World::setBodyActivity(bool aState, BodyID aBodyID)
+void World::setBodyActivity(bool aState, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	if (b2Body_IsValid(bodyID))
@@ -296,19 +296,19 @@ void World::setBodyActivity(bool aState, BodyID aBodyID)
 	}
 }
 
-void World::setGravity(Vector2 aGravity)
+void World::setGravity(const Vector2& aGravity)
 {
 	mGravity = aGravity;
 	b2World_SetGravity(mWorldID, {aGravity.x, aGravity.y});
 }
 
-void World::setLinearVelocity(Vector2 aVelocity, BodyID aBodyID)
+void World::setLinearVelocity(const Vector2& aVelocity, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	b2Body_SetLinearVelocity(bodyID, {aVelocity.x, aVelocity.y});
 }
 
-void World::setAngularVelocity(float aVelocity, BodyID aBodyID)
+void World::setAngularVelocity(float aVelocity, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	b2Body_SetAngularVelocity(bodyID, aVelocity);
@@ -316,7 +316,7 @@ void World::setAngularVelocity(float aVelocity, BodyID aBodyID)
 
 Vector2 World::getGravity() { return mGravity; }
 
-void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
+void World::setPosition(const Vector2& aPosition, float aRotation, const BodyID& aBodyID)
 {
 	b2BodyId bodyid = convertToB2BodyID(aBodyID);
 	float radians = aRotation * (M_PI / 180.0f);
@@ -327,14 +327,14 @@ void World::setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID)
 	b2Body_SetTransform(bodyid, {aPosition.x, aPosition.y}, rot);
 }
 
-Vector2 World::getLinearVelocity(BodyID aBodyID)
+Vector2 World::getLinearVelocity(const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	b2Vec2 velocity = b2Body_GetLinearVelocity(bodyID);
 	return {velocity.x, velocity.y};
 }
 
-float World::getAngularVelocity(BodyID aBodyID)
+float World::getAngularVelocity(const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
 	return b2Body_GetAngularVelocity(bodyID);
@@ -345,7 +345,7 @@ float World::getAngularVelocity(BodyID aBodyID)
  * @param aBodyID The BodyID to convert
  * @return The converted b2BodyID
  */
-b2BodyId World::convertToB2BodyID(BodyID aBodyID)
+b2BodyId World::convertToB2BodyID(const BodyID& aBodyID)
 {
 	b2BodyId bodyID;
 	bodyID.index1 = aBodyID.bodyID;
@@ -358,7 +358,7 @@ b2BodyId World::convertToB2BodyID(BodyID aBodyID)
  * @brief Gets all contact events of the current world step
  * @return The contact events
  */
-std::vector<std::pair<int, int>> World::getContactEvents()
+std::vector<std::pair<int, int>> World::getContactEvents() const
 {
 	std::vector<std::pair<int, int>> collisionList;
 	b2ContactEvents contactlist = b2World_GetContactEvents(mWorldID);
@@ -379,7 +379,7 @@ std::vector<std::pair<int, int>> World::getContactEvents()
  * @brief Gets all sensor events of the current world step
  * @return The sensor events
  */
-std::vector<std::pair<int, int>> World::getSensorEvents()
+std::vector<std::pair<int, int>> World::getSensorEvents() const
 {
 	std::vector<std::pair<int, int>> sensorList;
 	b2SensorEvents sensorEvents = b2World_GetSensorEvents(mWorldID);

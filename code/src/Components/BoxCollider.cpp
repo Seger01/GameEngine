@@ -1,5 +1,4 @@
 #include "BoxCollider.h"
-#include <iostream>
 
 BoxCollider::BoxCollider(std::string aTag)
 	: Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mIsTrigger(false), mRotation(0.0f), mCollideWithCategory({1}),
@@ -57,7 +56,7 @@ void BoxCollider::setCollideCategory(int category)
 
 std::vector<int> BoxCollider::getCollideWithCategory() const { return mCollideWithCategory; }
 
-void BoxCollider::setCollideWithCategory(std::vector<int> aCollideWith)
+void BoxCollider::setCollideWithCategory(const std::vector<int>& aCollideWith)
 {
 	mCollideWithCategory = aCollideWith;
 	mIsUpdated = true;

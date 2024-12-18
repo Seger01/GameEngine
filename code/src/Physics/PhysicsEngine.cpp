@@ -1,6 +1,6 @@
 #include "Physics/PhysicsEngine.h"
 
-PhysicsEngine::PhysicsEngine() : mStep(20.0f / 60.0f), mSubStep(4) {}
+PhysicsEngine::PhysicsEngine() : mStep(0.02f), mSubStep(4) {}
 
 PhysicsEngine::~PhysicsEngine() {}
 
@@ -8,7 +8,7 @@ PhysicsEngine::~PhysicsEngine() {}
  * @brief Creates the world
  * @param aGravity The gravity of the world
  */
-void PhysicsEngine::createWorld(Vector2 aGravity) { mWorld = World(aGravity); }
+void PhysicsEngine::createWorld(const Vector2& aGravity) { mWorld = World(aGravity); }
 
 /**
  * @brief Creates the bodies in the world
@@ -44,6 +44,7 @@ void PhysicsEngine::update()
 	setPositions();
 	applyForces();
 
+	std::cout << "Step is: " << mStep << std::endl;
 	mWorld.executeWorldStep(mStep, mSubStep);
 	convertFromBox2D(mObjects);
 
@@ -146,7 +147,7 @@ void PhysicsEngine::applyForces()
  * @brief Executes the collision scripts of the game objects
  * @param aBodyIDs The body IDs of the game objects
  */
-void PhysicsEngine::executeCollisionScripts(std::vector<std::pair<int, int>> aBodyIDs)
+void PhysicsEngine::executeCollisionScripts(const std::vector<std::pair<int, int>>& aBodyIDs)
 {
 
 	for (int i = 0; i < aBodyIDs.size(); i++)
@@ -270,6 +271,7 @@ GameObject& PhysicsEngine::getGameObjectByID(int aID)
 			}
 		}
 	}
+	return mObjects[0];
 }
 
 float PhysicsEngine::getSubStep() const { return mSubStep; }
@@ -282,7 +284,7 @@ void PhysicsEngine::setStep(float aStep) { mStep = aStep; }
 
 void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
 
-void PhysicsEngine::setGravity(Vector2 aGravity) { mWorld.setGravity(aGravity); }
+void PhysicsEngine::setGravity(const Vector2& aGravity) { mWorld.setGravity(aGravity); }
 
 /**
  * @brief Adds a game object to the physics engine

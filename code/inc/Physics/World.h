@@ -1,6 +1,13 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+/**
+ * @file World.h
+ *
+ * @brief This file contains all the logic for the box2d physics library and the world
+ *
+ */
+
 #include "Physics/BodyProxy.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
@@ -10,42 +17,47 @@
 class World
 {
 public:
-	World(Vector2 aGravity);
+	World(const Vector2& aGravity);
 	World();
 
+private:
 	void executeWorldStep(float step, int subStep);
 
-	BodyID createBody(BodyProxy& aBodyProxy);
-	void createShape(BodyProxy& aBodyProxy, BodyID aBodyID);
+	BodyID createBody(const BodyProxy& aBodyProxy);
+	void createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
 
-	void updateBodyPosition(BodyProxy& aBodyProxy, BodyID aBodyID);
-	void updateBodyProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
-	void updateShapeProperties(BodyProxy& aBodyProxy, BodyID aBodyID);
+	void updateBodyPosition(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
+	void updateBodyProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
+	void updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
 
-	void deleteBody(BodyID aBodyID);
+	void deleteBody(const BodyID& aBodyID);
 
-	void applyLinearForce(std::vector<Vector2> aForce, BodyID aBodyID);
-	void applyTorque(std::vector<float> aTorque, BodyID aBodyID);
+	void applyLinearForce(const std::vector<Vector2>& aForce, const BodyID& aBodyID);
+	void applyTorque(const std::vector<float>& aTorque, const BodyID& aBodyID);
 
-	void setGravity(Vector2 aGravity);
-	void setPosition(Vector2 aPosition, float aRotation, BodyID aBodyID);
-	void setRotation(float aRotation, BodyID aBodyID);
-	void setLinearVelocity(Vector2 aVelocity, BodyID aBodyID);
-	void setAngularVelocity(float aVelocity, BodyID aBodyID);
-	void setBodyActivity(bool aState, BodyID aBodyID);
+	void setGravity(const Vector2& aGravity);
+	void setPosition(const Vector2& aPosition, float aRotation, const BodyID& aBodyID);
+	void setRotation(float aRotation, const BodyID& aBodyID);
+	void setLinearVelocity(const Vector2& aVelocity, const BodyID& aBodyID);
+	void setAngularVelocity(float aVelocity, const BodyID& aBodyID);
+	void setBodyActivity(bool aState, const BodyID& aBodyID);
 
 	Vector2 getGravity();
-	Vector2 getPosition(BodyID aBodyID);
-	float getRotation(BodyID aBodyID);
-	Vector2 getLinearVelocity(BodyID aBodyID);
-	float getAngularVelocity(BodyID aBodyID);
+	Vector2 getPosition(const BodyID& aBodyID);
+	float getRotation(const BodyID& aBodyID);
+	Vector2 getLinearVelocity(const BodyID& aBodyID);
+	float getAngularVelocity(const BodyID& aBodyID);
 
-	b2BodyId convertToB2BodyID(BodyID aBodyID);
-	std::vector<std::pair<int, int>> getContactEvents();
-	std::vector<std::pair<int, int>> getSensorEvents();
+	b2BodyId convertToB2BodyID(const BodyID& aBodyID);
+	std::vector<std::pair<int, int>> getContactEvents() const;
+	std::vector<std::pair<int, int>> getSensorEvents() const;
+
+	friend class PhysicsEngine;
 
 private:
+	/// @brief The box2d world id
 	b2WorldId mWorldID;
+	/// @brief The gravity of the world
 	Vector2 mGravity;
 };
 
