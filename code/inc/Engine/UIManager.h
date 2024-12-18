@@ -1,3 +1,8 @@
+/**
+ * @file UIManager.h
+ * @brief UIManager class header file.
+ */
+
 #ifndef UIMANAGER_H
 #define UIMANAGER_H
 
@@ -8,6 +13,11 @@
 #include "EventManager.h"
 #include "Scene.h"
 #include "UIObject.h"
+
+/**
+ * @class UIManager
+ * @brief UIManager class responsible for calling the required function on the UI objects.
+ */
 
 class UIManager
 {
@@ -27,12 +37,17 @@ public:
 	void clearObjects();
 
 private:
+	/// @brief The list of UI objects
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
-	// std::vector<UIObject&> mClickableButtons;
+
+	/// @brief the constructor is private to prevent instantiation
 	UIManager();
+	/// @brief the destructor is private to prevent instantiation
 	~UIManager();
 
+	/// @brief The mouse down event queue which gets processed when update is called
 	std::vector<Event> mMouseDownEventQueue;
+	/// @brief The mouse up event queue which gets processed when update is called
 	std::vector<Event> mMouseUpEventQueue;
 };
 

@@ -26,6 +26,7 @@ public:
 	void clearObjects();
 
 private:
+	/// @brief The list of objects with particle emitters
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
 };
 

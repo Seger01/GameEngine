@@ -34,6 +34,7 @@ public:
 	void initialize();
 	void run();
 
+	void stopEngine();
 	void setFrameRateLimit(int aFrameRate);
 
 	SceneManager& getSceneManager();

@@ -53,9 +53,10 @@ public:
 	SDL_Renderer*& getSDLRenderer();
 
 private:
-	TTF_Font* mFont = nullptr; /**< The font used for rendering text. */
+	TTF_Font* mFont = nullptr;
 
-	SDL_Renderer* mRenderer = nullptr; /**< The SDL renderer. */
+	/// @brief The SDL renderer.
+	SDL_Renderer* mRenderer = nullptr;
 };
 
 #endif

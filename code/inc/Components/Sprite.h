@@ -65,16 +65,25 @@ public:
 	int getLayer() { return mLayer; }
 
 private:
-	Transform mTransform; // Relative position to the parent GameObject
+	/// @brief Transform of the sprite.
+	Transform mTransform;
 
-	const Texture& mTexture; // Pointer to the texture
-	Rect mSourceRect;		 // Source rectangle of the texture
-	Color mColorFilter;		 // Color filter of the sprite
+	/// @brief Texture of the sprite.
+	const Texture& mTexture;
+	/// @brief Source rectangle of the texture.
+	Rect mSourceRect;
+	/// @brief Color filter of the sprite.
+	Color mColorFilter;
 
-	float mWidth = 0;  // Width of the sprite
-	float mHeight = 0; // Height of the sprite
-	bool mFlipX;	   // Whether the sprite should flip horizontally
-	bool mFlipY;	   // Whether the sprite should flip vertically
+	/// @brief Width of the sprite.
+	float mWidth = 0;
+	/// @brief Height of the sprite.
+	float mHeight = 0;
+	/// @brief Whether the sprite should flip horizontally.
+	bool mFlipX;
+	/// @brief Whether the sprite should flip vertically.
+	bool mFlipY;
 
-	int mLayer = 0; // Layer of the sprite
+	/// @brief Layer the sprite should be rendered on.
+	int mLayer = 0;
 };
