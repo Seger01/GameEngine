@@ -396,7 +396,7 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 }
 
 /**
- * @brief Instantiates a prefab based on the provided prefab ID and transform.
+ * @brief instantiates a prefab based on the provided network packet.
  * @param aNetworkPacket The network packet containing the prefab ID and network object ID.
  * @return Pointer to the instantiated prefab.
  */

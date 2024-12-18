@@ -132,6 +132,7 @@ void NetworkObject::spawn()
 	{
 		throw std::runtime_error("Only the server can spawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
 void NetworkObject::despawn()
@@ -140,6 +141,7 @@ void NetworkObject::despawn()
 	{
 		throw std::runtime_error("Only the server can despawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
 /**
