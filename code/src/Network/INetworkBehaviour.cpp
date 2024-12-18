@@ -10,17 +10,12 @@
 
 #include <stdexcept>
 
-int INetworkBehaviour::networkBehaviourIDCounter = 0;
-
 /**
  * @brief Constructs a new INetworkBehaviour object.
  *
  * @param aTag The tag associated with this network behaviour.
  */
-INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
-{
-	mNetworkBehaviourID = networkBehaviourIDCounter++;
-}
+INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false) {}
 
 /**
  * @brief Copy constructor.
@@ -28,8 +23,7 @@ INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag),
  * @param other The INetworkBehaviour to copy.
  */
 INetworkBehaviour::INetworkBehaviour(const INetworkBehaviour& other)
-	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet),
-	  mNetworkBehaviourID(other.mNetworkBehaviourID)
+	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet)
 {
 	mNetworkVariables.clear();
 }
@@ -114,10 +108,3 @@ bool INetworkBehaviour::isOwner()
  * @brief Destroys the network behaviour.
  */
 void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
-
-/**
- * @brief Gets the network behaviour ID.
- *
- * @return uint8_t The network behaviour ID.
- */
-uint8_t INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }

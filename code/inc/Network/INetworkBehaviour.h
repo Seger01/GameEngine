@@ -39,13 +39,9 @@ public:
 
 	void destroy();
 
-	uint8_t getNetworkBehaviourID() const;
-
 private:
 	bool mIsOwner;						  ///< Indicates if the current object is the owner.
 	bool mIsOwnerSet;					  ///< Indicates if the owner status has been set.
-	uint8_t mNetworkBehaviourID;		  ///< The network behaviour ID.
-	static int networkBehaviourIDCounter; ///< Counter for generating unique network behaviour IDs.
 
 protected:
 	std::vector<std::reference_wrapper<NetworkVariableBase>> mNetworkVariables; ///< List of network variables.
