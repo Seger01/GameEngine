@@ -32,5 +32,5 @@ private:
     void createLevelEndTrigger(Scene* scene, const MapObject& mapObject);
     void createTileLayers(Scene* scene, const TileMapData& tileMapData);
     void createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex, bool isDoorsLayer, bool isGraphLayer);
-
+    void addTriggerCollider(GameObject* gameObject, const MapObject& mapObject);
 };

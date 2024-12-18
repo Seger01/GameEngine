@@ -48,29 +48,22 @@ void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, con
     GameObject* roomObject = new GameObject;
     roomObject->setName("RoomTrigger");
 
-    BoxCollider* boxCollider = new BoxCollider();
-    Transform transform;
-    transform.position.x = mapObject.x;
-    transform.position.y = mapObject.y;
-    boxCollider->setTransform(transform);
-    boxCollider->setWidth(mapObject.width);
-    boxCollider->setHeight(mapObject.height);
-    boxCollider->setTrigger(true);
-    roomObject->addComponent(boxCollider);
-
-    RigidBody* rigidBody = new RigidBody();
-    rigidBody->setTransform(transform);
-    roomObject->addComponent(rigidBody);
+    addTriggerCollider(roomObject, mapObject);
 
     scene->addGameObject(roomObject);
 }
 
 void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObject) {
-    std::cout << "Creating LevelEndTrigger" << std::endl;
     GameObject* levelEndObject = new GameObject;
     levelEndObject->setName("LevelEndTrigger");
     levelEndObject->setTag("LevelEnd");
 
+    addTriggerCollider(levelEndObject, mapObject);
+
+    scene->addGameObject(levelEndObject);
+}
+
+void LevelBuilder::addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) {
     BoxCollider* boxCollider = new BoxCollider();
     Transform transform;
     transform.position.x = mapObject.x;
@@ -79,13 +72,11 @@ void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObjec
     boxCollider->setWidth(mapObject.width);
     boxCollider->setHeight(mapObject.height);
     boxCollider->setTrigger(true);
-    levelEndObject->addComponent(boxCollider);
+    gameObject->addComponent(boxCollider);
 
     RigidBody* rigidBody = new RigidBody();
     rigidBody->setTransform(transform);
-    levelEndObject->addComponent(rigidBody);
-
-    scene->addGameObject(levelEndObject);
+    gameObject->addComponent(rigidBody);
 }
 
 void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData) {
@@ -101,7 +92,7 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
                     if (it != tileMapData.mTileInfoMap.end()) {
                         createTile(scene, it->second, layerIndex, rowIndex, colIndex, isDoorsLayer, isGraphLayer);
                     } else {
-                        std::cout << "Tile ID " << tile << " not found in mTileInfoMap.\n";
+                        std::cerr << "Tile ID " << tile << " not found in mTileInfoMap.\n";
                     }
                 }
             }
