@@ -7,6 +7,8 @@
 
 #include "Vector2.h"
 
+#include <cmath>
+
 /**
  * @struct Transform
  * @brief Represents a 2D transformation (position, rotation, scale).
@@ -109,12 +111,12 @@ struct Transform
 		rotation += deltaRotation;
 		if (rotation > 360)
 		{
-			rotation = fmod(rotation, 360);
+			rotation = std::fmod(rotation, 360);
 		}
 		else if (rotation < 0)
 		{
 			// Fmod to reduce it to [-360, 0). Then add 360 to make it [0, 360)
-			rotation = fmod(rotation, 360) + 360;
+			rotation = std::fmod(rotation, 360) + 360;
 		}
 	}
 
