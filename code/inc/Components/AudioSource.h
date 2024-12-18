@@ -13,7 +13,10 @@
 /**
  * @class AudioSource
  *
- * @brief This class is a component, responsible for holding the data of an audio source
+ * @brief This class is a component, representing an sfx or music source in the game.
+ *
+ * The AudioSource can be either music or sfx. Sfc can be played in a 'fire and forget' manner, and cannot be changed or
+ * stopped after playing. Music can always be started, paused, resumed and stopped.
  */
 class AudioSource : public Component
 {

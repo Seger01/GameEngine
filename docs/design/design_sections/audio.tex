@@ -15,16 +15,6 @@ it has the features to meet the engine requirements, and its ease of use makes i
 \subsection{Class diagram}
 \includegraphics[width=\textwidth]{audioClassDiagram.png}
 In the following subsections, the classes in this diagram are further detailed.
-\subsubsection{AudioSource}
-The AudioSource is a class required by the project's API, it is one of the child classes of Component.
-It will therefore be owned by a GameObject, and represent either a single sfx or song.
-
-Things to note about the AudioSource:
-\begin{itemize}
-    \item When creating an AudioSource, it must be explicitly stated if it is music or an sfx. This is because the AudioManager treats these differently.
-    \item mPlayOnWake (required by API) indicates whether the audio source should be played when a new scene is loaded. When this is false, the audio only plays when play() is called.
-    \item The x direction and velocity represent the location of the sound in the game, from left to right (x-axis).\footnote{Because the engine is made for 2D games, there is no depth (z-axis) members. Adding verticallity (y-axis) to sound is complex, and out of the scope of this project.} \footnote{The x coordinates and velocity are unrelated to the coordinate system for the game objects.}
-\end{itemize}
 
 \subsubsection{AudioManager}
 The AudioManager is, similarly to the other manager classes, responsible for controlling all of the sound features in the engine.
