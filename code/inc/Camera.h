@@ -40,13 +40,17 @@ public:
 	void setRenderOrder(uint aRenderOrder);
 	uint getRenderOrder() const;
 
+	bool isMainCamera() const;
+	void setMainCamera(bool aIsMainCamera);
+
 	void update();
 
 	void startShake(float duration, float magnitude);
 	void stopShake();
 
 private:
-	uint mRenderOrder; // position in the camera render queue
+	bool mIsMainCamera; // Whether this camera is the main camera
+	uint mRenderOrder;	// position in the camera render queue
 
 	/// @brief Background color, used to render every place where there is no renderable object.
 	Color mBackgroundColor;

@@ -1,3 +1,7 @@
+/**
+ * @file TileMapParser.h
+ * @brief This file contains the declaration of the TileMapParser class and the structs used to store the parsed data
+ */
 #pragma once
 
 #include <string>
@@ -77,8 +81,15 @@ private:
     void storeTileInfo();
     void parseObjectLayer(const nlohmann::json& layer);
 private:
+    /// @brief The path to the JSON file
     std::string mFilePath;
+
+    /// @brief The JSON data
     nlohmann::json mJsonData;
+
+    /// @brief The tilesets
     std::vector<nlohmann::json> mTilesets;
+
+    /// @brief The parsed tilemap data
     TileMapData mTileMapData;
 };

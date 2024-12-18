@@ -1,7 +1,8 @@
 #include "Engine/SceneManager.h"
 #include "EngineBravo.h"
+#include <functional>
 
-SceneManager::SceneManager() : mCurrentSceneIndex(0), mNewSceneName(""), mNewSceneID(-1), mScenes{} {}
+SceneManager::SceneManager() : mCurrentSceneIndex(-1), mNewSceneName(""), mNewSceneID(-1), mScenes{} {}
 
 SceneManager::~SceneManager() {}
 
@@ -88,11 +89,11 @@ bool SceneManager::sceneIDExists(int aSceneID)
 	return false;
 }
 
-Scene* SceneManager::createScene(std::string aSceneName, int aSceneID)
+Scene& SceneManager::createScene(std::string aSceneName, int aSceneID)
 {
 	if (sceneNameExists(aSceneName) || sceneIDExists(aSceneID))
 	{
-		return nullptr;
+		throw std::runtime_error("Scene name or ID already exists");
 	}
 
 	if (aSceneID == -1)
@@ -101,8 +102,7 @@ Scene* SceneManager::createScene(std::string aSceneName, int aSceneID)
 	}
 
 	mScenes.push_back(std::unique_ptr<Scene>(new Scene(aSceneName, aSceneID)));
-	return mScenes.back().get();
-	// return mScenes[mScenes.size() - 1].get();
+	return *mScenes[mScenes.size() - 1];
 }
 
 void SceneManager::removeScene(const std::string& sceneName)
@@ -122,13 +122,13 @@ void SceneManager::loadScene(int index)
 	// Release all objects from the managers
 	EngineBravo::getInstance().getUpdateQueue().clearManagerObjects();
 
-	Scene* currentScene = getCurrentScene();
+	Scene* currentScene = &getCurrentScene();
 	if (currentScene)
 	{
 		currentScene->releasePersistentGameObjects();
 	}
 
-	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> persistentGameObjects = currentScene->getPersistentGameObjects();
 
 	currentScene->clearPersistentGameObjects();
 
@@ -137,13 +137,13 @@ void SceneManager::loadScene(int index)
 		mCurrentSceneIndex = index;
 	}
 
-	currentScene = getCurrentScene();
+	currentScene = &getCurrentScene();
 
 	for (auto& object : persistentGameObjects)
 	{
-		currentScene->addPersistentGameObject(object);
+		currentScene->addPersistentGameObject(&object.get());
 		// Add the object to the update list
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
 	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }
@@ -153,13 +153,13 @@ void SceneManager::loadScene(const std::string& sceneName)
 	// Release all objects from the managers
 	EngineBravo::getInstance().getUpdateQueue().clearManagerObjects();
 
-	Scene* currentScene = getCurrentScene();
+	Scene* currentScene = &getCurrentScene();
 	if (currentScene)
 	{
 		currentScene->releasePersistentGameObjects();
 	}
 
-	std::vector<GameObject*> persistentGameObjects = currentScene->getPersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> persistentGameObjects = currentScene->getPersistentGameObjects();
 
 	currentScene->clearPersistentGameObjects();
 
@@ -174,26 +174,33 @@ void SceneManager::loadScene(const std::string& sceneName)
 		}
 	}
 
-	currentScene = getCurrentScene();
+	currentScene = &getCurrentScene();
 
 	for (auto& object : persistentGameObjects)
 	{
-		currentScene->addPersistentGameObject(object);
+		currentScene->addPersistentGameObject(&object.get());
 		// Add the object to the update list
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
-	for (GameObject* object : currentScene->getGameObjects())
+	for (GameObject& object : currentScene->getGameObjects())
 	{
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
 	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
 }
 
-Scene* SceneManager::getCurrentScene()
+Scene& SceneManager::getCurrentScene()
 {
+	if (mCurrentSceneIndex <= -1)
+	{
+		static Scene emptyScene("Non valid scene", -1);
+		return emptyScene;
+	}
+
 	if (mCurrentSceneIndex >= 0 && mCurrentSceneIndex < mScenes.size())
 	{
-		return mScenes[mCurrentSceneIndex].get();
+		return *mScenes[mCurrentSceneIndex];
 	}
-	return nullptr;
+
+	throw std::runtime_error("Scene index out of bounds");
 }

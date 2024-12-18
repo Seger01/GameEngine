@@ -31,10 +31,14 @@ public:
 	bool isOwner() const;
 	bool isPlayer() const;
 	int getNetworkObjectID() const;
+	int getPrefabID() const;
+	void spawn();
+	void despawn();
 
 private:
 	void setPlayer(bool aIsPlayer);
 	void setNetworkObjectID(int aNetworkObjectID);
+	void setPrefabID(int aPrefabID);
 
 private:
 	bool mIsOwner;				   ///< Indicates if this object is the owner.
@@ -43,6 +47,8 @@ private:
 
 	friend class NetworkManager;
 	bool mIsPlayer; ///< Indicates if this object is a player.
+
+	int mPrefabID; ///< The prefab ID of the object.
 
 	static int networkObjectIDCounter; ///< Counter for generating unique network object IDs.
 };

@@ -9,7 +9,6 @@
 #ifndef ENGINEBRAVO_H
 #define ENGINEBRAVO_H
 
-#include "AnimationManager.h"
 #include "AudioManager.h"
 #include "Configuration.h"
 #include "Engine/ResourceManager.h"

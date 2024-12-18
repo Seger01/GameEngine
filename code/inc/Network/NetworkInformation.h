@@ -25,11 +25,14 @@ enum class NetworkRole { UNASSIGNED, CLIENT, SERVER, HOST };
  * @enum NetworkMessage
  * @brief Defines custom network message identifiers.
  */
-enum NetworkMessage {
-    ID_TRANSFORM_PACKET = ID_USER_PACKET_ENUM + 1,
-    ID_PLAYER_INIT = ID_TRANSFORM_PACKET + 1,
-    ID_PLAYER_DESTROY = ID_PLAYER_INIT + 1,
-    ID_CUSTOM_SERIALIZE = ID_PLAYER_DESTROY + 1,
+enum NetworkMessage
+{
+	ID_TRANSFORM_PACKET = ID_USER_PACKET_ENUM + 1,
+	ID_PLAYER_INIT = ID_TRANSFORM_PACKET + 1,
+	ID_PLAYER_DESTROY = ID_PLAYER_INIT + 1,
+	ID_CUSTOM_SERIALIZE = ID_PLAYER_DESTROY + 1,
+	ID_SPAWN_PREFAB = ID_CUSTOM_SERIALIZE + 1,
+	ID_DESPAWN_PREFAB = ID_SPAWN_PREFAB + 1,
 };
 
 /**
@@ -45,10 +48,10 @@ enum class WritePermission { ReadOnly, ReadWrite };
 struct NetworkPacket {
 	SLNet::MessageID messageID;	  ///< The message ID of the packet.
 	uint16_t networkObjectID;	  ///< The network object ID.
-	uint16_t prefabID;			  ///< The prefab ID.
+	uint32_t prefabID;			  ///< The prefab ID.
 	uint64_t timestamp;			  ///< The timestamp of the packet.
 	SLNet::RakNetGUID clientGUID; ///< The GUID of the client.
-	uint16_t ISerializableID;	  ///< The serializable ID.
+	uint32_t ISerializableID;	  ///< The serializable ID.
 	uint8_t networkBehaviourID;	  ///< The network behaviour ID.
 	uint8_t networkVariableID;	  ///< The network variable ID.
 

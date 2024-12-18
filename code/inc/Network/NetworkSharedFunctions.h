@@ -16,7 +16,7 @@
  */
 class NetworkSharedFunctions {
 public:
-	static void reserverNetworkPacketBits(SLNet::BitStream& aBitStream);
+	static void reserveNetworkPacketBits(SLNet::BitStream& aBitStream);
 
 	static NetworkPacket getBitStreamData(SLNet::BitStream& aBitStream);
     static void setBitStreamNetworkPacket(SLNet::BitStream& aBitStream, const NetworkPacket& aNetworkPacket);

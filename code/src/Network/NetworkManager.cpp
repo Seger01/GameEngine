@@ -201,8 +201,8 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 
 	for (auto object : mObjects)
 	{
-		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientGUID() == packet.clientGUID) // Check if player already exists
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == packet.clientGUID) // Check if player already exists
 		{
 			return nullptr;
 		}
@@ -214,18 +214,17 @@ GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
 	{
 		throw std::runtime_error("Player prefab does not have a NetworkObject component");
 	}
-	networkObjects[0]->setClientGUID(packet.clientGUID); // Assign unique ID to player
+	networkObjects[0].get().setClientGUID(packet.clientGUID); // Assign unique ID to player
 	if (packet.networkObjectID != UINT16_MAX)
 	{
-		networkObjects[0]->setNetworkObjectID(packet.networkObjectID);
+		networkObjects[0].get().setNetworkObjectID(packet.networkObjectID);
 	}
 	else
 	{
-		networkObjects[0]->setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
+		networkObjects[0].get().setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
 	}
-	std::cout << "Player instantiated with network object ID: " << networkObjects[0]->getNetworkObjectID() << std::endl;
-	networkObjects[0]->setPlayer(true);		  // Mark as player
-	EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
+	networkObjects[0].get().setPlayer(true); // Mark as player
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
 	return player;
 }
 
@@ -237,10 +236,10 @@ void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
 {
 	for (auto object : mObjects)
 	{
-		NetworkObject* networkObject = object.get().getComponents<NetworkObject>()[0];
-		if (networkObject->getClientGUID() == playerID)
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == playerID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene()->requestGameObjectRemoval(&object.get());
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&object.get());
 			return;
 		}
 	}
@@ -302,13 +301,16 @@ void NetworkManager::startClient()
  * @brief Starts the host.
  * @throws std::runtime_error If the server or client is already running, or if the host is already running.
  */
-void NetworkManager::startHost() {
-    if (mServer || mClient) {
-        throw std::runtime_error("Cannot start host when server or client is already running");
-    }
-    if (mHost) {
-        throw std::runtime_error("Host is already running");
-    }
+void NetworkManager::startHost()
+{
+	if (mServer || mClient)
+	{
+		throw std::runtime_error("Cannot start host when server or client is already running");
+	}
+	if (mHost)
+	{
+		throw std::runtime_error("Host is already running");
+	}
 	mHost = std::make_unique<NetworkHost>(mObjects, mTickRate);
 }
 
@@ -336,9 +338,8 @@ void NetworkManager::addObject(GameObject& aObject)
  */
 void NetworkManager::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
@@ -355,3 +356,68 @@ const std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getObject
  * @brief Clears all game objects managed by the network manager.
  */
 void NetworkManager::clearObjects() { mObjects.clear(); }
+
+/**
+ * @brief Instantiates a prefab based on the provided prefab ID and transform.
+ * @param aPrefabID The ID of the prefab to instantiate.
+ * @param aTransform The transform to apply to the instantiated prefab.
+ * @return Pointer to the instantiated prefab.
+ */
+GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
+{
+	if (!isServer())
+	{
+		throw std::runtime_error("Only server may call instantiate");
+	}
+	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(aPrefabID);
+	if (!iNetworkprefab)
+	{
+		throw std::runtime_error("Prefab not found");
+	}
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
+	if (prefab->hasComponent<NetworkObject>())
+	{
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(aPrefabID);
+		networkObject.setOwner(true);
+	}
+	else
+	{
+		throw std::runtime_error("Prefab does not have a NetworkObject component");
+	}
+	if (aTransform.position != Transform().position || aTransform.rotation != Transform().rotation ||
+		aTransform.scale != Transform().scale)
+	{
+		prefab->setTransform(aTransform);
+	}
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
+	mServer->sendPrefabSpawn(prefab->getComponents<NetworkObject>()[0]);
+	return prefab;
+}
+
+/**
+ * @brief Instantiates a prefab based on the provided prefab ID and transform.
+ * @param aNetworkPacket The network packet containing the prefab ID and network object ID.
+ * @return Pointer to the instantiated prefab.
+ */
+GameObject* NetworkManager::instantiatePrefab(NetworkPacket aNetworkPacket)
+{
+	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(aNetworkPacket.prefabID);
+	if (!iNetworkprefab)
+	{
+		throw std::runtime_error("Prefab not found");
+	}
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
+	if (prefab->hasComponent<NetworkObject>())
+	{
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(aNetworkPacket.prefabID);
+		networkObject.setNetworkObjectID(aNetworkPacket.networkObjectID);
+	}
+	else
+	{
+		throw std::runtime_error("Prefab does not have a NetworkObject component");
+	}
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
+	return prefab;
+}

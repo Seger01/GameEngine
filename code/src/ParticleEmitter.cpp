@@ -28,9 +28,8 @@
  * @param aTag The tag of the particle emitter
  */
 ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float aAcceleration, int aMinLifeTimeMs,
-								 int aMaxLifeTimeMs, Vector2 aSize, Vector2 aEndSize, float aRotation,
-								 float angularVelocity, float angularAcceleration, std::vector<Color> aColorGradient,
-								 std::string aTag)
+								 int aMaxLifeTimeMs, Vector2 aSize, Vector2 aEndSize, std::vector<Color> aColorGradient,
+								 float aRotation, float angularVelocity, float angularAcceleration, std::string aTag)
 	: Component{aTag}, mEmitterMode(aEmitterMode), mVelocity(aSpeed), mAcceleration(aAcceleration),
 	  mMinLifeTimeMs(aMinLifeTimeMs), mMaxLifeTimeMs(aMaxLifeTimeMs), mSize(aSize), mEndSize(aEndSize),
 	  mRotation(aRotation), mAngularVelocity(angularVelocity), mAngularAcceleration(angularAcceleration),
@@ -38,7 +37,7 @@ ParticleEmitter::ParticleEmitter(EmitterMode aEmitterMode, float aSpeed, float a
 {
 	mParticlesPerSecond = 0;
 	mMinAngle = 0;
-	mMaxAngle = 0;
+	mMaxAngle = 360;
 }
 
 /**

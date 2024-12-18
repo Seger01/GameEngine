@@ -52,13 +52,13 @@ public:
 
 	bool getFlipY() const { return mFlipY; }
 
-	void setWidth(int aWidth) { mWidth = aWidth; }
+	void setWidth(float aWidth) { mWidth = aWidth; }
 
-	int getWidth() const { return mWidth; }
+	float getWidth() const { return mWidth; }
 
-	void setHeight(int aHeight) { mHeight = aHeight; }
+	void setHeight(float aHeight) { mHeight = aHeight; }
 
-	int getHeight() const { return mHeight; }
+	float getHeight() const { return mHeight; }
 
 	void setLayer(int aLayer) { mLayer = aLayer; }
 

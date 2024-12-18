@@ -15,7 +15,7 @@ public:
 	friend class EngineBravo;
 
 	void init();
-	void update(Scene* aScene);
+	void update(const Scene& aScene);
 
 	void handleMouseDownEvent(const Event& aEvent);
 	void handleMouseUpEvent(const Event& aEvent);

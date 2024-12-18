@@ -2,8 +2,6 @@
 
 Button::Button() : UIObject(), mWidth(0), mHeight(0), mInteractable(true), mOnClickCallback(nullptr), mHovered(false) {}
 
-Button::~Button() {}
-
 void Button::setOnClickCallback(const std::function<void()>& callback) { mOnClickCallback = callback; }
 
 void Button::activateOnClickCallback()

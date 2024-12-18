@@ -3,6 +3,7 @@
 #include "EngineBravo.h"
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <stdexcept>
 
@@ -20,7 +21,7 @@ void Scene::update()
 		// std::cout << "Removing GameObject in the update function" << std::endl;
 		for (auto& toBeRemoved : mGameObjectsToRemove)
 		{
-			removeGameObject(toBeRemoved);
+			removeGameObject(&toBeRemoved.get());
 		}
 		mGameObjectsToRemove.clear();
 	}
@@ -46,24 +47,24 @@ void Scene::removeGameObject(GameObject* aObject)
 	// std::cerr << "RemoveGameObject called but no matching object found" << std::endl;
 }
 
-std::vector<GameObject*> Scene::getGameObjects() const
+std::vector<std::reference_wrapper<GameObject>> Scene::getGameObjects() const
 {
-	std::vector<GameObject*> gameObjectRefs;
+	std::vector<std::reference_wrapper<GameObject>> gameObjectRefs;
 	for (const auto& gameObject : mGameObjects)
 	{
-		gameObjectRefs.push_back(gameObject.get());
+		gameObjectRefs.push_back(*gameObject.get());
 	}
 	return gameObjectRefs;
 }
 
-std::vector<GameObject*> Scene::getGameObjectsWithTag(const std::string& tag)
+std::vector<std::reference_wrapper<GameObject>> Scene::getGameObjectsWithTag(const std::string& tag)
 {
-	std::vector<GameObject*> objectsWithTag;
+	std::vector<std::reference_wrapper<GameObject>> objectsWithTag;
 	for (const auto& obj : mGameObjects)
 	{
 		if (obj->getTag() == tag)
 		{
-			objectsWithTag.push_back(obj.get());
+			objectsWithTag.push_back(*obj.get());
 		}
 	}
 	return objectsWithTag;
@@ -84,7 +85,7 @@ void Scene::requestGameObjectRemoval(int id)
 	{
 		if (obj->getID() == id)
 		{
-			mGameObjectsToRemove.push_back(obj.get());
+			mGameObjectsToRemove.push_back(*obj.get());
 			return;
 		}
 	}
@@ -97,7 +98,7 @@ void Scene::requestGameObjectRemoval(GameObject* object)
 	{
 		if (obj.get() == object)
 		{
-			mGameObjectsToRemove.push_back(obj.get());
+			mGameObjectsToRemove.push_back(*obj.get());
 			return;
 		}
 	}
@@ -134,7 +135,7 @@ std::vector<Camera*> Scene::getCameras() const
 	return cameras;
 }
 
-Camera* Scene::getCameraWithTag(const std::string& tag)
+Camera* Scene::getCameraWithTag(const std::string& tag) const
 {
 	for (const auto& obj : mGameObjects)
 	{
@@ -147,13 +148,26 @@ Camera* Scene::getCameraWithTag(const std::string& tag)
 	return nullptr;
 }
 
+Camera* Scene::getMainCamera() const
+{
+	for (const auto& obj : mGameObjects)
+	{
+		Camera* camera = dynamic_cast<Camera*>(obj.get());
+		if (camera && camera->isMainCamera())
+		{
+			return camera;
+		}
+	}
+	return nullptr;
+}
+
 void Scene::addPersistentGameObject(GameObject* object)
 {
 	if (object)
 	{
-		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 		mGameObjects.push_back(std::unique_ptr<GameObject>(object));
-		mPersistentGameObjects.push_back(object);
+		mPersistentGameObjects.push_back(*object);
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(*object);
 	}
 }
 
@@ -167,7 +181,7 @@ void Scene::removePersistentGameObject(GameObject* object)
 {
 	for (int i = 0; i < mPersistentGameObjects.size(); i++)
 	{
-		if (mPersistentGameObjects[i] == object)
+		if (&mPersistentGameObjects[i].get() == object)
 		{
 			mPersistentGameObjects.erase(mPersistentGameObjects.begin() + i);
 			break;
@@ -175,7 +189,7 @@ void Scene::removePersistentGameObject(GameObject* object)
 	}
 }
 
-std::vector<GameObject*>& Scene::getPersistentGameObjects() { return mPersistentGameObjects; }
+std::vector<std::reference_wrapper<GameObject>>& Scene::getPersistentGameObjects() { return mPersistentGameObjects; }
 
 void Scene::clearPersistentGameObjects() { mPersistentGameObjects.clear(); }
 
@@ -185,7 +199,7 @@ void Scene::releasePersistentGameObjects()
 	{
 		for (int i = 0; i < mGameObjects.size(); i++)
 		{
-			if (mGameObjects[i].get() == obj)
+			if (mGameObjects[i].get() == &obj.get())
 			{
 				GameObject* warningWeg = mGameObjects[i].release();
 				mGameObjects.erase(mGameObjects.begin() + i);
@@ -195,4 +209,4 @@ void Scene::releasePersistentGameObjects()
 	}
 }
 
-std::vector<GameObject*> Scene::getGameObjectsToBeRemoved() { return mGameObjectsToRemove; }
+std::vector<std::reference_wrapper<GameObject>> Scene::getGameObjectsToBeRemoved() { return mGameObjectsToRemove; }

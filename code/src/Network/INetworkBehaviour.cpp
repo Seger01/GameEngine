@@ -17,8 +17,21 @@ int INetworkBehaviour::networkBehaviourIDCounter = 0;
  *
  * @param aTag The tag associated with this network behaviour.
  */
-INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false) {
-    mNetworkBehaviourID = networkBehaviourIDCounter++;
+INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
+{
+	mNetworkBehaviourID = networkBehaviourIDCounter++;
+}
+
+/**
+ * @brief Copy constructor.
+ *
+ * @param other The INetworkBehaviour to copy.
+ */
+INetworkBehaviour::INetworkBehaviour(const INetworkBehaviour& other)
+	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet),
+	  mNetworkBehaviourID(other.mNetworkBehaviourID)
+{
+	mNetworkVariables.clear();
 }
 
 /**
@@ -50,7 +63,8 @@ void INetworkBehaviour::onNetworkSpawn()
  *
  * @param variable Pointer to the network variable to register.
  */
-void INetworkBehaviour::RegisterNetworkVariable(NetworkVariableBase* variable) {
+void INetworkBehaviour::RegisterNetworkVariable(NetworkVariableBase* variable)
+{
 	mNetworkVariables.push_back(*variable);
 	variable->setNetworkVariableID(mNetworkVariables.size() - 1);
 }
@@ -72,20 +86,28 @@ std::vector<std::reference_wrapper<NetworkVariableBase>> INetworkBehaviour::GetN
  * @return false Otherwise.
  * @throws std::runtime_error If the NetworkObject is not found.
  */
-bool INetworkBehaviour::isOwner() {
-    return mGameObject->getComponents<NetworkObject>()[0]->isOwner();
-    if (mIsOwnerSet) {
-        return mIsOwner;
-    } else {
-        NetworkObject* networkObject = mGameObject->getComponents<NetworkObject>()[0];
-        if (!networkObject) {
-            throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
-        }
+bool INetworkBehaviour::isOwner()
+{
+	return mGameObject->getComponents<NetworkObject>()[0].get().isOwner();
+	if (mIsOwnerSet)
+	{
+		return mIsOwner;
+	}
+	else
+	{
+		try
+		{
 
-        mIsOwner = networkObject->isOwner();
-        mIsOwnerSet = true;
-        return mIsOwner;
-    }
+			NetworkObject& networkObject = mGameObject->getComponents<NetworkObject>()[0];
+			mIsOwner = networkObject.isOwner();
+			mIsOwnerSet = true;
+			return mIsOwner;
+		}
+		catch (const std::exception& e)
+		{
+			throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
+		}
+	}
 }
 
 /**
