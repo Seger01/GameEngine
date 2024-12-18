@@ -44,7 +44,8 @@ private:
 	void handleClientDisconnect(SLNet::RakNetGUID aClientID);
 
 	void sendToAllClients(SLNet::BitStream& aBitStream);
-	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
+	void sendToClient(SLNet::BitStream& aBitStream, SLNet::RakNetGUID clientID);
+	void spawnObjectsForNewClient(SLNet::RakNetGUID playerID);
 
 private:
 	/**

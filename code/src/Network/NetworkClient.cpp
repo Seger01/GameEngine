@@ -39,7 +39,6 @@ NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aO
 	{
 		throw std::runtime_error("Failed to start client");
 	}
-	std::cout << "Client started\n";
 }
 
 /**
@@ -218,32 +217,32 @@ void NetworkClient::sendPlayerInit()
  */
 void NetworkClient::sendCustomSerialize()
 {
-	for (auto gameObject : mObjects)
+	for (GameObject& gameObject : mObjects)
 	{
-		auto networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		auto networkObject = gameObject.getComponents<NetworkObject>()[0];
 		if (!networkObject.get().isOwner())
 		{
 			continue;
 		}
-		if (!gameObject.get().hasComponent<INetworkBehaviour>())
+		if (!gameObject.hasComponent<INetworkBehaviour>())
 		{
 			continue;
 		}
-		for (INetworkBehaviour& networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
+		for (int i = 0; i < gameObject.getComponents<INetworkBehaviour>().size(); i++)
 		{
-			for (int i = 0; i < networkBehaviour.GetNetworkVariables().size(); i++)
+			INetworkBehaviour& networkBehaviour = gameObject.getComponents<INetworkBehaviour>()[i];
+			for (int j = 0; j < networkBehaviour.GetNetworkVariables().size(); j++)
 			{
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
-				networkPacket.networkObjectID =
-					gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID();
+				networkPacket.networkObjectID = gameObject.getComponents<NetworkObject>()[0].get().getNetworkObjectID();
 				networkPacket.ISerializableID = networkBehaviour.GetNetworkVariables().at(i).get().getTypeId();
 				networkPacket.SetTimeStampNow();
-				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0].get().getClientGUID();
-				networkPacket.networkBehaviourID = networkBehaviour.getNetworkBehaviourID();
-				networkPacket.networkVariableID = i;
+				networkPacket.clientGUID = gameObject.getComponents<NetworkObject>()[0].get().getClientGUID();
+				networkPacket.networkBehaviourID = i;
+				networkPacket.networkVariableID = j;
 				networkBehaviour.GetNetworkVariables().at(i).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 				sendToServer(bs);
@@ -277,7 +276,6 @@ void NetworkClient::handleIncomingPackets()
 			break;
 		case ID_UNCONNECTED_PONG:
 		{
-			std::cout << "Got pong from " << packet->systemAddress.ToString() << std::endl;
 			SLNet::BitStream bs(packet->data, packet->length, false);
 			NetworkSharedFunctions::getBitStreamData(bs);
 			std::string serverIp;
@@ -287,11 +285,9 @@ void NetworkClient::handleIncomingPackets()
 		}
 		case ID_UNCONNECTED_PING:
 		{
-			std::cout << "Got ping from " << packet->systemAddress.ToString() << std::endl;
 		}
 		case ID_UNCONNECTED_PING_OPEN_CONNECTIONS:
 		{
-			std::cout << "Got open connection ping from " << packet->systemAddress.ToString() << std::endl;
 		}
 		case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
 			handleTransform(packet);
@@ -330,9 +326,9 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	clientGuid = networkPacket.clientGUID;
 
-	for (auto gameObject : mObjects)
+	for (GameObject& gameObject : mObjects)
 	{
-		NetworkObject& networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		NetworkObject& networkObject = gameObject.getComponents<NetworkObject>()[0];
 		if (networkObject.isOwner())
 		{
 			continue;
@@ -341,10 +337,10 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 		{
 			continue;
 		}
-		if (gameObject.get().hasComponent<NetworkTransform>())
+		if (gameObject.hasComponent<NetworkTransform>())
 		{
-			Transform transform = gameObject.get().getTransform();
-			NetworkTransform& networkTransform = gameObject.get().getComponents<NetworkTransform>()[0];
+			Transform transform = gameObject.getTransform();
+			NetworkTransform& networkTransform = gameObject.getComponents<NetworkTransform>()[0];
 			if (networkTransform.getSendPositionX())
 			{
 				bs.Read(transform.position.x);
@@ -365,7 +361,7 @@ void NetworkClient::handleTransform(SLNet::Packet* aPacket)
 			{
 				bs.Read(transform.scale.y);
 			}
-			gameObject.get().setTransform(transform);
+			gameObject.setTransform(transform);
 		}
 	}
 }
@@ -411,9 +407,9 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 
-	for (auto gameObject : mObjects)
+	for (GameObject& gameObject : mObjects)
 	{
-		NetworkObject& networkObject = gameObject.get().getComponents<NetworkObject>()[0];
+		NetworkObject& networkObject = gameObject.getComponents<NetworkObject>()[0];
 		if (networkPacket.clientGUID != networkObject.getClientGUID())
 		{ // check client ID
 			continue;
@@ -422,24 +418,21 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 		{ // check network object ID
 			continue;
 		}
-		for (auto networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
+		if (gameObject.getComponents<INetworkBehaviour>().size() < networkPacket.networkBehaviourID)
 		{
-			if (networkBehaviour.get().getNetworkBehaviourID() != networkPacket.networkBehaviourID)
-			{ // check network
-			  // behaviour ID
-				continue;
-			}
-			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
-			{ // check network variable ID bounds
-				continue;
-			}
+			continue;
+		}
+		auto networkBehaviour = gameObject.getComponents<INetworkBehaviour>()[networkPacket.networkBehaviourID];
+		if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
+		{ // check network variable ID bounds
+			continue;
+		}
 			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
 				continue;
 			}
 			networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
-		}
 	}
 }
 
@@ -489,11 +482,11 @@ void NetworkClient::handleDespawnPrefab(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
-	for (auto gameObject : mObjects)
+	for (GameObject& gameObject : mObjects)
 	{
-		if (gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID() == networkPacket.networkObjectID)
+		if (gameObject.getComponents<NetworkObject>()[0].get().getNetworkObjectID() == networkPacket.networkObjectID)
 		{
-			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&gameObject.get());
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&gameObject);
 			break;
 		}
 	}
