@@ -28,101 +28,9 @@ void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
 
 	EngineBravo& engine = EngineBravo::getInstance();
 
-	for (const auto& mapObject : tileMapData.mMapObjects)
-	{
-		if (!mapObject.type.empty())
-		{
-			std::string type = mapObject.type;
-			if (type == "room_entry")
-			{
-				createRoomEntry(scene, mapObject, tileMapData);
-			}
-			else if (type == "LevelEndTrigger")
-			{
-				createLevelEndTrigger(scene, mapObject);
-			}
-		}
-	}
-
-	GameObject* musicObject = new GameObject;
-	AudioSource* music = new AudioSource("Audio/music.wav", true);
-	music->setPlayOnWake(true);
-	music->setVolume(10);
-	music->setXDirection(0);
-	musicObject->addComponent(music);
-	scene->addGameObject(musicObject);
-
 	createTileLayers(scene, tileMapData);
 }
 
-/**
- * @brief This function creates the room entry triggers
- *
- * @param scene
- * @param mapObject
- * @param tileMapData
- */
-void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData) const
-{
-	std::vector<MapObject> enemySpawns;
-	for (const auto& spawnPoint : tileMapData.mMapObjects)
-	{
-		if (spawnPoint.properties.find("isEnemySpawn") != spawnPoint.properties.end() &&
-			spawnPoint.properties.at("isEnemySpawn") == "true" &&
-			spawnPoint.properties.at("roomID") == mapObject.properties.at("roomID"))
-		{
-			enemySpawns.push_back(spawnPoint);
-		}
-	}
-
-	GameObject* roomObject = new GameObject;
-	roomObject->setName("RoomTrigger" + mapObject.properties.at("roomID"));
-	roomObject->setTag("RoomTrigger");
-
-	addTriggerCollider(roomObject, mapObject);
-
-	scene->addGameObject(roomObject);
-}
-
-/**
- * @brief This function creates the level end trigger
- *
- * @param scene
- * @param mapObject
- */
-void LevelBuilder::createLevelEndTrigger(Scene* scene, const MapObject& mapObject) const
-{
-	GameObject* levelEndObject = new GameObject;
-	levelEndObject->setName("LevelEndTrigger");
-	levelEndObject->setTag("LevelEnd");
-
-	addTriggerCollider(levelEndObject, mapObject);
-
-	scene->addGameObject(levelEndObject);
-}
-
-/**
- * @brief This function adds a collider and rigidbody to a trigger game object (Like room entry or level end)
- *
- * @param gameObject
- * @param mapObject
- */
-void LevelBuilder::addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) const
-{
-	BoxCollider* boxCollider = new BoxCollider();
-	Transform transform;
-	transform.position.x = mapObject.x;
-	transform.position.y = mapObject.y;
-	boxCollider->setTransform(transform);
-	boxCollider->setWidth(mapObject.width);
-	boxCollider->setHeight(mapObject.height);
-	boxCollider->setTrigger(true);
-	gameObject->addComponent(boxCollider);
-
-	RigidBody* rigidBody = new RigidBody();
-	rigidBody->setTransform(transform);
-	gameObject->addComponent(rigidBody);
-}
 
 /**
  * @brief This function creates the tile layers
@@ -185,6 +93,7 @@ void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerI
 	objectTransform.position.x = static_cast<int>(colIndex * 16);
 	objectTransform.position.y = static_cast<int>(rowIndex * 16);
 	gameObject->setTransform(objectTransform);
+    gameObject->setName("Tile");
 
 	if (!isGraphLayer)
 	{
