@@ -37,26 +37,24 @@ class SaveArray {
 
     + getName() : string
 
+    + addIntField(const string& aName) : void
+    + addFloatField(const string& aName) : void
+    + addStringField(const string& aName) : void
+
+    + getIntField(const string& aName) : IntSaveField&
+    + getFloatField(const string& aName) : FloatSaveField&
+    + getStringField(const string& aName) : StringSaveField&
+
+    + getIntArray() : const vector<IntSaveField>&
+    + getFloatArray() : const vector<FloatSaveField>&
+    + getStringArray() : const vector<StringSaveField>&
+
     - addAny(const string &aName, string aValue) : void
-
-    + getIntField(string aName) : IntSaveField&
-    + getFloatField(string aName) : FloatSaveField&
-    + getStringField(string aName) : StringSaveField&
-
-    + getIntArray() : const vector&
-    + getFloatArray() : const vector&
-    + getStringArray() : const vector&
-
-    + getSizeIntArray() : unsigned
-    + getSizeFloatArray() : unsigned
-    + getSizeStringArray() : unsigned
 }
 
-
-
 class SaveGameUtil {
-  + isInteger(string aValue) : static bool
-  + isFloat(string aValue) : static bool
+  + isInteger(const string& aValue) : static bool
+  + isFloat(const string& aValue) : static bool
 }
 
 together {
@@ -64,11 +62,11 @@ class IntSaveField {
   - mName : string
   - mValue : int
 
-  + IntSaveField(string aName)
+  + IntSaveField(const string& aName, int aValue)
 
   + getName() : string
 
-  + setValue(int) : void
+  + setValue(int aValue) : void
   + getValue() : int
 }
 
@@ -76,11 +74,11 @@ class FloatSaveField {
   - mName : string
   - mValue : float
 
-  + FloatSaveField(string aName)
+  + FloatSaveField(const string& aName, float aValue)
 
   + getName() : string
 
-  + setValue(float) : void
+  + setValue(float aValue) : void
   + getValue() : float
 }
 
@@ -88,11 +86,11 @@ class StringSaveField {
   - mName : string
   - mValue : string
 
-  + StringSaveField(string aName)
+  + StringSaveField(const string& aName, const string& aValue)
 
   + getName() : string
 
-  + setValue(string) : void
+  + setValue(const string& aValue) : void
   + getValue() : string
 }
 }
