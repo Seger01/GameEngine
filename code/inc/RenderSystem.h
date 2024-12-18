@@ -69,24 +69,31 @@ private:
 
 	void sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const;
 
-	// int getLowestLayer(const Scene& aScene) const;
-	// int getHighestLayer(const Scene& aScene) const;
 	void updateLayerRange(GameObject& aObject);
 
 private:
-	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< Collection of game objects managed by the system.
-	std::unique_ptr<Renderer> mRenderer;					  ///< Renderer instance for handling graphical output.
-	std::unique_ptr<Window> mWindow;						  ///< Window instance for displaying rendered content.
+	/// @brief Collection of game objects managed by the system.
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	/// @brief Renderer instance for handling graphical output.
+	std::unique_ptr<Renderer> mRenderer;
+	/// @brief Window instance for displaying rendered content.
+	std::unique_ptr<Window> mWindow;
 
-	Point mAspectRatio; ///< Aspect ratio for rendering.
+	/// @brief Aspect ratio of the shown game not the window
+	Point mAspectRatio;
 
-	int WindowWidth;  ///< Width of the rendering window.
-	int WindowHeight; ///< Height of the rendering window.
+	/// @brief Width of the window.
+	int WindowWidth;
+	/// @brief Height of the window.
+	int WindowHeight;
 
-	int mLowestLayer;  ///< Lowest layer in the scene.
-	int mHighestLayer; ///< Highest layer in the scene.
+	/// @brief Lowest layer of the objects in the scene.
+	int mLowestLayer;
+	/// @brief Highest layer of the objects in the scene.
+	int mHighestLayer;
 
-	Color mBackgroundColor; ///< Background color for rendering.
+	/// @brief Background color of the window.
+	Color mBackgroundColor;
 };
 
 #endif

@@ -1,3 +1,8 @@
+/**
+ * @file Text.h
+ * @brief Defines the Text class, responsible for managing and rendering text in the game.
+ */
+
 #ifndef TEXT_H
 #define TEXT_H
 
@@ -7,6 +12,10 @@
 #include "UIObject.h"
 #include "Vector2.h"
 
+/**
+ * @class Text
+ * @brief Represents text in the game.
+ */
 class Text : public UIObject
 {
 public:
@@ -30,11 +39,16 @@ public:
 	void setLayer(int aLayer);
 
 private:
+	/// @brief The layer of the text
 	int mLayer;
 
+	/// @brief The text to display
 	std::string mText;
+	/// @brief The font of the text
 	std::string mFont;
+	/// @brief The color of the text
 	Color mColor;
+	/// @brief The location of the text
 	Vector2 mScale;
 };
 
