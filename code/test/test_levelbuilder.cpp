@@ -36,7 +36,7 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 	TileInfo tileInfo;
 	tileInfo.mTilesetName = "Dungeontileset/0x72_DungeonTilesetII_v1.7.png";
 	tileInfo.mCoordinates = {0, 0};
-	tileMapData.mTileInfoMap[0] = tileInfo;
+	tileMapData.mTileInfoMap[1] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
 	levelBuilder.createLevel(&scene, tileMapData);
@@ -66,7 +66,7 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTilesWithCollidersAndRigidBodies)
 	collider.mHeight = 16.0f;
 	tileInfo.mColliders.push_back(collider);
 
-	tileMapData.mTileInfoMap[0] = tileInfo;
+	tileMapData.mTileInfoMap[1] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
 	levelBuilder.createLevel(&scene, tileMapData);
