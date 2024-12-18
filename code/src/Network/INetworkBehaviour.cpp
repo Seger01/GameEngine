@@ -93,20 +93,16 @@ bool INetworkBehaviour::isOwner()
 	{
 		return mIsOwner;
 	}
-	else
+	try
 	{
-		try
-		{
-
-			NetworkObject& networkObject = mGameObject->getComponents<NetworkObject>()[0];
-			mIsOwner = networkObject.isOwner();
-			mIsOwnerSet = true;
-			return mIsOwner;
-		}
-		catch (const std::exception& e)
-		{
-			throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
-		}
+		NetworkObject& networkObject = mGameObject->getComponents<NetworkObject>()[0];
+		mIsOwner = networkObject.isOwner();
+		mIsOwnerSet = true;
+		return mIsOwner;
+	}
+	catch (const std::exception& e)
+	{
+		throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
 	}
 }
 
