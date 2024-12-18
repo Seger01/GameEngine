@@ -314,8 +314,6 @@ private:
 	std::vector<Key> mDownKeys;
 	std::vector<Key> mUpKeys;
 	std::vector<Key> mHeldKeys;
-
-	std::vector<DefAction> mHeldActions;
 };
 
 #endif
