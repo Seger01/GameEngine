@@ -12,7 +12,8 @@
 /**
  * @class MixerContainer
  *
- * @brief This class is responsible for owning SDL mixer sound effects and music
+ * @brief This class is responsible for owning SDL mixer sound effects and music. It ensures that every unique sound
+ * effect is loaded into memory only once.
  */
 class MixerContainer
 {
