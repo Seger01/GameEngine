@@ -7,21 +7,25 @@ class SaveGame {
     + store() : void
     + remove() : void
 
-    + setIntField(string aName, int aValue) : void
-    + setFloatField(string aName, float aValue) : void
-    + setStringField(string aName, float aValue) : void
+    + addIntField(const string& aName, int aValue) : void
+    + addFloatField(const string& aName, float aValue) : void
+    + addStringField(const string& aName, const string& aValue) : void
 
-    + hasIntField(string aName) : bool
-    + hasFloatField(string aName) : bool
-    + hasStringField(string aName) : bool
+    + setIntField(const string& aName, int aValue) : void
+    + setFloatField(const string& aName, float aValue) : void
+    + setStringField(const string& aName, const string& aValue) : void
 
-    + getIntField(string aName) : const IntSaveField&
-    + getFloatField(string aName) : const FloatSaveField&
-    + getStringField(string aName) : const StringSaveField&
+    + hasIntField(const string& aName) : bool
+    + hasFloatField(const string& aName) : bool
+    + hasStringField(const string& aName) : bool
 
-    + addArray(string aName) : void
-    + setArray(string aName, SaveArray aValue) : void
-    + getArray(string aName) const : SaveArray
+    + getIntField(const string& aName) : const IntSaveField&
+    + getFloatField(const string& aName) : const FloatSaveField&
+    + getStringField(const string& aName) : const StringSaveField&
+
+    + addArray(const string& aName) : void
+    + setArray(const string& aName, const SaveArray& aValue) : void
+    + getArray(const string& aName) const : SaveArray
 
     - addAny(const string &aName, string aValue) : void
     - createFile() : void
