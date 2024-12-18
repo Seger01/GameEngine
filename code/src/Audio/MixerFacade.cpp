@@ -28,11 +28,6 @@ MixerFacade::MixerFacade() : mChannelCount(MIX_CHANNELS), mLastUsedChannel(0)
 	}
 }
 
-/**
- * @brief Load a sound effect into the mixer container. If the sound is already loaded, do nothing.
- *
- * @param aPath The path to the sound effect. Must be an absolute path.
- */
 void MixerFacade::loadSound(const std::string& aPath)
 {
 	// Check if the sound is already loaded
@@ -49,13 +44,6 @@ void MixerFacade::loadSound(const std::string& aPath)
 	mMixerContainer.addSound(aPath, sound);
 }
 
-/**
- * @brief Load a music file into the mixer container. If the music is already loaded, it is overwritten
- *
- * @param aPath The path to the music file. Must be an absolute path.
- *
- * @throw std::runtime_error if the music file could not be loaded
- */
 void MixerFacade::loadMusic(const std::string& aPath)
 {
 	Mix_Music* music = Mix_LoadMUS(aPath.c_str());
@@ -66,38 +54,16 @@ void MixerFacade::loadMusic(const std::string& aPath)
 	mMixerContainer.addMusic(aPath, music);
 }
 
-/**
- * @brief Unload all sounds and music from the mixer container
- */
 void MixerFacade::unloadAll() { mMixerContainer.clear(); }
 
-/**
- * @brief Check if a sound effect is loaded
- *
- * @param aPath The path to the sound effect. Must relative to resources folder.
- * @return true if the sound effect is loaded
- */
 bool MixerFacade::audioIsLoaded(const std::string& aPath) const
 {
 	std::string wholePath = FSConverter().getResourcePath(aPath);
 	return mMixerContainer.getSound(wholePath) != nullptr;
 }
 
-/**
- * @brief Check if any music is loaded
- *
- * @return true if music is loaded. False if not.
- */
 bool MixerFacade::musicIsLoaded() const { return mMixerContainer.getMusic() != nullptr; }
 
-/**
- * @brief Play a sound effect
- *
- * @param aPath The path to the sound effect. Must be an absolute path.
- * @param aLooping Whether the sound should loop
- * @param aVolume The volume of the sound.
- * @param aDirection The direction of the sound. Negative is left, positive is right, 0 is center.
- */
 void MixerFacade::playSound(const std::string& aPath, bool aLooping, unsigned aVolume, int aDirection)
 {
 	// Pointer, because sdl mixer does not work with references
@@ -114,12 +80,6 @@ void MixerFacade::playSound(const std::string& aPath, bool aLooping, unsigned aV
 	Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
 }
 
-/**
- * @brief Play the music. If the music is already playing, do nothing.
- *
- * @param aVolume The volume of the music. If it is below zero, volume is not adjusted (and will be the same as it was
- * last set.)
- */
 void MixerFacade::playMusic(int aVolume)
 {
 	Mix_Music* music = mMixerContainer.getMusic();
@@ -139,14 +99,8 @@ void MixerFacade::playMusic(int aVolume)
 	}
 }
 
-/**
- * @brief Pause the music. If no music is playing, do nothing.
- */
 void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
 
-/**
- * @brief Resume the music. If no music is paused, start playing the music from the beginning.
- */
 void MixerFacade::resumeMusic()
 {
 	if (!Mix_PlayingMusic())
@@ -160,17 +114,8 @@ void MixerFacade::resumeMusic()
 	}
 }
 
-/**
- * @brief Stop the music. If no music is playing, do nothing. Calling playMusic after this will start the music from
- * the beginning.
- */
 void MixerFacade::stopMusic() { Mix_HaltMusic(); }
 
-/**
- * @brief Check if a sound effect is playing
- *
- * @param aPath The path to the sound effect. Must be relative to the resources folder.
- */
 bool MixerFacade::isPlaying(const std::string& aPath) const
 {
 	std::string wholePath = FSConverter().getResourcePath(aPath);
