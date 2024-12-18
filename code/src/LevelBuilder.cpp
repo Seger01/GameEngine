@@ -46,7 +46,7 @@ void LevelBuilder::createRoomEntry(Scene* scene, const MapObject& mapObject, con
     }
 
     GameObject* roomObject = new GameObject;
-    roomObject->setName("RoomTrigger");
+    roomObject->setName("RoomTrigger" + mapObject.properties.at("roomID"));
     roomObject->setTag("RoomTrigger");
 
     addTriggerCollider(roomObject, mapObject);
