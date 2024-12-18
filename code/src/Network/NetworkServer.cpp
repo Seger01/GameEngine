@@ -172,10 +172,14 @@ void NetworkServer::sendCustomSerialize()
 		{
 			continue;
 		}
-		for (int i = 0; i < gameObject.get().getComponents<INetworkBehaviour>().size(); i++)
+		for (int networkBehaviourCounter = 0;
+			 networkBehaviourCounter < gameObject.get().getComponents<INetworkBehaviour>().size();
+			 networkBehaviourCounter++)
 		{
-			INetworkBehaviour& networkBehaviour = gameObject.get().getComponents<INetworkBehaviour>()[i];
-			for (int j = 0; j < networkBehaviour.GetNetworkVariables().size(); j++)
+			INetworkBehaviour& networkBehaviour =
+				gameObject.get().getComponents<INetworkBehaviour>()[networkBehaviourCounter];
+			for (int networkVariableCounter = 0; networkVariableCounter < networkBehaviour.GetNetworkVariables().size();
+				 networkVariableCounter++)
 			{
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::reserveNetworkPacketBits(bs);
@@ -183,13 +187,13 @@ void NetworkServer::sendCustomSerialize()
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =
 					gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID();
-				networkPacket.ISerializableID = networkBehaviour.GetNetworkVariables().at(i).get().getTypeId();
+				networkPacket.ISerializableID =
+					networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().getTypeId();
 				networkPacket.SetTimeStampNow();
 				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0].get().getClientGUID();
-				networkPacket.networkBehaviourID = i;
-				networkPacket.networkVariableID = j;
-
-				networkBehaviour.GetNetworkVariables().at(i).get().serialize(bs);
+				networkPacket.networkBehaviourID = networkBehaviourCounter;
+				networkPacket.networkVariableID = networkVariableCounter;
+				networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 				sendToAllClients(bs);
 			}
@@ -333,7 +337,7 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 		{ // check network object ID
 			continue;
 		}
-		if (gameObject.get().getComponents<INetworkBehaviour>().size() < networkPacket.networkBehaviourID)
+		if (gameObject.get().getComponents<INetworkBehaviour>().size() <= networkPacket.networkBehaviourID)
 		{
 			continue;
 		}
