@@ -30,14 +30,16 @@ interface IAudioFacade {
     + loadMusic(const string &aPath) : virtual void
     + unloadAll() : virtual void
     + soundIsLoaded(const string &aPath) virtual bool
-    + musicIsLoaded(const string &aPath) : virtual bool
+    + musicIsLoaded() : virtual bool
     
-    + playSound(const string &aPath, int aLooping, unsigned aVolume, int aDirection) : virtual void
+    + playSound(const string &aPath, bool aLooping, unsigned aVolume, int aDirection) : virtual void
     + playMusic(int aVolume) : virtual void
-    
-    + stopMusic() : virtual void
+	+ pauseMusic() : virtual void
+	+ resumeMusic() : virtual void
+	+ stopMusic() : virtual void
     
     + isPlaying(const string &aPath) : virtual bool
+    + aIsMusicPlaying() : virtual bool
 }
 
 class MixerFacade implements IAudioFacade {
