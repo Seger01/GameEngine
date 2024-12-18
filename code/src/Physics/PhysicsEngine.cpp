@@ -110,10 +110,13 @@ void PhysicsEngine::setPositions()
 
 			// Sets values if changed
 			if (newPos.x != mWorld.getPosition(rigidBody.getBodyId()).x ||
-				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y)
+				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y ||
+				transform.rotation != mWorld.getRotation(rigidBody.getBodyId()))
 			{
 				mWorld.setPosition(newPos, transform.rotation, rigidBody.getBodyId());
 			}
+			mWorld.updateShapeSize(BodyProxy(gameObject), rigidBody.getBodyId());
+
 			if (rigidBody.getLinearVelocity() != mWorld.getLinearVelocity(rigidBody.getBodyId()))
 			{
 				mWorld.setLinearVelocity(rigidBody.getLinearVelocity(), rigidBody.getBodyId());
@@ -248,7 +251,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 
 			Transform transform = gameObject.getTransform();
 			transform.position = position;
-			transform = Transform(Vector2(position.x, position.y));
+			transform.position = Vector2(position.x, position.y);
 
 			transform.rotation = rotation;
 

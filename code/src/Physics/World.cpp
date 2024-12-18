@@ -1,4 +1,6 @@
 #include "Physics/World.h"
+#include "box2d/box2d.h"
+#include "box2d/collision.h"
 
 World::World() {}
 
@@ -229,6 +231,9 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 	b2Body_GetShapes(bodyID, shapeArray, size);
 	int boxcounter = 0;
 	int circlecounter = 0;
+
+	Vector2 scale = aBodyProxy.getScale();
+
 	for (int i = 0; i < size; i++)
 	{
 		b2ShapeType shapeType = b2Shape_GetType(shapeArray[i]);
@@ -236,6 +241,14 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		{
 			try
 			{
+				BoxCollider& tempBoxCollider = aBodyProxy.getBoxColliders().at(boxcounter);
+				b2Polygon polygon = b2MakeOffsetBox(
+					tempBoxCollider.getWidth() * scale.x, tempBoxCollider.getHeight() * scale.y,
+					{tempBoxCollider.getTransform().position.x, tempBoxCollider.getTransform().position.y},
+					tempBoxCollider.getRotation());
+				b2Body_SetAwake(bodyID, true);
+				b2Shape_SetPolygon(shapeArray[i], &polygon);
+				boxcounter++;
 			}
 			catch (std::exception e)
 			{

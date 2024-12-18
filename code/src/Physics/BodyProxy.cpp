@@ -15,6 +15,7 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	}
 
 	mPosition = aGameObject.get().getTransform().position;
+	mScale = aGameObject.get().getTransform().scale;
 	mRotation = aGameObject.get().getTransform().rotation;
 	mHasGravity = rigidBody.getHasGravity();
 	mIsMoveableByForce = rigidBody.getIsMoveableByForce();
@@ -47,6 +48,8 @@ void BodyProxy::processBodyType()
 		mBodyType = BodyType::DYNAMIC;
 	}
 }
+
+Vector2 BodyProxy::getScale() const { return mScale; }
 
 bool BodyProxy::getHasGravity() const { return mHasGravity; }
 
