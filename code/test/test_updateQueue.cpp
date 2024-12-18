@@ -6,7 +6,7 @@
 #include "UIManager.h"
 #include <gtest/gtest.h>
 
-TEST(UpdateQueue, updateAdditions)
+TEST(TestUpdateQueue, updateAdditions)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
 	engineBravo.getUpdateQueue().clearUpdateObjects();
@@ -22,7 +22,7 @@ TEST(UpdateQueue, updateAdditions)
 	engineBravo.getSceneManager().requestSceneChange("TestScene");
 
 	GameObject* gameObject = new GameObject();
-	engineBravo.getSceneManager().getCurrentScene()->addGameObject(gameObject);
+	engineBravo.getSceneManager().getCurrentScene().addGameObject(gameObject);
 
 	engineBravo.getUpdateQueue().updateAdditions();
 
@@ -54,12 +54,13 @@ TEST(UpdateQueue, updateAdditions)
 	ASSERT_EQ(uiManager.getObjects().size(), 0);
 }
 
-TEST(UpdateQueue, updateRemovals)
+TEST(TestUpdateQueue, updateRemovals)
 {
 	EngineBravo& engineBravo = EngineBravo::getInstance();
 	engineBravo.getUpdateQueue().clearUpdateObjects();
 	engineBravo.getUpdateQueue().clearManagerObjects();
 	SceneManager& sceneManager = engineBravo.getSceneManager();
+	sceneManager.removeScene("TestScene");
 	sceneManager.createScene("TestScene");
 	sceneManager.requestSceneChange("TestScene");
 	GameObject* gameObject = new GameObject();
@@ -71,13 +72,13 @@ TEST(UpdateQueue, updateRemovals)
 
 	ASSERT_EQ(audioManager.getObjects().size(), 0);
 
-	sceneManager.getCurrentScene()->addGameObject(gameObject);
+	sceneManager.getCurrentScene().addGameObject(gameObject);
 	engineBravo.getUpdateQueue().addToUpdateObjects(*gameObject);
 	engineBravo.getUpdateQueue().updateAdditions();
 
 	ASSERT_EQ(audioManager.getObjects().size(), 1);
 
-	sceneManager.getCurrentScene()->requestGameObjectRemoval(gameObject);
+	sceneManager.getCurrentScene().requestGameObjectRemoval(gameObject);
 	engineBravo.getUpdateQueue().updateRemovals();
 	sceneManager.update();
 

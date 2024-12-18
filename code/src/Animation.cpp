@@ -210,7 +210,6 @@ void Animation::setColorFilter(const Color& aColor)
 			frame->setColorFilter(aColor);
 		}
 	}
-	throw std::runtime_error("Cannot set color filter: no instantiated frames in the animation");
 }
 
 /**

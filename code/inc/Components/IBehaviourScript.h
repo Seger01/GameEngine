@@ -26,7 +26,7 @@ public:
 
 	virtual void onCollide(GameObject* aGameObject) {}
 
-	virtual std::unique_ptr<Component> clone() const override = 0;
+	virtual std::unique_ptr<Component> clone() const override { return std::make_unique<IBehaviourScript>(*this); };
 
 	bool hasScriptStarted() { return hasStarted; }
 

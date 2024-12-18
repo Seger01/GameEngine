@@ -168,7 +168,7 @@ void NetworkClient::sendTransform()
 			Transform transform = gameObject.getTransform();
 			NetworkTransform& networkTransform = gameObject.getComponents<NetworkTransform>()[0];
 			SLNet::BitStream bs;
-			NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+			NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 			NetworkPacket networkPacket;
 			networkPacket.messageID = NetworkMessage::ID_TRANSFORM_PACKET;
 			networkPacket.networkObjectID = networkObject.getNetworkObjectID();
@@ -204,7 +204,7 @@ void NetworkClient::sendTransform()
 void NetworkClient::sendPlayerInit()
 {
 	SLNet::BitStream bs;
-	NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
 	networkPacket.messageID = NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = mClient->GetMyGUID();
@@ -234,7 +234,7 @@ void NetworkClient::sendCustomSerialize()
 			for (int i = 0; i < networkBehaviour.GetNetworkVariables().size(); i++)
 			{
 				SLNet::BitStream bs;
-				NetworkSharedFunctions::reserverNetworkPacketBits(bs);
+				NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 				NetworkPacket networkPacket;
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =
@@ -309,6 +309,13 @@ void NetworkClient::handleIncomingPackets()
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:
 			handleCustomSerialize(packet);
+			break;
+		case (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB:
+			std::cout << "Received spawn prefab packet\n";
+			handleSpawnPrefab(packet);
+			break;
+		case (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB:
+			handleDespawnPrefab(packet);
 			break;
 		default:
 			std::cout << "Message with identifier " << (int)packet->data[0] << " has arrived.\n";
@@ -428,6 +435,10 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 			  // behaviour ID
 				continue;
 			}
+			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			{ // check network variable ID bounds
+				continue;
+			}
 			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
@@ -447,4 +458,33 @@ void NetworkClient::handlePlayerDestruction(SLNet::Packet* aPacket)
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
 	EngineBravo::getInstance().getNetworkManager().destroyPlayer(networkPacket.clientGUID);
+}
+
+/**
+ * @brief Handles prefab spawn packets from the server.
+ * @param aPacket The packet containing prefab spawn data.
+ */
+void NetworkClient::handleSpawnPrefab(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+	GameObject* prefab = EngineBravo::getInstance().getNetworkManager().instantiatePrefab(networkPacket);
+}
+
+/**
+ * @brief Handles prefab despawn packets from the server.
+ * @param aPacket The packet containing prefab despawn data.
+ */
+void NetworkClient::handleDespawnPrefab(SLNet::Packet* aPacket)
+{
+	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
+	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
+	for (auto gameObject : mObjects)
+	{
+		if (gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID() == networkPacket.networkObjectID)
+		{
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&gameObject.get());
+			break;
+		}
+	}
 }

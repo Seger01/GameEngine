@@ -10,7 +10,7 @@
  * @note clears the bit stream
  * @param aBitStream The bit stream to reserve the bits in.
  */
-void NetworkSharedFunctions::reserverNetworkPacketBits(SLNet::BitStream& aBitStream)
+void NetworkSharedFunctions::reserveNetworkPacketBits(SLNet::BitStream& aBitStream)
 {
 	NetworkPacket networkPacket;
 	aBitStream.Reset();

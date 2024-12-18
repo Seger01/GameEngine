@@ -43,6 +43,8 @@ private:
     void handlePlayerInstantiation(SLNet::Packet* aPacket);
     void handleCustomSerialize(SLNet::Packet* aPacket);
     void handlePlayerDestruction(SLNet::Packet* aPacket);
+    void handleSpawnPrefab(SLNet::Packet* aPacket);
+    void handleDespawnPrefab(SLNet::Packet* aPacket);
 
 private:
     bool mIsConnected; ///< Indicates if the client is connected to the server.

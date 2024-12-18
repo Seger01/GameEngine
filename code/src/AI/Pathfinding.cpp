@@ -1,3 +1,8 @@
+/**
+ * @file Pathfinding.cpp
+ * @brief This file contains the implementation of the Pathfinding class
+ */
+
 #include "Pathfinding.h"
 #include <algorithm>
 #include <cmath>

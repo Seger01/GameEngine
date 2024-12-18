@@ -1,20 +1,21 @@
 #include "FSConverter.h"
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <iostream>
+#include <stdexcept>
 #include <thread>
 #include <unistd.h>
-#include <stdexcept>
-#include <algorithm>
 
 std::string FSConverter::mCachedResourceDir;
 
 /**
- * @brief Construct a new FSConverter::FSConverter object   
+ * @brief Construct a new FSConverter::FSConverter object
  * @details takes an optional string containing the path to the Resources directory.
- * @param aResourceDir 
+ * @param aResourceDir
+ * @throw std::runtime_error if the Resources folder is not found
  */
-FSConverter::FSConverter(std::string aResourceDir)
+FSConverter::FSConverter(const std::string& aResourceDir)
 {
 	if (!mCachedResourceDir.empty())
 	{
@@ -39,47 +40,40 @@ FSConverter::FSConverter(std::string aResourceDir)
 	}
 }
 
-
 /**
  * @brief Finds the Resources folder
- * 
- * @return std::string 
+ * @throw std::runtime_error if the Resources folder is not found
+ * @return std::string
  */
 std::string FSConverter::findResourcesFolder() const
 {
 	std::filesystem::path execPath = executablePath();
 
 	// Try to find the Resources folder in a few places relative to the executable
-	std::filesystem::path potentialPaths[] = {
-		execPath / "Resources",
-		execPath / "../Resources",
-		execPath / "../../Resources",
-		execPath / "../../../Resources"
-	};
+	std::filesystem::path potentialPaths[] = {execPath / "Resources", execPath / "../Resources",
+											  execPath / "../../Resources", execPath / "../../../Resources"};
 
-    auto it = std::find_if(std::begin(potentialPaths), std::end(potentialPaths), [](const std::filesystem::path& path) 
-    {
-        return std::filesystem::exists(path);
-    });
+	auto it = std::find_if(std::begin(potentialPaths), std::end(potentialPaths),
+						   [](const std::filesystem::path& path) { return std::filesystem::exists(path); });
 
-    if (it != std::end(potentialPaths))
+	if (it != std::end(potentialPaths))
 	{
-        return it->string();
-    }
-    else 
-    {
-	    throw std::runtime_error("Resources folder not found in any of the checked paths.");
-	    return ""; // Resources folder not found
-    }
+		return it->string();
+	}
+	else
+	{
+		throw std::runtime_error("Resources folder not found in any of the checked paths.");
+		return ""; // Resources folder not found
+	}
 }
-
 
 /**
  * @brief Finds the resource path
- * 
- * @param resourceName 
- * @param aCheckExists 
- * @return std::string 
+ *
+ * @param resourceName
+ * @param aCheckExists
+ * @throw std::runtime_error if the resource does not exist
+ * @return std::string
  */
 std::string FSConverter::getResourcePath(const std::string& resourceName, bool aCheckExists) const
 {
@@ -87,20 +81,19 @@ std::string FSConverter::getResourcePath(const std::string& resourceName, bool a
 
 	if (aCheckExists && !std::filesystem::exists(fullPath))
 	{
-        throw std::runtime_error("Error: Resource " + resourceName + " does not exist at " + fullPath.string());
+		throw std::runtime_error("Error: Resource " + resourceName + " does not exist at " + fullPath.string());
 		return "";
 	}
-    else 
-    {
-	    return fullPath.string();
-    }
+	else
+	{
+		return fullPath.string();
+	}
 }
-
 
 /**
  * @brief Finds the executable path
- * 
- * @return std::string 
+ * @throw std::runtime_error if the executable path is not found
+ * @return std::string
  */
 std::string FSConverter::executablePath() const
 {
@@ -110,8 +103,8 @@ std::string FSConverter::executablePath() const
 	{
 		throw std::runtime_error("Unable to determine the executable path.");
 	}
-    else 
-    {
-	    return std::filesystem::path(path).parent_path().string();
-    }
+	else
+	{
+		return std::filesystem::path(path).parent_path().string();
+	}
 }

@@ -7,7 +7,7 @@
 #define NETWORKSERVER_H
 
 #include "GameObject.h"
-#include "NetworkClient.h"
+#include "Network/NetworkClient.h"
 
 #include <chrono>
 #include <list>
@@ -16,11 +16,13 @@
 #include <slikenet/types.h>
 #include <vector>
 
+class NetworkObject;
 /**
  * @class NetworkServer
  * @brief Manages the server-side networking for the game.
  */
 class NetworkServer {
+friend class NetworkManager;
 public:
 	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
 	void update();
@@ -33,6 +35,8 @@ private:
 	void sendTransform();
 	void sendCustomSerialize();
 	void sendPlayerInit(SLNet::RakNetGUID playerID);
+	void sendPrefabSpawn(NetworkObject& aObject);
+	void sendPrefabDespawn(NetworkObject& aObject);
 
 	void handleTransform(SLNet::Packet* aPacket);
 	void handleCustomSerialize(SLNet::Packet* aPacket);
