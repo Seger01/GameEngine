@@ -7,22 +7,28 @@ class AudioSource implements Component_Proxy{
     - mFileName : string
     - mPlayOnAwake : bool
     - mLoop : bool
+    - mIsMusic : bool
     - mVolume : int
+    - mMaxVolume : const static int
     - mXDirection : int
     - minXDirection : const static int
     - maxXDirection : const static int
-    + AudioSource(string aPath, bool aIsMusic=false)
-    + play(bool aLooping=false) : void
+
+    + AudioSource(const string& aPath, bool aIsMusic, const string& aTag)
+    + play(bool aLooping) : void
     + stop() : void 
 
+    + isMusic() : bool
     + setPlayOnWake(bool aValue) : void
     + getPlayOnWake() : bool
     + setLooping(bool aLooping) : void
     + getLooping() : bool
     + setVolume(unsigned aVolume) : void
     + getVolume() : unsigned
+    + setXDirection(int aListenerX, int aSourceX) : void
     + setXDirection(int aXDirection) : void
     + getXDirection() : int
+    + getFileName() : string
 }
 
 interface IAudioFacade {
@@ -51,7 +57,6 @@ class MixerFacade implements IAudioFacade {
 }
 
 class MixerContainer {
-    // string is the path
     - mSfx : unordered_map<string, Mix_Chunk*>
     - mMusic : Mix_Music*
     + MixerContainer()
