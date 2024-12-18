@@ -26,6 +26,9 @@ struct Rect
 	{
 		return x < other.x + other.w && x + w > other.x && y < other.y + other.h && y + h > other.y;
 	}
+
+	// overload the == operator for Rect
+	bool operator==(const Rect& other) const { return x == other.x && y == other.y && w == other.w && h == other.h; }
 };
 
 #endif
