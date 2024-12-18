@@ -16,22 +16,6 @@ it has the features to meet the engine requirements, and its ease of use makes i
 \includegraphics[width=\textwidth]{audioClassDiagram.png}
 In the following subsections, the classes in this diagram are further detailed.
 
-\subsubsection{AudioManager}
-The AudioManager is, similarly to the other manager classes, responsible for controlling all of the sound features in the engine.
-It contains only a few basic methods, and delegates most functionality to the audio facade and audio resource manager.
-
-\begin{itemize}
-    \item The wake method is used to indicate when a new scene is loaded. This is used to play all the AudioSources set to play on wake.
-    \item The mGameObjects contains references to all GameObjects which own an AudioSource. Each cycle, this list is updated by the EngineBravo (which owns the AudioManager), by calling addSound and removeSound. This way, the AudioManager does not have to manually check which objects do and do not own an audio source.
-\end{itemize}
-
-\subsubsection{AudioResourceManager}
-The AudioResourceManager is intended to reduce the amount of memory the engine requires.
-If the audio resource manager is not used, each game object with a sound source would load the required sound file.
-When there are many game objects which all use the same sfx file, this file would be loaded into memory multpile times, which is inefficient.
-To solve this, the audio resource manager is created. This class makes sure that for each path, only one sound file is loaded.
-It makes use of the ComponentPathPair, to keep track of the relation between the AudioSource components and their paths.
-
 \subsubsection{IAudioFacade}
 A facade interface to make the coupling between the AudioManager and the used audio library less tight.
 
