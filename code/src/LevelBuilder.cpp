@@ -46,6 +46,10 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
 		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
 
+        if (isGraphLayer)
+        {
+            continue;
+        }
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
 			for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex)
@@ -82,9 +86,6 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex,
 							  bool isDoorsLayer, bool isGraphLayer) const
 {
-    if (isGraphLayer) {
-        return;
-    }
 	EngineBravo& engine = EngineBravo::getInstance();
 
 	SpriteDef spriteDef = {tileInfo.mTilesetName,
