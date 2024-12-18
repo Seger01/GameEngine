@@ -207,7 +207,6 @@ void NetworkServer::sendCustomSerialize()
  */
 void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 {
-	std::cout << "Sending player instantiation message to all clients.\n";
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
