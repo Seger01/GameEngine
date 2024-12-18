@@ -1,7 +1,17 @@
+/**
+ * @file IButtonBehaviourScript.h
+ * @brief Defines the IButtonBehaviourScript class.
+ */
+
 #ifndef IBUTTONBEHAVIOURSCRIPT_H
 #define IBUTTONBEHAVIOURSCRIPT_H
 
 #include "Component.h"
+
+/**
+ * @class IButtonBehaviourScript
+ * @brief Interface for button behaviour scripts.
+ */
 
 class IButtonBehaviourScript : public Component
 {
