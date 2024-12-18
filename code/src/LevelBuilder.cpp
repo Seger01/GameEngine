@@ -43,7 +43,18 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
 	{
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
-		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
+		bool isGraphLayer = false;
+
+		// Check if the layer has custom properties and if isGraphLayer is set
+		auto layerPropertiesIt = tileMapData.mLayerProperties.find(tileMapData.mLayerNames[layerIndex]);
+		if (layerPropertiesIt != tileMapData.mLayerProperties.end())
+		{
+			auto propertyIt = layerPropertiesIt->second.find("isGraphLayer");
+			if (propertyIt != layerPropertiesIt->second.end())
+			{
+				isGraphLayer = (propertyIt->second == "true");
+			}
+		}
 
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{

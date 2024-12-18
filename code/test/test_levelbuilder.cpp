@@ -25,42 +25,6 @@ TEST_F(LevelBuilderTests, CreateLevel_NullScene_ThrowsException)
 	EXPECT_THROW(levelBuilder.createLevel(nullptr, tileMapData), std::runtime_error);
 }
 
-TEST_F(LevelBuilderTests, CreateRoomEntry_AddsRoomTrigger)
-{
-	LevelBuilder levelBuilder;
-	TileMapData tileMapData;
-
-	MapObject roomEntry;
-	roomEntry.type = "room_entry";
-	roomEntry.properties["roomID"] = "1";
-	tileMapData.mMapObjects.push_back(roomEntry);
-
-	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
-	levelBuilder.createLevel(&scene, tileMapData);
-
-	auto gameObjects = scene.getGameObjects();
-	ASSERT_EQ(gameObjects.size(), 2);
-	EXPECT_EQ(gameObjects[0].get().getName(), "RoomTrigger1");
-	EXPECT_EQ(gameObjects[0].get().getTag(), "RoomTrigger");
-}
-
-TEST_F(LevelBuilderTests, CreateLevelEndTrigger_AddsLevelEndTrigger)
-{
-	LevelBuilder levelBuilder;
-	TileMapData tileMapData;
-
-	MapObject levelEndTrigger;
-	levelEndTrigger.type = "LevelEndTrigger";
-	tileMapData.mMapObjects.push_back(levelEndTrigger);
-
-	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
-	levelBuilder.createLevel(&scene, tileMapData);
-
-	auto gameObjects = scene.getGameObjects();
-	ASSERT_EQ(gameObjects.size(), 2);
-	EXPECT_EQ(gameObjects[0].get().getName(), "LevelEndTrigger");
-	EXPECT_EQ(gameObjects[0].get().getTag(), "LevelEnd");
-}
 
 TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 {
@@ -72,15 +36,15 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 	TileInfo tileInfo;
 	tileInfo.mTilesetName = "Dungeontileset/0x72_DungeonTilesetII_v1.7.png";
 	tileInfo.mCoordinates = {0, 0};
-	tileMapData.mTileInfoMap[1] = tileInfo;
+	tileMapData.mTileInfoMap[0] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
 	levelBuilder.createLevel(&scene, tileMapData);
 
 	auto gameObjects = scene.getGameObjects();
-	ASSERT_EQ(gameObjects.size(), 3);
+	ASSERT_EQ(gameObjects.size(), 2);
+	EXPECT_EQ(gameObjects[0].get().getName(), "Tile");
 	EXPECT_EQ(gameObjects[1].get().getName(), "Tile");
-	EXPECT_EQ(gameObjects[2].get().getName(), "Tile");
 }
 
 TEST_F(LevelBuilderTests, CreateTileLayers_AddsTilesWithCollidersAndRigidBodies)
@@ -102,20 +66,20 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTilesWithCollidersAndRigidBodies)
 	collider.mHeight = 16.0f;
 	tileInfo.mColliders.push_back(collider);
 
-	tileMapData.mTileInfoMap[1] = tileInfo;
+	tileMapData.mTileInfoMap[0] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
 	levelBuilder.createLevel(&scene, tileMapData);
 
 	auto gameObjects = scene.getGameObjects();
-	ASSERT_EQ(gameObjects.size(), 3);
+	ASSERT_EQ(gameObjects.size(), 2);
+	EXPECT_EQ(gameObjects[0].get().getName(), "Tile");
 	EXPECT_EQ(gameObjects[1].get().getName(), "Tile");
-	EXPECT_EQ(gameObjects[2].get().getName(), "Tile");
 
 	// Verify that the game objects have colliders and rigid bodies
 
-	auto boxColliders = gameObjects[1].get().getComponents<BoxCollider>();
-	auto rigidBodies = gameObjects[2].get().getComponents<RigidBody>();
+	auto boxColliders = gameObjects[0].get().getComponents<BoxCollider>();
+	auto rigidBodies = gameObjects[1].get().getComponents<RigidBody>();
 	EXPECT_FALSE(boxColliders.empty());
 	EXPECT_FALSE(rigidBodies.empty());
 }

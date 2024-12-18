@@ -123,13 +123,23 @@ void TileMapParser::parseLayerProperties(const nlohmann::json& layer, const std:
         std::unordered_map<std::string, std::string> properties;
         for (const auto& property : layer["properties"]) {
             std::string name = property["name"];
-            std::string value = property["value"];
+            std::string value;
+            if (property["type"] == "bool") {
+                value = property["value"].get<bool>() ? "true" : "false";
+            } else if (property["type"] == "int") {
+                value = std::to_string(property["value"].get<int>());
+            } else if (property["type"] == "float") {
+                value = std::to_string(property["value"].get<float>());
+            } else if (property["type"] == "string") {
+                value = property["value"].get<std::string>();
+            } else {
+                value = property["value"].dump(); // Fallback to JSON string representation
+            }
             properties[name] = value;
         }
         mTileMapData.mLayerProperties[layerName] = properties;
     }
 }
-
 
 /**
  * @brief Parses the objects of JSON TileMap Object Layer
