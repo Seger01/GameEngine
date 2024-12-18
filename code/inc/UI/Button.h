@@ -1,3 +1,8 @@
+/**
+ * @file Button.h
+ * @brief Defines the Button class, responsible for managing and rendering buttons in the game.
+ */
+
 #ifndef BUTTON_H
 #define BUTTON_H
 
@@ -5,6 +10,10 @@
 #include "Vector2.h"
 #include <functional> // For std::function
 
+/**
+ * @struct BoundingBox
+ * @brief Represents a bounding box in 2D space.
+ */
 struct BoundingBox
 {
 	Vector2 topLeft;
@@ -16,6 +25,10 @@ struct BoundingBox
 	}
 };
 
+/**
+ * @class Button
+ * @brief Represents a button in the game.
+ */
 class Button : public UIObject
 {
 public:
@@ -47,14 +60,19 @@ public:
 	BoundingBox getBoundingBox() const;
 
 private:
+	/// @brief The width of the button
 	float mWidth;
+	/// @brief The height of the button
 	float mHeight;
+	/// @brief Whether the button is interactable
 	bool mInteractable;
 
+	/// @brief Whether the button is hovered
 	bool mHovered;
 
-	// Callback function for the button
+	/// @brief The callback to be called when the button is clicked
 	std::function<void()> mOnClickCallback;
+	/// @brief The callback to be called when the button is released
 	std::function<void()> mOnReleaseCallback;
 };
 

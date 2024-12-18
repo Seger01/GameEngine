@@ -16,8 +16,6 @@
 #include "ScopedTimer.h"
 #include "Sprite.h"
 #include "Text.h"
-#include "box2d/box2d.h"
-#include "box2d/math_functions.h"
 
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
@@ -61,9 +59,12 @@ void EngineBravo::run()
 
 	mSceneManager.update();
 
+	double accumalatedTimePhysics = 0;
+
 	while (mRunning)
 	{
 		Time::update();
+		accumalatedTimePhysics += Time::rawDeltaTime;
 
 		mEventManager.handleEvents();
 		input.update();
@@ -77,7 +78,11 @@ void EngineBravo::run()
 
 		mUpdateQueue.updateAdditions();
 
-		mPhysicsManager.updatePhysicsEngine();
+		while (accumalatedTimePhysics >= 0.02)
+		{
+			mPhysicsManager.updatePhysicsEngine(Time::timeDilation);
+			accumalatedTimePhysics -= 0.02;
+		}
 
 		mParticleSystem.update();
 		mRenderSystem.render(mSceneManager.getCurrentScene());
@@ -89,6 +94,8 @@ void EngineBravo::run()
 		mUpdateQueue.updateRemovals();
 	}
 }
+
+void EngineBravo::stopEngine() { mRunning = false; }
 
 void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRate; }
 
@@ -160,14 +167,17 @@ void EngineBravo::startBehaviourScripts()
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		if (gameObject.get().hasComponent<IBehaviourScript>())
 		{
-			if (behaviourScript.get().hasScriptStarted())
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 			{
-				continue;
+				if (behaviourScript.get().hasScriptStarted())
+				{
+					continue;
+				}
+				behaviourScript.get().onStart();
+				behaviourScript.get().setScriptStarted(true);
 			}
-			behaviourScript.get().onStart();
-			behaviourScript.get().setScriptStarted(true);
 		}
 	}
 }
@@ -183,9 +193,12 @@ void EngineBravo::runBehaviourScripts()
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		if (gameObject.get().hasComponent<IBehaviourScript>())
 		{
-			behaviourScript.get().onUpdate();
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+			{
+				behaviourScript.get().onUpdate();
+			}
 		}
 	}
 }

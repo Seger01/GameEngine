@@ -58,13 +58,21 @@ public:
 	int getLayer() const;
 
 private:
+	/// @brief The transform of the animation.
 	Transform mTransform;
 
+	/// @brief The animation frames.
 	std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
 
+	/// @brief true if the antimation is flipped horizontally.
 	bool mFlipX;
+
+	/// @brief true if the antimation is flipped vertically.
 	bool mFlipY;
+	/// @brief the time between frames of the animation
 	int mTimeBetweenFrames;
+	/// @brief if the animation is looping
 	bool mIsLooping;
+	/// @brief the layer of the animation
 	int mLayer;
 };

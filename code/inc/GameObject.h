@@ -62,6 +62,7 @@ public:
 	void setParent(GameObject& aParent);
 	void removeParent();
 	GameObject& getParent();
+	bool hasParent() const;
 
 	void addChild(GameObject& aChild);
 	void removeChild(GameObject& aChild);

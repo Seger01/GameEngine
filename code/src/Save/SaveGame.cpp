@@ -168,7 +168,6 @@ void SaveGame::addIntField(const std::string& aName, int aValue)
 	// Check if the field already exists
 	if (hasIntField(aName))
 	{
-		std::cout << "Field with name \"" << aName << "\" already exists. Overwriting value instead." << std::endl;
 		setIntField(aName, aValue);
 		return;
 	}
@@ -189,7 +188,6 @@ void SaveGame::addFloatField(const std::string& aName, float aValue)
 	// Check if the field already exists
 	if (hasFloatField(aName))
 	{
-		std::cout << "Field with name \"" << aName << "\" already exists. Overwriting value instead." << std::endl;
 		setFloatField(aName, aValue);
 		return;
 	}
@@ -210,7 +208,6 @@ void SaveGame::addStringField(const std::string& aName, const std::string& aValu
 	// Check if the field already exists
 	if (hasStringField(aName))
 	{
-		std::cout << "Field with name \"" << aName << "\" already exists. Overwriting value instead." << std::endl;
 		setStringField(aName, aValue);
 		return;
 	}

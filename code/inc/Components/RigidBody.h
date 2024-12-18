@@ -77,28 +77,41 @@ private:
 	Transform mTransform;
 
 	bool mIsUpdated;
-	bool mHasGravity = false;
-	bool mIsMoveableByForce = false;
-	bool mCanRotate = false;
-	bool mCanCollide = true;
+	bool mHasGravity;
+	bool mIsMoveableByForce;
+	bool mCanRotate;
+	bool mCanCollide;
 	BodyType mBodyType;
 
-	float mLinearDamping = 0;  // reduces linear velocity over time
-	float mAngularDamping = 0; // reduces angular velocity over time
+	/// @brief Reduces linear velocity over time
+	float mLinearDamping;
+	/// @brief Reduces angular velocity over time
+	float mAngularDamping;
 
-	float mDensity = 0;
-	float mFriction = 0;
-	float mRestitution = 0;
+	/// @brief The density of the body
+	float mDensity;
+	/// @brief The friction of the body
+	float mFriction;
+	/// @brief The restitution of the body
+	float mRestitution;
 
-	Vector2 mLinearVelocity = {0.0f, 0.0f};
-	float mAngularVelocity = 0;
-	float mRotation = 0;
+	/// @brief Linear velocity of the body
+	Vector2 mLinearVelocity;
+	/// @brief Angular velocity of the body
+	float mAngularVelocity;
+	/// @brief The mass of the body
+	float mRotation;
 
-	float mMass = 0;
-	float mGravityScale = 0;
+	/// @brief The gravity scale of the body
+	float mMass;
+	/// @brief The gravity scale of the body
+	float mGravityScale;
 
+	/// @brief Box2D ID of the body
 	BodyID mBodyID;
 
+	/// @brief Buffer for forces to apply to the body
 	std::vector<Vector2> mForcesBuffer;
+	/// @brief Buffer for torques to apply to the body
 	std::vector<float> mTorqueBuffer;
 };
