@@ -4,7 +4,7 @@
 /**
  * @file World.h
  *
- * @brief This file contains all the logic for the box2d physics library and the world
+ * @brief Contains the Box2D physics library and its functions used to create the physics engine for engine bravo
  *
  */
 
@@ -29,6 +29,7 @@ private:
 	void updateBodyPosition(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
 	void updateBodyProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
 	void updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
+	void updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID);
 
 	void deleteBody(const BodyID& aBodyID);
 

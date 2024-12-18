@@ -4,7 +4,8 @@
 /**
  * @file PhysicsManager.h
  *
- * @brief This file contains the declaration of the PhysicsManager class
+ * @brief Declaration for the physics manager, used to call update loop and create functions of
+ * the physics engine
  *
  */
 
@@ -19,6 +20,7 @@ public:
 	PhysicsEngine& getPhysicsEngine();
 
 private:
+	/// @brief The physics engine
 	PhysicsEngine mPhysicsEngine;
 };
 

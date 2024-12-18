@@ -11,7 +11,7 @@ PhysicsEngine::~PhysicsEngine() {}
 void PhysicsEngine::createWorld(const Vector2& aGravity) { mWorld = World(aGravity); }
 
 /**
- * @brief Creates the bodies in the world
+ * @brief Creates the bodies in the box2d world
  */
 void PhysicsEngine::createBodies()
 {
@@ -21,6 +21,7 @@ void PhysicsEngine::createBodies()
 		{
 			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
 
+			// Checks if the body ha sbeen created (-1 equals not created)
 			if (rigidBody.getBodyId().bodyID == -1)
 			{
 				BodyProxy bodyProxy = BodyProxy(gameObject);
@@ -44,7 +45,6 @@ void PhysicsEngine::update()
 	setPositions();
 	applyForces();
 
-	std::cout << "Step is: " << mStep << std::endl;
 	mWorld.executeWorldStep(mStep, mSubStep);
 	convertFromBox2D(mObjects);
 
@@ -106,8 +106,9 @@ void PhysicsEngine::setPositions()
 		{
 			RigidBody& rigidBody = gameObject.getComponents<RigidBody>()[0];
 			Transform transform = gameObject.getTransform();
-
 			Vector2 newPos = Vector2(transform.position.x, transform.position.y);
+
+			// Sets values if changed
 			if (newPos.x != mWorld.getPosition(rigidBody.getBodyId()).x ||
 				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y)
 			{
@@ -144,19 +145,21 @@ void PhysicsEngine::applyForces()
 }
 
 /**
- * @brief Executes the collision scripts of the game objects
- * @param aBodyIDs The body IDs of the game objects
+ * @brief Executes the collision scripts of the game objects if collision occurred in box2d world
+ * @param aBodIDs vector containing body IDs of collided objects within the current step
  */
 void PhysicsEngine::executeCollisionScripts(const std::vector<std::pair<int, int>>& aBodyIDs)
 {
 
 	for (int i = 0; i < aBodyIDs.size(); i++)
 	{
+		// Get game objects by box2d ID to use for collision
 		GameObject& gameObjectA = getGameObjectByID(aBodyIDs.at(i).first);
 		GameObject& gameObjectB = getGameObjectByID(aBodyIDs.at(i).second);
 
 		if (gameObjectA.hasComponent<IBehaviourScript>())
 		{
+			// Get behaviour script of collided object
 			std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
 				gameObjectA.getComponents<IBehaviourScript>();
 			for (int i = 0; i < behaviourScript.size(); i++)
@@ -169,6 +172,8 @@ void PhysicsEngine::executeCollisionScripts(const std::vector<std::pair<int, int
 		{
 			if (gameObjectB.hasComponent<IBehaviourScript>())
 			{
+				// Get behaviour script of collided object
+
 				std::vector<std::reference_wrapper<IBehaviourScript>> behaviourScript =
 					gameObjectB.getComponents<IBehaviourScript>();
 				for (int i = 0; i < behaviourScript.size(); i++)
@@ -192,6 +197,7 @@ void PhysicsEngine::convertToBox2D(const std::vector<std::reference_wrapper<Game
 		{
 			if (gameObject.hasComponent<BoxCollider>())
 			{
+				// Sets colliders to half size and offsets them to match Box2D positioning
 				for (BoxCollider& boxCollider : gameObject.getComponents<BoxCollider>())
 				{
 					boxCollider.setWidth(boxCollider.getWidth() / 2);
@@ -222,6 +228,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 			rigidBody.setAngularVelocity(mWorld.getAngularVelocity(rigidBody.getBodyId()));
 			if (gameObject.hasComponent<BoxCollider>())
 			{
+				// Sets colliders to full size and offsets them to match engine bravo positioning
 				for (BoxCollider& boxCollider : gameObject.getComponents<BoxCollider>())
 				{
 
@@ -255,7 +262,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
  * @param aID The ID of the game object
  * @return The game objects
  */
-GameObject& PhysicsEngine::getGameObjectByID(int aID)
+GameObject& PhysicsEngine::getGameObjectByID(int aBodyID)
 {
 	for (GameObject& gameObject : mObjects)
 	{
@@ -264,7 +271,7 @@ GameObject& PhysicsEngine::getGameObjectByID(int aID)
 			std::vector<std::reference_wrapper<RigidBody>> rigidBodies = gameObject.getComponents<RigidBody>();
 			if (!rigidBodies.empty())
 			{
-				if (rigidBodies[0].get().getBodyId().bodyID == aID)
+				if (rigidBodies[0].get().getBodyId().bodyID == aBodyID)
 				{
 					return gameObject;
 				}

@@ -4,7 +4,7 @@
 /**
  * @file PhysicsEngine.h
  *
- * @brief This file contains the declaration of the PhysicsEngine class
+ * @brief The general logic for the physics engine of engine bravo
  *
  */
 #include "GameObject.h"
@@ -66,4 +66,3 @@ private:
 };
 
 #endif // PHYSICSENGINE_H
-

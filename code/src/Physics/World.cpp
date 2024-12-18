@@ -106,7 +106,7 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		uint16_t maskBits = 0;
 		for (int category : circleCollider.getCollideWithCategory())
 		{
-			maskBits |= (1 << category); // Generate the bitmask
+			maskBits |= (1 << category);
 		}
 		shapeDef.filter.categoryBits = (1 << circleCollider.getCollideCategory());
 

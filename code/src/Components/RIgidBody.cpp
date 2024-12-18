@@ -4,7 +4,7 @@ RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties, std::
 	: Component{aTag}, mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),
 	  mCanRotate(aBodyFlags.IsMoveableByForce), mDensity(aBodyProperties.Density), mFriction(aBodyProperties.Friction),
 	  mRestitution(aBodyProperties.Restitution), mLinearDamping(0.0f), mAngularDamping(0.0f), mIsUpdated(false),
-	  mBodyID({-1, 0})
+	  mBodyID({-1, 0}), mAngularVelocity(0.0f), mLinearVelocity({0.0f, 0.0f})
 {
 }
 
