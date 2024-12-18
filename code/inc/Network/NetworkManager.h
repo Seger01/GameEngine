@@ -50,9 +50,6 @@ public:
 	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
 	GameObject& getDefaultPlayerPrefab() const;
 
-	GameObject* instantiatePlayer(NetworkPacket packet);
-	void destroyPlayer(SLNet::RakNetGUID playerID);
-
 	void setRole(NetworkRole aRole);
 	NetworkRole getRole() const;
 
@@ -64,14 +61,15 @@ private:
 	void startClient();
 	void startHost();
 
+		GameObject* instantiatePlayer(NetworkPacket packet);
+	void destroyPlayer(SLNet::RakNetGUID playerID);
+
 	std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
 
 	void addObject(GameObject& aObject);
 	void removeObject(GameObject& aObject);
 	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 	void clearObjects();
-	GameObject* instantiatePrefab(NetworkPacket aNetworkPacket);
-	void destroyPrefab(NetworkPacket aNetworkPacket);
 
 private:
 	NetworkRole mRole;										  ///< The role of the network manager.

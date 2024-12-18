@@ -71,25 +71,20 @@ void NetworkServer::handleIncomingPackets()
 		switch (packet->data[0])
 		{
 		case ID_NEW_INCOMING_CONNECTION:
-			std::cout << "A connection is incoming.\n";
 			spawnPlayerForNewClient(packet->guid);
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			std::cout << "The server is full.\n";
 			break;
 		case ID_DISCONNECTION_NOTIFICATION:
-			std::cout << "A client has disconnected.\n";
 			handleClientDisconnect(packet->guid);
 			break;
 		case ID_CONNECTION_LOST:
-			std::cout << "A client lost the connection.\n";
 			handleClientDisconnect(packet->guid);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
 			handleTransform(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
-			std::cout << "Received player instantiation message.\n";
 			handlePlayerInit(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:

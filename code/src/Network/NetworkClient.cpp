@@ -263,19 +263,16 @@ void NetworkClient::handleIncomingPackets()
 		switch (packet->data[0])
 		{
 		case ID_CONNECTION_REQUEST_ACCEPTED:
-			std::cout << "Connected to server.\n";
 			mIsConnected = true;
 			mIsConnecting = false;
 			mServerGUID = packet->guid;
 			sendPlayerInit();
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
-			std::cout << "Connection attempt failed. Retrying...\n";
 			mIsConnecting = false;
 			mIsConnected = false;
 			break;
 		case ID_CONNECTION_LOST:
-			std::cout << "Connection lost or disconnected.\n";
 			mIsConnected = false;
 			break;
 		case ID_UNCONNECTED_PONG:
@@ -300,18 +297,15 @@ void NetworkClient::handleIncomingPackets()
 			handleTransform(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
-			std::cout << "Received player init packet\n";
 			handlePlayerInstantiation(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_PLAYER_DESTROY:
-			std::cout << "Received player destroy packet\n";
 			handlePlayerDestruction(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:
 			handleCustomSerialize(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB:
-			std::cout << "Received spawn prefab packet\n";
 			handleSpawnPrefab(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_DESPAWN_PREFAB:
@@ -468,7 +462,23 @@ void NetworkClient::handleSpawnPrefab(SLNet::Packet* aPacket)
 {
 	SLNet::BitStream bs(aPacket->data, aPacket->length, false);
 	NetworkPacket networkPacket = NetworkSharedFunctions::getBitStreamData(bs);
-	GameObject* prefab = EngineBravo::getInstance().getNetworkManager().instantiatePrefab(networkPacket);
+	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(networkPacket.prefabID);
+	if (!iNetworkprefab)
+	{
+		throw std::runtime_error("Prefab not found");
+	}
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
+	if (prefab->hasComponent<NetworkObject>())
+	{
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(networkPacket.prefabID);
+		networkObject.setNetworkObjectID(networkPacket.networkObjectID);
+	}
+	else
+	{
+		throw std::runtime_error("Prefab does not have a NetworkObject component");
+	}
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
 }
 
 /**
