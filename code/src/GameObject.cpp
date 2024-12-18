@@ -254,7 +254,7 @@ Transform& GameObject::getTransformRef() { return mTransform; }
  *
  * @param aTransform The transform to set.
  */
-void GameObject::setTransform(Transform aTransform) { mTransform = aTransform; }
+void GameObject::setTransform(const Transform& aTransform) { mTransform = aTransform; }
 
 /**
  * @brief Sets the parent of the GameObject. Removes the GameObject from its current parent and adds it to the new
