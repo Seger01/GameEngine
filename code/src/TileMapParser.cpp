@@ -95,7 +95,10 @@ void TileMapParser::parse()
 			mTileMapData.mLayers.push_back(grid);
 			if (layer.contains("name"))
 			{
-				mTileMapData.mLayerNames.push_back(layer["name"]);
+				std::string layerName = layer["name"];
+				mTileMapData.mLayerNames.push_back(layerName);
+				parseLayerProperties(layer, layerName);
+
 			}
 		}
 		else if (layer["type"] == "objectgroup")
@@ -107,6 +110,26 @@ void TileMapParser::parse()
 	// Store tile information in a map
 	storeTileInfo();
 }
+
+
+/**
+ * @brief Parses custom properties of a layer
+ * 
+ * @param layer 
+ * @param layerName 
+ */
+void TileMapParser::parseLayerProperties(const nlohmann::json& layer, const std::string& layerName) {
+    if (layer.contains("properties")) {
+        std::unordered_map<std::string, std::string> properties;
+        for (const auto& property : layer["properties"]) {
+            std::string name = property["name"];
+            std::string value = property["value"];
+            properties[name] = value;
+        }
+        mTileMapData.mLayerProperties[layerName] = properties;
+    }
+}
+
 
 /**
  * @brief Parses the objects of JSON TileMap Object Layer

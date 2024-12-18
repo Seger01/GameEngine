@@ -60,6 +60,7 @@ struct TileMapData {
     std::vector<std::string> mLayerNames;
     std::unordered_map<int, TileInfo> mTileInfoMap;
     std::vector<MapObject> mMapObjects;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> mLayerProperties;
 };
 
 
@@ -80,6 +81,7 @@ public:
 private:
     void storeTileInfo();
     void parseObjectLayer(const nlohmann::json& layer);
+    void parseLayerProperties(const nlohmann::json& layer, const std::string& layerName); 
 private:
     /// @brief The path to the JSON file
     std::string mFilePath;

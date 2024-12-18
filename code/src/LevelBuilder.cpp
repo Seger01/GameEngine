@@ -82,6 +82,9 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerIndex, int rowIndex, int colIndex,
 							  bool isDoorsLayer, bool isGraphLayer) const
 {
+    if (isGraphLayer) {
+        return;
+    }
 	EngineBravo& engine = EngineBravo::getInstance();
 
 	SpriteDef spriteDef = {tileInfo.mTilesetName,
@@ -95,12 +98,12 @@ void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerI
 	gameObject->setTransform(objectTransform);
     gameObject->setName("Tile");
 
-	if (!isGraphLayer)
-	{
-		Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
-		sprite->setLayer(layerIndex);
-		gameObject->addComponent(sprite);
-	}
+	// if (!isGraphLayer)
+	// {
+	// 	Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+	// 	sprite->setLayer(layerIndex);
+	// 	gameObject->addComponent(sprite);
+	// }
 
 	for (const auto& collider : tileInfo.mColliders)
 	{
