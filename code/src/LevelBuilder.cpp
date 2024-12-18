@@ -13,7 +13,8 @@
 
 /**
  * @brief This function creates a level from the parsed json data
- *
+ * @details To use room_entry and LevelEndTrigger, the type property must be set as room_entry or LevelEndTrigger
+ * respectively in the json file
  * @param scene
  * @param tileMapData
  * @throw runtime_error if scene is null
