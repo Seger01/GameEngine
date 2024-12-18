@@ -12,7 +12,9 @@
  */
 struct Vector2
 {
+	/// @brief The x value of the vector.
 	float x;
+	/// @brief The y value of the vector.
 	float y;
 
 	/**
