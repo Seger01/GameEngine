@@ -54,9 +54,14 @@ private:
 	void addAny(const std::string& aName, const nlohmann::json& aValue);
 
 private:
+	/// @brief The file name of the save game.
 	std::string mFileName;
+	/// @brief Vector of integer fields stored in this savegame.
 	std::vector<IntSaveField> mIntFields;
+	/// @brief Vector of float fields stored in this savegame.
 	std::vector<FloatSaveField> mFloatFields;
+	/// @brief Vector of string fields stored in this savegame.
 	std::vector<StringSaveField> mStringFields;
+	/// @brief Vector of savearrays stored in this savegame.
 	std::vector<SaveArray> mArrays;
 };

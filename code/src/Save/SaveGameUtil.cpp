@@ -3,9 +3,9 @@
 #include <iostream>
 #include <sstream>
 
-bool SaveGameUtil::isInteger(const std::string& s)
+bool SaveGameUtil::isInteger(const std::string& aValue)
 {
-	std::istringstream iss(s);
+	std::istringstream iss(aValue);
 	int val;
 	// Attempt to read an integer from the string
 	iss >> std::noskipws >> val;
@@ -13,9 +13,9 @@ bool SaveGameUtil::isInteger(const std::string& s)
 	return iss.eof() && !iss.fail();
 }
 
-bool SaveGameUtil::isFloat(const std::string& s)
+bool SaveGameUtil::isFloat(const std::string& aValue)
 {
-	std::istringstream iss(s);
+	std::istringstream iss(aValue);
 	float val;
 	// Attempt to read a float from the string
 	iss >> std::noskipws >> val;

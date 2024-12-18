@@ -15,6 +15,6 @@
 class SaveGameUtil
 {
 public:
-	static bool isInteger(const std::string& str);
-	static bool isFloat(const std::string& str);
+	static bool isInteger(const std::string& aValue);
+	static bool isFloat(const std::string& aValue);
 };

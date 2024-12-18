@@ -7,22 +7,28 @@ class AudioSource implements Component_Proxy{
     - mFileName : string
     - mPlayOnAwake : bool
     - mLoop : bool
+    - mIsMusic : bool
     - mVolume : int
+    - mMaxVolume : const static int
     - mXDirection : int
     - minXDirection : const static int
     - maxXDirection : const static int
-    + AudioSource(string aPath, bool aIsMusic=false)
-    + play(bool aLooping=false) : void
+
+    + AudioSource(const string& aPath, bool aIsMusic, const string& aTag)
+    + play(bool aLooping) : void
     + stop() : void 
 
+    + isMusic() : bool
     + setPlayOnWake(bool aValue) : void
     + getPlayOnWake() : bool
     + setLooping(bool aLooping) : void
     + getLooping() : bool
     + setVolume(unsigned aVolume) : void
     + getVolume() : unsigned
+    + setXDirection(int aListenerX, int aSourceX) : void
     + setXDirection(int aXDirection) : void
     + getXDirection() : int
+    + getFileName() : string
 }
 
 interface IAudioFacade {
@@ -47,19 +53,19 @@ class MixerFacade implements IAudioFacade {
     - mLastUsedChannel : unsigned
     - findAvailableChannel() : int
     - distanceToAngle(int aDirection) : int
-    - calcDirection(int aListenerX, int aSoundX, float aScale) : int
 }
 
 class MixerContainer {
-    // string is the path
     - mSfx : unordered_map<string, Mix_Chunk*>
+    - mMusicPath : string
     - mMusic : Mix_Music*
     + MixerContainer()
     + ~MixerContainer()
-    + addSound(string aPath, Mix_Chunk *aSound) : void
-    + getSound(string aIndex) : Mix_Chunk*
-    + getSound(string aIndex) : const Mix_Chunk*
-    + addMusic(Mix_Music *aMusic) : void
+    + addSound(const string& aPath, Mix_Chunk *aSound) : void
+    + getSound(const string& aIndex) : Mix_Chunk*
+    + getSound(const string& aIndex) : const Mix_Chunk*
+
+    + addMusic(const string& aPath, Mix_Music *aMusic) : void
     + getMusic() : Mix_Music*
     + getMusic() : const Mix_Music*
     + clear() : void

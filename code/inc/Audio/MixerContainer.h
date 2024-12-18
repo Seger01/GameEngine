@@ -29,7 +29,7 @@ public:												  // rule of five
 public:
 	void addSound(const std::string& aPath, Mix_Chunk* aSound);
 	Mix_Chunk* getSound(const std::string& aIndex);
-	const Mix_Chunk* getSound(std::string aIndex) const;
+	const Mix_Chunk* getSound(const std::string& aIndex) const;
 
 	void addMusic(const std::string& aPath, Mix_Music* aMusic);
 	Mix_Music* getMusic();

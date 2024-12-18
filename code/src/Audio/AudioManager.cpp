@@ -11,7 +11,8 @@
 #include <stdexcept>
 
 /**
- * @brief Construct a new AudioManager::AudioManager object. Currently creates a MixerFacade object.
+ * @brief AudioManger constructor. Currently creates a MixerFacade object, as it is the only audio library facade
+ * currently available.
  */
 AudioManager::AudioManager() { mFacade = std::make_unique<MixerFacade>(); }
 
@@ -45,6 +46,8 @@ void AudioManager::play(const AudioSource& aSource)
 /**
  * @brief Pause the given audio source (must be music). If the music is not playing, nothing happens.
  *
+ * @param aSource The audio source to pause.
+ *
  * @throw std::logic_error if the audio source is not music
  */
 void AudioManager::pause(const AudioSource& aSource)
@@ -62,7 +65,9 @@ void AudioManager::pause(const AudioSource& aSource)
 /**
  * @brief Resume the given audio source (must be music). If the music is already playing, nothing happens.
  *
- * @throw std::logic_error if the audio source is not music
+ * @param aSource The audio source to resume.
+ *
+ * @throw std::logic_error if the audio source is not music. (Only music sources can be resumed.)
  */
 void AudioManager::resume(const AudioSource& aSource)
 {
@@ -77,7 +82,11 @@ void AudioManager::resume(const AudioSource& aSource)
 }
 
 /**
- * @brief Stop the audio source. If it is not a music source, throw an error.
+ * @brief Stop the audio source.
+ *
+ * @param aSource The audio source to stop.
+ *
+ * @throw std::logic_error if the audio source is not music. (Only music sources can be stopped.)
  */
 void AudioManager::stop(const AudioSource& aSource)
 {
@@ -151,16 +160,19 @@ void AudioManager::addObject(GameObject& aObject)
 	}
 }
 
-/*
+/**
  * @brief Remove a game object from the list of objects that have audio sources. If the object is not in the list,
  * nothing is done.
  *
  * @param aObject The game object to remove
+ *
+ * @note This method does not delete the object from memory, it only removes it from the list of objects that have audio
  */
 void AudioManager::removeObject(GameObject& aObject)
 {
-	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
-							 { return &obj.get() == &aObject; });
+	auto it =
+		std::remove_if(mObjects.begin(), mObjects.end(),
+					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());
