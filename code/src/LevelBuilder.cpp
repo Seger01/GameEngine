@@ -31,7 +31,6 @@ void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
 	createTileLayers(scene, tileMapData);
 }
 
-
 /**
  * @brief This function creates the tile layers
  *
@@ -46,10 +45,6 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 		bool isDoorsLayer = (tileMapData.mLayerNames[layerIndex] == "Doors");
 		bool isGraphLayer = (tileMapData.mLayerNames[layerIndex] == "Graph");
 
-        if (isGraphLayer)
-        {
-            continue;
-        }
 		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
 			for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex)
@@ -97,14 +92,14 @@ void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, int layerI
 	objectTransform.position.x = static_cast<int>(colIndex * 16);
 	objectTransform.position.y = static_cast<int>(rowIndex * 16);
 	gameObject->setTransform(objectTransform);
-    gameObject->setName("Tile");
+	gameObject->setName("Tile");
 
-	// if (!isGraphLayer)
-	// {
-	// 	Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
-	// 	sprite->setLayer(layerIndex);
-	// 	gameObject->addComponent(sprite);
-	// }
+	if (!isGraphLayer)
+	{
+		Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+		sprite->setLayer(layerIndex);
+		gameObject->addComponent(sprite);
+	}
 
 	for (const auto& collider : tileInfo.mColliders)
 	{
