@@ -83,22 +83,35 @@ private:
 	bool mCanCollide;
 	BodyType mBodyType;
 
-	float mLinearDamping;  /** < Reduces linear velocity over time */
-	float mAngularDamping; /** < Reduces angular velocity over time */
+	/// @brief Reduces linear velocity over time
+	float mLinearDamping;
+	/// @brief Reduces angular velocity over time
+	float mAngularDamping;
 
+	/// @brief The density of the body
 	float mDensity;
+	/// @brief The friction of the body
 	float mFriction;
+	/// @brief The restitution of the body
 	float mRestitution;
 
+	/// @brief Linear velocity of the body
 	Vector2 mLinearVelocity;
+	/// @brief Angular velocity of the body
 	float mAngularVelocity;
+	/// @brief The mass of the body
 	float mRotation;
 
+	/// @brief The gravity scale of the body
 	float mMass;
+	/// @brief The gravity scale of the body
 	float mGravityScale;
 
+	/// @brief Box2D ID of the body
 	BodyID mBodyID;
 
+	/// @brief Buffer for forces to apply to the body
 	std::vector<Vector2> mForcesBuffer;
+	/// @brief Buffer for torques to apply to the body
 	std::vector<float> mTorqueBuffer;
 };

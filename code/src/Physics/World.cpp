@@ -219,6 +219,42 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 	}
 }
 
+void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
+{
+	b2BodyId bodyID = convertToB2BodyID(aBodyID);
+	int size = aBodyProxy.getBoxColliders().size() + aBodyProxy.getCircleColliders().size();
+
+	b2ShapeId shapeArray[size];
+
+	b2Body_GetShapes(bodyID, shapeArray, size);
+	int boxcounter = 0;
+	int circlecounter = 0;
+	for (int i = 0; i < size; i++)
+	{
+		b2ShapeType shapeType = b2Shape_GetType(shapeArray[i]);
+		if (shapeType == b2_polygonShape)
+		{
+			try
+			{
+			}
+			catch (std::exception e)
+			{
+				std::cout << e.what() << std::endl;
+			}
+		}
+		else if (shapeType == b2_circleShape)
+		{
+			try
+			{
+			}
+			catch (std::exception e)
+			{
+				std::cout << e.what() << std::endl;
+			}
+		}
+	}
+}
+
 /**
  * @brief Deletes a body from the box2d world
  * @param aBodyID The body ID to delete
