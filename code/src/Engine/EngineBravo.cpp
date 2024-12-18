@@ -16,8 +16,6 @@
 #include "ScopedTimer.h"
 #include "Sprite.h"
 #include "Text.h"
-#include "box2d/box2d.h"
-#include "box2d/math_functions.h"
 
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
@@ -61,9 +59,12 @@ void EngineBravo::run()
 
 	mSceneManager.update();
 
+	double accumalatedTimePhysics = 0;
+
 	while (mRunning)
 	{
 		Time::update();
+		accumalatedTimePhysics += Time::rawDeltaTime;
 
 		mEventManager.handleEvents();
 		input.update();
@@ -77,7 +78,11 @@ void EngineBravo::run()
 
 		mUpdateQueue.updateAdditions();
 
-		mPhysicsManager.updatePhysicsEngine();
+		while (accumalatedTimePhysics >= 0.02)
+		{
+			mPhysicsManager.updatePhysicsEngine(Time::timeDilation);
+			accumalatedTimePhysics -= 0.02;
+		}
 
 		mParticleSystem.update();
 		mRenderSystem.render(mSceneManager.getCurrentScene());

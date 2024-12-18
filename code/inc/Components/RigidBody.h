@@ -77,25 +77,25 @@ private:
 	Transform mTransform;
 
 	bool mIsUpdated;
-	bool mHasGravity = false;
-	bool mIsMoveableByForce = false;
-	bool mCanRotate = false;
-	bool mCanCollide = true;
+	bool mHasGravity;
+	bool mIsMoveableByForce;
+	bool mCanRotate;
+	bool mCanCollide;
 	BodyType mBodyType;
 
-	float mLinearDamping = 0;  // reduces linear velocity over time
-	float mAngularDamping = 0; // reduces angular velocity over time
+	float mLinearDamping;  /** < Reduces linear velocity over time */
+	float mAngularDamping; /** < Reduces angular velocity over time */
 
-	float mDensity = 0;
-	float mFriction = 0;
-	float mRestitution = 0;
+	float mDensity;
+	float mFriction;
+	float mRestitution;
 
-	Vector2 mLinearVelocity = {0.0f, 0.0f};
-	float mAngularVelocity = 0;
-	float mRotation = 0;
+	Vector2 mLinearVelocity;
+	float mAngularVelocity;
+	float mRotation;
 
-	float mMass = 0;
-	float mGravityScale = 0;
+	float mMass;
+	float mGravityScale;
 
 	BodyID mBodyID;
 

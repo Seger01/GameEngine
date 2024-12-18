@@ -294,6 +294,13 @@ GameObject& GameObject::getParent()
 }
 
 /**
+ * @brief Checks if the GameObject has a parent.
+ *
+ * @return True if the GameObject has a parent, false otherwise.
+ */
+bool GameObject::hasParent() const { return mParent != nullptr; }
+
+/**
  * @brief Adds a child to the GameObject.
  *
  * @param aChild The child to add.
