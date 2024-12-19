@@ -63,6 +63,8 @@ void Controller::update()
 	if (!connected)
 		return;
 
+	previousButtonStates = buttonStates;
+
 	SDL_JoystickUpdate();
 	pollControllerState();
 }
@@ -156,6 +158,23 @@ void Controller::print()
 }
 
 bool Controller::isButtonPressed(Key aKey)
+{
+	static std::map<int, int> myMap = {{(int)Key::Controller_Cross, 0},		 {(int)Key::Controller_Circle, 1},
+									   {(int)Key::Controller_Square, 2},	 {(int)Key::Controller_Triangle, 3},
+									   {(int)Key::Controller_L1, 9},		 {(int)Key::Controller_R1, 10},
+									   {(int)Key::Controller_L3, 7},		 {(int)Key::Controller_R3, 8},
+									   {(int)Key::Controller_DPad_Up, 11},	 {(int)Key::Controller_DPad_Down, 12},
+									   {(int)Key::Controller_DPad_Left, 13}, {(int)Key::Controller_DPad_Right, 14}};
+
+	int button = myMap[(int)aKey];
+	if (buttonStates[button] == 1 && previousButtonStates[button] == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Controller::isButton(Key aKey)
 {
 	static std::map<int, int> myMap = {{(int)Key::Controller_Cross, 0},		 {(int)Key::Controller_Circle, 1},
 									   {(int)Key::Controller_Square, 2},	 {(int)Key::Controller_Triangle, 3},
