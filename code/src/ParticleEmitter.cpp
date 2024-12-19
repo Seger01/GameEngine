@@ -198,15 +198,6 @@ void ParticleEmitter::update()
 			++i; // Only increment if no element was erased
 		}
 	}
-	// for (int i = 0; i < mParticles.size();) {
-	//     mParticles[i].update();
-	//     if (mParticles[i].getLifeTime() <= 0) {
-	//         std::swap(mParticles[i], mParticles.back());
-	//         mParticles.pop_back(); // Removes the last element efficiently
-	//     } else {
-	//         ++i;
-	//     }
-	// }
 }
 
 /**
