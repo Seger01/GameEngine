@@ -25,8 +25,6 @@ const std::vector<std::vector<int>>* MapToGraph::findGraphLayer() const
 {
 	for (size_t i = 0; i < mTileMapData.mLayers.size(); ++i)
 	{
-        bool isGraphLayer = false;
-
         // Check if the layer has custom properties and if isGraphLayer is set
         auto layerPropertiesIt = mTileMapData.mLayerProperties.find(mTileMapData.mLayerNames[i]);
         if (layerPropertiesIt != mTileMapData.mLayerProperties.end()) {

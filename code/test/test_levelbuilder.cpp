@@ -104,3 +104,15 @@ TEST_F(LevelBuilderTests, CreateTileLayers_SkipsGraphLayer)
 	auto gameObjects = scene.getGameObjects();
 	ASSERT_EQ(gameObjects.size(), 0); // No game objects should be created for graph layers
 }
+
+TEST_F(LevelBuilderTests, CreateTileLayers_ThrowsExceptionForMissingTile) {
+    LevelBuilder levelBuilder;
+    TileMapData tileMapData;
+
+    tileMapData.mLayers = {{{1, 0}, {0, 1}}};
+    tileMapData.mLayerNames = {"Layer1"};
+    // Do not add the tile to tileInfoMap to simulate missing tile
+
+    Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
+    EXPECT_THROW(levelBuilder.createLevel(&scene, tileMapData, 16, 16), std::runtime_error);
+}

@@ -73,7 +73,7 @@ void LevelBuilder::createTileLayers(Scene* aScene, const TileMapData& aTileMapDa
 					}
 					else
 					{
-						std::runtime_error("Tile not found in tileInfoMap in LevelBuilder::createTileLayers");
+						throw std::runtime_error("Tile not found in tileInfoMap in LevelBuilder::createTileLayers");
 					}
 				}
 			}
