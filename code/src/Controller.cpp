@@ -142,17 +142,29 @@ int Controller::readDpad()
 	}
 }
 
+void Controller::print()
+{
+	for (int i = 0; i < buttonStates.size(); i++)
+	{
+		std::cout << "Button " << i << " is " << buttonStates[i] << std::endl;
+	}
+
+	for (int i = 0; i < axisValues.size(); i++)
+	{
+		std::cout << "Axis " << i << " is " << axisValues[i] << std::endl;
+	}
+}
+
 bool Controller::isButtonPressed(Key aKey)
 {
-	std::map<int, int> myMap = {
-		{(int)Key::Controller_Cross, 100}, {6, 200}, {7, 200}, {8, 200}, {2, 200}, {3, 300}, {4, 400}};
+	static std::map<int, int> myMap = {{(int)Key::Controller_Cross, 0},		 {(int)Key::Controller_Circle, 1},
+									   {(int)Key::Controller_Square, 2},	 {(int)Key::Controller_Triangle, 3},
+									   {(int)Key::Controller_L1, 9},		 {(int)Key::Controller_R1, 10},
+									   {(int)Key::Controller_L3, 7},		 {(int)Key::Controller_R3, 8},
+									   {(int)Key::Controller_DPad_Up, 11},	 {(int)Key::Controller_DPad_Down, 12},
+									   {(int)Key::Controller_DPad_Left, 13}, {(int)Key::Controller_DPad_Right, 14}};
 
-	int button = (int)aKey;
-	if (button < 0 || button >= static_cast<int>(buttonStates.size()))
-	{
-		std::cerr << "Button index out of range" << std::endl;
-		return false;
-	}
+	int button = myMap[(int)aKey];
 	return buttonStates[button];
 }
 
