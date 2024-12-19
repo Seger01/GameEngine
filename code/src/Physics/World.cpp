@@ -1,5 +1,4 @@
 #include "Physics/World.h"
-#include <numeric>
 
 World::World() {}
 
@@ -77,12 +76,11 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		shapeDef.restitution = aBodyProxy.getRestitution();
 		shapeDef.isSensor = boxCollider.isTrigger();
 
-		uint16_t maskBits =
-			std::accumulate(boxCollider.getCollideWithCategory().begin(), boxCollider.getCollideWithCategory().end(), 0,
-							[](uint16_t acc, int category)
-							{
-								return acc | (1 << category); // Generate the bitmask
-							});
+		uint16_t maskBits = 0;
+		for (int category : boxCollider.getCollideWithCategory())
+		{
+			maskBits |= (1 << category); // Generate the bitmask
+		}
 		shapeDef.filter.categoryBits = (1 << boxCollider.getCollideCategory());
 
 		shapeDef.filter.maskBits = maskBits;
@@ -105,12 +103,11 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		shapeDef.enablePreSolveEvents = true;
 		shapeDef.isSensor = circleCollider.getIsTrigger();
 
-		uint16_t maskBits = std::accumulate(circleCollider.getCollideWithCategory().begin(),
-											circleCollider.getCollideWithCategory().end(), 0,
-											[](uint16_t acc, int category)
-											{
-												return acc | (1 << category); // Generate the bitmask
-											});
+		uint16_t maskBits = 0;
+		for (int category : circleCollider.getCollideWithCategory())
+		{
+			maskBits |= (1 << category);
+		}
 		shapeDef.filter.categoryBits = (1 << circleCollider.getCollideCategory());
 
 		shapeDef.filter.maskBits = maskBits;
@@ -167,9 +164,11 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 					createShape(aBodyProxy, aBodyID);
 				}
 
-				uint16_t maskBits = std::accumulate(tempBoxCollider.getCollideWithCategory().begin(),
-													tempBoxCollider.getCollideWithCategory().end(), 0,
-													[](uint16_t acc, int category) { return acc | (1 << category); });
+				uint16_t maskBits = 0;
+				for (int category : tempBoxCollider.getCollideWithCategory())
+				{
+					maskBits |= (1 << category);
+				}
 
 				b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
 				tempFilter.maskBits = maskBits;
@@ -178,7 +177,7 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 				b2Shape_SetFilter(shapeArray[i], tempFilter);
 				boxcounter++;
 			}
-			catch (std::exception& e)
+			catch (std::exception e)
 			{
 				std::cout << e.what() << std::endl;
 			}
@@ -199,9 +198,11 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 					createShape(aBodyProxy, aBodyID);
 				}
 
-				uint16_t maskBits = std::accumulate(tempCircleCollider.getCollideWithCategory().begin(),
-													tempCircleCollider.getCollideWithCategory().end(), 0,
-													[](uint16_t acc, int category) { return acc | (1 << category); });
+				uint16_t maskBits = 0;
+				for (int category : tempCircleCollider.getCollideWithCategory())
+				{
+					maskBits |= (1 << category);
+				}
 
 				b2Filter tempFilter = b2Shape_GetFilter(shapeArray[i]);
 				tempFilter.maskBits = maskBits;
@@ -210,7 +211,7 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 				b2Shape_SetFilter(shapeArray[i], tempFilter);
 				circlecounter++;
 			}
-			catch (std::exception& e)
+			catch (std::exception e)
 			{
 				std::cout << e.what() << std::endl;
 			}
@@ -236,7 +237,7 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 			try
 			{
 			}
-			catch (std::exception& e)
+			catch (std::exception e)
 			{
 				std::cout << e.what() << std::endl;
 			}
@@ -246,7 +247,7 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 			try
 			{
 			}
-			catch (std::exception& e)
+			catch (std::exception e)
 			{
 				std::cout << e.what() << std::endl;
 			}
