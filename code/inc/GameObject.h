@@ -20,6 +20,13 @@
  *
  * @brief Represents a game object in the game world. Is the base of everything that should be seen or heard in the
  * game. The GameObject is a container for components, which define the behavior of the GameObject.
+ *
+ * GameObjects are the basic building blocks of the game. A GameObject has essentially no behaviour or properties by
+ * itself, but acts as a container for components, which have a shared Transform. A GameObject always possesses a
+ * Transform, because it is necessary to have a position in the game world. The GameObject class has various methods for
+ * manipulating its components. Everything that is visible or interactable in the game is a GameObject with components
+ * attached to it. Components can be added to the GameObjects at runtime, from the Behaviourscripts. All GameObjects are
+ * stored in scenes, which can be seen as the different levels of a game.
  */
 class GameObject
 {

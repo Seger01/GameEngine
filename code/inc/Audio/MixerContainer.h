@@ -12,7 +12,8 @@
 /**
  * @class MixerContainer
  *
- * @brief This class is responsible for owning SDL mixer sound effects and music
+ * @brief This class is responsible for owning SDL mixer sound effects and music. It ensures that every unique sound
+ * effect is loaded into memory only once.
  */
 class MixerContainer
 {
@@ -29,7 +30,7 @@ public:												  // rule of five
 public:
 	void addSound(const std::string& aPath, Mix_Chunk* aSound);
 	Mix_Chunk* getSound(const std::string& aIndex);
-	const Mix_Chunk* getSound(std::string aIndex) const;
+	const Mix_Chunk* getSound(const std::string& aIndex) const;
 
 	void addMusic(const std::string& aPath, Mix_Music* aMusic);
 	Mix_Music* getMusic();

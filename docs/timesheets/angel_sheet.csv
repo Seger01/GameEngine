@@ -74,3 +74,8 @@ Date,Time,Duration(in hours),Activity
 2024-12-03, 7:45, 8.0, Helped with update queue bug; fixing translate step for multiple colliders
 2024-12-04, 7:45, 9.0, Finished fixing translate; Fixed physics bugs; added physics tests; attempt at rotate fix
 2024-12-04, 8:00, 8.0, Added circle colliders; writing tests;
+2024-12-09, 8:15, 8.5, Fixing rotation
+2024-12-10, 8:15, 7.5, Fixing rotation
+2024-12-11, 8:15, 8.25, Added physics features
+2024-12-12, 11:00, 1.5, Project class
+2024-12-13, 9:45, 5.25, applying code standards;

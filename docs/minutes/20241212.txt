@@ -1,0 +1,12 @@
+Notes class 12 December
+
+Feedback:
+Agrees with laying focus on demo app. Suggests turning that into something interesting.
+
+- Sean geet aan dat we vanaf week 1 code standaard gebruiken.
+- Angel: geeft aan dat code review niet rekening houdt met het checken van raw pointers
+- Review systeem is wazig: teveel onduidelijkheid.
+
+For next week:
+- In 7 minutes: create a game for live public, to demonstrate the engine.
+- Afterwards show the current validation app.

@@ -1,0 +1,24 @@
+Minutes 19-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Various small code improvements. Reorganise design document.
+- Angel: Finished 50Hz physics update.
+- Ronan: Created the levelbuilder.
+- Sean: Objects can be despawned. Ran into issues with requesting game object ids over network.
+- Seger: Code standard improvements. Small camera updates. Helped Angel with scaling physics.
+
+What is going to be done:
+- Siem: Update design document. Check exception safety.
+- Angel: Test physics scaling.
+- Ronan: Improve levelbuilder (code standard). Cppcheck code. Update design doc.
+- Sean: Fix issues with requesting game object ids over network.
+- Seger: Scaling debug colliders. Add demo game controller support.
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: -
+- Sean: C++ not having some functionalities pre-made.
+- Seger: -

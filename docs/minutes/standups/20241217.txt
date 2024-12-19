@@ -1,0 +1,24 @@
+Minutes 17-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Fixed code standard w/ Angel
+- Angel: Fixed code standard.
+- Ronan: Demo: particle room, stress test room.
+- Sean: Not worked on project since last standup.
+- Seger: Demo: particle room. Code standard improvements. Fixed issue with default scene.
+
+What is going to be done:
+- Siem: Inventory of things to hand in, update code standard for exception safety.
+- Angel: Code standard, physics behaviour
+- Ronan: Demo: add user choice for stress test, update demo document. Update class diagram.
+- Sean: Fix Sean's develeopment environment. Networking despawn.
+- Seger: Help Sean with development environment.
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: -
+- Sean: Issues with build environment.
+- Seger: Issues with build environment.
