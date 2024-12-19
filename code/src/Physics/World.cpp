@@ -6,8 +6,15 @@
 #include "box2d/id.h"
 #include "box2d/types.h"
 
+/**
+ * @brief Default constructor
+ */
 World::World() {}
 
+/**
+ * @brief Constructs a world with the specified gravity
+ * @param aGravity The gravity of the world
+ */
 World::World(const Vector2& aGravity)
 {
 	b2WorldDef worldDef = b2DefaultWorldDef();

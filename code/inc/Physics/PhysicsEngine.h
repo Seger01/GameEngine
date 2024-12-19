@@ -1,6 +1,4 @@
-#ifndef PHYSICSENGINE_H
-#define PHYSICSENGINE_H
-
+#pragma once
 /**
  * @file PhysicsEngine.h
  *
@@ -18,7 +16,6 @@ class PhysicsEngine
 {
 public:
 	PhysicsEngine();
-	~PhysicsEngine();
 	float getStep() const;
 	float getSubStep() const;
 	World& getWorld();
@@ -66,5 +63,3 @@ private:
 	/// @brief The substep of the physics engine
 	int mSubStep;
 };
-
-#endif // PHYSICSENGINE_H

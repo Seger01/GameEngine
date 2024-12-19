@@ -1,9 +1,10 @@
 #include "Physics/PhysicsEngine.h"
 #include "Vector2.h"
 
+/**
+ * @brief Constructs a PhysicsEngine instance with default values
+ */
 PhysicsEngine::PhysicsEngine() : mStep(0.02f), mSubStep(4) {}
-
-PhysicsEngine::~PhysicsEngine() {}
 
 /**
  * @brief Creates the world
