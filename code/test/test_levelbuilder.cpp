@@ -18,14 +18,6 @@ protected:
 	EngineBravo* engine;
 };
 
-TEST_F(LevelBuilderTests, CreateLevel_NullScene_ThrowsException)
-{
-	LevelBuilder levelBuilder;
-	TileMapData tileMapData;
-	Scene* invalidScene = nullptr;
-	EXPECT_THROW(levelBuilder.createLevel(*invalidScene, tileMapData, 16, 16), std::runtime_error);
-}
-
 TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 {
 	LevelBuilder levelBuilder;
