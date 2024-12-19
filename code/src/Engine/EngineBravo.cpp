@@ -31,9 +31,6 @@ void EngineBravo::initialize()
 {
 	this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-	mConfiguration.setConfig("render_colliders", true);
-	mConfiguration.setConfig("render_fps", true);
-
 	mSceneManager.update();
 
 	mNetworkManager.initialize();
@@ -95,6 +92,8 @@ void EngineBravo::run()
 	}
 }
 
+void EngineBravo::stopEngine() { mRunning = false; }
+
 void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRate; }
 
 void EngineBravo::handleEvent(const Event& aEvent)
@@ -152,8 +151,6 @@ UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
-Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
-
 void EngineBravo::startBehaviourScripts()
 {
 	Scene& currentScene = mSceneManager.getCurrentScene();
@@ -165,14 +162,17 @@ void EngineBravo::startBehaviourScripts()
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		if (gameObject.get().hasComponent<IBehaviourScript>())
 		{
-			if (behaviourScript.get().hasScriptStarted())
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
 			{
-				continue;
+				if (behaviourScript.get().hasScriptStarted())
+				{
+					continue;
+				}
+				behaviourScript.get().onStart();
+				behaviourScript.get().setScriptStarted(true);
 			}
-			behaviourScript.get().onStart();
-			behaviourScript.get().setScriptStarted(true);
 		}
 	}
 }
@@ -188,9 +188,12 @@ void EngineBravo::runBehaviourScripts()
 		{
 			continue;
 		}
-		for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+		if (gameObject.get().hasComponent<IBehaviourScript>())
 		{
-			behaviourScript.get().onUpdate();
+			for (auto behaviourScript : gameObject.get().getComponents<IBehaviourScript>())
+			{
+				behaviourScript.get().onUpdate();
+			}
 		}
 	}
 }

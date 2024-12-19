@@ -12,8 +12,8 @@
 #include "Particle.h"
 
 /**
- * @class ParticleEmitter
- * @brief Class for emitting particles.
+ * @enum EmitterMode
+ * @brief Enum for the mode of the emitter.
  */
 enum EmitterMode
 {
@@ -25,7 +25,6 @@ enum EmitterMode
  * @class ParticleEmitter
  * @brief Class for emitting particles.
  */
-
 class ParticleEmitter : public Component
 {
 public:
@@ -62,29 +61,45 @@ private:
 	Vector2 generateRandomVelocity(float aMinSpeed, float aMaxSpeed, int aMinAngle, int aMaxAngle);
 
 private:
-	Transform mRelativeTransform; // Relative transform of the particle emitter
+	/// @brief Relative transform of the particle emitter.
+	Transform mRelativeTransform;
 
-	int mParticlesPerSecond;		  // Amount of particles to spawn per second
-	std::vector<Particle> mParticles; // Vector of particles
+	/// @brief The number of particles to emit per second.
+	int mParticlesPerSecond;
+	/// @brief The particles that were spawned by this emitter
+	std::vector<Particle> mParticles;
 
-	EmitterMode mEmitterMode; // Mode of the emitter
+	/// @brief The mode of the emitter.
+	EmitterMode mEmitterMode;
 
-	int mMinAngle; // Min angle of the particles
-	int mMaxAngle; // Max angle of the particles
+	/// @brief The minimum and maximum angle of the particles.
+	int mMinAngle;
+	int mMaxAngle;
 
-	int mMinLifeTimeMs; // Min lifetime of the particles
-	int mMaxLifeTimeMs; // Max lifetime of the particles
+	/// @brief the minimum lifetime of the particles.
+	int mMinLifeTimeMs;
+	/// @brief the maximum lifetime of the particles.
+	int mMaxLifeTimeMs;
 
-	float mVelocity;				   // Velocity of the particles
-	float mAcceleration;			   // Acceleration of the particles
-	Vector2 mSize;					   // Size of the particles
-	Vector2 mEndSize;				   // End size of the particles
-	float mRotation;				   // Rotation of the particles
-	float mAngularVelocity;			   // Angular velocity of the particles
-	float mAngularAcceleration;		   // Angular acceleration of the particles
-	std::vector<Color> mColorGradient; // Color gradient of the particles
+	/// @brief The speed of the particles.
+	float mVelocity;
+	/// @brief The acceleration of the particles.
+	float mAcceleration;
+	/// @brief The size of the particles.
+	Vector2 mSize;
+	/// @brief The size the particles are at the end of the maximum lifetime.
+	Vector2 mEndSize;
+	/// @brief The starting rotation of the particles.
+	float mRotation;
+	/// @brief The angular velocity of the particles.
+	float mAngularVelocity;
+	/// @brief The angular acceleration of the particles.
+	float mAngularAcceleration;
+	/// @brief The color gradient of the particles.
+	std::vector<Color> mColorGradient;
 
-	int mLayer = 0; // Layer of the particles
+	/// @brief The layer of the particles.
+	int mLayer = 0;
 };
 
 #endif // PARTICLEEMITTER_H
