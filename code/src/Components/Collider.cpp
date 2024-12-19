@@ -1,19 +1,15 @@
 #include "Collider.h"
 
-Collider::Collider(std::string aTag) : Component(aTag) {
-    // Constructor implementation
-}
+/**
+ * @file Collider.cpp
+ *
+ * @brief This file contains the implementation of the Collider class which is used to
+ */
 
-Collider::~Collider() {
-    // Destructor implementation
-}
+Collider::Collider(const std::string& aTag) : Component(aTag) {}
 
 std::unique_ptr<Component> Collider::clone() const { return std::make_unique<Collider>(*this); }
 
-Transform Collider::getTransform() const {
-    return mTransform;
-}
+Transform Collider::getTransform() const { return mTransform; }
 
-void Collider::setTransform(const Transform& transform) {
-    mTransform = transform;
-}
+void Collider::setTransform(const Transform& transform) { mTransform = transform; }

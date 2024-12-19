@@ -1,6 +1,14 @@
 #include "Physics/PhysicsEngine.h"
 
 /**
+ * @file PhysicsEngine.cpp
+ *
+ * @brief This file contains the implementation of the PhysicsEngine class which is used to
+ * store the properties of a physics engine and send it to the box2d world
+ *
+ */
+
+/**
  * @brief Constructs a PhysicsEngine instance with default values
  */
 PhysicsEngine::PhysicsEngine() : mStep(0.02f), mSubStep(4) {}

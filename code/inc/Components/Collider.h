@@ -5,17 +5,24 @@
 #include "Transform.h"
 #include "vector"
 
-class Collider : public Component {
+/**
+ * @file Collider.h
+ *
+ * @brief This file contains the declaration of the Collider class which is used to
+ * store the properties of a collider and send it to the world
+ *
+ */
+
+class Collider : public Component
+{
 public:
-    Collider(std::string aTag = "defaultCollider");
-    virtual ~Collider();
+	Collider(const std::string& aTag = "defaultCollider");
+	virtual std::unique_ptr<Component> clone() const override;
 
-    virtual std::unique_ptr<Component> clone() const override;
-
-    // Getter and setter methods for transform
-    Transform getTransform() const;
-    void setTransform(const Transform& transform);
+	Transform getTransform() const;
+	void setTransform(const Transform& transform);
 
 private:
-    Transform mTransform;
+	/// @brief Transform of the collider
+	Transform mTransform;
 };
