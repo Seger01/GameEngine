@@ -1,6 +1,4 @@
-#ifndef WORLD_H
-#define WORLD_H
-
+#pragma once
 /**
  * @file World.h
  *
@@ -61,5 +59,3 @@ private:
 	/// @brief The gravity of the world
 	Vector2 mGravity;
 };
-
-#endif // WORLD_H

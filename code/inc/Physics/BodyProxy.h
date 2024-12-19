@@ -1,5 +1,4 @@
-#ifndef BODYPROXY_H
-#define BODYPROXY_H
+#pragma once
 
 /**
  * @file BodyProxy.h
@@ -94,5 +93,3 @@ private:
 	/// @brief Circle colliders of the body
 	std::vector<std::reference_wrapper<CircleCollider>> mCircleColliders;
 };
-
-#endif // BODYPROXY_H

@@ -1,6 +1,16 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties, std::string aTag)
+/**
+ * @brief Constructs a RigidBody instance with the specified body flags, body properties, and tag.
+ *
+ * @param aBodyFlags The flags that define physical behaviors of the body, such as gravity and movability by force.
+ * @param aBodyProperties The properties of the body, including density, friction, restitution, gravity scale, and mass.
+ * @param aTag A string tag to identify the RigidBody component.
+ *
+ * @see BodyFlags
+ * @see BodyProperties
+ */
+RigidBody::RigidBody(const BodyFlags& aBodyFlags, const BodyProperties& aBodyProperties, const std::string& aTag)
 	: Component{aTag}, mHasGravity(aBodyFlags.HasGravity), mIsMoveableByForce(aBodyFlags.IsMoveableByForce),
 	  mCanRotate(aBodyFlags.IsMoveableByForce), mDensity(aBodyProperties.Density), mFriction(aBodyProperties.Friction),
 	  mRestitution(aBodyProperties.Restitution), mLinearDamping(0.0f), mAngularDamping(0.0f), mIsUpdated(false),
@@ -8,8 +18,6 @@ RigidBody::RigidBody(BodyFlags aBodyFlags, BodyProperties aBodyProperties, std::
 	  mGravityScale(aBodyProperties.GravityScale), mMass(aBodyProperties.Mass)
 {
 }
-
-RigidBody::~RigidBody() {}
 
 std::unique_ptr<Component> RigidBody::clone() const { return std::make_unique<RigidBody>(*this); }
 

@@ -1,13 +1,14 @@
 #include "Physics/World.h"
-#include "BodyID.h"
-#include "BodyProxy.h"
-#include "box2d/box2d.h"
-#include "box2d/collision.h"
-#include "box2d/id.h"
-#include "box2d/types.h"
 
+/**
+ * @brief Default constructor
+ */
 World::World() {}
 
+/**
+ * @brief Constructs a world with the specified gravity
+ * @param aGravity The gravity of the world
+ */
 World::World(const Vector2& aGravity)
 {
 	b2WorldDef worldDef = b2DefaultWorldDef();
