@@ -46,10 +46,14 @@ protected:
 	void addAny(const std::string& aName, const nlohmann::json& aValue);
 
 private:
+	/// @brief The name of the array. Used to identify it.
 	std::string mName;
+	/// @brief Vector of integer fields stored in this array.
 	std::vector<IntSaveField> mIntFields;
+	/// @brief Vector of float fields stored in this array.
 	std::vector<FloatSaveField> mFloatFields;
+	/// @brief Vector of string fields stored in this array.
 	std::vector<StringSaveField> mStringFields;
-
+	/// @brief Allow SaveGame to access private members.
 	friend class SaveGame;
 };

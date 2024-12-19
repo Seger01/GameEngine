@@ -21,6 +21,10 @@
  */
 class NetworkManager
 {
+	friend class NetworkClient;
+	friend class NetworkServer;
+	friend class UpdateQueue;
+
 public:
 	NetworkManager();
 
@@ -46,11 +50,19 @@ public:
 	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
 	GameObject& getDefaultPlayerPrefab() const;
 
-	GameObject* instantiatePlayer(NetworkPacket packet);
-	void destroyPlayer(SLNet::RakNetGUID playerID);
-
 	void setRole(NetworkRole aRole);
 	NetworkRole getRole() const;
+
+	GameObject* instantiate(int aPrefabID, Transform aTransform = Transform());
+	void destroy(GameObject& aObject);
+
+private:
+	void startServer();
+	void startClient();
+	void startHost();
+
+		GameObject* instantiatePlayer(NetworkPacket packet);
+	void destroyPlayer(SLNet::RakNetGUID playerID);
 
 	std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
 
@@ -59,23 +71,16 @@ public:
 	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
 	void clearObjects();
 
-	GameObject* instantiate(int aPrefabID, Transform aTransform = Transform());
-	GameObject* instantiatePrefab(NetworkPacket aNetworkPacket);
-
 private:
-	void startServer();
-	void startClient();
-	void startHost();
-
-private:
-	NetworkRole mRole;  ///< The role of the network manager.
-	int mTickRate; 	///< The tick rate for sending packets.
-	std::unique_ptr<GameObject> mDefaultPlayerPrefab; ///< The default player prefab.
-	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< The list of game objects managed by the network manager.
+	NetworkRole mRole;										  ///< The role of the network manager.
+	int mTickRate;											  ///< The tick rate for sending packets.
+	std::unique_ptr<GameObject> mDefaultPlayerPrefab;		  ///< The default player prefab.
+	std::vector<std::reference_wrapper<GameObject>> mObjects; ///< The list of game objects managed by the network
+															  ///< manager.
 
 	std::unique_ptr<NetworkServer> mServer; ///< The server for the network manager.
 	std::unique_ptr<NetworkClient> mClient; ///< The client for the network manager.
-	std::unique_ptr<NetworkHost> mHost; ///< The host for the network manager.
+	std::unique_ptr<NetworkHost> mHost;		///< The host for the network manager.
 };
 
 #endif // NETWORKMANAGER_H

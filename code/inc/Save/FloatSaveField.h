@@ -22,6 +22,8 @@ public:
 	float getValue() const;
 
 private:
+	/// @brief The name of the field. Used to identify it.
 	std::string mName;
+	/// @brief The value of the field.
 	float mValue;
 };

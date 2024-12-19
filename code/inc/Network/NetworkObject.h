@@ -17,6 +17,10 @@ class NetworkManager;
  * @brief Represents a networked object in the game engine.
  */
 class NetworkObject : public Component {
+	friend class NetworkManager;
+	friend class NetworkClient;
+	friend class NetworkServer;
+
 public:
     NetworkObject(std::string aTag = "defaultNetworkObject");
 	~NetworkObject() = default;
@@ -25,9 +29,6 @@ public:
 	NetworkObject(NetworkObject&& other) noexcept;
 	NetworkObject& operator=(NetworkObject&& other) noexcept;
 	std::unique_ptr<Component> clone() const override;
-	void setClientGUID(SLNet::RakNetGUID aClientID);
-	SLNet::RakNetGUID getClientGUID() const;
-	void setOwner(bool aIsOwner);
 	bool isOwner() const;
 	bool isPlayer() const;
 	int getNetworkObjectID() const;
@@ -39,13 +40,15 @@ private:
 	void setPlayer(bool aIsPlayer);
 	void setNetworkObjectID(int aNetworkObjectID);
 	void setPrefabID(int aPrefabID);
+	void setClientGUID(SLNet::RakNetGUID aClientID);
+	SLNet::RakNetGUID getClientGUID() const;
+	void setOwner(bool aIsOwner);
 
 private:
 	bool mIsOwner;				   ///< Indicates if this object is the owner.
 	int mNetworkObjectID;		   ///< The network object ID.
 	SLNet::RakNetGUID mClientGUID; ///< The client GUID.
 
-	friend class NetworkManager;
 	bool mIsPlayer; ///< Indicates if this object is a player.
 
 	int mPrefabID; ///< The prefab ID of the object.

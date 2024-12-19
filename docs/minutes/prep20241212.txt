@@ -1,8 +1,15 @@
 Today: showing off design patterns and algorithms.
 
+Note for Siem: mention that I am not presented during class next monday.
+
 Design patterns:
-1.  Facade for audio
-2.  ??
+1.  Engine is singleton, various systems have private constructors, but are not publicly accessible. (Angel)
+2.  Facade for audio (Siem)
+3.  Update queue (Siem)
+4.  Fixed update physics. (Angel)
+5.  Camera system. (Seger)
+6.  Prefab + clone (Seger)
+7.  Tilemap functionality (Ronan)
 
 Algorithms:
-1.  ??
+1.  A* pathfinding (Ronan)

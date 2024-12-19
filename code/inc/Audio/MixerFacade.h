@@ -12,8 +12,9 @@
 /**
  * @class MixerFacade
  *
- * @brief This class is responsible for interacting with the SDL mixer library, and performing all audio operations
- * (such as playing, stopping and loading)
+ * @brief This class implements the IAudioFacade interface, and is responsible for interacting with the SDL mixer
+ * library, and performing all audio operations (such as playing, stopping and loading). This class is also responsible
+ * for managing which track (in SDL known as channel) to play audio on (because this is not handled by SLD mixer).
  */
 class MixerFacade : public IAudioFacade
 {
