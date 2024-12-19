@@ -492,7 +492,7 @@ void RenderSystem::renderSquare(const Vector2& aPosition, const int aWidth, cons
  * @param aScreenViewPort The viewport of the screen.
  */
 void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
-								const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
+								const Camera& aCurrentCamera, const Rect& aScreenViewPort, const Vector2& aScale) const
 {
 
 	Vector2 circlePosition = aPosition;
@@ -503,7 +503,7 @@ void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, c
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
-	int radius = std::round(aRadius * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int radius = std::round(aRadius * aScale.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
 
 	// Render
 	mRenderer->drawCircle(drawPosition, radius, aColor, aFilled);
@@ -564,7 +564,7 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 						gameObject.get().getTransform().position + circleCollider.getTransform().position;
 
 					renderCircle(circleColliderWorldPos, circleCollider.getRadius(), Color(0, 0, 255), false,
-								 aCurrentCamera, aScreenViewPort);
+								 aCurrentCamera, aScreenViewPort, gameObject.get().getTransform().scale);
 				}
 			}
 		}
