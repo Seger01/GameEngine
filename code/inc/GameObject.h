@@ -80,14 +80,11 @@ public:
 	 */
 	template <typename T> bool hasComponent() const
 	{
-		for (const std::unique_ptr<Component>& component : mComponents)
-		{
-			if (dynamic_cast<T*>(component.get()) != nullptr)
-			{
-				return true;
-			}
-		}
-		return false;
+		// If the lambda function returns true at least one time (i.e. there is a component of type T), then the
+		// std::any_of function returns true.
+		return std::any_of(mComponents.begin(), mComponents.end(),
+						   [](const std::unique_ptr<Component>& component)
+						   { return dynamic_cast<T*>(component.get()) != nullptr; });
 	}
 
 	/**
