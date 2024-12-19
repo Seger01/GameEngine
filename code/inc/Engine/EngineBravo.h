@@ -10,7 +10,6 @@
 #define ENGINEBRAVO_H
 
 #include "AudioManager.h"
-#include "Configuration.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/SaveGameManager.h"
 #include "EventManager.h"
@@ -46,9 +45,6 @@ public:
 	AudioManager& getAudioManager();
 	EventManager& getEventManager();
 	UIManager& getUIManager();
-
-	Configuration& getConfiguration();
-	// UIManager& getUIManager();
 	PhysicsManager& getPhysicsManager();
 
 	UpdateQueue& getUpdateQueue();
@@ -82,11 +78,7 @@ private:
 	SaveGameManager mSaveGameManager;
 	AudioManager mAudioManager;
 	UIManager mUIManager;
-
-	Configuration mConfiguration;
-
 	PhysicsManager mPhysicsManager;
-	// AnimationManager animationManager;
 
 	UpdateQueue mUpdateQueue;
 };

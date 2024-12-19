@@ -1,3 +1,8 @@
+/**
+ * @file SceneManager.h
+ * @brief SceneManager class header file.
+ */
+
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
@@ -7,6 +12,10 @@
 #include <string>
 #include <vector>
 
+/**
+ * @class SceneManager
+ * @brief Manages scenes.
+ */
 class SceneManager
 {
 public:
@@ -27,7 +36,7 @@ private:
 	bool sceneChanged();
 
 	void loadScene(int index);
-	void loadScene(const std::string& sceneName); // Willen we dit overloaden?
+	void loadScene(const std::string& sceneName);
 
 	bool sceneNameExists(std::string aSceneName);
 	bool sceneIDExists(int aSceneID);
@@ -37,10 +46,14 @@ private:
 	SceneManager();
 	~SceneManager();
 
+	/// @brief The stored scenes
 	std::vector<std::unique_ptr<Scene>> mScenes;
+	/// @brief The current scene index
 	int mCurrentSceneIndex;
 
+	/// @brief The new scene name after request
 	std::string mNewSceneName;
+	/// @brief The new scene ID after request
 	int mNewSceneID;
 };
 

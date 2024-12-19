@@ -19,7 +19,6 @@
 class Texture
 {
 public:
-	// Texture(SDL_Renderer*& aRenderer);
 	Texture(SDL_Texture* aTexture, int aID = 0);
 	~Texture();
 
@@ -28,9 +27,12 @@ public:
 	int getID() const { return mID; }
 
 private:
+	/// @brief The texture id
 	int mID = 0;
+	/// @brief The SDL texture
 	SDL_Texture* mTexture = nullptr;
 
+	/// @brief Whether the texture is loaded
 	bool mTextureLoaded = false;
 };
 

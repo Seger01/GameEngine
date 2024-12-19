@@ -8,18 +8,22 @@
 #include "Network/NetworkObject.h"
 #include "Network/NetworkVariable.h"
 
+#include "EngineBravo.h"
+
 #include <stdexcept>
 
-int INetworkBehaviour::networkBehaviourIDCounter = 0;
+int INetworkBehaviour::mNetworkBehaviourIDCounter = 0;
 
 /**
  * @brief Constructs a new INetworkBehaviour object.
  *
  * @param aTag The tag associated with this network behaviour.
  */
-INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
+INetworkBehaviour::INetworkBehaviour(const std::string& aTag)
+	: IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
 {
-	mNetworkBehaviourID = networkBehaviourIDCounter++;
+	mNetworkVariables.clear();
+	mNetworkBehaviourID = mNetworkBehaviourIDCounter++;
 }
 
 /**
@@ -93,31 +97,47 @@ bool INetworkBehaviour::isOwner()
 	{
 		return mIsOwner;
 	}
-	else
+	try
 	{
-		try
-		{
-
-			NetworkObject& networkObject = mGameObject->getComponents<NetworkObject>()[0];
-			mIsOwner = networkObject.isOwner();
-			mIsOwnerSet = true;
-			return mIsOwner;
-		}
-		catch (const std::exception& e)
-		{
-			throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
-		}
+		NetworkObject& networkObject = mGameObject->getComponents<NetworkObject>()[0];
+		mIsOwner = networkObject.isOwner();
+		mIsOwnerSet = true;
+		return mIsOwner;
+	}
+	catch (const std::exception& e)
+	{
+		throw std::runtime_error("INetworkBehaviour::isOwner() NetworkObject not found");
 	}
 }
 
 /**
- * @brief Destroys the network behaviour.
+ * @brief Checks if the current object is the server.
+ *
+ * @return true If the current object is the server.
+ * @return false Otherwise.
  */
-void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
+bool INetworkBehaviour::isServer() { return EngineBravo::getInstance().getNetworkManager().isServer(); }
+
+/**
+ * @brief Destroys the network behaviour.
+ *
+ * @note This function is not implemented. It breaks the synchronization of the network behaviours
+ */
+// void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
 
 /**
  * @brief Gets the network behaviour ID.
  *
- * @return uint8_t The network behaviour ID.
+ * @return int The network behaviour ID.
  */
-uint8_t INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+
+/**
+ * @brief Sets the network behaviour ID.
+ *
+ * @param aNetworkBehaviourID The network behaviour ID to set.
+ */
+void INetworkBehaviour::setNetworkBehaviourID(uint32_t aNetworkBehaviourID)
+{
+	mNetworkBehaviourID = aNetworkBehaviourID;
+}

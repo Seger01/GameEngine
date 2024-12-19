@@ -28,6 +28,8 @@ protected:
 	}
 
 	void TearDown() override { delete mPhysicsManager; }
+
+	friend PhysicsManager;
 };
 
 TEST_F(PhysicsTest, WorldStep)
@@ -38,8 +40,8 @@ TEST_F(PhysicsTest, WorldStep)
 	ASSERT_EQ(mPhysicsEngine.getSubStep(), 4);
 	ASSERT_EQ(mPhysicsEngine.getStep(), 1.0f / 60.0f);
 
-	mPhysicsEngine.getWorld().setGravity(Vector2(0, 0));
-	ASSERT_EQ(mPhysicsEngine.getWorld().getGravity(), Vector2(0, 0));
+	mPhysicsEngine.setGravity(Vector2(0, 0));
+	ASSERT_EQ(mPhysicsEngine.getGravity(), Vector2(0, 0));
 }
 
 TEST_F(PhysicsTest, BodyProxy)
@@ -136,7 +138,7 @@ TEST_F(PhysicsTest, updateloop)
 
 	mPhysicsEngine.addObject(*gameObject);
 
-	mPhysicsEngine.update();
+	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
 
 	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
 	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0).get();
@@ -172,7 +174,7 @@ TEST_F(PhysicsTest, UpdateFlag)
 
 	mPhysicsEngine.addObject(*gameObject);
 
-	mPhysicsEngine.update();
+	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
 
 	b2BodyId bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
 	b2ShapeId shapeArray[gameObject->getComponents<BoxCollider>().size()];
@@ -188,7 +190,7 @@ TEST_F(PhysicsTest, UpdateFlag)
 	boxCollider = gameObject->getComponents<BoxCollider>()[0];
 	boxCollider.setCollideCategory(4);
 	boxCollider.setCollideWithCategory({5, 6, 7});
-	mPhysicsEngine.update();
+	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
 	bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
 	b2ShapeId shapeArray2[gameObject->getComponents<BoxCollider>().size()];
 	b2Body_GetShapes(bodyID, shapeArray2, gameObject->getComponents<BoxCollider>().size());
@@ -220,7 +222,7 @@ TEST_F(PhysicsTest, PositionTranslate)
 
 	mPhysicsEngine.addObject(*gameObject);
 
-	mPhysicsEngine.update();
+	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
 
 	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
 	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
@@ -302,7 +304,7 @@ TEST_F(PhysicsTest, testcollide)
 	mPhysicsEngine.setSubStep(4);
 	mPhysicsEngine.setStep(1.0f / 60.0f);
 
-	ASSERT_NO_THROW(mPhysicsEngine.update());
+	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(Time::timeDilation));
 
 	std::vector<std::pair<int, int>> test = mPhysicsEngine.getWorld().getContactEvents();
 
@@ -317,8 +319,6 @@ TEST_F(PhysicsTest, testcollide)
 	collide.second = 2;
 
 	bodyIDs.push_back(collide);
-
-	mPhysicsEngine.executeCollisionScripts(bodyIDs);
 }
 
 TEST_F(PhysicsTest, BoxCollider)
@@ -423,7 +423,7 @@ TEST_F(PhysicsTest, remove)
 	mPhysicsEngine.addObject(*gameObject);
 	mPhysicsEngine.addObject(*gameObject2);
 
-	ASSERT_NO_THROW(mPhysicsEngine.update());
+	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(Time::timeDilation));
 
 	std::vector<std::pair<int, int>> bodyIDs;
 	std::pair<int, int> collide;
@@ -432,10 +432,10 @@ TEST_F(PhysicsTest, remove)
 
 	bodyIDs.push_back(collide);
 
-	mPhysicsEngine.executeCollisionScripts(bodyIDs);
+	// mPhysicsEngine.executeCollisionScripts(bodyIDs);
 
 	mPhysicsEngine.removeObject(*gameObject);
 	mPhysicsEngine.removeObject(*gameObject2);
 
-	mPhysicsEngine.executeCollisionScripts(bodyIDs);
+	//	mPhysicsEngine.executeCollisionScripts(bodyIDs);
 }

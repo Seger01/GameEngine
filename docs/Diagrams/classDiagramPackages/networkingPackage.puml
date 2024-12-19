@@ -5,100 +5,247 @@ class NetworkObject implements Component_Proxy{
     + spawn() : void
     + despawn() : void
     + getNetworkID(): int
+    + setClientGUID(SLNet::RakNetGUID aClientID) : void
+    + getClientGUID() : SLNet::RakNetGUID
+    + setOwner(bool aIsOwner) : void
+    + isOwner() : bool
+    + isPlayer() : bool
+    + getNetworkObjectID() : int
+    + getPrefabID() : int
 
     - mIsOwner: bool
     - mNetworkID: int
+    - mNetworkObjectID: int
+    - mClientGUID: SLNet::RakNetGUID
+    - mIsPlayer: bool
+    - mPrefabID: int
+    - static int networkObjectIDCounter
+
+    # setPlayer(bool aIsPlayer) : void
+    # setNetworkObjectID(int aNetworkObjectID) : void
+    # setPrefabID(int aPrefabID) : void
 }
 
 interface INetworkBehaviour implements IBehavourScript_Proxy{
     + {abstract} void serverRpc()
     + {abstract} void clientRpc()
     + {abstract} void OnNetworkSpawn()
+    + RegisterNetworkVariable(NetworkVariableBase* variable) : void
+    + GetNetworkVariables() : std::vector<std::reference_wrapper<NetworkVariableBase>>
+    + isOwner() : bool
+    + destroy() : void
+    + getNetworkBehaviourID() : uint8_t
 
-    - std::vector(NetworkVariableBase*) mNetworkVariables
-    
+    - std::vector<std::reference_wrapper<NetworkVariableBase>> mNetworkVariables
+    - mIsOwner: bool
+    - mIsOwnerSet: bool
+    - mNetworkBehaviourID: uint8_t
+    - static int networkBehaviourIDCounter
 }
 
 ' Template class for network variables
-class NetworkVariable implements NetworkVariableBase{
-    + networkVariable(WritePermission)
-    + <INetworkSerialiazble>(T) Value
-    
+class NetworkVariableBase {
+    + serialize(SLNet::BitStream& stream) const : void
+    + deserialize(SLNet::BitStream& stream) : void
+    + getTypeId() const : uint32_t
+    + setNetworkVariableID(int aNetworkVariableID) : void
+    + getNetworkVariableID() const : int
+
+    - mNetworkVariableID: int
+}
+
+class NetworkVariable<T> implements NetworkVariableBase {
+    + getValue() : T&
+    + setValue(T aValue) : void
+    + serialize(SLNet::BitStream& stream) const : void
+    + deserialize(SLNet::BitStream& stream) : void
+    + getTypeId() const : uint32_t
+
+    - mValue: T
 }
 
 class IBehavourScript_Proxy{}
 
-' Maybe not needed
-class NetworkTransform implements Transform_Proxy{
-    + UpdateTransform()
-    + SyncPosition()
-    + Interpolate()
-}
+class NetworkTransform implements Component_Proxy{
+    + setSendPositionX(bool aSendPositionX)
+    + setSendPositionY(bool aSendPositionY)
+    + setSendRotation(bool aSendRotation)
+    + setSendScaleX(bool aSendScaleX)
+    + setSendScaleY(bool aSendScaleY)
+    + getSendPositionX() : bool
+    + getSendPositionY() : bool
+    + getSendRotation() : bool
+    + getSendScaleX() : bool
+    + getSendScaleY() : bool
 
-class Transform_Proxy{}
+    - mPosition: Vector3
+    - mRotation: Quaternion
+    - mScale: Vector3
+    - mSendPositionX: bool
+    - mSendPositionY: bool
+    - mSendRotation: bool
+    - mSendScaleX: bool
+    - mSendScaleY: bool
+}
 
 class NetworkClient {
     + ConnectToServer()
     + SendGameState()
     + ReceiveGameState()
+    + discoverServers() : void
+    + update() : void
+    + getServerAddresses() : std::vector<std::string>&
+    + setServerAddress(std::string aServerAddress) : void
+    + isConnected() : bool
 
     - mIsConnected: bool
-    - mClientID: int
+    - mIsConnecting: bool
+    - mClient: std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)>
+    - mServerAddresses: std::vector<std::string>
+    - mServerAddress: std::string
+    - mServerGUID: SLNet::RakNetGUID
+    - mObjects: std::vector<std::reference_wrapper<GameObject>>&
+    - mTickRate: int
+    - mLastSendPacketsTime: std::chrono::time_point<std::chrono::steady_clock>
 }
 
 class NetworkServer {
-    + HandleClientConnection()
-    + ReceiveGameState()
-    + SendGameState()
+    + update() : void
+    + isConnected() : bool
+    + handleIncomingPackets() : void
+    + sendPackets() : void
+    + sendTransform() : void
+    + sendCustomSerialize() : void
+    + sendPlayerInit(SLNet::RakNetGUID playerID) : void
+    + sendPrefabSpawn(NetworkObject& aObject) : void
+    + sendPrefabDespawn(NetworkObject& aObject) : void
+    + handleTransform(SLNet::Packet* aPacket) : void
+    + handleCustomSerialize(SLNet::Packet* aPacket) : void
+    + handlePlayerInit(SLNet::Packet* aPacket) : void
+    + handleClientDisconnect(SLNet::RakNetGUID aClientID) : void
+    + sendToAllClients(SLNet::BitStream& aBitStream) : void
+    + spawnPlayerForNewClient(SLNet::RakNetGUID playerID) : void
+
+    - mObjects: std::vector<std::reference_wrapper<GameObject>>&
+    - mServer: std::unique_ptr<SLNet::RakPeerInterface, void (*)(SLNet::RakPeerInterface*)>
+    - mLastSendPacketsTime: std::chrono::time_point<std::chrono::steady_clock>
+    - mTickRate: int
 }
 
 class NetworkHost {
-    + ActAsClient()
-    + ActAsServer()
+    + update() : void
+
+    - mServer: std::unique_ptr<NetworkServer>
+    - mClient: std::unique_ptr<NetworkClient>
 }
 
-' class NetworkMessage {
-'     + Serialize()
-'     + Deserialize()
-'     + SendMessage()
-'     - mMessageType: string
-' }
-
-' class NetworkSceneManager {
-'     + LoadScene()
-'     + SyncScene()
-'     + UnloadScene()
-' }
 
 interface INetworkSerializable {
-    + {abstract} NetworkSerialize()
-    ' + Deserialize()
+    + {abstract} void serialize(SLNet::BitStream& stream) const
+    + {abstract} void deserialize(SLNet::BitStream& stream)
 }
 
 class Component_Proxy{
 }
 
-' NetworkManager <-- AuthorityManager
+interface INetworkPrefab {
+    + {abstract} GameObject* createEnemyPrefab()
+    + {abstract} int getPrefabID() const
+}
+
+class NetworkInformation {
+    + SetTimeStampNow() : void
+    + NetworkPacket()
+
+    - messageID: SLNet::MessageID
+    - networkObjectID: uint16_t
+    - prefabID: uint32_t
+    - timestamp: uint64_t
+    - clientGUID: SLNet::RakNetGUID
+    - ISerializableID: uint32_t
+    - networkBehaviourID: uint8_t
+    - networkVariableID: uint8_t
+}
+
+struct NetworkPacket{
+    + messageID: SLNet::MessageID
+    + networkObjectID: uint16_t
+    + prefabID: uint32_t
+    + timestamp: uint64_t
+    + clientGUID: SLNet::RakNetGUID
+    + ISerializableID: uint32_t
+    + networkBehaviourID: uint8_t
+    + networkVariableID: uint8_t
+}
+
+class NetworkManager {
+    + startNetwork() : void
+    + shutdown() : void
+    + initialize() : void
+    + update() : void
+    + getServer() : NetworkServer&
+    + getClient() : NetworkClient&
+    + getHost() : NetworkHost&
+    + isServer() : bool
+    + isClient() : bool
+    + isHost() : bool
+    + isNetworked() : bool
+    + isConnected() : bool
+    + setTickRate(int aTickRate) : void
+    + getTickRate() : int
+    + setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab) : void
+    + getDefaultPlayerPrefab() : GameObject&
+    + instantiatePlayer(NetworkPacket packet) : GameObject*
+    + destroyPlayer(SLNet::RakNetGUID playerID) : void
+    + setRole(NetworkRole aRole) : void
+    + getRole() : NetworkRole
+    + getGameObjects() : std::vector<std::reference_wrapper<GameObject>>&
+    + addObject(GameObject& aObject) : void
+    + removeObject(GameObject& aObject) : void
+    + getObjects() : const std::vector<std::reference_wrapper<GameObject>>&
+    + clearObjects() : void
+    + instantiate(int aPrefabID, Transform aTransform = Transform()) : GameObject*
+    + instantiatePrefab(NetworkPacket aNetworkPacket) : GameObject*
+
+    - mRole: NetworkRole
+    - mTickRate: int
+    - mDefaultPlayerPrefab: std::unique_ptr<GameObject>
+    - mObjects: std::vector<std::reference_wrapper<GameObject>>
+    - mServer: std::unique_ptr<NetworkServer>
+    - mClient: std::unique_ptr<NetworkClient>
+    - mHost: std::unique_ptr<NetworkHost>
+}
+
+class NetworkRegister {
+    + registerSerializeType<T>() : void
+    + registerPrefabType<T>() : void
+    + CreateSerializeInstance(std::uint32_t typeId) : std::unique_ptr<INetworkSerializable>
+    + CreatePrefabInstance(std::uint32_t typeId) : std::unique_ptr<INetworkPrefab>
+
+    - mSerializeRegistry: std::unordered_map<std::uint32_t, NetworkSerializableFactory>
+    - mPrefabRegistry: std::unordered_map<std::uint32_t, NetworkPrefabFactory>
+}
+
+class NetworkSharedFunctions {
+    + reserveNetworkPacketBits(SLNet::BitStream& aBitStream) : void
+    + getBitStreamData(SLNet::BitStream& aBitStream) : NetworkPacket
+    + setBitStreamNetworkPacket(SLNet::BitStream& aBitStream, const NetworkPacket& aNetworkPacket) : void
+}
 
 NetworkObject *-- "*" INetworkBehaviour
 NetworkObject -- NetworkTransform
 
-INetworkBehaviour <-- NetworkVariable
+INetworkBehaviour <-- NetworkVariableBase
+
 NetworkVariable <-- INetworkSerializable
-
-' NetworkClient --> NetworkInputManager
-' NetworkClient --> NetworkMessage
-' NetworkClient --> NetworkReplicationManager
-
-' NetworkServer --> NetworkMessage
-' NetworkServer --> NetworkReplicationManager
-
+NetworkRegister --> INetworkSerializable
+NetworkRegister --> INetworkPrefab
 
 NetworkHost <-- NetworkServer
 NetworkHost <-- NetworkClient
 
-' AuthorityManager <-- NetworkObject
-' NetworkSceneManager *-- "*" NetworkObject
+NetworkSharedFunctions --> NetworkClient
+NetworkSharedFunctions --> NetworkServer
 
 }
 
@@ -106,7 +253,5 @@ Networking *-- NetworkObject
 Networking *-- "0..1"NetworkClient
 Networking *-- "0..1"NetworkServer
 Networking *-- "0..1"NetworkHost
-' Networking *-- NetworkSceneManager
-Networking *-- "1" NetworkObject
 
 @enduml

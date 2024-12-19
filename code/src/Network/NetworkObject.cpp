@@ -13,7 +13,7 @@ int NetworkObject::networkObjectIDCounter = 0;
  * @brief Constructs a new NetworkObject with a specified tag.
  * @param aTag The tag for the NetworkObject.
  */
-NetworkObject::NetworkObject(std::string aTag)
+NetworkObject::NetworkObject(const std::string& aTag)
 	: Component{aTag}, mIsOwner(false), mClientGUID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
 	  mNetworkObjectID(networkObjectIDCounter++), mPrefabID(-1)
 {
@@ -126,20 +126,32 @@ int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
  */
 int NetworkObject::getPrefabID() const { return mPrefabID; }
 
+/**
+ * @brief Spawns the network object across the network
+ *
+ * @note This function is not implemented.
+ */
 void NetworkObject::spawn()
 {
 	if (!EngineBravo::getInstance().getNetworkManager().isServer())
 	{
 		throw std::runtime_error("Only the server can spawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
+/**
+ * @brief Despawns the network object across the network
+ *
+ * @note This function is not implemented.
+ */
 void NetworkObject::despawn()
 {
 	if (!EngineBravo::getInstance().getNetworkManager().isServer())
 	{
 		throw std::runtime_error("Only the server can despawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
 /**

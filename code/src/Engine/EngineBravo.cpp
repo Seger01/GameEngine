@@ -31,9 +31,6 @@ void EngineBravo::initialize()
 {
 	this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
-	mConfiguration.setConfig("render_colliders", true);
-	mConfiguration.setConfig("render_fps", true);
-
 	mSceneManager.update();
 
 	mNetworkManager.initialize();
@@ -153,8 +150,6 @@ EventManager& EngineBravo::getEventManager() { return mEventManager; }
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
-
-Configuration& EngineBravo::getConfiguration() { return mConfiguration; }
 
 void EngineBravo::startBehaviourScripts()
 {
