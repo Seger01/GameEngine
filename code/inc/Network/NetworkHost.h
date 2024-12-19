@@ -18,7 +18,7 @@ class GameObject;
  */
 class NetworkHost {
 public:
-	NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
 
 	void update();
 

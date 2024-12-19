@@ -13,7 +13,7 @@ int NetworkObject::networkObjectIDCounter = 0;
  * @brief Constructs a new NetworkObject with a specified tag.
  * @param aTag The tag for the NetworkObject.
  */
-NetworkObject::NetworkObject(std::string aTag)
+NetworkObject::NetworkObject(const std::string& aTag)
 	: Component{aTag}, mIsOwner(false), mClientGUID(SLNet::UNASSIGNED_RAKNET_GUID), mIsPlayer(false),
 	  mNetworkObjectID(networkObjectIDCounter++), mPrefabID(-1)
 {

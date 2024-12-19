@@ -19,7 +19,8 @@ int INetworkBehaviour::mNetworkBehaviourIDCounter = 0;
  *
  * @param aTag The tag associated with this network behaviour.
  */
-INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
+INetworkBehaviour::INetworkBehaviour(const std::string& aTag)
+	: IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
 {
 	mNetworkVariables.clear();
 	mNetworkBehaviourID = mNetworkBehaviourIDCounter++;

@@ -50,7 +50,7 @@ public:
 	void setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab);
 	GameObject& getDefaultPlayerPrefab() const;
 
-	void setRole(NetworkRole aRole);
+	void setRole(const NetworkRole aRole);
 	NetworkRole getRole() const;
 
 	GameObject* instantiate(int aPrefabID, Transform aTransform = Transform());

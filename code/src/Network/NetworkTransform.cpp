@@ -16,9 +16,11 @@
  * @param aTag The tag for the component.
  */
 NetworkTransform::NetworkTransform(bool aSendPositionX, bool aSendPositionY, bool aSendRotation, bool aSendScaleX,
-                                   bool aSendScaleY, std::string aTag)
-    : Component{aTag}, mSendPositionX(aSendPositionX), mSendPositionY(aSendPositionY), mSendRotation(aSendRotation),
-      mSendScaleX(aSendScaleX), mSendScaleY(aSendScaleY) {}
+								   bool aSendScaleY, const std::string& aTag)
+	: Component{aTag}, mSendPositionX(aSendPositionX), mSendPositionY(aSendPositionY), mSendRotation(aSendRotation),
+	  mSendScaleX(aSendScaleX), mSendScaleY(aSendScaleY)
+{
+}
 
 /**
  * @brief Clones the NetworkTransform object.

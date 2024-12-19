@@ -27,7 +27,7 @@
  * @param aObjects Reference to a vector of GameObjects.
  * @param aTickRate Tick rate for the server (default is 60).
  */
-NetworkServer::NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
+NetworkServer::NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate)
 	: mServer(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance),
 	  mLastSendPacketsTime(std::chrono::steady_clock::now()), mObjects(aObjects), mTickRate(aTickRate)
 {

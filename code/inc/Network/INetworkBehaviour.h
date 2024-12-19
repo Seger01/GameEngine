@@ -26,7 +26,7 @@ class INetworkBehaviour : public IBehaviourScript
 	friend class NetworkClient;
 
 public:
-	INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
+	INetworkBehaviour(const std::string& aTag = "defaultNetworkBehaviour");
 	virtual ~INetworkBehaviour() = default;
 	INetworkBehaviour(const INetworkBehaviour& other);
 

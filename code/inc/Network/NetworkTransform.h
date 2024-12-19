@@ -14,10 +14,11 @@
  */
 class NetworkTransform : public Component {
 public:
-    NetworkTransform(bool aSendPositionX = false, bool aSendPositionY = false, bool aSendRotation = false,
-                     bool aSendScaleX = false, bool aSendScaleY = false, std::string aTag = "defaultNetworkTransform");
+	NetworkTransform(bool aSendPositionX = false, bool aSendPositionY = false, bool aSendRotation = false,
+					 bool aSendScaleX = false, bool aSendScaleY = false,
+					 const std::string& aTag = "defaultNetworkTransform");
 
-    std::unique_ptr<Component> clone() const override;
+	std::unique_ptr<Component> clone() const override;
 
     void setSendPositionX(bool aSendPositionX);
     void setSendPositionY(bool aSendPositionY);
