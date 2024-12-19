@@ -1,6 +1,17 @@
 /**
  * @file TileMapParser.h
- * @brief This file contains the declaration of the TileMapParser class and the structs used to store the parsed data
+ * @brief This file contains the declaration of the TileMapParser class and the structs used to store the parsed data.
+ * @details Tilemaps are a way to make a level made of small, resuable tiles and thus create a 2D level in an easy way.
+	Tilemaps will be parsed in the engine using the TileMapParser class.
+
+	The map creator that is used to create the tilemaps for the engine is Tiled.
+	Tiled is a free, open-source third party map editor that can be used to create 2D maps.
+	The reason Tiled is chosen is primarily because it was recommended for this project.
+	Another advantage Tiled has is its extensive documentation and its ease of use.
+	Maps created in Tiled are exported in the JSON format.
+	The engine will parse the map file using a library called nlohmann/json, which is a popular libary for parsing JSON files.
+	From the parsed map, the LevelBuilder class can be used to build a scene and load the tiles.
+	Also, a graph can be created form a layer which has the custom property "isGraphLayer" set to true using the MapToGraph class.
  */
 #pragma once
 

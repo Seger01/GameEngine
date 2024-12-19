@@ -1,6 +1,8 @@
 /**
  * @file Pathfinding.h
  * @brief This file contains the declaration of the Pathfinding class
+ * @details The Pathfinding class is responsible for finding the shortest path between two nodes in a graph using the A* algorithm using the Manhatten method to calculate the distance.
+ * The graph is represented as an adjacency list.
  */
 
 #pragma once
