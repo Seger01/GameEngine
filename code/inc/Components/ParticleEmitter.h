@@ -12,8 +12,8 @@
 #include "Particle.h"
 
 /**
- * @class ParticleEmitter
- * @brief Class for emitting particles.
+ * @enum EmitterMode
+ * @brief Enum for the mode of the emitter.
  */
 enum EmitterMode
 {
