@@ -22,9 +22,9 @@ const int DPadRight = 3;
 
 Controller::Controller(int index) : joystickIndex(index), joystick(nullptr), connected(false)
 {
-	if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
+	if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
 	{
-		std::cerr << "Failed to initialize SDL Joystick: " << SDL_GetError() << std::endl;
+		std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
 		return;
 	}
 

@@ -16,7 +16,7 @@ class PhysicsManager
 public:
 	PhysicsManager();
 	void startPhysicsEngine(const Vector2& aGravity);
-	void updatePhysicsEngine(double timePassed);
+	void updatePhysicsEngine(double timeDilation);
 	PhysicsEngine& getPhysicsEngine();
 
 private:

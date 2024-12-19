@@ -59,9 +59,9 @@ private:
 					const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const;
 	void renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
 					  const Color& aColor, bool aFilled, const Camera& aCurrentCamera, const Rect& aScreenViewPort,
-					  const Point& aRotationalCenter = {0, 0}) const;
+					  const Vector2& aScale = {1, 1}, const Point& aRotationalCenter = {0, 0}) const;
 	void renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled,
-					  const Camera& aCurrentCamera, const Rect& aScreenViewPort) const;
+					  const Camera& aCurrentCamera, const Rect& aScreenViewPort, const Vector2& aScale = {1, 1}) const;
 
 	void renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const;
 
