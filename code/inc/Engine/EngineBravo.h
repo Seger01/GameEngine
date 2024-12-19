@@ -7,8 +7,15 @@
  * @mainpage Engine Bravo
  *
  * Engine Bravo is the game engine, created for the Systems Programming in C++ minor at Avans University of Applied
- * Sciences. It largely uses the interface provided by Unity.
- *
+ * Sciences. It largely uses the interface provided by Unity. Managers contain only references to the game objects which
+ * are relevant to them. For example, the physics manager only
+ * contains references to game objects with collider or rigidbody components. Whenever a component is added to or
+ * removed
+ * from a game object, the game object calls a function in the game engine class. This adds the game object to an update
+ * queue. This update queue is used every cycle, where the engine checks all components of the object in the queue, and
+ * adds or removes them to the relevant managers. Managers have a private constructor and can only be created from the
+ * main engine class. This is done to ensure that there is only one instance of each manager.
+
  */
 
 #pragma once
