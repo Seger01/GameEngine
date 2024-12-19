@@ -21,8 +21,8 @@
  */
 class NetworkClient {
 public:
-    NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
-    ~NetworkClient();
+	NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
+	~NetworkClient();
 
     void connectToServer();
     void update();

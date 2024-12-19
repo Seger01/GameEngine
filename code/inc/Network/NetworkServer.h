@@ -22,7 +22,7 @@ class NetworkObject;
 class NetworkServer {
 friend class NetworkManager;
 public:
-	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
 	void update();
 	bool isConnected() const;
 
