@@ -9,7 +9,6 @@
 #ifndef INETWORKSERIALIZABLE_H
 #define INETWORKSERIALIZABLE_H
 
-#include "Network/NetworkInformation.h"
 #include "Network/NetworkRegister.h"
 
 #include <cstdint>

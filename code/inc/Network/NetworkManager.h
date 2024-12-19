@@ -61,7 +61,7 @@ private:
 	void startClient();
 	void startHost();
 
-		GameObject* instantiatePlayer(NetworkPacket packet);
+	GameObject* instantiatePlayer(NetworkPacket packet);
 	void destroyPlayer(SLNet::RakNetGUID playerID);
 
 	std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
