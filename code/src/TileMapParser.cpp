@@ -2,28 +2,13 @@
  * @file TileMapParser.cpp
  * @brief This file contains the implementation of the TileMapParser class
  */
-
 #include "TileMapParser.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-/**
- * @brief Construct a new TileMapParser object
- *
- * @param aFilePath
- */
 TileMapParser::TileMapParser(const std::string& aFilePath) : mFilePath(aFilePath) {}
 
-/**
- * @brief Parses the JSON file
- *
- * @throw std::runtime_error if the file cannot be opened, is empty, or has invalid JSON
- * @throw std::runtime_error if the JSON is missing 'tilesets' or 'layers'
- * @throw std::runtime_error if a layer is missing 'type' key
- *
- * @details Parse() reads the JSON file and calls the private storeTileInfo() and storeObjectLayer() methods accordingly
- */
 void TileMapParser::parse()
 {
 	std::ifstream file(mFilePath);
@@ -95,7 +80,9 @@ void TileMapParser::parse()
 			mTileMapData.mLayers.push_back(grid);
 			if (layer.contains("name"))
 			{
-				mTileMapData.mLayerNames.push_back(layer["name"]);
+				std::string layerName = layer["name"];
+				mTileMapData.mLayerNames.push_back(layerName);
+				parseLayerProperties(layer, layerName);
 			}
 		}
 		else if (layer["type"] == "objectgroup")
@@ -108,11 +95,41 @@ void TileMapParser::parse()
 	storeTileInfo();
 }
 
-/**
- * @brief Parses the objects of JSON TileMap Object Layer
- * @param layer
- * @throw std::runtime_error if 'objects' is missing or not an array
- */
+void TileMapParser::parseLayerProperties(const nlohmann::json& layer, const std::string& layerName)
+{
+	if (layer.contains("properties"))
+	{
+		std::unordered_map<std::string, std::string> properties;
+		for (const auto& property : layer["properties"])
+		{
+			std::string name = property["name"];
+			std::string value;
+			if (property["type"] == "bool")
+			{
+				value = property["value"].get<bool>() ? "true" : "false";
+			}
+			else if (property["type"] == "int")
+			{
+				value = std::to_string(property["value"].get<int>());
+			}
+			else if (property["type"] == "float")
+			{
+				value = std::to_string(property["value"].get<float>());
+			}
+			else if (property["type"] == "string")
+			{
+				value = property["value"].get<std::string>();
+			}
+			else
+			{
+				value = property["value"].dump(); // Fallback to JSON string representation
+			}
+			properties[name] = value;
+		}
+		mTileMapData.mLayerProperties[layerName] = properties;
+	}
+}
+
 void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
 {
 	if (!layer.contains("objects") || !layer["objects"].is_array())
@@ -152,7 +169,7 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
 				}
 				else
 				{
-					std::runtime_error("Unhandled property type: " + property["type"].get<std::string>());
+					throw std::runtime_error("Unhandled property type: " + property["type"].get<std::string>());
 				}
 			}
 		}
@@ -160,22 +177,16 @@ void TileMapParser::parseObjectLayer(const nlohmann::json& layer)
 	}
 }
 
-/**
- * @brief Getter for a tile position
- * @param gID
- * @throw std::runtime_error if gID is not found in any tileset
- * @return std::pair<int, int>
- */
 std::pair<int, int> TileMapParser::getTilePosition(int gID) const
 {
 	for (const auto& tileset : mTilesets)
 	{
 		int firstGID = tileset["firstgid"];
 		int tileCount = tileset["tilecount"];
-		int columns = tileset["columns"];
 
 		if (gID >= firstGID && gID < firstGID + tileCount)
 		{
+			int columns = tileset["columns"];
 			int localID = gID - firstGID;
 			int tileWidth = tileset["tilewidth"];
 			int tileHeight = tileset["tileheight"];
@@ -187,18 +198,10 @@ std::pair<int, int> TileMapParser::getTilePosition(int gID) const
 	throw std::runtime_error("gID not found in any tileset");
 }
 
-/**
- * @brief Stores tile information in a map into a TileMapData struct
- * @throw std::runtime_error if no layers are found in JSON
- * @throw std::runtime_error if a tile is missing 'objectgroup' key
- * @throw std::runtime_error if a collider is missing 'x', 'y', 'width', or 'height' keys
- * @throw std::runtime_error if a collider value is an invalid type
- */
 void TileMapParser::storeTileInfo()
 {
 	std::unordered_set<int> usedGIDs;
 
-	// Collect all used gIDs from the layers
 	if (mTileMapData.mLayers.empty())
 	{
 		throw std::runtime_error("No layers found in JSON: " + mFilePath);
@@ -210,31 +213,30 @@ void TileMapParser::storeTileInfo()
 			for (int gID : row)
 			{
 				if (gID != 0)
-				{ // Assuming 0 is an empty tile
+				{
 					usedGIDs.insert(gID);
 				}
 			}
 		}
 	}
 
-	// Store tile information for the used gIDs
 	for (int gID : usedGIDs)
 	{
 		for (const auto& tileset : mTilesets)
 		{
 			int firstGID = tileset["firstgid"];
 			int tileCount = tileset["tilecount"];
-			std::string tilesetName = tileset["image"];
 
 			if (gID >= firstGID && gID < firstGID + tileCount)
 			{
+				std::string tilesetName = tileset["image"];
 				auto position = getTilePosition(gID);
 				TileInfo tileInfo = {tilesetName, position, {}};
 
-				// Check for colliders
-				int localID = gID - firstGID;
 				if (tileset.contains("tiles"))
 				{
+					int localID = gID - firstGID;
+
 					for (const auto& tile : tileset["tiles"])
 					{
 						if (tile["id"] == localID && tile.contains("objectgroup"))
@@ -265,9 +267,4 @@ void TileMapParser::storeTileInfo()
 	}
 }
 
-/**
- * @brief Getter for the parsed TileMapData
- *
- * @return const TileMapData&
- */
 const TileMapData& TileMapParser::getTileMapData() const { return mTileMapData; }

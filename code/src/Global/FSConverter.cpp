@@ -1,3 +1,7 @@
+/**
+ * @file FSConverter.cpp
+ * @brief This file contains the implementation of the FSConverter class
+ */
 #include "FSConverter.h"
 #include <algorithm>
 #include <chrono>
@@ -63,7 +67,6 @@ std::string FSConverter::findResourcesFolder() const
 	else
 	{
 		throw std::runtime_error("Resources folder not found in any of the checked paths.");
-		return ""; // Resources folder not found
 	}
 }
 
@@ -82,7 +85,6 @@ std::string FSConverter::getResourcePath(const std::string& resourceName, bool a
 	if (aCheckExists && !std::filesystem::exists(fullPath))
 	{
 		throw std::runtime_error("Error: Resource " + resourceName + " does not exist at " + fullPath.string());
-		return "";
 	}
 	else
 	{

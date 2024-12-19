@@ -1,5 +1,4 @@
-#ifndef BODYPROXY_H
-#define BODYPROXY_H
+#pragma once
 
 /**
  * @file BodyProxy.h
@@ -31,6 +30,8 @@ public:
 	Vector2 getPosition() const;
 	float getRotation() const;
 
+	Vector2 getScale() const;
+
 	bool getHasGravity() const;
 	bool getIsMoveableByForce() const;
 	bool getCanRotate() const;
@@ -56,6 +57,8 @@ private:
 	Vector2 mPosition;
 	/// @brief Rotation of the body
 	float mRotation;
+	/// @brief Scale of the body
+	Vector2 mScale;
 
 	/// @brief Whether the body has gravity
 	bool mHasGravity;
@@ -90,5 +93,3 @@ private:
 	/// @brief Circle colliders of the body
 	std::vector<std::reference_wrapper<CircleCollider>> mCircleColliders;
 };
-
-#endif // BODYPROXY_H

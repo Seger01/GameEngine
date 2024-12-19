@@ -1,15 +1,14 @@
 #include "BoxCollider.h"
 
-BoxCollider::BoxCollider(std::string aTag)
+/**
+ * @brief Constructs a BoxCollider instance with the specified tag.
+ *
+ * @param aTag A string tag to identify the BoxCollider component.
+ */
+BoxCollider::BoxCollider(const std::string& aTag)
 	: Collider{aTag}, mWidth(0.0f), mHeight(0.0f), mIsTrigger(false), mRotation(0.0f), mCollideWithCategory({1}),
 	  mCollideCategory(1)
 {
-	// Constructor implementation
-}
-
-BoxCollider::~BoxCollider()
-{
-	// Destructor implementation
 }
 
 std::unique_ptr<Component> BoxCollider::clone() const { return std::make_unique<BoxCollider>(*this); }

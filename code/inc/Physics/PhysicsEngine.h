@@ -1,6 +1,4 @@
-#ifndef PHYSICSENGINE_H
-#define PHYSICSENGINE_H
-
+#pragma once
 /**
  * @file PhysicsEngine.h
  *
@@ -18,7 +16,6 @@ class PhysicsEngine
 {
 public:
 	PhysicsEngine();
-	~PhysicsEngine();
 	float getStep() const;
 	float getSubStep() const;
 	World& getWorld();
@@ -26,6 +23,8 @@ public:
 	void setStep(float);
 	void setSubStep(int);
 	void setGravity(const Vector2& aGravity);
+
+	Vector2 getGravity() const;
 
 public:
 	void addObject(GameObject& aObject);
@@ -64,5 +63,3 @@ private:
 	/// @brief The substep of the physics engine
 	int mSubStep;
 };
-
-#endif // PHYSICSENGINE_H

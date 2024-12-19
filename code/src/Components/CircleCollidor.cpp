@@ -1,12 +1,16 @@
 #include "Components/CircleCollider.h"
 
+/**
+ * @brief Constructs a CircleCollider instance with the specified radius and tag.
+ *
+ * @param aRadius The radius of the circle collider.
+ * @param aTag A string tag to identify the CircleCollider component.
+ */
 CircleCollider::CircleCollider(float aRadius, std::string aTag)
 	: Collider{aTag}, mRadius(aRadius), mIsTrigger(false), mCollideCategory(1), mCollideWithCategory({1}),
 	  mIsUpdated(false)
 {
 }
-
-CircleCollider::~CircleCollider() {}
 
 float CircleCollider::getRadius() const { return mRadius; }
 

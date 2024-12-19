@@ -7,10 +7,8 @@
 #define NETWORKSERVER_H
 
 #include "GameObject.h"
-#include "Network/NetworkClient.h"
 
 #include <chrono>
-#include <list>
 #include <memory>
 #include <slikenet/peerinterface.h>
 #include <slikenet/types.h>
@@ -24,7 +22,7 @@ class NetworkObject;
 class NetworkServer {
 friend class NetworkManager;
 public:
-	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
 	void update();
 	bool isConnected() const;
 
@@ -35,7 +33,7 @@ private:
 	void sendTransform();
 	void sendCustomSerialize();
 	void sendPlayerInit(SLNet::RakNetGUID playerID);
-	void sendPrefabSpawn(NetworkObject& aObject);
+	void sendPrefabSpawn(GameObject& aObject, SLNet::RakNetGUID clientID = SLNet::UNASSIGNED_RAKNET_GUID);
 	void sendPrefabDespawn(NetworkObject& aObject);
 
 	void handleTransform(SLNet::Packet* aPacket);
@@ -44,7 +42,8 @@ private:
 	void handleClientDisconnect(SLNet::RakNetGUID aClientID);
 
 	void sendToAllClients(SLNet::BitStream& aBitStream);
-	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
+	void sendToClient(SLNet::BitStream& aBitStream, SLNet::RakNetGUID clientID);
+	void spawnObjectsForNewClient(SLNet::RakNetGUID playerID);
 
 private:
 	/**

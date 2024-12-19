@@ -1,7 +1,14 @@
 #include "Physics/World.h"
 
+/**
+ * @brief Default constructor
+ */
 World::World() {}
 
+/**
+ * @brief Constructs a world with the specified gravity
+ * @param aGravity The gravity of the world
+ */
 World::World(const Vector2& aGravity)
 {
 	b2WorldDef worldDef = b2DefaultWorldDef();
@@ -46,8 +53,6 @@ BodyID World::createBody(const BodyProxy& aBodyProxy)
 	bodyDef.fixedRotation = !aBodyProxy.getCanRotate();
 	bodyDef.linearDamping = aBodyProxy.getLinearDamping();
 	bodyDef.angularDamping = aBodyProxy.getAngularDamping();
-	bodyDef.allowFastRotation = true;
-	bodyDef.isAwake = true;
 	b2BodyId bodyID = b2CreateBody(mWorldID, &bodyDef);
 	createShape(aBodyProxy, {bodyID.index1, bodyID.revision, bodyID.world0});
 
@@ -67,9 +72,11 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 
 	for (BoxCollider& boxCollider : aBodyProxy.getBoxColliders())
 	{
-		b2Polygon polygon = b2MakeOffsetBox(
-			boxCollider.getWidth(), boxCollider.getHeight(),
-			{boxCollider.getTransform().position.x, boxCollider.getTransform().position.y}, boxCollider.getRotation());
+		b2Polygon polygon = b2MakeOffsetBox(boxCollider.getWidth() * aBodyProxy.getScale().x,
+											boxCollider.getHeight() * aBodyProxy.getScale().y,
+											{boxCollider.getTransform().position.x * aBodyProxy.getScale().x,
+											 boxCollider.getTransform().position.y * aBodyProxy.getScale().y},
+											boxCollider.getRotation());
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = aBodyProxy.getDensity();
 		shapeDef.friction = aBodyProxy.getFriction();
@@ -79,7 +86,7 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		uint16_t maskBits = 0;
 		for (int category : boxCollider.getCollideWithCategory())
 		{
-			maskBits |= (1 << category); // Generate the bitmask
+			maskBits |= (1 << category);
 		}
 		shapeDef.filter.categoryBits = (1 << boxCollider.getCollideCategory());
 
@@ -99,8 +106,6 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		shapeDef.density = aBodyProxy.getDensity();
 		shapeDef.friction = aBodyProxy.getFriction();
 		shapeDef.restitution = aBodyProxy.getRestitution();
-		shapeDef.forceContactCreation = true;
-		shapeDef.enablePreSolveEvents = true;
 		shapeDef.isSensor = circleCollider.getIsTrigger();
 
 		uint16_t maskBits = 0;
@@ -112,7 +117,7 @@ void World::createShape(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 
 		shapeDef.filter.maskBits = maskBits;
 		b2CreateCircleShape(bodyID, &shapeDef, &circle);
-	};
+	}
 }
 
 /**
@@ -219,6 +224,11 @@ void World::updateShapeProperties(const BodyProxy& aBodyProxy, const BodyID& aBo
 	}
 }
 
+/**
+ * @brief Updates the size of the shapes in a body
+ * @param aBodyProxy The body proxy containing the new shape sizes
+ * @param aBodyID The body ID to update
+ */
 void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 {
 	b2BodyId bodyID = convertToB2BodyID(aBodyID);
@@ -229,6 +239,9 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 	b2Body_GetShapes(bodyID, shapeArray, size);
 	int boxcounter = 0;
 	int circlecounter = 0;
+
+	Vector2 scale = aBodyProxy.getScale();
+
 	for (int i = 0; i < size; i++)
 	{
 		b2ShapeType shapeType = b2Shape_GetType(shapeArray[i]);
@@ -236,6 +249,22 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		{
 			try
 			{
+				BoxCollider& tempBoxCollider = aBodyProxy.getBoxColliders().at(boxcounter);
+				b2Polygon pol = b2Shape_GetPolygon(shapeArray[i]);
+				if (tempBoxCollider.getWidth() * 2 * scale.x != pol.vertices[2].x)
+				{
+					b2Polygon polygon =
+						b2MakeOffsetBox(tempBoxCollider.getWidth() * scale.x, tempBoxCollider.getHeight() * scale.y,
+										{(tempBoxCollider.getTransform().position.x - tempBoxCollider.getWidth()) +
+											 tempBoxCollider.getWidth() * scale.x,
+										 (tempBoxCollider.getTransform().position.y - tempBoxCollider.getHeight()) +
+											 tempBoxCollider.getHeight() * scale.y},
+										tempBoxCollider.getRotation());
+					b2Body_SetAwake(bodyID, true);
+					b2Shape_SetPolygon(shapeArray[i], &polygon);
+
+					boxcounter++;
+				}
 			}
 			catch (std::exception e)
 			{
@@ -246,6 +275,17 @@ void World::updateShapeSize(const BodyProxy& aBodyProxy, const BodyID& aBodyID)
 		{
 			try
 			{
+				CircleCollider& tempCircleCollider = aBodyProxy.getCircleColliders().at(circlecounter);
+				b2Circle circle = b2Shape_GetCircle(shapeArray[i]);
+				if (tempCircleCollider.getRadius() * scale.x != circle.radius)
+				{
+					circle.radius = tempCircleCollider.getRadius() * scale.x;
+					circle.center = {tempCircleCollider.getTransform().position.x,
+									 tempCircleCollider.getTransform().position.y};
+					b2Body_SetAwake(bodyID, true);
+					b2Shape_SetCircle(shapeArray[i], &circle);
+					circlecounter++;
+				}
 			}
 			catch (std::exception e)
 			{
@@ -350,7 +390,7 @@ void World::setAngularVelocity(float aVelocity, const BodyID& aBodyID)
 	b2Body_SetAngularVelocity(bodyID, aVelocity);
 }
 
-Vector2 World::getGravity() { return mGravity; }
+Vector2 World::getGravity() const { return mGravity; }
 
 void World::setPosition(const Vector2& aPosition, float aRotation, const BodyID& aBodyID)
 {

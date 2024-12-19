@@ -1,8 +1,9 @@
 #include "Physics/PhysicsEngine.h"
 
+/**
+ * @brief Constructs a PhysicsEngine instance with default values
+ */
 PhysicsEngine::PhysicsEngine() : mStep(0.02f), mSubStep(4) {}
-
-PhysicsEngine::~PhysicsEngine() {}
 
 /**
  * @brief Creates the world
@@ -110,10 +111,13 @@ void PhysicsEngine::setPositions()
 
 			// Sets values if changed
 			if (newPos.x != mWorld.getPosition(rigidBody.getBodyId()).x ||
-				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y)
+				newPos.y != mWorld.getPosition(rigidBody.getBodyId()).y ||
+				transform.rotation != mWorld.getRotation(rigidBody.getBodyId()))
 			{
 				mWorld.setPosition(newPos, transform.rotation, rigidBody.getBodyId());
 			}
+			mWorld.updateShapeSize(BodyProxy(gameObject), rigidBody.getBodyId());
+
 			if (rigidBody.getLinearVelocity() != mWorld.getLinearVelocity(rigidBody.getBodyId()))
 			{
 				mWorld.setLinearVelocity(rigidBody.getLinearVelocity(), rigidBody.getBodyId());
@@ -248,7 +252,7 @@ void PhysicsEngine::convertFromBox2D(const std::vector<std::reference_wrapper<Ga
 
 			Transform transform = gameObject.getTransform();
 			transform.position = position;
-			transform = Transform(Vector2(position.x, position.y));
+			transform.position = Vector2(position.x, position.y);
 
 			transform.rotation = rotation;
 
@@ -292,6 +296,8 @@ void PhysicsEngine::setStep(float aStep) { mStep = aStep; }
 void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
 
 void PhysicsEngine::setGravity(const Vector2& aGravity) { mWorld.setGravity(aGravity); }
+
+Vector2 PhysicsEngine::getGravity() const { return mWorld.getGravity(); }
 
 /**
  * @brief Adds a game object to the physics engine

@@ -36,19 +36,13 @@ enum NetworkMessage
 };
 
 /**
- * @enum WritePermission
- * @brief Defines the write permissions for network variables.
- */
-enum class WritePermission { ReadOnly, ReadWrite };
-
-/**
  * @struct NetworkPacket
  * @brief Represents a network packet with various attributes.
  */
 struct NetworkPacket {
 	SLNet::MessageID messageID;	  ///< The message ID of the packet.
 	uint16_t networkObjectID;	  ///< The network object ID.
-	uint32_t prefabID;			  ///< The prefab ID.
+	int32_t prefabID;			  ///< The prefab ID.
 	uint64_t timestamp;			  ///< The timestamp of the packet.
 	SLNet::RakNetGUID clientGUID; ///< The GUID of the client.
 	uint32_t ISerializableID;	  ///< The serializable ID.
@@ -59,8 +53,10 @@ struct NetworkPacket {
 	 * @brief Default constructor for NetworkPacket.
 	 */
 	NetworkPacket()
-		: messageID(0), networkObjectID(UINT16_MAX), prefabID(UINT16_MAX), timestamp(0), clientGUID(SLNet::UNASSIGNED_RAKNET_GUID),
-		  ISerializableID(UINT16_MAX), networkBehaviourID(UINT8_MAX), networkVariableID(UINT8_MAX) {
+		: messageID(0), networkObjectID(UINT16_MAX), prefabID(INT32_MAX), timestamp(0),
+		  clientGUID(SLNet::UNASSIGNED_RAKNET_GUID), ISerializableID(UINT32_MAX), networkBehaviourID(UINT8_MAX),
+		  networkVariableID(UINT8_MAX)
+	{
 	}
 
 	/**

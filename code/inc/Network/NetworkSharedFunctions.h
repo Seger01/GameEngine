@@ -7,7 +7,6 @@
 #define NETWORKSHAREDFUNCTIONS_H
 
 #include "Network/NetworkInformation.h"
-#include <chrono>
 #include <slikenet/BitStream.h>
 
 /**

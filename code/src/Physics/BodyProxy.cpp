@@ -1,6 +1,9 @@
 #include "Physics/BodyProxy.h"
-#include <functional>
 
+/**
+ * @brief Constructs a BodyProxy instance with the specified game object
+ * @param aGameObject The game object to create the body proxy from
+ */
 BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 {
 	RigidBody& rigidBody = aGameObject.get().getComponents<RigidBody>().at(0);
@@ -15,6 +18,7 @@ BodyProxy::BodyProxy(const std::reference_wrapper<GameObject>& aGameObject)
 	}
 
 	mPosition = aGameObject.get().getTransform().position;
+	mScale = aGameObject.get().getTransform().scale;
 	mRotation = aGameObject.get().getTransform().rotation;
 	mHasGravity = rigidBody.getHasGravity();
 	mIsMoveableByForce = rigidBody.getIsMoveableByForce();
@@ -37,16 +41,21 @@ BodyProxy::~BodyProxy() {}
  */
 void BodyProxy::processBodyType()
 {
+	// Automatically assign body type depending on parameters
 	if (!mHasGravity && !mIsMoveableByForce && !mCanRotate && mDensity == 0 && mRestitution == 0 && mMass == 0 &&
 		mGravityScale == 0)
 	{
+		// Static body which can't be moved by box2d forces
 		mBodyType = BodyType::STATIC;
 	}
 	else
 	{
+		// Dynamic body which can be moved by box2d forces
 		mBodyType = BodyType::DYNAMIC;
 	}
 }
+
+Vector2 BodyProxy::getScale() const { return mScale; }
 
 bool BodyProxy::getHasGravity() const { return mHasGravity; }
 
