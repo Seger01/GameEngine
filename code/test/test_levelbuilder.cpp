@@ -22,9 +22,8 @@ TEST_F(LevelBuilderTests, CreateLevel_NullScene_ThrowsException)
 {
 	LevelBuilder levelBuilder;
 	TileMapData tileMapData;
-	EXPECT_THROW(levelBuilder.createLevel(nullptr, tileMapData), std::runtime_error);
+	EXPECT_THROW(levelBuilder.createLevel(nullptr, tileMapData, 16, 16), std::runtime_error);
 }
-
 
 TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 {
@@ -39,7 +38,7 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTiles)
 	tileMapData.mTileInfoMap[1] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
-	levelBuilder.createLevel(&scene, tileMapData);
+	levelBuilder.createLevel(&scene, tileMapData, 16, 16);
 
 	auto gameObjects = scene.getGameObjects();
 	ASSERT_EQ(gameObjects.size(), 2);
@@ -69,7 +68,7 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTilesWithCollidersAndRigidBodies)
 	tileMapData.mTileInfoMap[1] = tileInfo;
 
 	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
-	levelBuilder.createLevel(&scene, tileMapData);
+	levelBuilder.createLevel(&scene, tileMapData, 16, 16);
 
 	auto gameObjects = scene.getGameObjects();
 	ASSERT_EQ(gameObjects.size(), 2);
@@ -82,4 +81,26 @@ TEST_F(LevelBuilderTests, CreateTileLayers_AddsTilesWithCollidersAndRigidBodies)
 	auto rigidBodies = gameObjects[1].get().getComponents<RigidBody>();
 	EXPECT_FALSE(boxColliders.empty());
 	EXPECT_FALSE(rigidBodies.empty());
+}
+
+
+TEST_F(LevelBuilderTests, CreateTileLayers_SkipsGraphLayer)
+{
+	LevelBuilder levelBuilder;
+	TileMapData tileMapData;
+
+	tileMapData.mLayers = {{{1, 0}, {0, 1}}};
+	tileMapData.mLayerNames = {"GraphLayer"};
+	tileMapData.mLayerProperties["GraphLayer"]["isGraphLayer"] = "true"; // Set the custom property
+
+	TileInfo tileInfo;
+	tileInfo.mTilesetName = "Dungeontileset/0x72_DungeonTilesetII_v1.7.png";
+	tileInfo.mCoordinates = {0, 0};
+	tileMapData.mTileInfoMap[1] = tileInfo;
+
+	Scene& scene = engine->getSceneManager().createScene("TestSceneLevelBuilder", 1);
+	levelBuilder.createLevel(&scene, tileMapData, 16, 16);
+
+	auto gameObjects = scene.getGameObjects();
+	ASSERT_EQ(gameObjects.size(), 0); // No game objects should be created for graph layers
 }

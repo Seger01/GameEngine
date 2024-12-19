@@ -19,16 +19,16 @@
  * @param tileMapData
  * @throw runtime_error if scene is null
  */
-void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
+void LevelBuilder::createLevel(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
 {
-	if (scene == nullptr)
+	if (aScene == nullptr)
 	{
 		throw std::runtime_error("Scene is null in LevelBuilder::createLevel");
 	}
 
 	EngineBravo& engine = EngineBravo::getInstance();
 
-	createTileLayers(scene, tileMapData);
+	createTileLayers(aScene, aTileMapData, aTileWidth, aTileHeight);
 }
 
 /**
@@ -38,14 +38,14 @@ void LevelBuilder::createLevel(Scene* scene, const TileMapData& tileMapData)
  * @param tileMapData
  * @throw runtime_error if tile not found in tileInfoMap
  */
-void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData) const
+void LevelBuilder::createTileLayers(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
 {
-	for (size_t layerIndex = 0; layerIndex < tileMapData.mLayers.size(); ++layerIndex)
+	for (size_t layerIndex = 0; layerIndex < aTileMapData.mLayers.size(); ++layerIndex)
 	{
 		bool isGraphLayer = false;
 
-		auto layerPropertiesIt = tileMapData.mLayerProperties.find(tileMapData.mLayerNames[layerIndex]);
-		if (layerPropertiesIt != tileMapData.mLayerProperties.end())
+		auto layerPropertiesIt = aTileMapData.mLayerProperties.find(aTileMapData.mLayerNames[layerIndex]);
+		if (layerPropertiesIt != aTileMapData.mLayerProperties.end())
 		{
 			auto propertyIt = layerPropertiesIt->second.find("isGraphLayer");
 			if (propertyIt != layerPropertiesIt->second.end())
@@ -54,20 +54,21 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 			}
 		}
 
-		for (size_t rowIndex = 0; rowIndex < tileMapData.mLayers[layerIndex].size(); ++rowIndex)
+		for (size_t rowIndex = 0; rowIndex < aTileMapData.mLayers[layerIndex].size(); ++rowIndex)
 		{
-			for (size_t colIndex = 0; colIndex < tileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex)
+			for (size_t colIndex = 0; colIndex < aTileMapData.mLayers[layerIndex][rowIndex].size(); ++colIndex)
 			{
-				int tile = tileMapData.mLayers[layerIndex][rowIndex][colIndex];
+				int tile = aTileMapData.mLayers[layerIndex][rowIndex][colIndex];
 				if (tile != 0)
 				{
-					auto it = tileMapData.mTileInfoMap.find(tile);
-					if (it != tileMapData.mTileInfoMap.end())
+					auto it = aTileMapData.mTileInfoMap.find(tile);
+					if (it != aTileMapData.mTileInfoMap.end())
 					{
+						//Don't create game objects for graph layers
 						if (!isGraphLayer)
 						{
-							createTile(scene, it->second, tileMapData.mLayerNames[layerIndex], layerIndex, rowIndex,
-									   colIndex, isGraphLayer);
+							createTile(aScene, it->second, aTileMapData.mLayerNames[layerIndex], layerIndex, rowIndex,
+									   colIndex, aTileWidth, aTileHeight);
 						}
 					}
 					else
@@ -85,58 +86,54 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
  *
  * @param scene
  * @param tileInfo
+ * @param layerName
  * @param layerIndex
  * @param rowIndex
  * @param colIndex
- * @param isDoorsLayer
- * @param isGraphLayer
  */
-void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex,
-							  int rowIndex, int colIndex, bool isGraphLayer) const
+void LevelBuilder::createTile(Scene* aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex,
+							  int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) const
 {
-	//if (!isGraphLayer)
-	//{
-		EngineBravo& engine = EngineBravo::getInstance();
+	EngineBravo& engine = EngineBravo::getInstance();
 
-		SpriteDef spriteDef = {tileInfo.mTilesetName,
-							   Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16}, 16, 16};
+	SpriteDef spriteDef = {aTileInfo.mTilesetName,
+						   Rect{aTileInfo.mCoordinates.first, aTileInfo.mCoordinates.second, aTileWidth, aTileHeight}, static_cast<float>(aTileWidth), static_cast<float>(aTileHeight)};
 
-		GameObject* gameObject = new GameObject;
+	GameObject* gameObject = new GameObject;
 
-		Transform objectTransform;
-		objectTransform.position.x = static_cast<int>(colIndex * 16);
-		objectTransform.position.y = static_cast<int>(rowIndex * 16);
-		gameObject->setTransform(objectTransform);
+	Transform objectTransform;
+	objectTransform.position.x = static_cast<int>(aColIndex * aTileWidth);
+	objectTransform.position.y = static_cast<int>(aRowIndex * aTileHeight);
+	gameObject->setTransform(objectTransform);
+	gameObject->setName("Tile");
+
+	Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
+	sprite->setLayer(aLayerIndex);
+	gameObject->addComponent(sprite);
+
+	for (const auto& collider : aTileInfo.mColliders)
+	{
+		BoxCollider* boxCollider = new BoxCollider();
+		Transform transform;
+		transform.position.x = collider.x;
+		transform.position.y = collider.y;
+		boxCollider->setTransform(transform);
+		boxCollider->setWidth(collider.mWidth + 0.1f);
+		boxCollider->setHeight(collider.mHeight + 0.1f);
+		boxCollider->setCollideCategory(1);
+		boxCollider->setCollideWithCategory({1, 2, 3});
+		gameObject->addComponent(boxCollider);
+	}
+
+	if (!aTileInfo.mColliders.empty())
+	{
+		RigidBody* rigidBody = new RigidBody();
+		rigidBody->setTransform(objectTransform);
+		rigidBody->setFriction(1.0f);
+		gameObject->addComponent(rigidBody);
 		gameObject->setName("Tile");
+	}
 
-		Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
-		sprite->setLayer(layerIndex);
-		gameObject->addComponent(sprite);
-
-		for (const auto& collider : tileInfo.mColliders)
-		{
-			BoxCollider* boxCollider = new BoxCollider();
-			Transform transform;
-			transform.position.x = collider.x;
-			transform.position.y = collider.y;
-			boxCollider->setTransform(transform);
-			boxCollider->setWidth(collider.mWidth + 0.1f);
-			boxCollider->setHeight(collider.mHeight + 0.1f);
-			boxCollider->setCollideCategory(1);
-			boxCollider->setCollideWithCategory({1, 2, 3});
-			gameObject->addComponent(boxCollider);
-		}
-
-		if (!tileInfo.mColliders.empty())
-		{
-			RigidBody* rigidBody = new RigidBody();
-			rigidBody->setTransform(objectTransform);
-			rigidBody->setFriction(1.0f);
-			gameObject->addComponent(rigidBody);
-			gameObject->setName("Tile");
-		}
-
-		gameObject->setTag(layerName);
-		scene->addGameObject(gameObject);
-	//}
+	gameObject->setTag(aLayerName);
+	aScene->addGameObject(gameObject);
 }

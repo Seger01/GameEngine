@@ -25,12 +25,9 @@ public:
     LevelBuilder() = default;
     ~LevelBuilder() = default;
 
-    void createLevel(Scene* scene, const TileMapData& tileMapData);
+    void createLevel(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
 
 private:
-    void createRoomEntry(Scene* scene, const MapObject& mapObject, const TileMapData& tileMapData) const;
-    void createLevelEndTrigger(Scene* scene, const MapObject& mapObject) const;
-    void createTileLayers(Scene* scene, const TileMapData& tileMapData) const;
-    void createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex, int rowIndex, int colIndex, bool isGraphLayer) const;
-    void addTriggerCollider(GameObject* gameObject, const MapObject& mapObject) const;
+    void createTileLayers(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
+    void createTile(Scene* aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex, int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) const;
 };
