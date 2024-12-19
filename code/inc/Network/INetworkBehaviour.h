@@ -23,6 +23,8 @@ class NetworkVariableBase;
  */
 class INetworkBehaviour : public IBehaviourScript
 {
+	friend class NetworkClient;
+
 public:
 	INetworkBehaviour(std::string aTag = "defaultNetworkBehaviour");
 	virtual ~INetworkBehaviour() = default;
@@ -36,12 +38,20 @@ public:
 	std::vector<std::reference_wrapper<NetworkVariableBase>> GetNetworkVariables();
 
 	bool isOwner();
+	bool isServer();
 
 	void destroy();
 
+	int getNetworkBehaviourID() const;
+
 private:
-	bool mIsOwner;						  ///< Indicates if the current object is the owner.
-	bool mIsOwnerSet;					  ///< Indicates if the owner status has been set.
+	void setNetworkBehaviourID(int aNetworkBehaviourID);
+
+private:
+	bool mIsOwner;						   ///< Indicates if the current object is the owner.
+	bool mIsOwnerSet;					   ///< Indicates if the owner status has been set.
+	int mNetworkBehaviourID;			   ///< The network behaviour ID.
+	static int mNetworkBehaviourIDCounter; ///< Counter for network behaviour IDs.
 
 protected:
 	std::vector<std::reference_wrapper<NetworkVariableBase>> mNetworkVariables; ///< List of network variables.

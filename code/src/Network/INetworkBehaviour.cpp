@@ -8,14 +8,22 @@
 #include "Network/NetworkObject.h"
 #include "Network/NetworkVariable.h"
 
+#include "EngineBravo.h"
+
 #include <stdexcept>
+
+int INetworkBehaviour::mNetworkBehaviourIDCounter = 0;
 
 /**
  * @brief Constructs a new INetworkBehaviour object.
  *
  * @param aTag The tag associated with this network behaviour.
  */
-INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false) {}
+INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
+{
+	mNetworkVariables.clear();
+	mNetworkBehaviourID = mNetworkBehaviourIDCounter++;
+}
 
 /**
  * @brief Copy constructor.
@@ -23,7 +31,8 @@ INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag),
  * @param other The INetworkBehaviour to copy.
  */
 INetworkBehaviour::INetworkBehaviour(const INetworkBehaviour& other)
-	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet)
+	: IBehaviourScript(other), mIsOwner(other.mIsOwner), mIsOwnerSet(other.mIsOwnerSet),
+	  mNetworkBehaviourID(other.mNetworkBehaviourID)
 {
 	mNetworkVariables.clear();
 }
@@ -105,6 +114,28 @@ bool INetworkBehaviour::isOwner()
 }
 
 /**
+ * @brief Checks if the current object is the server.
+ *
+ * @return true If the current object is the server.
+ * @return false Otherwise.
+ */
+bool INetworkBehaviour::isServer() { return EngineBravo::getInstance().getNetworkManager().isServer(); }
+
+/**
  * @brief Destroys the network behaviour.
  */
 void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
+
+/**
+ * @brief Gets the network behaviour ID.
+ *
+ * @return int The network behaviour ID.
+ */
+int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+
+/**
+ * @brief Sets the network behaviour ID.
+ *
+ * @param aNetworkBehaviourID The network behaviour ID to set.
+ */
+void INetworkBehaviour::setNetworkBehaviourID(int aNetworkBehaviourID) { mNetworkBehaviourID = aNetworkBehaviourID; }

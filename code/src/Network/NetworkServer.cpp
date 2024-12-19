@@ -172,12 +172,9 @@ void NetworkServer::sendCustomSerialize()
 		{
 			continue;
 		}
-		for (int networkBehaviourCounter = 0;
-			 networkBehaviourCounter < gameObject.get().getComponents<INetworkBehaviour>().size();
-			 networkBehaviourCounter++)
+
+		for (INetworkBehaviour& networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
 		{
-			INetworkBehaviour& networkBehaviour =
-				gameObject.get().getComponents<INetworkBehaviour>()[networkBehaviourCounter];
 			for (int networkVariableCounter = 0; networkVariableCounter < networkBehaviour.GetNetworkVariables().size();
 				 networkVariableCounter++)
 			{
@@ -191,7 +188,7 @@ void NetworkServer::sendCustomSerialize()
 					networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().getTypeId();
 				networkPacket.SetTimeStampNow();
 				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0].get().getClientGUID();
-				networkPacket.networkBehaviourID = networkBehaviourCounter;
+				networkPacket.networkBehaviourID = networkBehaviour.getNetworkBehaviourID();
 				networkPacket.networkVariableID = networkVariableCounter;
 				networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
@@ -336,21 +333,24 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 		{ // check network object ID
 			continue;
 		}
-		if (gameObject.get().getComponents<INetworkBehaviour>().size() <= networkPacket.networkBehaviourID)
+		for (INetworkBehaviour& networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
 		{
-			continue;
+			if (networkBehaviour.getNetworkBehaviourID() != networkPacket.networkBehaviourID)
+			{ // check network behaviour ID
+				continue;
+			}
+			if (networkBehaviour.GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			{ // check network variable ID bounds
+				continue;
+			}
+			if (networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
+				networkPacket.ISerializableID)
+			{ // check network variable ID
+				continue;
+			}
+			networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
+			return;
 		}
-		auto networkBehaviour = gameObject.get().getComponents<INetworkBehaviour>()[networkPacket.networkBehaviourID];
-		if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
-		{ // check network variable ID bounds
-			continue;
-		}
-		if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
-			networkPacket.ISerializableID)
-		{ // check network variable ID
-			continue;
-		}
-		networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
 	}
 }
 
