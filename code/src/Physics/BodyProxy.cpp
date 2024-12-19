@@ -1,5 +1,4 @@
 #include "Physics/BodyProxy.h"
-#include <functional>
 
 /**
  * @brief Constructs a BodyProxy instance with the specified game object
