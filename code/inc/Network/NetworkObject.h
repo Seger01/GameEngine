@@ -22,7 +22,7 @@ class NetworkObject : public Component {
 	friend class NetworkServer;
 
 public:
-    NetworkObject(std::string aTag = "defaultNetworkObject");
+	NetworkObject(const std::string& aTag = "defaultNetworkObject");
 	~NetworkObject() = default;
 	NetworkObject(const NetworkObject& other);
 	NetworkObject& operator=(const NetworkObject& other);

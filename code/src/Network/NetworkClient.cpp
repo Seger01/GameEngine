@@ -27,7 +27,7 @@
  * @param aObjects Reference to a vector of GameObjects.
  * @param aTickRate Tick rate for sending packets.
  */
-NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60)
+NetworkClient::NetworkClient(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate)
 	: mClient(SLNet::RakPeerInterface::GetInstance(), SLNet::RakPeerInterface::DestroyInstance), mIsConnected(false),
 	  mIsConnecting(false), mServerAddress("0.0.0.0"), mObjects(aObjects), mTickRate(aTickRate),
 	  mLastSendPacketsTime(std::chrono::steady_clock::now())

@@ -36,12 +36,6 @@ enum NetworkMessage
 };
 
 /**
- * @enum WritePermission
- * @brief Defines the write permissions for network variables.
- */
-enum class WritePermission { ReadOnly, ReadWrite };
-
-/**
  * @struct NetworkPacket
  * @brief Represents a network packet with various attributes.
  */

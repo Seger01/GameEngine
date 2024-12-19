@@ -5,20 +5,19 @@
 #ifndef NETWORKHOST_H
 #define NETWORKHOST_H
 
-#include "Network/NetworkClient.h"
-#include "Network/NetworkServer.h"
-
 #include <memory>
 #include <vector>
 
 class GameObject;
+class NetworkClient;
+class NetworkServer;
 
 /**
  * @brief The NetworkHost class manages both the server and client for network communication.
  */
 class NetworkHost {
 public:
-	NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	NetworkHost(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
 
 	void update();
 

@@ -7,10 +7,8 @@
 #define NETWORKSERVER_H
 
 #include "GameObject.h"
-#include "Network/NetworkClient.h"
 
 #include <chrono>
-#include <list>
 #include <memory>
 #include <slikenet/peerinterface.h>
 #include <slikenet/types.h>
@@ -24,7 +22,7 @@ class NetworkObject;
 class NetworkServer {
 friend class NetworkManager;
 public:
-	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate);
+	NetworkServer(std::vector<std::reference_wrapper<GameObject>>& aObjects, int aTickRate = 60);
 	void update();
 	bool isConnected() const;
 
