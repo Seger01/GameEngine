@@ -235,17 +235,33 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
  * @brief Sends a spawn prefab message to all clients.
  * @param aObject The object to spawn.
  */
-void NetworkServer::sendPrefabSpawn(NetworkObject& aObject)
+void NetworkServer::sendPrefabSpawn(GameObject& aObject, SLNet::RakNetGUID clientID)
 {
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
+	NetworkObject& networkObject = aObject.getComponents<NetworkObject>()[0];
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB;
-	networkPacket.networkObjectID = aObject.getNetworkObjectID();
-	networkPacket.prefabID = aObject.getPrefabID();
+	networkPacket.networkObjectID = networkObject.getNetworkObjectID();
+	networkPacket.prefabID = networkObject.getPrefabID();
+	networkPacket.clientGUID = networkObject.getClientGUID();
 	networkPacket.SetTimeStampNow();
 	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-	sendToAllClients(bs);
+	uint8_t networkBehaviourCount = aObject.getComponents<INetworkBehaviour>().size();
+	bs.Write(networkBehaviourCount);
+	for (uint8_t i = 0; i < networkBehaviourCount; i++)
+	{
+		uint32_t networkBehaviourID = aObject.getComponents<INetworkBehaviour>()[i].get().getNetworkBehaviourID();
+		bs.Write(networkBehaviourID);
+	}
+	if (clientID == SLNet::UNASSIGNED_RAKNET_GUID)
+	{
+		sendToAllClients(bs);
+	}
+	else
+	{
+		sendToClient(bs, clientID);
+	}
 }
 
 /**
@@ -439,17 +455,13 @@ void NetworkServer::spawnObjectsForNewClient(SLNet::RakNetGUID playerID)
 			networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 			networkPacket.clientGUID = networkObject.get().getClientGUID();
 			networkPacket.networkObjectID = networkObject.get().getNetworkObjectID();
+			networkPacket.SetTimeStampNow();
+			NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+			sendToClient(bs, playerID);
 		}
 		else
 		{
-			// send spawn prefab message
-			networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB;
-			networkPacket.networkObjectID = networkObject.get().getNetworkObjectID();
-			networkPacket.prefabID = networkObject.get().getPrefabID();
-			networkPacket.clientGUID = networkObject.get().getClientGUID();
+			sendPrefabSpawn(persistantObject.get(), playerID);
 		}
-		networkPacket.SetTimeStampNow();
-		NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-		sendToClient(bs, playerID);
 	}
 }

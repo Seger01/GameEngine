@@ -391,7 +391,7 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 		prefab->setTransform(aTransform);
 	}
 	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
-	mServer->sendPrefabSpawn(prefab->getComponents<NetworkObject>()[0]);
+	mServer->sendPrefabSpawn(*prefab);
 	return prefab;
 }
 

@@ -123,8 +123,10 @@ bool INetworkBehaviour::isServer() { return EngineBravo::getInstance().getNetwor
 
 /**
  * @brief Destroys the network behaviour.
+ *
+ * @note This function is not implemented. It breaks the synchronization of the network behaviours
  */
-void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
+// void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
 
 /**
  * @brief Gets the network behaviour ID.
@@ -138,4 +140,7 @@ int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourI
  *
  * @param aNetworkBehaviourID The network behaviour ID to set.
  */
-void INetworkBehaviour::setNetworkBehaviourID(int aNetworkBehaviourID) { mNetworkBehaviourID = aNetworkBehaviourID; }
+void INetworkBehaviour::setNetworkBehaviourID(uint32_t aNetworkBehaviourID)
+{
+	mNetworkBehaviourID = aNetworkBehaviourID;
+}

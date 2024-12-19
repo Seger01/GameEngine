@@ -40,17 +40,17 @@ public:
 	bool isOwner();
 	bool isServer();
 
-	void destroy();
+	// void destroy();
 
 	int getNetworkBehaviourID() const;
 
 private:
-	void setNetworkBehaviourID(int aNetworkBehaviourID);
+	void setNetworkBehaviourID(uint32_t aNetworkBehaviourID);
 
 private:
 	bool mIsOwner;						   ///< Indicates if the current object is the owner.
 	bool mIsOwnerSet;					   ///< Indicates if the owner status has been set.
-	int mNetworkBehaviourID;			   ///< The network behaviour ID.
+	uint32_t mNetworkBehaviourID;		   ///< The network behaviour ID.
 	static int mNetworkBehaviourIDCounter; ///< Counter for network behaviour IDs.
 
 protected:

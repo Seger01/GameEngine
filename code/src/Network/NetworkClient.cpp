@@ -413,12 +413,10 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 		NetworkObject& networkObject = gameObject.getComponents<NetworkObject>()[0];
 		if (networkPacket.clientGUID != networkObject.getClientGUID())
 		{ // check client ID
-			std::cout << "Client ID does not match\n";
 			continue;
 		}
 		if (networkPacket.networkObjectID != networkObject.getNetworkObjectID())
 		{ // check network object ID
-			std::cout << "Network object ID does not match\n";
 			continue;
 		}
 		for (INetworkBehaviour& networkBehaviour : gameObject.getComponents<INetworkBehaviour>())
@@ -435,7 +433,6 @@ void NetworkClient::handleCustomSerialize(SLNet::Packet* aPacket)
 			if (networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
-				std::cout << "Network variable ID does not match\n";
 				continue;
 			}
 			networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
@@ -478,6 +475,20 @@ void NetworkClient::handleSpawnPrefab(SLNet::Packet* aPacket)
 	else
 	{
 		throw std::runtime_error("Prefab does not have a NetworkObject component");
+	}
+	uint8_t networkBehaviourCount;
+	bs.Read(networkBehaviourCount);
+	if (networkBehaviourCount > prefab->getComponents<INetworkBehaviour>().size())
+	{
+		std::cout << "NetworkBehaviourCount: " << (int)networkBehaviourCount << std::endl;
+		std::cout << "NetworkBehaviourSize: " << prefab->getComponents<INetworkBehaviour>().size() << std::endl;
+		throw std::runtime_error("Network behaviour count exceeds the number of network behaviours");
+	}
+	for (uint8_t i = 0; i < networkBehaviourCount; i++)
+	{
+		uint32_t networkBehaviourID;
+		bs.Read(networkBehaviourID);
+		prefab->getComponents<INetworkBehaviour>()[i].get().setNetworkBehaviourID(networkBehaviourID);
 	}
 	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
 }
