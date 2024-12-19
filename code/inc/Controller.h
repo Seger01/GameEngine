@@ -19,6 +19,7 @@ public:
 
 	int getAxis(int axis) const;
 	bool isButtonPressed(Key aKey);
+	bool isButton(Key aKey);
 
 	float getLeftStickUp();
 	float getLeftStickLeft();
@@ -36,6 +37,7 @@ private:
 	bool connected;
 	std::vector<int> axisValues;
 	std::vector<bool> buttonStates;
+	std::vector<bool> previousButtonStates;
 
 	void pollControllerState();
 	void pollDpad();
