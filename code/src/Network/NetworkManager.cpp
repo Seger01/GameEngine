@@ -391,33 +391,27 @@ GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
 		prefab->setTransform(aTransform);
 	}
 	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
-	mServer->sendPrefabSpawn(prefab->getComponents<NetworkObject>()[0]);
+	mServer->sendPrefabSpawn(*prefab);
 	return prefab;
 }
 
 /**
- * @brief Instantiates a prefab based on the provided prefab ID and transform.
- * @param aNetworkPacket The network packet containing the prefab ID and network object ID.
- * @return Pointer to the instantiated prefab.
+ * @brief Destroys a game object based on the provided game object.
+ * @param aObject The game object to destroy.
  */
-GameObject* NetworkManager::instantiatePrefab(NetworkPacket aNetworkPacket)
+void NetworkManager::destroy(GameObject& aObject)
 {
-	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(aNetworkPacket.prefabID);
-	if (!iNetworkprefab)
+	if (!isServer())
 	{
-		throw std::runtime_error("Prefab not found");
+		throw std::runtime_error("Only server may call destroy");
 	}
-	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
-	if (prefab->hasComponent<NetworkObject>())
+	if (aObject.hasComponent<NetworkObject>())
 	{
-		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
-		networkObject.setPrefabID(aNetworkPacket.prefabID);
-		networkObject.setNetworkObjectID(aNetworkPacket.networkObjectID);
+		NetworkObject& networkObject = aObject.getComponents<NetworkObject>()[0].get();
+		if (networkObject.isOwner())
+		{
+			mServer->sendPrefabDespawn(networkObject);
+		}
 	}
-	else
-	{
-		throw std::runtime_error("Prefab does not have a NetworkObject component");
-	}
-	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
-	return prefab;
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&aObject);
 }

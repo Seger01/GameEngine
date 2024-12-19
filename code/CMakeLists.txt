@@ -12,23 +12,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add a CMake option to enable or disable debug mode
-option(ENABLE_DEBUG "Enable debug mode" OFF)
-
 # Option to enable or disable building tests
 option(ENABLE_TESTS "Enable building tests" OFF)
 
-# Set the build type based on the ENABLE_DEBUG option
-# if(ENABLE_DEBUG)
-#     message("Debug mode enabled")
-#     set(CMAKE_BUILD_TYPE Debug)
-#     add_compile_options(-g -O0)
-# else()
-#     set(CMAKE_BUILD_TYPE Release)
-#     add_compile_options(-O3)  # Optimization flag for Release build
-# endif()
-
-add_compile_options(-O3 -g)  # Optimization flag for Release build
 if(ENABLE_TESTS)
     # Set coverage compile and link flags
     add_compile_options(--coverage)

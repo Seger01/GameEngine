@@ -8,9 +8,11 @@
 #include "Network/NetworkObject.h"
 #include "Network/NetworkVariable.h"
 
+#include "EngineBravo.h"
+
 #include <stdexcept>
 
-int INetworkBehaviour::networkBehaviourIDCounter = 0;
+int INetworkBehaviour::mNetworkBehaviourIDCounter = 0;
 
 /**
  * @brief Constructs a new INetworkBehaviour object.
@@ -19,7 +21,8 @@ int INetworkBehaviour::networkBehaviourIDCounter = 0;
  */
 INetworkBehaviour::INetworkBehaviour(std::string aTag) : IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
 {
-	mNetworkBehaviourID = networkBehaviourIDCounter++;
+	mNetworkVariables.clear();
+	mNetworkBehaviourID = mNetworkBehaviourIDCounter++;
 }
 
 /**
@@ -107,13 +110,33 @@ bool INetworkBehaviour::isOwner()
 }
 
 /**
- * @brief Destroys the network behaviour.
+ * @brief Checks if the current object is the server.
+ *
+ * @return true If the current object is the server.
+ * @return false Otherwise.
  */
-void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
+bool INetworkBehaviour::isServer() { return EngineBravo::getInstance().getNetworkManager().isServer(); }
+
+/**
+ * @brief Destroys the network behaviour.
+ *
+ * @note This function is not implemented. It breaks the synchronization of the network behaviours
+ */
+// void INetworkBehaviour::destroy() { mGameObject->removeComponent(this); }
 
 /**
  * @brief Gets the network behaviour ID.
  *
- * @return uint8_t The network behaviour ID.
+ * @return int The network behaviour ID.
  */
-uint8_t INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+int INetworkBehaviour::getNetworkBehaviourID() const { return mNetworkBehaviourID; }
+
+/**
+ * @brief Sets the network behaviour ID.
+ *
+ * @param aNetworkBehaviourID The network behaviour ID to set.
+ */
+void INetworkBehaviour::setNetworkBehaviourID(uint32_t aNetworkBehaviourID)
+{
+	mNetworkBehaviourID = aNetworkBehaviourID;
+}

@@ -71,25 +71,20 @@ void NetworkServer::handleIncomingPackets()
 		switch (packet->data[0])
 		{
 		case ID_NEW_INCOMING_CONNECTION:
-			std::cout << "A connection is incoming.\n";
-			spawnPlayerForNewClient(packet->guid);
+			spawnObjectsForNewClient(packet->guid);
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			std::cout << "The server is full.\n";
 			break;
 		case ID_DISCONNECTION_NOTIFICATION:
-			std::cout << "A client has disconnected.\n";
 			handleClientDisconnect(packet->guid);
 			break;
 		case ID_CONNECTION_LOST:
-			std::cout << "A client lost the connection.\n";
 			handleClientDisconnect(packet->guid);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_TRANSFORM_PACKET:
 			handleTransform(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT:
-			std::cout << "Received player instantiation message.\n";
 			handlePlayerInit(packet);
 			break;
 		case (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE:
@@ -177,9 +172,11 @@ void NetworkServer::sendCustomSerialize()
 		{
 			continue;
 		}
+
 		for (INetworkBehaviour& networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
 		{
-			for (int i = 0; i < networkBehaviour.GetNetworkVariables().size(); i++)
+			for (int networkVariableCounter = 0; networkVariableCounter < networkBehaviour.GetNetworkVariables().size();
+				 networkVariableCounter++)
 			{
 				SLNet::BitStream bs;
 				NetworkSharedFunctions::reserveNetworkPacketBits(bs);
@@ -187,13 +184,13 @@ void NetworkServer::sendCustomSerialize()
 				networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_CUSTOM_SERIALIZE;
 				networkPacket.networkObjectID =
 					gameObject.get().getComponents<NetworkObject>()[0].get().getNetworkObjectID();
-				networkPacket.ISerializableID = networkBehaviour.GetNetworkVariables().at(i).get().getTypeId();
+				networkPacket.ISerializableID =
+					networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().getTypeId();
 				networkPacket.SetTimeStampNow();
 				networkPacket.clientGUID = gameObject.get().getComponents<NetworkObject>()[0].get().getClientGUID();
 				networkPacket.networkBehaviourID = networkBehaviour.getNetworkBehaviourID();
-				networkPacket.networkVariableID = i;
-
-				networkBehaviour.GetNetworkVariables().at(i).get().serialize(bs);
+				networkPacket.networkVariableID = networkVariableCounter;
+				networkBehaviour.GetNetworkVariables().at(networkVariableCounter).get().serialize(bs);
 				NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
 				sendToAllClients(bs);
 			}
@@ -207,7 +204,6 @@ void NetworkServer::sendCustomSerialize()
  */
 void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 {
-	std::cout << "Sending player instantiation message to all clients.\n";
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
@@ -236,20 +232,37 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 }
 
 /**
- * @brief Sends a spawn prefab message to all clients.
+ * @brief Spawns objects for a new client.
  * @param aObject The object to spawn.
+ * @param clientID The GUID of the client.
  */
-void NetworkServer::sendPrefabSpawn(NetworkObject& aObject)
+void NetworkServer::sendPrefabSpawn(GameObject& aObject, SLNet::RakNetGUID clientID)
 {
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
+	NetworkObject& networkObject = aObject.getComponents<NetworkObject>()[0];
 	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_SPAWN_PREFAB;
-	networkPacket.networkObjectID = aObject.getNetworkObjectID();
-	networkPacket.prefabID = aObject.getPrefabID();
+	networkPacket.networkObjectID = networkObject.getNetworkObjectID();
+	networkPacket.prefabID = networkObject.getPrefabID();
+	networkPacket.clientGUID = networkObject.getClientGUID();
 	networkPacket.SetTimeStampNow();
 	NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-	sendToAllClients(bs);
+	uint8_t networkBehaviourCount = aObject.getComponents<INetworkBehaviour>().size();
+	bs.Write(networkBehaviourCount);
+	for (uint8_t i = 0; i < networkBehaviourCount; i++)
+	{
+		uint32_t networkBehaviourID = aObject.getComponents<INetworkBehaviour>()[i].get().getNetworkBehaviourID();
+		bs.Write(networkBehaviourID);
+	}
+	if (clientID == SLNet::UNASSIGNED_RAKNET_GUID)
+	{
+		sendToAllClients(bs);
+	}
+	else
+	{
+		sendToClient(bs, clientID);
+	}
 }
 
 /**
@@ -337,23 +350,23 @@ void NetworkServer::handleCustomSerialize(SLNet::Packet* aPacket)
 		{ // check network object ID
 			continue;
 		}
-		for (auto networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
+		for (INetworkBehaviour& networkBehaviour : gameObject.get().getComponents<INetworkBehaviour>())
 		{
-			if (networkBehaviour.get().getNetworkBehaviourID() != networkPacket.networkBehaviourID)
-			{ // check network
-			  // behaviour ID
+			if (networkBehaviour.getNetworkBehaviourID() != networkPacket.networkBehaviourID)
+			{ // check network behaviour ID
 				continue;
 			}
-			if (networkBehaviour.get().GetNetworkVariables().size() <= networkPacket.networkVariableID)
+			if (networkBehaviour.GetNetworkVariables().size() <= networkPacket.networkVariableID)
 			{ // check network variable ID bounds
 				continue;
 			}
-			if (networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
+			if (networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().getTypeId() !=
 				networkPacket.ISerializableID)
 			{ // check network variable ID
 				continue;
 			}
-			networkBehaviour.get().GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
+			networkBehaviour.GetNetworkVariables().at(networkPacket.networkVariableID).get().deserialize(bs);
+			return;
 		}
 	}
 }
@@ -409,30 +422,47 @@ void NetworkServer::sendToAllClients(SLNet::BitStream& aBitStream)
 }
 
 /**
- * @brief Spawns a player for a new client.
+ * @brief Sends a bitstream to a specific client.
+ * @param aBitStream The bitstream to send.
+ * @param clientID The GUID of the client to send to.
+ */
+void NetworkServer::sendToClient(SLNet::BitStream& aBitStream, SLNet::RakNetGUID clientID)
+{
+	mServer->Send(&aBitStream, PacketPriority::MEDIUM_PRIORITY, PacketReliability::RELIABLE, 0, clientID, false);
+}
+
+/**
+ * @brief send objects to new client
  * @param playerID The GUID of the new client.
  */
-void NetworkServer::spawnPlayerForNewClient(SLNet::RakNetGUID playerID)
+void NetworkServer::spawnObjectsForNewClient(SLNet::RakNetGUID playerID)
 {
-	std::cout << "Sending all players to each client" << std::endl;
 	SLNet::BitStream bs;
 	NetworkSharedFunctions::reserveNetworkPacketBits(bs);
 	NetworkPacket networkPacket;
-	networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
 	networkPacket.clientGUID = playerID;
 
 	auto persistantObjects = EngineBravo::getInstance().getSceneManager().getCurrentScene().getPersistentGameObjects();
-	for (auto player : persistantObjects)
+	for (auto persistantObject : persistantObjects)
 	{
-		if (!player.get().hasComponent<NetworkObject>())
+		if (!persistantObject.get().hasComponent<NetworkObject>())
 		{
 			continue;
 		}
-		auto networkObject = player.get().getComponents<NetworkObject>()[0];
-		networkPacket.clientGUID = networkObject.get().getClientGUID();
-		networkPacket.networkObjectID = networkObject.get().getNetworkObjectID();
-		networkPacket.SetTimeStampNow();
-		NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
-		sendToAllClients(bs);
+		auto networkObject = persistantObject.get().getComponents<NetworkObject>()[0];
+		if (networkObject.get().isPlayer())
+		{
+			// send player init message
+			networkPacket.messageID = (SLNet::MessageID)NetworkMessage::ID_PLAYER_INIT;
+			networkPacket.clientGUID = networkObject.get().getClientGUID();
+			networkPacket.networkObjectID = networkObject.get().getNetworkObjectID();
+			networkPacket.SetTimeStampNow();
+			NetworkSharedFunctions::setBitStreamNetworkPacket(bs, networkPacket);
+			sendToClient(bs, playerID);
+		}
+		else
+		{
+			sendPrefabSpawn(persistantObject.get(), playerID);
+		}
 	}
 }

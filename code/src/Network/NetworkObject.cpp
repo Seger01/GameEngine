@@ -126,20 +126,32 @@ int NetworkObject::getNetworkObjectID() const { return mNetworkObjectID; }
  */
 int NetworkObject::getPrefabID() const { return mPrefabID; }
 
+/**
+ * @brief Spawns the network object across the network
+ *
+ * @note This function is not implemented.
+ */
 void NetworkObject::spawn()
 {
 	if (!EngineBravo::getInstance().getNetworkManager().isServer())
 	{
 		throw std::runtime_error("Only the server can spawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
+/**
+ * @brief Despawns the network object across the network
+ *
+ * @note This function is not implemented.
+ */
 void NetworkObject::despawn()
 {
 	if (!EngineBravo::getInstance().getNetworkManager().isServer())
 	{
 		throw std::runtime_error("Only the server can despawn network objects");
 	}
+	throw std::runtime_error("Not implemented");
 }
 
 /**
