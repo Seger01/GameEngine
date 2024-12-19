@@ -9,10 +9,10 @@ const int LEFT_STICK_LEFT_AXIS = 0;
 const int LEFT_STICK_DOWN_AXIS = 1;
 const int LEFT_STICK_RIGHT_AXIS = 0;
 
-const int RIGHT_STICK_UP_AXIS = 4;
-const int RIGHT_STICK_LEFT_AXIS = 3;
-const int RIGHT_STICK_DOWN_AXIS = 4;
-const int RIGHT_STICK_RIGHT_AXIS = 3;
+const int RIGHT_STICK_UP_AXIS = 3;
+const int RIGHT_STICK_LEFT_AXIS = 2;
+const int RIGHT_STICK_DOWN_AXIS = 3;
+const int RIGHT_STICK_RIGHT_AXIS = 2;
 
 const int DPadNothing = -1;
 const int DPadUp = 0;
