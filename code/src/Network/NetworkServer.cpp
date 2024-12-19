@@ -232,8 +232,9 @@ void NetworkServer::sendPlayerInit(SLNet::RakNetGUID playerID)
 }
 
 /**
- * @brief Sends a spawn prefab message to all clients.
+ * @brief Spawns objects for a new client.
  * @param aObject The object to spawn.
+ * @param clientID The GUID of the client.
  */
 void NetworkServer::sendPrefabSpawn(GameObject& aObject, SLNet::RakNetGUID clientID)
 {
