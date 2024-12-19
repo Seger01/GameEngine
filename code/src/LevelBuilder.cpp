@@ -82,7 +82,7 @@ void LevelBuilder::createTileLayers(Scene* aScene, const TileMapData& aTileMapDa
 }
 
 /**
- * @brief This function creates a specific tile, and is called from createTileLayers
+ * @brief This function creates a specific tile with a the rigidbody and colliders, and is called from createTileLayers
  *
  * @param scene
  * @param tileInfo

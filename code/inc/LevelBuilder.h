@@ -17,6 +17,7 @@
  * @class LevelBuilder
  *
  * @brief Builds a level from parsed json data.
+ * @details This class creates a level from the parsed json data by creating game objects with sprites, colliders and rigid bodies.
  */
 
 
