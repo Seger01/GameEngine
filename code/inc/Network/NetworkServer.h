@@ -7,10 +7,8 @@
 #define NETWORKSERVER_H
 
 #include "GameObject.h"
-#include "Network/NetworkClient.h"
 
 #include <chrono>
-#include <list>
 #include <memory>
 #include <slikenet/peerinterface.h>
 #include <slikenet/types.h>

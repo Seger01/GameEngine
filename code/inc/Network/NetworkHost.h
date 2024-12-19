@@ -5,13 +5,12 @@
 #ifndef NETWORKHOST_H
 #define NETWORKHOST_H
 
-#include "Network/NetworkClient.h"
-#include "Network/NetworkServer.h"
-
 #include <memory>
 #include <vector>
 
 class GameObject;
+class NetworkClient;
+class NetworkServer;
 
 /**
  * @brief The NetworkHost class manages both the server and client for network communication.

@@ -4,6 +4,9 @@
  */
 #include "Network/NetworkHost.h"
 
+#include "Network/NetworkClient.h"
+#include "Network/NetworkServer.h"
+
 /**
  * @brief Constructs a new NetworkHost object.
  * 
