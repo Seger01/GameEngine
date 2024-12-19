@@ -1,3 +1,7 @@
+/**
+ * @file TileMapParser.cpp
+ * @brief This file contains the implementation of the TileMapParser class
+ */
 #include "TileMapParser.h"
 #include <fstream>
 #include <iostream>

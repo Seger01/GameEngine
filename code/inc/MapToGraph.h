@@ -1,6 +1,8 @@
 /**
  * @file MapToGraph.h
- * @brief This file contains the declaration of the MapToGraph class
+ * @brief This file contains the declaration of the MapToGraph class.
+ * @details The MapToGraph class is responsible for converting a tilemap graph layer into a graph representation using an adjacency list.
+ * The method in which is graph layer can be identified in the tilemap data is by checking if the layer has a custom property "isGraphLayer" set to true.
  */
 #pragma once
 

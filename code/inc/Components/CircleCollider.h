@@ -1,5 +1,4 @@
-#ifndef CIRCLE_COLLIDER_H
-#define CIRCLE_COLLIDER_H
+#pragma once
 
 /**
  * @file CircleCollider.h
@@ -14,8 +13,6 @@ class CircleCollider : public Collider
 {
 public:
 	CircleCollider(float aRadius = 0.0f, std::string aTag = "defaultCircleCollider");
-	~CircleCollider();
-
 	float getRadius() const;
 	void setRadius(float radius);
 
@@ -34,6 +31,7 @@ public:
 	void setIsUpdated(bool aUpdated);
 
 private:
+	/// @brief Radius of the circle
 	float mRadius;
 	/// @brief Category with which shapes the collider can collide
 	std::vector<int> mCollideWithCategory;
@@ -45,5 +43,3 @@ private:
 	/// @brief Whether the collider has been updated
 	bool mIsUpdated;
 };
-
-#endif // CIRCLE_COLLIDER_H

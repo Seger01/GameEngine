@@ -12,9 +12,8 @@
 class RigidBody : public Component
 {
 public:
-	RigidBody(BodyFlags aBodyFlags = {0, 0, 0}, BodyProperties aBodyProperties = {0, 0, 0, 0, 0},
-			  std::string aTag = "defaultRigidBody");
-	~RigidBody();
+	RigidBody(const BodyFlags& aBodyFlags = {0, 0, 0}, const BodyProperties& aBodyProperties = {0, 0, 0, 0, 0},
+			  const std::string& aTag = "defaultRigidBody");
 	std::unique_ptr<Component> clone() const override;
 	Transform getTransform() const;
 	void setTransform(const Transform& aTransform);
@@ -76,11 +75,17 @@ public:
 private:
 	Transform mTransform;
 
+	/// @brief Flags for the body
 	bool mIsUpdated;
+	/// @brief Whether the body has gravity
 	bool mHasGravity;
+	/// @brief Whether the body is moveable by force
 	bool mIsMoveableByForce;
+	/// @brief Whether the body can rotate
 	bool mCanRotate;
+	/// @brief Whether the body can collide
 	bool mCanCollide;
+	/// @brief The body type of the body
 	BodyType mBodyType;
 
 	/// @brief Reduces linear velocity over time
