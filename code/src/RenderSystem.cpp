@@ -457,7 +457,8 @@ void RenderSystem::renderForCamera(const Scene& aScene, const Camera& camera, co
  */
 void RenderSystem::renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation,
 								const Color& aColor, bool aFilled, const Camera& aCurrentCamera,
-								const Rect& aScreenViewPort, const Point& aRotationalCenter) const
+								const Rect& aScreenViewPort, const Vector2& aScale,
+								const Point& aRotationalCenter) const
 {
 	Vector2 squarePosition = aPosition;
 	Vector2 cameraOrigin = aCurrentCamera.getOrigin();
@@ -467,13 +468,14 @@ void RenderSystem::renderSquare(const Vector2& aPosition, const int aWidth, cons
 	drawPosition.x = std::round(drawPosition.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	drawPosition.y = std::round(drawPosition.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
-	int squareWidth = std::round(aWidth * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
-	int squareHeight = std::round(aHeight * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
+	int squareWidth = std::round(aWidth * aScale.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth())) + 1;
+	int squareHeight = std::round(aHeight * aScale.x * ((float)aScreenViewPort.h / aCurrentCamera.getHeight())) + 1;
 
 	Point scaledRotationalCenter;
-	scaledRotationalCenter.x = std::round(aRotationalCenter.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
+	scaledRotationalCenter.x =
+		std::round(aRotationalCenter.x * aScale.x * ((float)aScreenViewPort.w / aCurrentCamera.getWidth()));
 	scaledRotationalCenter.y =
-		std::round(aRotationalCenter.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
+		std::round(aRotationalCenter.y * aScale.y * ((float)aScreenViewPort.h / aCurrentCamera.getHeight()));
 
 	// Render
 	mRenderer->renderSquare(drawPosition, squareWidth, squareHeight, aRotation, aColor, aFilled,
@@ -550,7 +552,7 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 					renderSquare(
 						boxColliderWorldPos, boxCollider.getWidth(), boxCollider.getHeight(),
 						gameObject.get().getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
-						aScreenViewPort,
+						aScreenViewPort, gameObject.get().getTransform().scale,
 						Point{static_cast<int>(-relativeBoxPosition.x), static_cast<int>(-relativeBoxPosition.y)});
 				}
 			}
