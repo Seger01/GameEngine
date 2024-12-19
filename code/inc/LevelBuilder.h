@@ -26,7 +26,7 @@ public:
     LevelBuilder() = default;
     ~LevelBuilder() = default;
 
-    void createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
+    void createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight);
 
 private:
     void createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;

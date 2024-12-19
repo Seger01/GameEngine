@@ -19,7 +19,7 @@
  * @param tileMapData
  * @throw runtime_error if scene is null
  */
-void LevelBuilder::createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
+void LevelBuilder::createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight)
 {
 	if (&aScene == nullptr)
 	{
