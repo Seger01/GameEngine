@@ -35,7 +35,7 @@ private:
 	void sendTransform();
 	void sendCustomSerialize();
 	void sendPlayerInit(SLNet::RakNetGUID playerID);
-	void sendPrefabSpawn(NetworkObject& aObject);
+	void sendPrefabSpawn(GameObject& aObject, SLNet::RakNetGUID clientID = SLNet::UNASSIGNED_RAKNET_GUID);
 	void sendPrefabDespawn(NetworkObject& aObject);
 
 	void handleTransform(SLNet::Packet* aPacket);
@@ -44,7 +44,8 @@ private:
 	void handleClientDisconnect(SLNet::RakNetGUID aClientID);
 
 	void sendToAllClients(SLNet::BitStream& aBitStream);
-	void spawnPlayerForNewClient(SLNet::RakNetGUID playerID);
+	void sendToClient(SLNet::BitStream& aBitStream, SLNet::RakNetGUID clientID);
+	void spawnObjectsForNewClient(SLNet::RakNetGUID playerID);
 
 private:
 	/**
