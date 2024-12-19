@@ -31,7 +31,7 @@ public:
 		auto currentTime = std::chrono::high_resolution_clock::now();
 
 		// Calculate raw deltaTime in seconds
-		double rawDeltaTime = std::chrono::duration<double>(currentTime - lastFrameTime).count();
+		rawDeltaTime = std::chrono::duration<double>(currentTime - lastFrameTime).count();
 
 		if (timeDilation <= 0.0)
 		{
@@ -48,6 +48,7 @@ public:
 	}
 
 	static double deltaTime;	// Time in seconds since last frame, affected by time dilation
+	static double rawDeltaTime; // Time in seconds since last frame, not affected by time dilation
 	static double ticks;		// Total time since start in seconds, affected by time dilation
 	static double timeDilation; // Time dilation factor (e.g., 0.5 for half speed, 2.0 for double speed)
 

@@ -131,7 +131,9 @@
 
     \item Use \texttt{unique\_ptr} for ownership; pass raw pointers only when ownership is not implied.
 
-    \item Avoid \texttt{MyConstructor = delete} and use exceptions for error handling.
+    \item Avoid \texttt{MyConstructor = delete}.
+    
+    \item Always use exceptions for error handling. Do not use return values for error handling, unless required by a library. All code must be exception-safe.
 
     \item Use C++ libraries (e.g., \texttt{cmath}) over C libraries (e.g., \texttt{math.h}).
 

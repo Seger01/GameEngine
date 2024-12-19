@@ -80,18 +80,53 @@ package Engine {
 
     class RenderSystem {
         + RenderSystem()
-        + render(Scene* aScene) : void 
+
+        + setAspectRatio(const Point& aAspectRatio) : void 
+        + getAspectRatio() const : Point 
+
+        + renderLayer(const Scene& aScene, int aLayer, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const : void 
+        + render(const Scene& aScene) const : void 
+
         + getRenderer() : Renderer& 
-        + getWindow() : Window&
-        + addObject(GameObject& aObject) : void
-        + removeObject(GameObject& aObject) : void
-        - mObjects : vector<reference_wrapper<GameObject>>
-        - renderSprite(GameObject* aGameObject, Sprite* aSprite) : void 
-        - renderAnimation(GameObject* aGameObject, Animation* aAnimation) : void 
+        + getWindow() : Window& 
+
+        + getTextSize(const std::string& aFont, const std::string& aText, int& aWidth, int& aHeight,
+        const Vector2& aScale) const : bool 
+        + screenToWorldPos(const Point& aScreenpos, const Camera& aCurrentCamera) const : Vector2 
+
+        + addObject(GameObject& aObject) : void 
+        + removeObject(GameObject& aObject) : void 
+
+        + getObjects() const : const std::vector<std::reference_wrapper<GameObject>>& 
+        + clearObjects() : void 
+
+        - renderSprite(const Camera& aCurrentCamera, const GameObject& aGameObject, const Sprite& aSprite, const Rect& aScreenViewPort) const : void 
+        - renderAnimation(const Camera& aCurrentCamera, const GameObject& aGameObject, const Animation& aAnimation, const Rect& aScreenViewPort) const : void 
+        - renderParticle(const Camera& aCurrentCamera, const Particle& aParticle, const Rect& aScreenViewPort) const : void 
+        - renderText(const Camera& aCurrentCamera, const std::string& aText, const Vector2& aLocation, const Color& aColor, const Vector2& aScale, const Rect& aScreenViewPort) const : void 
+        - renderSquare(const Vector2& aPosition, const int aWidth, const int aHeight, const float aRotation, const Color& aColor, bool aFilled, const Camera& aCurrentCamera, const Rect& aScreenViewPort, const Point& aRotationalCenter = {0, 0}) const : void 
+        - renderCircle(const Vector2& aPosition, const float aRadius, const Color& aColor, const bool aFilled, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const : void 
+
+        - renderForCamera(const Scene& aScene, const Camera& camera, const Rect& aScreenViewPort) const : void 
+
+        - renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const : void 
+
+        - sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) const : void 
+
+        - updateLayerRange(GameObject& aObject) : void 
+
+        - mObjects : std::vector<std::reference_wrapper<GameObject>> 
         - mRenderer : std::unique_ptr<Renderer> 
         - mWindow : std::unique_ptr<Window> 
+
+        - mAspectRatio : Point 
+
         - WindowWidth : int 
         - WindowHeight : int 
+
+        - mLowestLayer : int 
+        - mHighestLayer : int 
+
         - mBackgroundColor : Color 
     }
 

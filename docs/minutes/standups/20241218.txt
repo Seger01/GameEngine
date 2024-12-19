@@ -1,0 +1,24 @@
+Minutes 18-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Update code standard, update gameobject to follow code standard. Prepare for assessment.
+- Angel: Update code to follow code standard. Implement physics fixed update rate.
+- Ronan: Created demo starting room. Bullet impact particles. Enemy flash upon hit. Updated class diagram. Updated demo document.
+- Sean: Fixed building environment. Merging issues.
+- Seger: Help Sean with building environment. Fixed issue with camera tag dependency. Added test and updated for code standard.
+
+What is going to be done:
+- Siem: Update design document.
+- Angel: Finish physics fixed update rate. Physics scaling.
+- Ronan: Improve tilemapparser interface.
+- Sean: Implement network despawn.
+- Seger: Update class diagram. 
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: -
+- Sean: Issues with build environment.
+- Seger: Broken laptop.

@@ -2,11 +2,15 @@
 
 package Rendering {
 
-interface IWindow{
+
+class Window {
     + Window(int aWindowWidth, int aWindowHeight)
-    + ~Window()
+	+ ~Window()
+
+    + showWindow() : void 
 
     + getSize() : Vector2 
+    + setSize(Vector2 aSize) : void 
 
     + setFullScreen() : void 
     + setFloating() : void 
@@ -14,143 +18,159 @@ interface IWindow{
 
     + getSDLWindow() : SDL_Window* 
 
-    - mWindow = nullptr : SDL_Window* 
+    - mWindow : SDL_Window* 
 }
 
-class SDLWindow implements IWindow{
-    + Window(int aWindowWidth, int aWindowHeight)
-    + ~Window()
 
-    + getSize() : Vector2 
+class Renderer {
+	+ Renderer(Window& window)
+	+ ~Renderer()
 
-    + setFullScreen() : void 
-    + setFloating() : void 
-    + toggleFullFloating() : void 
+    + clear(const Color& aColor) const : void 
+    + show() const : void 
+    + setViewport(const Rect& viewport) const : void 
 
-    + getSDLWindow() : SDL_Window* 
+	+ renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation, const int aWidth,
+					   const int aHeight, const bool aFlipX, const bool aFlipY, const float aRotation,
+                       const Color& aColor, const Point& aRotationalCenter = {0, 0}) const : void 
 
-    - mWindow = nullptr : SDL_Window* 
-}
+	+ renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
+    const Color& aColor, const bool aFill, const Point& aRotationalCenter = {0, 0}) const : void 
 
-interface IRenderer {
-    + Renderer(Window& window)
-    + ~Renderer() 
+    + drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const : void 
 
-    + clear(Color aColor) : void 
-    + show() : void 
+	+ renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
+    const float scaleY) const : void 
 
-    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
-                       bool aFlipY, float aRotation) : void
-
-    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
+    + calculateTextSize(const std::string& font, const std::string& text, int& width, int& height) const : bool 
 
     + getSDLRenderer() : SDL_Renderer*& 
 
-    - mRenderer = nullptr : SDL_Renderer* 
+    - mFont : TTF_Font* 
 
-}
-
-class SDLRenderer implements IRenderer {
-    + Renderer(Window& window)
-    + ~Renderer() 
-
-    + clear(Color aColor) : void 
-    + show() : void 
-
-    + renderTexture(Texture& aTexture, Rect aSourceRect, Vector2 aLocation, int aWidth, int aHeight, bool aFlipX,
-                       bool aFlipY, float aRotation) : void
-
-    + renderSquare(Vector2 aLocation, int aWidth, int aHeight, Color aColor, bool aFill) : void 
-
-    + getSDLRenderer() : SDL_Renderer*& 
-
-    - mRenderer = nullptr : SDL_Renderer* 
-
+    - mRenderer : SDL_Renderer* 
 }
 
 class Sprite implements Component{
-    + Sprite(Texture* aTexture, int aWidth, int aHeight, Rect aSourceRect = Rect())
-    + ~Sprite()
+	+ Sprite(const Texture& aTexture, int aWidth, int aHeight, const Rect& aSourceRect = Rect(),
+		   const std::string& aTag = "defaultSprite")
+	+ ~Sprite()
 
-    + Texture* getTexture()
+	
+	+ Sprite(const Sprite& other)
+	+ Sprite& operator=(const Sprite& other)
+	+ Sprite(Sprite&& other) 
+	+ Sprite& operator=(Sprite&& other) 
 
-    + getRelativePosition() : Transform 
-    + setRelativePosition(Transform aNewTransform) : void 
+    + clone() const override : std::unique_ptr<Component> 
 
-    + getSource() : Rect 
-    + setSource(Rect aSourceRect) : void
+    + Texture& getTexture() const : const 
 
-    +  setFlipX(bool state) { mFlipX = state; } : void
-    +  getFlipX() { return mFlipX; } : bool
+    + getRelativePosition() const : Transform 
+    + setRelativePosition(const Transform& aNewTransform) : void 
 
-    +  setFlipY(bool state) { mFlipY = state; } : void
-    +  getFlipY() { return mFlipY; } : bool
+    + Rect& getSource() const : const 
+    + setSource(const Rect& aSourceRect) : void 
 
-    +  setWidth(int aWidth) { mWidth = aWidth; } : void
-    +  getWidth() { return mWidth; } : int
+    + getColorFilter() const : Color 
+    + setColorFilter(Color aColor) : void 
 
-    +  setHeight(int aHeight) { mHeight = aHeight; } : void
-    +  getHeight() { return mHeight; } : int
+    + setFlipX(bool state) : void  
 
-    - Texture* mTexture = nullptr;
-    - Transform mTransform;
+    + getFlipX() const : bool  
 
-    - Rect mSourceRect;
+    + setFlipY(bool state) : void  
 
-    - std::string mSprite;
-    - int mWidth = 0;
-    - int mHeight = 0;
-    - bool mFlipX;
-    - bool mFlipY;
+    + getFlipY() const : bool  
 
-    - int mLayer;
+    + setWidth(float aWidth) : void  
+
+    + getWidth() const : float  
+
+    + setHeight(float aHeight) : void  
+
+    + getHeight() const : float  
+
+    + setLayer(int aLayer) : void  
+
+    + getLayer() : int  
+
+	- Transform mTransform
+
+	- const Texture& mTexture
+	- Rect mSourceRect
+	- Color mColorFilter
+
+	- float mWidth = 0
+	- float mHeight = 0
+	- bool mFlipX
+	- bool mFlipY
+
+	- int mLayer = 0
 }
 
 class Component_Proxy {}
 
 class Animation implements Component_Proxy{
-    + Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false)
-    + ~Animation()
+	+ Animation(std::vector<std::reference_wrapper<Sprite>> aAnimationFrames, int aTimeBetweenFrames,
+			  bool aIsLooping = false, const std::string& aTag = "defaultAnimation")
+	+ ~Animation()
 
-    + getTransform() : Transform 
-    + setTransform(Transform aNewTransform) : void 
+	+ Animation(const Animation& other)
+	+ Animation& operator=(const Animation& other)
+	+ Animation(Animation&& other) noexcept
+	+ Animation& operator=(Animation&& other) noexcept
 
-    + getFrame(int aFrameIndex) : Sprite* 
-    + getFrameAtTime(long aTime) : Sprite* 
+    + clone() const override : std::unique_ptr<Component> 
 
-    + getTimeBetweenFrames() : int 
+    + getTransform() const : Transform 
+    + setTransform(const Transform& aNewTransform) : void 
+
+    + Sprite& getFrame(int aFrameIndex) const : const 
+    + Sprite& getCurrentFrame() const : const 
+
+    + getColorFilter() const : Color 
+    + setColorFilter(const Color& aColor) : void 
+
+    + getTimeBetweenFrames() const : int 
     + setTimeBetweenFrames(int aTimeBetweenFrames) : void 
 
     + setFlipX(bool state) : void 
-    + getFlipX() : bool 
+    + getFlipX() const : bool 
 
     + setFlipY(bool state) : void 
-    + getFlipY() : bool 
+    + getFlipY() const : bool 
 
-    + isLooping() : bool 
+    + isLooping() const : bool 
     + setIsLooping(bool aIsLooping) : void 
 
-    + getFrameCount() : int 
+    + getFrameCount() const : int 
 
-    - mTransform : Transform 
+    + setLayer(int aLayer) : void 
+    + getLayer() const : int 
 
-    - mFlipX : bool 
-    - mFlipY : bool 
+	- Transform mTransform
 
-    - mAnimationFrames : std::vector<Sprite*> 
-    - mTimeBetweenFrames : int 
-    - mIsLooping : bool 
+	- std::vector<std::unique_ptr<Sprite>> mAnimationFrames
+
+	- bool mFlipX
+	- bool mFlipY
+	- int mTimeBetweenFrames
+	- bool mIsLooping
+	- int mLayer
 }
 
 class Texture {
-    + Texture(SDL_Texture* aTexture)
-    + ~Texture()
+	+ Texture(SDL_Texture* aTexture, int aID = 0)
+	+ ~Texture()
 
-    + SDL_Texture* getSDLTexture();
+    + getSDLTexture() const : SDL_Texture* 
 
-    - SDL_Texture* mTexture = nullptr;
+    + getID() const : int  
 
-    - bool mTextureLoaded = false;
+    - mID : int 
+    - mTexture : SDL_Texture* 
+    - mTextureLoaded : bool 
 }
 
 
@@ -159,8 +179,8 @@ Sprite *-up- "1" Texture
 
 }
 
-Rendering *-- "1" IRenderer
-Rendering *-- "1" IWindow
+Rendering *-- "1" Renderer
+Rendering *-- "1" Window
 @enduml
 
 

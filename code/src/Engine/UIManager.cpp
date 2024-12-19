@@ -1,3 +1,8 @@
+/**
+ * @file UIManager.cpp
+ * @brief UIManager class implementation file.
+ */
+
 #include "Engine/UIManager.h"
 
 #include "Button.h"
@@ -7,10 +12,19 @@
 #include "Input.h"
 #include "Scene.h"
 
+/**
+ * @brief UIManager class constructor
+ */
 UIManager::UIManager() {}
 
+/**
+ * @brief UIManager class destructor
+ */
 UIManager::~UIManager() {}
 
+/**
+ * @brief Initialize the UIManager and subscribe to the required events
+ */
 void UIManager::init()
 {
 	EventManager& eventManager = EngineBravo::getInstance().getEventManager();
@@ -21,10 +35,22 @@ void UIManager::init()
 						   EventType::MouseButtonUp);
 }
 
+/**
+ * @brief Handle the mouse down event
+ * @param aEvent The mouse down event
+ */
 void UIManager::handleMouseDownEvent(const Event& aEvent) { mMouseDownEventQueue.push_back(aEvent); }
 
+/**
+ * @brief Handle the mouse up event
+ * @param aEvent The mouse up event
+ */
 void UIManager::handleMouseUpEvent(const Event& aEvent) { mMouseUpEventQueue.push_back(aEvent); }
 
+/**
+ * @brief Update the UIManager
+ * @param aScene The current scene
+ */
 void UIManager::update(const Scene& aScene)
 {
 	for (GameObject& gameObject : mObjects)
@@ -141,6 +167,10 @@ void UIManager::update(const Scene& aScene)
 	mMouseUpEventQueue.clear();
 }
 
+/**
+ * @brief Add a UI object to the UIManager
+ * @param aObject The UI object to add
+ */
 void UIManager::addObject(GameObject& aObject)
 {
 	auto it = std::find_if(mObjects.begin(), mObjects.end(),
@@ -155,6 +185,10 @@ void UIManager::addObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Remove a UI object from the UIManager
+ * @param aObject The UI object to remove
+ */
 void UIManager::removeObject(GameObject& aObject)
 {
 	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
@@ -165,6 +199,13 @@ void UIManager::removeObject(GameObject& aObject)
 	}
 }
 
+/**
+ * @brief Get the list of UI objects
+ * @return The list of UI objects
+ */
 const std::vector<std::reference_wrapper<GameObject>>& UIManager::getObjects() const { return mObjects; }
 
+/**
+ * @brief Clear the list of UI objects
+ */
 void UIManager::clearObjects() { mObjects.clear(); }
