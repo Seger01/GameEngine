@@ -20,7 +20,6 @@ public:
 	World(const Vector2& aGravity);
 	World();
 
-private:
 	void executeWorldStep(float step, int subStep);
 
 	BodyID createBody(const BodyProxy& aBodyProxy);
@@ -43,7 +42,7 @@ private:
 	void setAngularVelocity(float aVelocity, const BodyID& aBodyID);
 	void setBodyActivity(bool aState, const BodyID& aBodyID);
 
-	Vector2 getGravity();
+	Vector2 getGravity() const;
 	Vector2 getPosition(const BodyID& aBodyID);
 	float getRotation(const BodyID& aBodyID);
 	Vector2 getLinearVelocity(const BodyID& aBodyID);
@@ -53,6 +52,7 @@ private:
 	std::vector<std::pair<int, int>> getContactEvents() const;
 	std::vector<std::pair<int, int>> getSensorEvents() const;
 
+private:
 	friend class PhysicsEngine;
 
 private:

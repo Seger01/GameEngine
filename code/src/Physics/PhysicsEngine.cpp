@@ -1,4 +1,5 @@
 #include "Physics/PhysicsEngine.h"
+#include "Vector2.h"
 
 PhysicsEngine::PhysicsEngine() : mStep(0.02f), mSubStep(4) {}
 
@@ -295,6 +296,8 @@ void PhysicsEngine::setStep(float aStep) { mStep = aStep; }
 void PhysicsEngine::setSubStep(int aSubStep) { mSubStep = aSubStep; }
 
 void PhysicsEngine::setGravity(const Vector2& aGravity) { mWorld.setGravity(aGravity); }
+
+Vector2 PhysicsEngine::getGravity() const { return mWorld.getGravity(); }
 
 /**
  * @brief Adds a game object to the physics engine

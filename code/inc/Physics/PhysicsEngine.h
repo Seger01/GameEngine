@@ -27,6 +27,8 @@ public:
 	void setSubStep(int);
 	void setGravity(const Vector2& aGravity);
 
+	Vector2 getGravity() const;
+
 public:
 	void addObject(GameObject& aObject);
 	void removeObject(GameObject& aObject);
