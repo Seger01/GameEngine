@@ -35,6 +35,7 @@ public:
 	SDL_Window* getSDLWindow();
 
 private:
+	/// @brief The SDL window.
 	SDL_Window* mWindow = nullptr;
 };
 

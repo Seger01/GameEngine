@@ -6,7 +6,7 @@ Date,Time,Duration(in hours),Activity
 2024-09-04, 11:00, 3, group discussion on plan of attack and general requirements and planning
 2024-09-05, 10:45, 1, Writing PoA: planning and version control
 2024-09-05, 18:00, 0.5, Small bits of feedback to PoA chapter quality
-2024-09-05, 21:00, 0.5, Small bits of PoA feedback, added requirements to requirements docu up to userstory 3
+2024-09-05, 21:00, 0.5, Small bits of PoA feedback; added requirements to requirements docu up to userstory 3
 2024-09-06, 11:00, 0.5, Updated PoA planning (second quarter)
 2024-09-06, 11:30, 0.5, Added requirements up to user story 6
 2024-09-06, 17:00, 0.5, Implement small bits of feedback on PoA
@@ -94,3 +94,9 @@ Date,Time,Duration(in hours),Activity
 2024-12-04, 9:15, 7, Fix issue with pausing music, help Sean with multiplayer implementation testing, update particle to follow code standard.
 2024-12-05, 9:15, 7, Debugging networking with Sean
 2024-12-09, 9:15, 7, Add audio doxygen; add doxygen cmake target; implement multiplayer demo enemies.
+2024-12-10, 9:15, 7, Fix multiplayer menu
+2024-12-11, 9:15, 7.5, Fix multiplayer menu, Prepare for class
+2024-12-11, 11:00, 1.5, Attend project class
+2024-12-12, 9:45, 5.25, Applying code standard
+2024-12-17, 9:15, 7.5, Various code standard fixes, preparing for assessment.
+2024-12-18, 9:15, 7.5, Updates to design document and Doxygen.

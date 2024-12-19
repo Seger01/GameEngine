@@ -2,16 +2,13 @@
 
 PhysicsManager::PhysicsManager() {}
 
-void PhysicsManager::startPhysicsEngine(Vector2 aGravity)
+void PhysicsManager::startPhysicsEngine(const Vector2& aGravity) { mPhysicsEngine.createWorld(aGravity); }
+
+void PhysicsManager::updatePhysicsEngine(double timeDilation)
 {
-	float timeStep = 20.0f / 60.0f;
-
-	mPhysicsEngine.setStep(timeStep);
-	mPhysicsEngine.setSubStep(4);
-
-	mPhysicsEngine.createWorld(aGravity);
+	double step = 0.02 * timeDilation;
+	mPhysicsEngine.setStep(step);
+	mPhysicsEngine.update();
 }
-
-void PhysicsManager::updatePhysicsEngine() { mPhysicsEngine.update(); }
 
 PhysicsEngine& PhysicsManager::getPhysicsEngine() { return mPhysicsEngine; }

@@ -14,6 +14,8 @@ skinparam backgroundColor #AAAAAA
 !include classDiagramPackages/uiPackage.puml
 !include classDiagramPackages/audioPackage.puml
 !include classDiagramPackages/renderingPackage.puml
+!include classDiagramPackages/tileMapParserPackage.puml
+!include classDiagramPackages/aiPackage.puml
 
 NetworkManager *-down- Networking
 PhysicsManager *-down- Physics
@@ -21,7 +23,7 @@ ParticleSystem *-down- ParticlePackage
 SaveGameManager *-down- Save
 SceneManager *-down- "*" Scene
 UIManager o-down- UI
-SceneManager -down-> TileMap
+SceneManager -down-> TileMapParser
 AudioManager *-down- Audio
 TextureManager *-down- "0..*" Texture
 RenderSystem *-down- Rendering

@@ -15,7 +15,11 @@ class GameObject;
 /**
  * @class AudioManager
  *
- * @brief This class is responsible for owning and playing audio sources
+ * @brief This class is responsible for owning and playing AudioSources
+ *
+ * The AudioManager is, similarly to the other manager classes, responsible for
+ * controlling all of the sound features in the engine. It contains only a few basic methods, and delegates most
+ * functionality to the audio facade.
  */
 class AudioManager
 {
@@ -41,7 +45,8 @@ public:
 	void clearObjects();
 
 private:
-	/// @brief References to all game objects with audio sources. Is regulated by calls to addObject and removeObject
+	/// @brief References to all game objects with audio sources. Is regulated by EngineBravo using calls to addObject
+	/// and removeObject
 	std::vector<std::reference_wrapper<GameObject>> mObjects;
 	/// @brief The facade that will be used to interact with the audio system.
 	std::unique_ptr<IAudioFacade> mFacade;

@@ -111,7 +111,7 @@ Mix_Chunk* MixerContainer::getSound(const std::string& aIndex)
 /**
  * @brief Get a sound effect from the container. If the effect is not found, return nullptr
  */
-const Mix_Chunk* MixerContainer::getSound(std::string aIndex) const
+const Mix_Chunk* MixerContainer::getSound(const std::string& aIndex) const
 {
 	try
 	{

@@ -34,7 +34,7 @@ void CircleCollider::setCollideCategory(int category)
 
 std::vector<int> CircleCollider::getCollideWithCategory() const { return mCollideWithCategory; }
 
-void CircleCollider::setCollideWithCategory(std::vector<int> aCollideWith)
+void CircleCollider::setCollideWithCategory(const std::vector<int>& aCollideWith)
 {
 	mIsUpdated = true;
 	mCollideWithCategory = aCollideWith;
