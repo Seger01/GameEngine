@@ -19,9 +19,9 @@
  * @param tileMapData
  * @throw runtime_error if scene is null
  */
-void LevelBuilder::createLevel(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
+void LevelBuilder::createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
 {
-	if (aScene == nullptr)
+	if (&aScene == nullptr)
 	{
 		throw std::runtime_error("Scene is null in LevelBuilder::createLevel");
 	}
@@ -38,7 +38,7 @@ void LevelBuilder::createLevel(Scene* aScene, const TileMapData& aTileMapData, i
  * @param tileMapData
  * @throw runtime_error if tile not found in tileInfoMap
  */
-void LevelBuilder::createTileLayers(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
+void LevelBuilder::createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
 {
 	for (size_t layerIndex = 0; layerIndex < aTileMapData.mLayers.size(); ++layerIndex)
 	{
@@ -91,7 +91,7 @@ void LevelBuilder::createTileLayers(Scene* aScene, const TileMapData& aTileMapDa
  * @param rowIndex
  * @param colIndex
  */
-void LevelBuilder::createTile(Scene* aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex,
+void LevelBuilder::createTile(Scene& aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex,
 							  int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) const
 {
 	EngineBravo& engine = EngineBravo::getInstance();
@@ -135,5 +135,5 @@ void LevelBuilder::createTile(Scene* aScene, const TileInfo& aTileInfo, const st
 	}
 
 	gameObject->setTag(aLayerName);
-	aScene->addGameObject(gameObject);
+	aScene.addGameObject(gameObject);
 }

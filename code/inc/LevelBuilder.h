@@ -26,9 +26,9 @@ public:
     LevelBuilder() = default;
     ~LevelBuilder() = default;
 
-    void createLevel(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
+    void createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
 
 private:
-    void createTileLayers(Scene* aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
-    void createTile(Scene* aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex, int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) const;
+    void createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const;
+    void createTile(Scene& aScene, const TileInfo& aTileInfo, const std::string& aLayerName, int aLayerIndex, int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) const;
 };
