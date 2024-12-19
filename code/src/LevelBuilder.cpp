@@ -64,7 +64,11 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
 					auto it = tileMapData.mTileInfoMap.find(tile);
 					if (it != tileMapData.mTileInfoMap.end())
 					{
-						createTile(scene, it->second, tileMapData.mLayerNames[layerIndex], layerIndex, rowIndex, colIndex, isGraphLayer);
+						if (!isGraphLayer)
+						{
+							createTile(scene, it->second, tileMapData.mLayerNames[layerIndex], layerIndex, rowIndex,
+									   colIndex, isGraphLayer);
+						}
 					}
 					else
 					{
@@ -87,52 +91,52 @@ void LevelBuilder::createTileLayers(Scene* scene, const TileMapData& tileMapData
  * @param isDoorsLayer
  * @param isGraphLayer
  */
-void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex, int rowIndex, int colIndex,
-							  bool isGraphLayer) const
+void LevelBuilder::createTile(Scene* scene, const TileInfo& tileInfo, const std::string& layerName, int layerIndex,
+							  int rowIndex, int colIndex, bool isGraphLayer) const
 {
-	EngineBravo& engine = EngineBravo::getInstance();
+	//if (!isGraphLayer)
+	//{
+		EngineBravo& engine = EngineBravo::getInstance();
 
-	SpriteDef spriteDef = {tileInfo.mTilesetName,
-						   Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16}, 16, 16};
+		SpriteDef spriteDef = {tileInfo.mTilesetName,
+							   Rect{tileInfo.mCoordinates.first, tileInfo.mCoordinates.second, 16, 16}, 16, 16};
 
-	GameObject* gameObject = new GameObject;
+		GameObject* gameObject = new GameObject;
 
-	Transform objectTransform;
-	objectTransform.position.x = static_cast<int>(colIndex * 16);
-	objectTransform.position.y = static_cast<int>(rowIndex * 16);
-	gameObject->setTransform(objectTransform);
-	gameObject->setName("Tile");
+		Transform objectTransform;
+		objectTransform.position.x = static_cast<int>(colIndex * 16);
+		objectTransform.position.y = static_cast<int>(rowIndex * 16);
+		gameObject->setTransform(objectTransform);
+		gameObject->setName("Tile");
 
-	if (!isGraphLayer)
-	{
 		Sprite* sprite = engine.getResourceManager().createSprite(spriteDef);
 		sprite->setLayer(layerIndex);
 		gameObject->addComponent(sprite);
-	}
 
-	for (const auto& collider : tileInfo.mColliders)
-	{
-		BoxCollider* boxCollider = new BoxCollider();
-		Transform transform;
-		transform.position.x = collider.x;
-		transform.position.y = collider.y;
-		boxCollider->setTransform(transform);
-		boxCollider->setWidth(collider.mWidth + 0.1f);
-		boxCollider->setHeight(collider.mHeight + 0.1f);
-		boxCollider->setCollideCategory(1);
-		boxCollider->setCollideWithCategory({1, 2, 3});
-		gameObject->addComponent(boxCollider);
-	}
+		for (const auto& collider : tileInfo.mColliders)
+		{
+			BoxCollider* boxCollider = new BoxCollider();
+			Transform transform;
+			transform.position.x = collider.x;
+			transform.position.y = collider.y;
+			boxCollider->setTransform(transform);
+			boxCollider->setWidth(collider.mWidth + 0.1f);
+			boxCollider->setHeight(collider.mHeight + 0.1f);
+			boxCollider->setCollideCategory(1);
+			boxCollider->setCollideWithCategory({1, 2, 3});
+			gameObject->addComponent(boxCollider);
+		}
 
-	if (!tileInfo.mColliders.empty())
-	{
-		RigidBody* rigidBody = new RigidBody();
-		rigidBody->setTransform(objectTransform);
-		rigidBody->setFriction(1.0f);
-		gameObject->addComponent(rigidBody);
-		gameObject->setName("Tile");
-	}
+		if (!tileInfo.mColliders.empty())
+		{
+			RigidBody* rigidBody = new RigidBody();
+			rigidBody->setTransform(objectTransform);
+			rigidBody->setFriction(1.0f);
+			gameObject->addComponent(rigidBody);
+			gameObject->setName("Tile");
+		}
 
-	gameObject->setTag(layerName);
-	scene->addGameObject(gameObject);
+		gameObject->setTag(layerName);
+		scene->addGameObject(gameObject);
+	//}
 }
