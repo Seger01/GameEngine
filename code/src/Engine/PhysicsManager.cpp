@@ -21,6 +21,7 @@ void PhysicsManager::updatePhysicsEngine(double timeDilation)
 {
 	double step = 0.02 * timeDilation;
 	mPhysicsEngine.setStep(step);
+	mPhysicsEngine.setSubStep(4);
 	mPhysicsEngine.update();
 }
 

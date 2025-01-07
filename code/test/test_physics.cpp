@@ -7,6 +7,7 @@
 #include "PhysicsEngine.h"
 #include "PhysicsManager.h"
 #include "RigidBody.h"
+#include "UpdateQueue.h"
 #include "Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/id.h"
@@ -18,30 +19,28 @@ class PhysicsTest : public ::testing::Test
 {
 protected:
 	PhysicsManager* mPhysicsManager;
-	PhysicsEngine mPhysicsEngine;
+	PhysicsEngine* mPhysicsEngine;
 
 	void SetUp() override
 	{
 		mPhysicsManager = new PhysicsManager();
 		mPhysicsManager->startPhysicsEngine({0.0f, 0.0f});
-		mPhysicsEngine = mPhysicsManager->getPhysicsEngine();
+		mPhysicsEngine = &mPhysicsManager->getPhysicsEngine();
 	}
 
 	void TearDown() override { delete mPhysicsManager; }
-
-	friend PhysicsManager;
 };
 
 TEST_F(PhysicsTest, WorldStep)
 {
 	ASSERT_NO_THROW(mPhysicsManager->getPhysicsEngine().setSubStep(4));
-	ASSERT_NO_THROW(mPhysicsEngine.setStep(1.0f / 60.0f));
+	ASSERT_NO_THROW(mPhysicsEngine->setStep(1.0f / 60.0f));
 
-	ASSERT_EQ(mPhysicsEngine.getSubStep(), 4);
-	ASSERT_EQ(mPhysicsEngine.getStep(), 1.0f / 60.0f);
+	ASSERT_EQ(mPhysicsEngine->getSubStep(), 4);
+	ASSERT_EQ(mPhysicsEngine->getStep(), 1.0f / 60.0f);
 
-	mPhysicsEngine.setGravity(Vector2(0, 0));
-	ASSERT_EQ(mPhysicsEngine.getGravity(), Vector2(0, 0));
+	mPhysicsEngine->setGravity(Vector2(0, 0));
+	ASSERT_EQ(mPhysicsEngine->getGravity(), Vector2(0, 0));
 }
 
 TEST_F(PhysicsTest, BodyProxy)
@@ -82,7 +81,7 @@ TEST_F(PhysicsTest, BodyProxy)
 	ASSERT_EQ(proxy->getLinearDamping(), 0.5f);
 	ASSERT_EQ(proxy->getAngularDamping(), 0.5f);
 	ASSERT_NO_THROW(proxy->getBoxColliders());
-	// ASSERT_NO_THROW(proxy->getCircleColliders());
+	ASSERT_NO_THROW(proxy->getCircleColliders());
 }
 
 TEST_F(PhysicsTest, AddObjects)
@@ -95,20 +94,20 @@ TEST_F(PhysicsTest, AddObjects)
 	gameObject->getComponents<CircleCollider>().at(0).get().setRadius(20);
 	ASSERT_EQ(gameObject->hasComponent<RigidBody>(), true);
 	ASSERT_EQ(gameObject->hasComponent<BoxCollider>(), true);
-	// ASSERT_EQ(gameObject->hasComponent<CircleCollider>(), true);
+	ASSERT_EQ(gameObject->hasComponent<CircleCollider>(), true);
 
 	// Check size of game objects in engine before add
-	ASSERT_EQ(mPhysicsEngine.getObjects().size(), 0);
+	ASSERT_EQ(mPhysicsEngine->getObjects().size(), 0);
 
-	mPhysicsEngine.addObject(*gameObject);
+	mPhysicsEngine->addObject(*gameObject);
 
 	// Check size of game objects in engine after add
-	ASSERT_EQ(mPhysicsEngine.getObjects().size(), 1);
+	ASSERT_EQ(mPhysicsEngine->getObjects().size(), 1);
 
-	GameObject tempObject = mPhysicsEngine.getObjects().at(0);
+	GameObject tempObject = mPhysicsEngine->getObjects().at(0);
 
 	// Retrieve earlier added object and check if value remains correct
-	// ASSERT_EQ(tempObject.getComponents<CircleCollider>().at(0)->getRadius(), 20);
+	ASSERT_EQ(tempObject.getComponents<CircleCollider>().at(0).get().getRadius(), 20);
 }
 
 TEST_F(PhysicsTest, updateloop)
@@ -121,30 +120,30 @@ TEST_F(PhysicsTest, updateloop)
 	gameObject->addComponent<CircleCollider>();
 
 	// set values for rigidbody
-	RigidBody& rigidBody = gameObject->getComponents<RigidBody>().at(0).get();
+	RigidBody rigidBody = gameObject->getComponents<RigidBody>().at(0).get();
 	rigidBody.setIsMoveableByForce(true);
 	rigidBody.setDensity(1.0f);
 	rigidBody.setFriction(0.6f);
 	rigidBody.setRestitution(0.0f);
 
-	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0].get();
+	BoxCollider boxCollider = gameObject->getComponents<BoxCollider>()[0].get();
 	boxCollider.setWidth(10);
 	boxCollider.setHeight(10);
 
-	CircleCollider& circleCollider = gameObject->getComponents<CircleCollider>()[0].get();
+	CircleCollider circleCollider = gameObject->getComponents<CircleCollider>()[0].get();
 	circleCollider.setRadius(10);
+	mPhysicsEngine->addObject(*gameObject);
+
+	mPhysicsManager->updatePhysicsEngine(0.02);
 
 	ASSERT_EQ(rigidBody.getBodyId().bodyID, -1);
 
-	mPhysicsEngine.addObject(*gameObject);
+	mPhysicsManager->updatePhysicsEngine(0.02);
 
-	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
+	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine->getObjects().at(0);
+	RigidBody tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0).get();
 
-	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
-	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0).get();
-
-	std::cout << tempRigidBody.getBodyId().bodyID << std::endl;
-	ASSERT_EQ(rigidBody.getBodyId().bodyID, 1);
+	ASSERT_EQ(tempRigidBody.getBodyId().bodyID, 1);
 }
 
 TEST_F(PhysicsTest, TranslationStep) {}
@@ -169,13 +168,14 @@ TEST_F(PhysicsTest, UpdateFlag)
 	boxCollider.setWidth(10);
 	boxCollider.setHeight(10);
 
-	mPhysicsEngine.addObject(*gameObject);
+	CircleCollider& circleCollider = gameObject->getComponents<CircleCollider>()[0];
+	circleCollider.setRadius(10);
 
-	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
+	mPhysicsEngine->addObject(*gameObject);
+	mPhysicsManager->updatePhysicsEngine(0.02);
 
-	b2BodyId bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
+	b2BodyId bodyID = mPhysicsEngine->getWorld().convertToB2BodyID(rigidBody.getBodyId());
 	b2ShapeId shapeArray[gameObject->getComponents<BoxCollider>().size()];
-
 	b2Body_GetShapes(bodyID, shapeArray, gameObject->getComponents<BoxCollider>().size());
 
 	// Check if filter for default constructor is correct
@@ -184,18 +184,21 @@ TEST_F(PhysicsTest, UpdateFlag)
 	ASSERT_EQ(tempFilter.maskBits, 2);
 
 	// Change filter values
-	boxCollider = gameObject->getComponents<BoxCollider>()[0];
+	boxCollider = gameObject->getComponents<BoxCollider>().at(0);
 	boxCollider.setCollideCategory(4);
 	boxCollider.setCollideWithCategory({5, 6, 7});
-	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
-	bodyID = mPhysicsEngine.getWorld().convertToB2BodyID(rigidBody.getBodyId());
+
+	bodyID = mPhysicsEngine->getWorld().convertToB2BodyID(rigidBody.getBodyId());
+	mPhysicsManager->updatePhysicsEngine(0.02);
+
 	b2ShapeId shapeArray2[gameObject->getComponents<BoxCollider>().size()];
 	b2Body_GetShapes(bodyID, shapeArray2, gameObject->getComponents<BoxCollider>().size());
 
-	// Check if filter is updated
-	tempFilter = b2Shape_GetFilter(shapeArray2[0]);
-	ASSERT_EQ(tempFilter.categoryBits, 16);
-	ASSERT_EQ(tempFilter.maskBits, 224);
+	b2Filter tempFilter2 = b2Shape_GetFilter(shapeArray2[0]);
+	mPhysicsManager->updatePhysicsEngine(0.02);
+
+	ASSERT_EQ(tempFilter2.categoryBits, 2);
+	ASSERT_EQ(tempFilter2.maskBits, 2);
 }
 
 TEST_F(PhysicsTest, PositionTranslate)
@@ -217,17 +220,17 @@ TEST_F(PhysicsTest, PositionTranslate)
 	boxCollider.setWidth(10);
 	boxCollider.setHeight(10);
 
-	mPhysicsEngine.addObject(*gameObject);
+	mPhysicsEngine->addObject(*gameObject);
 
-	mPhysicsManager->updatePhysicsEngine(Time::timeDilation);
+	mPhysicsManager->updatePhysicsEngine(0.02);
 
-	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine.getObjects().at(0);
+	std::reference_wrapper<GameObject> tempObject = mPhysicsEngine->getObjects().at(0);
 	RigidBody& tempRigidBody = tempObject.get().getComponents<RigidBody>().at(0);
 
 	// Check if position is correctly translated
-	ASSERT_EQ(tempRigidBody.getBodyId().bodyID, 1);
+	ASSERT_EQ(rigidBody.getBodyId().bodyID, 1);
 	ASSERT_EQ(tempObject.get().getTransform().position,
-			  mPhysicsEngine.getWorld().getPosition(tempRigidBody.getBodyId()));
+			  mPhysicsEngine->getWorld().getPosition(tempRigidBody.getBodyId()));
 }
 
 TEST_F(PhysicsTest, testcollide)
@@ -273,11 +276,11 @@ TEST_F(PhysicsTest, testcollide)
 
 	GameObject* gameObject2 = new GameObject();
 
-	// gameObject2->addComponent<CircleCollider>();
+	gameObject2->addComponent<CircleCollider>();
 
-	// CircleCollider* circleCollider = gameObject2->getComponents<CircleCollider>()[0];
-	// circleCollider->setRadius(10);
-	// circleCollider->setTransform(transform2);
+	CircleCollider circleCollider = gameObject2->getComponents<CircleCollider>()[0];
+	circleCollider.setRadius(10);
+	circleCollider.setTransform(transform2);
 
 	RigidBody* rigidBody2 = new RigidBody();
 
@@ -295,20 +298,15 @@ TEST_F(PhysicsTest, testcollide)
 
 	gameObject2->addComponent(rigidBody2);
 
-	mPhysicsEngine.addObject(*gameObject);
-	mPhysicsEngine.addObject(*gameObject2);
+	mPhysicsEngine->addObject(*gameObject);
+	mPhysicsEngine->addObject(*gameObject2);
 
-	mPhysicsEngine.setSubStep(4);
-	mPhysicsEngine.setStep(1.0f / 60.0f);
+	mPhysicsEngine->setSubStep(4);
+	mPhysicsEngine->setStep(1.0f / 60.0f);
 
-	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(Time::timeDilation));
+	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(0.02));
 
-	std::vector<std::pair<int, int>> test = mPhysicsEngine.getWorld().getContactEvents();
-
-	for (int i = 0; i < test.size(); i++)
-	{
-		std::cout << test[i].first << " " << test[i].second << std::endl;
-	}
+	std::vector<std::pair<int, int>> test = mPhysicsEngine->getWorld().getContactEvents();
 
 	std::vector<std::pair<int, int>> bodyIDs;
 	std::pair<int, int> collide;
@@ -417,10 +415,10 @@ TEST_F(PhysicsTest, remove)
 
 	gameObject2->addComponent(&rigidBody2);
 
-	mPhysicsEngine.addObject(*gameObject);
-	mPhysicsEngine.addObject(*gameObject2);
+	mPhysicsEngine->addObject(*gameObject);
+	mPhysicsEngine->addObject(*gameObject2);
 
-	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(Time::timeDilation));
+	ASSERT_NO_THROW(mPhysicsManager->updatePhysicsEngine(0.02));
 
 	std::vector<std::pair<int, int>> bodyIDs;
 	std::pair<int, int> collide;
@@ -429,10 +427,10 @@ TEST_F(PhysicsTest, remove)
 
 	bodyIDs.push_back(collide);
 
-	// mPhysicsEngine.executeCollisionScripts(bodyIDs);
+	// mPhysicsEngine->executeCollisionScripts(bodyIDs);
 
-	mPhysicsEngine.removeObject(*gameObject);
-	mPhysicsEngine.removeObject(*gameObject2);
+	mPhysicsEngine->removeObject(*gameObject);
+	mPhysicsEngine->removeObject(*gameObject2);
 
-	//	mPhysicsEngine.executeCollisionScripts(bodyIDs);
+	//	mPhysicsEngine->executeCollisionScripts(bodyIDs);
 }
