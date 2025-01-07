@@ -60,7 +60,6 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 	}
 
 	// Load the texture from the specified path
-	// SDL_Texture* loadedTexture = IMG_LoadTexture(engine.getRenderSystem().getRenderer().getSDLRenderer(), );
 	SDL_Texture* sdlTexture =
 		IMG_LoadTexture(mRenderer->getSDLRenderer(), FSConverter().getResourcePath(aPngPath).c_str());
 	if (!sdlTexture)
