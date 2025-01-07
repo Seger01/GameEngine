@@ -1,6 +1,12 @@
 #include "RigidBody.h"
 
 /**
+ * @file RigidBody.cpp
+ *
+ * @brief This file contains the implementation of the RigidBody class which is used to
+ */
+
+/**
  * @brief Constructs a RigidBody instance with the specified body flags, body properties, and tag.
  *
  * @param aBodyFlags The flags that define physical behaviors of the body, such as gravity and movability by force.

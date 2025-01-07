@@ -9,6 +9,14 @@
 
 #include <vector>
 
+/**
+ * @file RigidBody.h
+ *
+ * @brief This file contains the declaration of the RigidBody class which is used to
+ * store the properties of a body and send it to the world
+ *
+ */
+
 class RigidBody : public Component
 {
 public:

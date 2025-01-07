@@ -64,10 +64,10 @@ TEST_F(PhysicsTest, BodyProxy)
 
 	Transform transform;
 	transform.position = {0.0f, 0.0f};
-	// gameObject->addComponent<CircleCollider>();
-	// CircleCollider* circleCollider = gameObject->getComponents<CircleCollider>()[0];
-	// circleCollider->setRadius(10);
-	// circleCollider->setTransform(transform);
+	gameObject->addComponent<CircleCollider>();
+	CircleCollider& circleCollider = gameObject->getComponents<CircleCollider>()[0];
+	circleCollider.setRadius(10);
+	circleCollider.setTransform(transform);
 
 	BodyProxy* proxy = new BodyProxy(*gameObject);
 
@@ -91,8 +91,8 @@ TEST_F(PhysicsTest, AddObjects)
 	GameObject* gameObject = new GameObject();
 	gameObject->addComponent<RigidBody>();
 	gameObject->addComponent<BoxCollider>();
-	// gameObject->addComponent<CircleCollider>();
-	// gameObject->getComponents<CircleCollider>().at(0)->setRadius(20);
+	gameObject->addComponent<CircleCollider>();
+	gameObject->getComponents<CircleCollider>().at(0).get().setRadius(20);
 	ASSERT_EQ(gameObject->hasComponent<RigidBody>(), true);
 	ASSERT_EQ(gameObject->hasComponent<BoxCollider>(), true);
 	// ASSERT_EQ(gameObject->hasComponent<CircleCollider>(), true);
@@ -156,7 +156,7 @@ TEST_F(PhysicsTest, UpdateFlag)
 
 	gameObject->addComponent<RigidBody>();
 	gameObject->addComponent<BoxCollider>();
-	// gameObject->addComponent<CircleCollider>();
+	gameObject->addComponent<CircleCollider>();
 
 	// set values for rigidbody
 	RigidBody& rigidBody = gameObject->getComponents<RigidBody>().at(0);
@@ -168,9 +168,6 @@ TEST_F(PhysicsTest, UpdateFlag)
 	BoxCollider& boxCollider = gameObject->getComponents<BoxCollider>()[0];
 	boxCollider.setWidth(10);
 	boxCollider.setHeight(10);
-
-	// CircleCollider* circleCollider = gameObject->getComponents<CircleCollider>()[0];
-	// circleCollider->setRadius(10);
 
 	mPhysicsEngine.addObject(*gameObject);
 
