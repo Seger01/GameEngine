@@ -41,21 +41,23 @@ Samenworking:
 
 Professionele werkhouding:
     + Communicated important design choices to client on time either in person or via email/Teams
-    + Asked questions and acted profesionally during contact hours.
-    + Prepared for the presentations for contact hours when needed.
+    + Asked questions and acted profesionally during contact hours
+    + Prepared for the presentations for contact hours when needed
     - Project documentation in regards to the reasoning behind certain design choices.
 
 Product vs verwachting technisch:
     + Design following API
-    + When design does not follow API, this is discussed with client.
-    + Engine follows proper C++ techniques.
-    + Algorithm present for pathfinding.
-    + Design patterns present where necessary.
+    + When design does not follow API, this is discussed with client
+    + Engine follows proper C++ techniques
+    + Algorithm present for pathfinding
+    + Design patterns present where necessary
 
 Product vs verwachting functioneel:
     + All user stories implemented that were a must-have.
-    + Engine supports different types of games instead of only a single genre of game.
+    + Engine supports different types of games instead of only a single genre of game
     + Unit tests present
     + Demo is easy to use and follow
     + Stress test present
-    - No real game present, only a demo for singleplayer and multiplayer.
+    + Posibility for callgrind and generating coverage reports with gcovr
+    + Can generate doxygen
+    - No real game present, only a demo for singleplayer and multiplayer
