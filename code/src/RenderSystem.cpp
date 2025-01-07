@@ -515,8 +515,68 @@ void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, c
  * @param aCurrentCamera The active camera rendering the scene.
  * @param aScreenViewPort The viewport of the screen.
  */
+// void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort)
+// const
+// {
+//     if (Time::deltaTime == 0)
+//     {
+//         return;
+//     }
+//
+//     if (aCurrentCamera.getDebugOverlay().showFPS)
+//     {
+//         int fps = 1.0f / Time::rawDeltaTime;
+//
+//         renderText(aCurrentCamera, "FPS: " + std::to_string(fps),
+//                 Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
+//                 Vector2(0.5, 0.5), aScreenViewPort);
+//     }
+//
+//     if (aCurrentCamera.getDebugOverlay().renderCameraViewport)
+//     {
+//         mRenderer->renderSquare(Vector2(0, 0), aScreenViewPort.w, aScreenViewPort.h, 0, Color(0, 255, 208), false);
+//     }
+//
+//     if (aCurrentCamera.getDebugOverlay().renderColliders)
+//     {
+//         for (auto& gameObject : aScene.getGameObjects())
+//         {
+//             if (gameObject.get().hasComponent<BoxCollider>())
+//             {
+//                 for (BoxCollider& boxCollider : gameObject.get().getComponents<BoxCollider>())
+//                 {
+//                     Vector2 relativeBoxPosition = boxCollider.getTransform().position;
+//
+//                     Vector2 boxColliderWorldPos =
+//                         gameObject.get().getTransform().position + boxCollider.getTransform().position;
+//
+//                     renderSquare(
+//                             boxColliderWorldPos, boxCollider.getWidth(), boxCollider.getHeight(),
+//                             gameObject.get().getTransform().rotation, Color(0, 0, 255), false, aCurrentCamera,
+//                             aScreenViewPort, gameObject.get().getTransform().scale,
+//                             Point{static_cast<int>(-relativeBoxPosition.x),
+//                             static_cast<int>(-relativeBoxPosition.y)});
+//                 }
+//             }
+//             if (gameObject.get().hasComponent<CircleCollider>())
+//             {
+//                 for (CircleCollider& circleCollider : gameObject.get().getComponents<CircleCollider>())
+//                 {
+//                     Vector2 circleColliderWorldPos =
+//                         gameObject.get().getTransform().position + circleCollider.getTransform().position;
+//
+//                     renderCircle(circleColliderWorldPos, circleCollider.getRadius(), Color(0, 0, 255), false,
+//                             aCurrentCamera, aScreenViewPort, gameObject.get().getTransform().scale);
+//                 }
+//             }
+//         }
+//     }
+// }
 void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
+	static float smoothedFPS = 60.0f;		   // Start with an initial estimated FPS value
+	static const float smoothingFactor = 0.1f; // Smoothing factor between 0 (no smoothing) and 1 (full smoothing)
+
 	if (Time::deltaTime == 0)
 	{
 		return;
@@ -524,9 +584,14 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 
 	if (aCurrentCamera.getDebugOverlay().showFPS)
 	{
-		int fps = 1.0f / Time::rawDeltaTime;
+		// Calculate the current FPS
+		float currentFPS = 1.0f / Time::rawDeltaTime;
 
-		renderText(aCurrentCamera, "FPS: " + std::to_string(fps),
+		// Apply exponential smoothing
+		smoothedFPS = (smoothingFactor * currentFPS) + ((1.0f - smoothingFactor) * smoothedFPS);
+
+		// Render the smoothed FPS
+		renderText(aCurrentCamera, "FPS: " + std::to_string(static_cast<int>(smoothedFPS)),
 				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
