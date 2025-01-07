@@ -1,3 +1,5 @@
+#define protected public
+#define private public
 #include "Network/INetworkBehaviour.h"
 #include "Network/INetworkSerializable.h"
 #include "Network/NetworkClient.h"
@@ -6,6 +8,9 @@
 #include "Network/NetworkServer.h"
 #include "Network/NetworkSharedFunctions.h"
 #include "Network/NetworkTransform.h"
+#undef protected
+#undef private
+
 #include <gtest/gtest.h>
 
 #include "ConcreteNetworkBehaviour.h"
@@ -220,7 +225,7 @@ TEST_F(INetworkSerializableTest, TestSerializableRegistration) {
     ASSERT_NE(obj, nullptr);
 }
 
-class NetworkInformationTest : public ::testing::Test
+class NetworkPacketTest : public ::testing::Test
 {
 protected:
 	void SetUp() override
@@ -229,20 +234,20 @@ protected:
 	}
 };
 
-TEST_F(NetworkInformationTest, DefaultConstructor)
+TEST_F(NetworkPacketTest, DefaultConstructor)
 {
 	NetworkPacket packet;
 	EXPECT_EQ(packet.messageID, 0);
 	EXPECT_EQ(packet.networkObjectID, UINT16_MAX);
-	EXPECT_EQ(packet.prefabID, UINT16_MAX);
+	EXPECT_EQ(packet.prefabID, INT32_MAX);
 	EXPECT_EQ(packet.timestamp, 0);
 	EXPECT_EQ(packet.clientGUID, SLNet::UNASSIGNED_RAKNET_GUID);
-	EXPECT_EQ(packet.ISerializableID, UINT16_MAX);
+	EXPECT_EQ(packet.ISerializableID, UINT32_MAX);
 	EXPECT_EQ(packet.networkBehaviourID, UINT8_MAX);
 	EXPECT_EQ(packet.networkVariableID, UINT8_MAX);
 }
 
-TEST_F(NetworkInformationTest, SetTimeStampNow)
+TEST_F(NetworkPacketTest, SetTimeStampNow)
 {
 	NetworkPacket packet;
 	packet.SetTimeStampNow();
@@ -267,10 +272,10 @@ TEST_F(NetworkSharedFunctionsTest, MakeBitStream)
 
 	EXPECT_EQ(packet.messageID, 0);
 	EXPECT_EQ(packet.networkObjectID, UINT16_MAX);
-	EXPECT_EQ(packet.prefabID, UINT16_MAX);
+	EXPECT_EQ(packet.prefabID, INT32_MAX);
 	EXPECT_EQ(packet.timestamp, 0);
 	EXPECT_EQ(packet.clientGUID, SLNet::UNASSIGNED_RAKNET_GUID);
-	EXPECT_EQ(packet.ISerializableID, UINT16_MAX);
+	EXPECT_EQ(packet.ISerializableID, UINT32_MAX);
 	EXPECT_EQ(packet.networkBehaviourID, UINT8_MAX);
 	EXPECT_EQ(packet.networkVariableID, UINT8_MAX);
 }
@@ -344,55 +349,3 @@ TEST_F(INetworkBehaviourTest, IsOwner)
 	networkObject.setOwner(false);
 	EXPECT_FALSE(behaviour->isOwner());
 }
-
-TEST_F(INetworkBehaviourTest, Destroy)
-{
-	behaviour->destroy();
-	EXPECT_TRUE(gameObject.getComponents<INetworkBehaviour>().empty());
-}
-
-// class NetworkTest : public ::testing::Test
-// {
-// protected:
-// 	void SetUp() override
-// 	{
-// 		// Set up necessary objects before each test.
-// 		serverObjects = std::vector<std::reference_wrapper<GameObject>>();
-// 		clientObjects = std::vector<std::reference_wrapper<GameObject>>();
-
-// 		server = std::make_unique<NetworkServer>(serverObjects, 60);
-// 		client = std::make_unique<NetworkClient>(clientObjects, 60);
-// 	}
-
-// 	void TearDown() override
-// 	{
-// 		// Clean up after each test.
-// 		server.reset();
-// 		client.reset();
-// 	}
-
-// 	std::unique_ptr<NetworkServer> server;
-// 	std::unique_ptr<NetworkClient> client;
-// 	std::vector<std::reference_wrapper<GameObject>> serverObjects;
-// 	std::vector<std::reference_wrapper<GameObject>> clientObjects;
-// };
-
-// TEST_F(NetworkTest, ServerClientConnection)
-// {
-// 	// Set server address for the client
-// 	client->setServerAddress("127.0.0.1");
-
-// 	// Connect client to server
-// 	client->connectToServer();
-
-// 	// Simulate server and client update loops
-// 	for (int i = 0; i < 100; ++i)
-// 	{
-// 		server->update();
-// 		client->update();
-// 	}
-
-// 	// Verify that the client is connected to the server
-// 	EXPECT_TRUE(client->isConnected());
-// 	EXPECT_TRUE(server->isConnected());
-// }

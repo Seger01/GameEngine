@@ -56,6 +56,11 @@ public:
 	GameObject* instantiate(int aPrefabID, Transform aTransform = Transform());
 	void destroy(GameObject& aObject);
 
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
+	void clearObjects();
+
 private:
 	void startServer();
 	void startClient();
@@ -65,11 +70,6 @@ private:
 	void destroyPlayer(SLNet::RakNetGUID playerID);
 
 	std::vector<std::reference_wrapper<GameObject>>& getGameObjects();
-
-	void addObject(GameObject& aObject);
-	void removeObject(GameObject& aObject);
-	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
-	void clearObjects();
 
 private:
 	NetworkRole mRole;										  ///< The role of the network manager.
