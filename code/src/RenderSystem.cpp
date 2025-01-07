@@ -524,7 +524,7 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 
 	if (aCurrentCamera.getDebugOverlay().showFPS)
 	{
-		int fps = 1.0f / Time::deltaTime;
+		int fps = 1.0f / Time::rawDeltaTime;
 
 		renderText(aCurrentCamera, "FPS: " + std::to_string(fps),
 				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
