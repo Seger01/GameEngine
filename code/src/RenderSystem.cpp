@@ -517,6 +517,9 @@ void RenderSystem::renderCircle(const Vector2& aPosition, const float aRadius, c
  */
 void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCamera, const Rect& aScreenViewPort) const
 {
+	static float smoothedFPS = 60.0f;		   // Start with an initial estimated FPS value
+	static const float smoothingFactor = 0.1f; // Smoothing factor between 0 (no smoothing) and 1 (full smoothing)
+
 	if (Time::deltaTime == 0)
 	{
 		return;
@@ -524,9 +527,14 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 
 	if (aCurrentCamera.getDebugOverlay().showFPS)
 	{
-		int fps = 1.0f / Time::deltaTime;
+		// Calculate the current FPS
+		float currentFPS = 1.0f / Time::rawDeltaTime;
 
-		renderText(aCurrentCamera, "FPS: " + std::to_string(fps),
+		// Apply exponential smoothing
+		smoothedFPS = (smoothingFactor * currentFPS) + ((1.0f - smoothingFactor) * smoothedFPS);
+
+		// Render the smoothed FPS
+		renderText(aCurrentCamera, "FPS: " + std::to_string(static_cast<int>(smoothedFPS)),
 				   Vector2(aCurrentCamera.getOrigin().x + 5, aCurrentCamera.getOrigin().y + 5), Color(0, 255, 0),
 				   Vector2(0.5, 0.5), aScreenViewPort);
 	}
