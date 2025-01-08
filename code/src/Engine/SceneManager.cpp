@@ -184,9 +184,15 @@ void SceneManager::loadScene(int index)
 
 	currentScene->clearPersistentGameObjects();
 
-	if (index >= 0 && index < mScenes.size())
+	for (int i = 0; i < mScenes.size(); ++i)
 	{
-		mCurrentSceneIndex = index;
+		if (mScenes[i]->getID() == index)
+		{
+			std::cout << "Loading scene with ID: " << index << std::endl;
+			mCurrentSceneIndex = i;
+			EngineBravo::getInstance().getAudioManager().wake();
+			break;
+		}
 	}
 
 	currentScene = &getCurrentScene();
@@ -195,6 +201,10 @@ void SceneManager::loadScene(int index)
 	{
 		currentScene->addPersistentGameObject(&object.get());
 		// Add the object to the update list
+		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
+	}
+	for (GameObject& object : currentScene->getGameObjects())
+	{
 		EngineBravo::getInstance().getUpdateQueue().addToUpdateObjects(object);
 	}
 	EngineBravo::getInstance().getUpdateQueue().updateAdditions();
@@ -206,6 +216,11 @@ void SceneManager::loadScene(int index)
  */
 void SceneManager::loadScene(const std::string& sceneName)
 {
+	if (mScenes.size() == 0)
+	{
+		throw std::runtime_error("Requested to load scene but no scene exist");
+	}
+
 	// Release all objects from the managers
 	EngineBravo::getInstance().getUpdateQueue().clearManagerObjects();
 
@@ -227,6 +242,11 @@ void SceneManager::loadScene(const std::string& sceneName)
 			mCurrentSceneIndex = i;
 			EngineBravo::getInstance().getAudioManager().wake();
 			break;
+		}
+		if (i == mScenes.size() - 1)
+		{
+			// thow runtime error if scene does not exist but tell the user which scene name was incorrect
+			throw std::runtime_error("Scene name does not exist: " + sceneName);
 		}
 	}
 
