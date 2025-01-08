@@ -14,7 +14,7 @@
  * @param aRadius The radius of the circle collider.
  * @param aTag A string tag to identify the CircleCollider component.
  */
-CircleCollider::CircleCollider(float aRadius, std::string aTag)
+CircleCollider::CircleCollider(float aRadius, const std::string& aTag)
 	: Collider{aTag}, mRadius(aRadius), mIsTrigger(false), mCollideCategory(1), mCollideWithCategory({1}),
 	  mIsUpdated(false)
 {

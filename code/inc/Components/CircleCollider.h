@@ -12,7 +12,7 @@
 class CircleCollider : public Collider
 {
 public:
-	CircleCollider(float aRadius = 0.0f, std::string aTag = "defaultCircleCollider");
+	CircleCollider(float aRadius = 0.0f, const std::string& aTag = "defaultCircleCollider");
 	float getRadius() const;
 	void setRadius(float radius);
 

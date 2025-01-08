@@ -1,14 +1,6 @@
 #include "Physics/World.h"
 
 /**
- * @file World.cpp
- *
- * @brief This file contains the implementation of the World class which is used to
- * store the properties of a world and send it to the box2d world
- *
- */
-
-/**
  * @brief Default constructor
  */
 World::World() {}
