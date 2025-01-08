@@ -1,8 +1,3 @@
-/**
- * @file EngineBravo.cpp
- *
- * @brief Implementation of the EngineBravo class.
- */
 #include "EngineBravo.h"
 
 #include <SDL.h>
@@ -22,31 +17,19 @@
 #include "Sprite.h"
 #include "Text.h"
 
-/**
- * @brief Construct a new EngineBravo::EngineBravo object. Sets framre rate limit to 60.
- */
 EngineBravo::EngineBravo() : mFrameRateLimit(60), mRunning(false) {}
 
 EngineBravo::~EngineBravo() {}
 
-/**
- * @brief Get the singleton instance of the EngineBravo class. If it is not yet instantiated, it will be created.
- *
- * @return EngineBravo& The singleton instance of the EngineBravo class.
- */
 EngineBravo& EngineBravo::getInstance()
 {
 	static EngineBravo instance;
 	return instance;
 }
 
-/**
- * @brief Initialize the engine. Sets the renderer for the resource manager, updates the scene manager, initializes the
- * network manager, initializes the time, initializes the UI manager, starts the physics engine.
- */
 void EngineBravo::initialize()
 {
-	mResourceManager.setRenderer(&mRenderSystem.getRenderer());
+	this->mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
 	mSceneManager.update();
 
@@ -57,13 +40,10 @@ void EngineBravo::initialize()
 	mUIManager.init();
 
 	mPhysicsManager.startPhysicsEngine(Vector2(0, 0.0f));
+
+	return;
 }
 
-/**
- * @brief Run the engine. This function is the main loop of the engine. It handles input, updates the scene, runs
- * behaviour scripts, updates the physics engine, updates the particle system, renders the scene, updates the network
- * manager, limits the frame rate.
- */
 void EngineBravo::run()
 {
 	Input& input = Input::getInstance();
@@ -112,18 +92,10 @@ void EngineBravo::run()
 	}
 }
 
-/**
- * @brief Stop the engine. Sets the running flag to false.
- */
 void EngineBravo::stopEngine() { mRunning = false; }
 
 void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRate; }
 
-/**
- * @brief Handle an event. This function is called when an event is triggered.
- *
- * @param aEvent The event to handle.
- */
 void EngineBravo::handleEvent(const Event& aEvent)
 {
 	switch (aEvent.type)
@@ -136,10 +108,8 @@ void EngineBravo::handleEvent(const Event& aEvent)
 	}
 }
 
-/**
- * @brief function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next
- * frame if it renders too quickly
- */
+// function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next
+// frame if it renders too quickly
 void EngineBravo::limitFrameRate(int aFrameRate)
 {
 	// Minimum time per frame in milliseconds
@@ -181,10 +151,6 @@ UIManager& EngineBravo::getUIManager() { return mUIManager; }
 
 NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
-/**
- * @brief Start the behaviour scripts of all objects in the current scene. This function is called at the start of the
- * engine loop.
- */
 void EngineBravo::startBehaviourScripts()
 {
 	Scene& currentScene = mSceneManager.getCurrentScene();
@@ -211,10 +177,6 @@ void EngineBravo::startBehaviourScripts()
 	}
 }
 
-/**
- * @brief Run the behaviour scripts of all objects in the current scene. This function is called every frame of the
- * engine. Only calls the onUpdate if the object is active.
- */
 void EngineBravo::runBehaviourScripts()
 {
 	Scene& currentScene = mSceneManager.getCurrentScene();
