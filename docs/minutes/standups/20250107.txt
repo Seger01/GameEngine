@@ -1,0 +1,25 @@
+Minutes 07-01-2025
+
+What was discussed:
+
+What has been done:
+- Siem:
+- Angel: -
+- Ronan: -
+- Sean: fixed network tests.
+- Seger: doxygen
+
+What is going to be done:
+- Siem:
+- Angel: make box and circle collider inherit collider. check and make tests
+- Ronan: Check what needs to be zipped. check and make tests
+- Sean: check and make tests
+- Seger: check and make tests
+
+Roadblocks:
+- Siem:
+- Angel:
+- Ronan:
+- Sean:
+- Seger:
+

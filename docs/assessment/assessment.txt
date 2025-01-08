@@ -5,7 +5,6 @@ Preparation for project assessment on tuesday 14-01
 -   Standup minutes
 -   Timesheets
 -   Trello board
--   Design document
 
 2. showing the code
 -   Class diagram
@@ -24,5 +23,42 @@ Note. Documents to hand in
 -   Source code
 -   Generated Doxygen
 -   Class diagram (as an image file)
--   Design document
 -   Minutes
+-   ReadMe for .zip
+
+
+Arguments for grades:
+Stakeholders:
+    + Weekly update emails
+    + Discussed with customer about issues
+    + Discussed with customer about what features are added to the Engine
+    - Could have discussed more about features with customer
+
+Samenworking:
+    + Every development day started with a Standup
+    + Notes about every meeting
+    + Hours worked on project are even
+    - Taakverdeling
+
+Professionele werkhouding:
+    + Communicated important design choices to client on time either in person or via email/Teams
+    + Asked questions and acted profesionally during contact hours
+    + Prepared for the presentations for contact hours when needed
+    - Project documentation in regards to the reasoning behind certain design choices.
+
+Product vs verwachting technisch:
+    + Design following API
+    + When design does not follow API, this is discussed with client
+    + Engine follows proper C++ techniques
+    + Algorithm present for pathfinding
+    + Design patterns present where necessary
+
+Product vs verwachting functioneel:
+    + All user stories implemented that were a must-have.
+    + Engine supports different types of games instead of only a single genre of game
+    + Unit tests present
+    + Demo is easy to use and follow
+    + Stress test present
+    + Posibility for callgrind and generating coverage reports with gcovr
+    + Can generate doxygen
+    - No real game present, only a demo for singleplayer and multiplayer
