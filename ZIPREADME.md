@@ -9,6 +9,9 @@ https://github.com/Engine-BRAVO/Bullet_Bravo
 This folder contains the code folder and docs folder.
 It also contains the Doxyfile and a script to run the unit tests for the engine.
 
+## Resources folder
+This folder contains the resources needed to run the unit tests.
+
 ## code folder
 This folder contains the source code for the engine.
 It also contains a subfolder containing the tests for the engine.
@@ -18,7 +21,7 @@ This folder contains the documentation for the Engine-BRAVO project.
 It contains the following subfolders:
 
 ### assessment
-Contains the assessment.txt and a handin subfolder containing the papierwerk document.
+Contains the assessment.txt. 
 
 ### Diagrams
 Contains the designs for the engine (Class diagrams).
@@ -38,10 +41,6 @@ Contains the Plan of Attack, codestandard, and requirements documents,
 ### timesheets
 Contains the timesheets for each group member.
 Execute the calculate_hours script to get an overview of the total hours per person
-
-# Game_project_template
-This folder contains the game project template.
-Using this template, a game developer can get started with using the engine and creating a game.
 
 # Bullet Bravo
 This folders contains the code for the demo game.

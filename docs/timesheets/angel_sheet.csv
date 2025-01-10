@@ -82,3 +82,4 @@ Date,Time,Duration(in hours),Activity
 2024-12-17, 8:30, 7.0, worked on 50 hz physics update
 2024-12-18, 8:30, 8.0, finished 50 hz updated; finished scaling for boxcollider
 2024-12-19, 8:30, 8.0, finished scaling for circle collider; added doxygen
+2024-01-07, 09:15, 4   , Final project meeting; worked on tests
