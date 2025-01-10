@@ -1,6 +1,8 @@
 # We'll use defaults from the LLVM style, but with 4 columns indentation.
 BasedOnStyle: LLVM
+UseTab: Always
 IndentWidth: 4
+TabWidth: 4
 
 
 Language: Cpp
@@ -15,3 +17,6 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 #IndentAccessModifiers: false
 AccessModifierOffset: -4
+
+BreakBeforeBraces: Allman
+SeparateDefinitionBlocks: Always

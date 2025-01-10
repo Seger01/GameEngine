@@ -30,4 +30,4 @@ rm -rf "$COVERAGE_DIR"
 mkdir -p "$COVERAGE_DIR"
 
 # Generate the coverage report, excluding external and build directories
-gcovr -e external -e build --html --html-details -o "$COVERAGE_DIR/coverage.html" --print-summary --delete
+gcovr -e external -e build -e test --html --html-details -o "$COVERAGE_DIR/coverage.html" --print-summary --delete

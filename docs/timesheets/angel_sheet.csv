@@ -33,7 +33,7 @@ Date,Time,Duration(in hours),Activity
 2024-09-27, 15:00, 0.75, cleaned up physics poc code
 2024-09-30, 14:30, 1.5, added movement and keyboard inputs to physics poc
 2024-10-01, 11:00, 2.25, attempted code cleanup for physics poc but ended up making a mess and will restart
-2024-10-02, 09:00, 6.00, finished physics poc
+2024-10-02, 09:00, 6.0, finished physics poc
 2024-10-03, 09:30, 1.5, sick
 2024-10-04, 09:00, 3.5, sick
 2024-10-07, 11:00, 1.5, Project class
@@ -51,3 +51,34 @@ Date,Time,Duration(in hours),Activity
 2024-11-01, 11:45, 5.25, worked on engine design and validation app
 2024-11-02, 19:15, 0.5, added library choice to design doc
 2024-11-03, 18:45, 0.5, added intro for physics section; small addition to library choice
+2024-11-04, 8:45, 7.0, Meeting with Bob; worked on physics engine
+2024-11-06, 8:15, 7.75, worked on physics engine
+2024-11-08, 8:30, 7.30, worked on physics engine
+2024-11-11, 10:00, 5.0, worked on physics engine; worked on contact listener; added movemeny by force;
+2024-11-13, 8:00, 8.75, worked on physics; added body create on run
+2024-11-14, 8:30, 7.5, worked on physics; integrated code to test game
+2024-11-15, 9:00, 1.5, presenting progress to class
+2024-11-15, 11:30, 0.5, fixed sensor events
+2024-11-14, 13:30, 0.5, fixed enable/disable collide
+2024-11-19, 9:00, 7, Bug hunting in physics.
+2024-11-20, 8:00, 8.5, Fixed translation step physics; finished update flags; started writing tests
+2024-11-20, 20:00, 0.5, continued writing tests
+2024-11-21, 8:00, 5.0, continued writing tests; fixed ids box2d
+2024-11-21, 13:00, 2.0, continued physics tests;
+2024-11-23, 10:00, 3.0, finished physics tests; start at implementing circlecollider; writing fix for translate step offset when using colliders of different sizes
+2024-11-26, 8:30, 8.5, Added box2d remove function; project class with bob
+2024-11-27, 8:00, 8.75, helped Siem debug updatequeue; added collision filtering; addded rotational force to box2d body; finished circle colliders
+2024-11-28, 13:00, 2.0, Re wrote some tests; added temporary fix for translate step
+2024-11-29, 8:00, 2.25, writing tests for physics delete handler branch
+2024-11-29, 12:30, 4.0, fixing physics bug; writing tests physics delete handler
+2024-12-03, 7:45, 8.0, Helped with update queue bug; fixing translate step for multiple colliders
+2024-12-04, 7:45, 9.0, Finished fixing translate; Fixed physics bugs; added physics tests; attempt at rotate fix
+2024-12-04, 8:00, 8.0, Added circle colliders; writing tests;
+2024-12-09, 8:15, 8.5, Fixing rotation
+2024-12-10, 8:15, 7.5, Fixing rotation
+2024-12-11, 8:15, 8.25, Added physics features
+2024-12-12, 11:00, 1.5, Project class
+2024-12-13, 9:45, 5.25, applying code standards;
+2024-12-17, 8:30, 7.0, worked on 50 hz physics update
+2024-12-18, 8:30, 8.0, finished 50 hz updated; finished scaling for boxcollider
+2024-12-19, 8:30, 8.0, finished scaling for circle collider; added doxygen

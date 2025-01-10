@@ -1,39 +1,51 @@
+/**
+ * @file Component.cpp
+ *
+ * @brief This file contains the implementation of the Component class
+ */
 #include "Component.h"
 
-Component::Component(std::string aTag) : mTag(aTag) {}
+/**
+ * @brief Component constructor. Sets the tag to the argument value, and sets the component to active.
+ *
+ * @param aTag The tag of the component. Defaults to "defaultComponent".
+ */
+Component::Component(const std::string& aTag) : mGameObject{nullptr}, mTag(aTag), mActive(true) {}
 
-// Copy constructor
-Component::Component(const Component& other)
-    : mGameObject(other.mGameObject), mTag(other.mTag), mActive(other.mActive) {}
+/**
+ * @brief Clone the component. Mandatory for the prototype pattern, and all derived classes should override this.
+ */
+std::unique_ptr<Component> Component::clone() const { return std::make_unique<Component>(*this); }
 
-// Copy assignment operator
-Component& Component::operator=(const Component& other) {
-    if (this == &other)
-        return *this;
+/**
+ * @brief Set the parent GameObject of the component.
+ *
+ * @param aParentObject The GameObject to set as the parent.
+ */
+void Component::setGameObjectParent(GameObject* aParentObject) { mGameObject = aParentObject; }
 
-    mGameObject = other.mGameObject;
-    mTag = other.mTag;
-    mActive = other.mActive;
+/**
+ * @brief Check if the component is active
+ *
+ * @return true if the component is active, false otherwise
+ */
+bool Component::isActive() { return mActive; }
 
-    return *this;
-}
+/**
+ * @brief Set the active state of the component
+ *
+ * @param aState The state to set the component to
+ */
+void Component::setActive(bool aState) { mActive = aState; }
 
-// Move constructor
-Component::Component(Component&& other) noexcept
-    : mGameObject(other.mGameObject), mTag(std::move(other.mTag)), mActive(other.mActive) {
-    other.mGameObject = nullptr;
-}
+/**
+ * @brief Get the tag of the component
+ */
+std::string Component::getTag() { return mTag; }
 
-// Move assignment operator
-Component& Component::operator=(Component&& other) noexcept {
-    if (this == &other)
-        return *this;
-
-    mGameObject = other.mGameObject;
-    mTag = std::move(other.mTag);
-    mActive = other.mActive;
-
-    other.mGameObject = nullptr;
-
-    return *this;
-}
+/**
+ * @brief Set the tag of the component
+ *
+ * @param aTag The tag to set
+ */
+void Component::setTag(const std::string& aTag) { mTag = aTag; }

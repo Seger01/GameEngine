@@ -2,38 +2,86 @@
 
 package Physics{
 class PhysicsEngine {
++ PhysicsEngine()
+    + ~PhysicsEngine()
 
-    + updateReferences(vector<GameObject*>&) : void
-    + update() : void
-    + setSubStep() : void
-    + getSubStep() : int
-    + executeCollisionScripts(vector<int>) : void
-    + getBody(int bodyID) : GameObject
+    + getStep() const : float
+    + getSubStep() const : float
+    + getWorld() : World&
 
-    - GameObjects : vector<GameObject*>
-    - step : float
-    - subStep : int
+    + setStep(float) : void
+    + setSubStep(int) : void
+    + setGravity(const Vector2 &aGravity) : void
+
+    + getGravity() const : Vector2
+
+    + addObject(GameObject &aObject) : void
+    + removeObject(GameObject &aObject) : void
+    + getObjects() const : const std::vector<std::reference_wrapper<GameObject>> &
+    + clearObjects() : void
+
+    + executeCollisionScripts(const std::vector<std::pair<int, int>> &aBodyIDs) : void
+
+    + convertToBox2D(const std::vector<std::reference_wrapper<GameObject>> &aGameObjects) : void
+    + convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>> &aGameObjects) : void
+
+    + getGameObjectByID(int aID) : GameObject&
+
+    - createWorld(const Vector2 &aGravity) : void
+    - createBodies() : void
+
+    - update() : void
+    - updateFlags() : void
+    - setPositions() : void
+    - applyForces() : void
+
+    - mObjects : std::vector<std::reference_wrapper<GameObject>>
+    - mWorld : World
+    - mStep : float
+    - mSubStep : int
 
 }
 
 class BodyProxy {
-    + BodyProxy(GameObject&)
-    + defineBodyType() : void
-    + getBodyFlags() : struct
-    + getBodyProperties() : struct
-    + getBodyType() : enum
-    + getPosition() : point
-    + getSize() : point
+    + BodyProxy(const std::reference_wrapper<GameObject> &aGameObject)
+    + ~BodyProxy()
 
+    + processBodyType() : void
 
-    - mPosition : point
-    - mSize : point
+    + getPosition() const : Vector2
+    + getRotation() const : float
+
+    + getHasGravity() const : bool
+    + getIsMoveableByForce() const : bool
+    + getCanRotate() const : bool
+    + getCanCollide() const : bool
+    + getBodyType() const : BodyType
+
+    + getLinearDamping() const : float
+    + getAngularDamping() const : float
+
+    + getDensity() const : float
+    + getFriction() const : float
+    + getRestitution() const : float
+
+    + getMass() const : float
+    + getGravityScale() const : float
+
+    + getBoxColliders() const : std::vector<std::reference_wrapper<BoxCollider>>
+    + getCircleColliders() const : std::vector<std::reference_wrapper<CircleCollider>>
+
+    - mPosition : Vector2
+    - mRotation : float
 
     - mHasGravity : bool
     - mIsMoveableByForce : bool
     - mCanRotate : bool
+    - mCanCollide : bool
 
-    - mBodyType : Enum 
+    - mBodyType : BodyType
+
+    - mLinearDamping : float
+    - mAngularDamping : float
 
     - mDensity : float
     - mFriction : float
@@ -42,39 +90,59 @@ class BodyProxy {
     - mMass : float
     - mGravityScale : float
 
+    - mBoxColliders : std::vector<std::reference_wrapper<BoxCollider>>
+    - mCircleColliders : std::vector<std::reference_wrapper<CircleCollider>>
+
 }
 
 class World {
-
-    + World(b2Vec2 Gravity)
++ World(const Vector2 &aGravity)
+    + World()
 
     + executeWorldStep(float step, int subStep) : void
-    + reset() : void
 
-    + createBody(BodyProxy& bodyProxy) : b2BoxId
-    + updateBody(b2BodyId bodyID, BodyProxy&) : void
-    + applyForce(b2BodyId bodyID, point force): void
+    + createBody(const BodyProxy &aBodyProxy) : BodyID
+    + createShape(const BodyProxy &aBodyProxy, const BodyID &aBodyID) : void
 
-    + setPosition(b2BodyId bodyID, point pos) : void
-    + setGravity(point gravity) : void
+    + updateBodyPosition(const BodyProxy &aBodyProxy, const BodyID &aBodyID) : void
+    + updateBodyProperties(const BodyProxy &aBodyProxy, const BodyID &aBodyID) : void
+    + updateShapeProperties(const BodyProxy &aBodyProxy, const BodyID &aBodyID) : void
+    + updateShapeSize(const BodyProxy &aBodyProxy, const BodyID &aBodyID) : void
 
-    + getPosition(b2BodyId bodyID) : point
-    + getGravity() : point
+    + deleteBody(const BodyID &aBodyID) : void
 
-    + checkContactEvent() : vector<int>
+    + applyLinearForce(const std::vector<Vector2> &aForce, const BodyID &aBodyID) : void
+    + applyTorque(const std::vector<float> &aTorque, const BodyID &aBodyID) : void
 
-    - mWorldID : b2worldId
+    + setGravity(const Vector2 &aGravity) : void
+    + setPosition(const Vector2 &aPosition, float aRotation, const BodyID &aBodyID) : void
+    + setRotation(float aRotation, const BodyID &aBodyID) : void
+    + setLinearVelocity(const Vector2 &aVelocity, const BodyID &aBodyID) : void
+    + setAngularVelocity(float aVelocity, const BodyID &aBodyID) : void
+    + setBodyActivity(bool aState, const BodyID &aBodyID) : void
+
+    + getGravity() const : Vector2
+    + getPosition(const BodyID &aBodyID) : Vector2
+    + getRotation(const BodyID &aBodyID) : float
+    + getLinearVelocity(const BodyID &aBodyID) : Vector2
+    + getAngularVelocity(const BodyID &aBodyID) : float
+
+    + convertToB2BodyID(const BodyID &aBodyID) : b2BodyId
+    + getContactEvents() const : std::vector<std::pair<int, int>>
+    + getSensorEvents() const : std::vector<std::pair<int, int>>
+
+    - mWorldID : b2WorldId
+    - mGravity : Vector2
+
+
+
+
+
 }
-
-PhysicsEngine *-- "1" World
-BodyProxy -left-> PhysicsEngine
-
 }
 
 Physics *-- "1" PhysicsEngine
+PhysicsEngine *-- "1" World
+BodyProxy -left-> PhysicsEngine
 
-' check oncollide events van game objecten
-' collisions uitlezen via contact array
-' maak functie die body id terug kan leiden naar game object
 @enduml
-

@@ -3,49 +3,55 @@
 
 #include "Camera.h"
 #include "GameObject.h"
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
 
-class Scene {
+class Scene
+{
 public:
-    friend class SceneManager;
-    ~Scene();
-    void addGameObject(GameObject* object);
-    void removeGameObject(int id);
-    void removeGameObject(GameObject* object);
-    GameObject& getGameObject(int id);
+	friend class SceneManager;
+	~Scene();
 
-    int addCamera();
-    void removeCamera(int id);
-    Camera& getCamera(int id);
-    void setActiveCamera(int id);
-    Camera& getActiveCamera();
+	void update();
 
-    int getID();
-    std::string getName();
+	void addGameObject(GameObject* object);
+	void requestGameObjectRemoval(int id);
+	void requestGameObjectRemoval(GameObject* object);
+	GameObject& getGameObject(int id);
 
-    std::vector<GameObject*>& getGameObjects();
-    std::vector<GameObject*> getGameObjectsWithTag(const std::string& tag);
+	std::vector<Camera*> getCameras() const;
+	Camera* getCameraWithTag(const std::string& tag) const;
+	Camera* getMainCamera() const;
 
-    void addPersistentGameObject(GameObject* object);
-    void removePersistentGameObject(GameObject* object);
-    std::vector<GameObject*>& getPersistentGameObjects();
-    void clearPersistentGameObjects();
+	int getID();
+	std::string getName();
 
-    void releasePersistentGameObjects();
+	std::vector<std::reference_wrapper<GameObject>> getGameObjects() const;
+	std::vector<std::reference_wrapper<GameObject>> getGameObjectsWithTag(const std::string& tag);
 
-private:
-    Scene(std::string aSceneName, int aSceneID);
+	void addPersistentGameObject(GameObject* object);
+	std::vector<std::reference_wrapper<GameObject>>& getPersistentGameObjects();
+	void clearPersistentGameObjects();
+	void releasePersistentGameObjects();
+
+	std::vector<std::reference_wrapper<GameObject>> getGameObjectsToBeRemoved();
 
 private:
-    std::vector<std::unique_ptr<GameObject>> mGameObjects;
-    std::vector<GameObject*> mPersistentGameObjects;
+	Scene(std::string aSceneName, int aSceneID);
 
-    std::vector<std::unique_ptr<Camera>> mCameras;
-    int mActiveCameraIndex;
-    std::string mSceneName;
-    int mSceneID = -1;
+	void removeGameObject(GameObject* aObject);
+	void removePersistentGameObject(GameObject* object);
+
+private:
+	std::vector<std::unique_ptr<GameObject>> mGameObjects;
+	std::vector<std::reference_wrapper<GameObject>> mPersistentGameObjects;
+	std::vector<std::reference_wrapper<GameObject>> mGameObjectsToRemove;
+
+	int mActiveCameraIndex;
+	std::string mSceneName;
+	int mSceneID = -1;
 };
 
 #endif // SCENE_H

@@ -1,0 +1,24 @@
+Minutes 05-12-24
+
+What was discussed:
+
+What has been done:
+- Siem: Help Sean with multiplayer. Update issue with pausing music. Update render code to follow code standard.
+- Angel: Finished translation for physics, worked on rotating colliders. Fixed issues with scene switching physics.
+- Ronan: Worked on demo game implementation (now almost finished).
+- Sean: Networking: let game programmer create their own network packets. Ran into issues with this.
+- Seger: Viewport system implementation and layered rendering. Helped with demo game implementation.
+
+What is going to be done:
+- Siem: Adding stress test room to demo game.
+- Angel: Implement circle colliders.
+- Ronan: Updating code to follow code standard.
+- Sean: Fix aforementioned issues.
+- Seger: Work on fixing rendering aspect ratio changes.
+
+Roadblocks:
+- Siem: -
+- Angel: -
+- Ronan: Issues with physics scaling.
+- Sean: -
+- Seger: -

@@ -41,3 +41,36 @@ Date,Time,Duration(in hours),Activity
 2024-11-01, 11:00, 4   , worked on class_diagram/design and documentation
 2024-11-01, 20:00, 4   , worked on and finished first version of particle system
 2024-11-03, 11:00, 3   , working on documentation
+2024-11-04, 09:00, 1.5 , assessment project
+2024-11-04, 11:00, 5   , worked with ronan on level loading and created first version of Camera functionality
+2024-11-04, 19:00, 3   , finished first version of camera functionality and level loading
+2024-11-05, 14:00, 3   , Worked on improving animation systen for player animations worked; scoped timers; fps counter 
+2024-11-05, 19:00, 2.5 , In world text rendering and camera funcionality refinements
+2024-11-06, 09:00, 7   , Design meetings and test creation and collider creation system work
+2024-11-07, 12:00, 5   , Designed and implemented the first version of the UI system (also reviewed prs)
+2024-11-08, 12:00, 5   , Designed elements with team and worked on the UI system and UI system test. spent consiberable time helping Angel debug the physics code
+2024-11-09, 14:00, 5   , Designed tests simpel tests for each part of the physics system and now a very rudimentary physics system is in place
+2024-11-11, 10:00, 5   , worked on project and physics and ui and helped Sean.
+2024-11-12, 14:00, 3   , worked on improving memory management and started on getting the text size functionality going
+2024-11-13, 09:30, 7   , worked on rendering system getting text size helping sean and working on the ui system and persistance of GameObjects.worked on improving memory management and started on getting the text size functionality going
+2024-11-14, 09:00, 7.5 , worked on scene behaviour
+2024-11-15, 09:00, 2   , Class with other groups
+2024-11-19, 09:15, 7.75, Worked on testGame and the scene system and the player animations 
+2024-11-20, 09:00, 7   , Button hover and click functionality 
+2024-11-21, 09:15, 4   , worked on project
+2024-11-22, 09:00, 7.5 , Worked on bullet bravo game en mainmenu
+2024-11-26, 09:00, 7.5 , Finished menu and wrote some more tests.
+2024-11-27, 09:00, 7.5 , Wrote and mostly finished camera viewport functionality
+2024-11-29, 09:15, 1.25, standup and worked on intergration of different PRs and branches
+2024-11-29, 12:00, 4.5 , Worked on camera system and merging differnet branches 
+2024-12-03, 09:15, 7.5 , Debug issue with scene changes merged a bunch of code into development and worked a small bit on Camera functionality
+2024-12-04, 09:00, 8   , Handled prs into development; Worked with ronan on demo level; added camera functionality showcase to the demo level; worked on the camera system with ordered camera rendering 
+2024-12-05, 09:00, 7   , Handled prs into development; Worked with ronan on demo level; added camera letterboxing functionality and background rendering.
+2024-12-09, 09:15, 7   , Added code standard and doxygen to rendersystem, renderer and camera
+2024-12-10, 09:15, 7   , Added camera shake to camera system and 
+2024-12-11, 09:15, 7.5 , Fixed angels physics
+2024-12-12, 09:45, 4.25, Game programming practice
+2024-12-16, 10:00, 2.25, Did the seven minute demo presentation and attended presentations of other groups; after that we discussed the groups relative score to each other
+2024-12-17, 09:15, 7.5 , Had to help Sean with his Laptop and his installation of Linux. This was a blocker for the project so it had to be handled. Besides that I worked a bit on the code standard and merging some of the changes made by ironfist Siem.
+2024-12-18, 09:15, 7.5 , Doxygen changes; ronan helping; camera fixes
+2024-12-19, 09:15, 6.25, Doxygen changes; ronan helping; camera fixes

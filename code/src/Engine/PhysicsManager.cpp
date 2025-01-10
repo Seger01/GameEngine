@@ -1,17 +1,28 @@
 #include "PhysicsManager.h"
-#include "SceneManager.h"
 
+/// @brief Constructs a PhysicsManager instance
+
+/**
+ * @brief Constructs a PhysicsManager instance
+ */
 PhysicsManager::PhysicsManager() {}
 
-void PhysicsManager::startPhysicsEngine(Vector2 aGravity) {
-    mPhysicsEngine.createWorld(aGravity);
+/**
+ * @brief Starts the physics engine
+ * @param aGravity The gravity of the world
+ */
+void PhysicsManager::startPhysicsEngine(const Vector2& aGravity) { mPhysicsEngine.createWorld(aGravity); }
 
-    mPhysicsEngine.setStep(1.0f / 60.0f);
-    mPhysicsEngine.setSubStep(6);
+/**
+ * @brief Updates the physics engine
+ * @param timeDilation The time dilation
+ */
+void PhysicsManager::updatePhysicsEngine(double timeDilation)
+{
+	double step = 0.02 * timeDilation;
+	mPhysicsEngine.setStep(step);
+	mPhysicsEngine.setSubStep(4);
+	mPhysicsEngine.update();
 }
 
-void PhysicsManager::updatePhysicsEngine(Scene* aScene) {
-    mPhysicsEngine.updateReferences(aScene->getGameObjects());
-
-    mPhysicsEngine.update();
-}
+PhysicsEngine& PhysicsManager::getPhysicsEngine() { return mPhysicsEngine; }

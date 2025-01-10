@@ -6,7 +6,7 @@ Date,Time,Duration(in hours),Activity
 2024-09-04, 11:00, 3, group discussion on plan of attack and general requirements and planning
 2024-09-05, 10:45, 1, Writing PoA: planning and version control
 2024-09-05, 18:00, 0.5, Small bits of feedback to PoA chapter quality
-2024-09-05, 21:00, 0.5, Small bits of PoA feedback, added requirements to requirements docu up to userstory 3
+2024-09-05, 21:00, 0.5, Small bits of PoA feedback; added requirements to requirements docu up to userstory 3
 2024-09-06, 11:00, 0.5, Updated PoA planning (second quarter)
 2024-09-06, 11:30, 0.5, Added requirements up to user story 6
 2024-09-06, 17:00, 0.5, Implement small bits of feedback on PoA
@@ -63,3 +63,41 @@ Date,Time,Duration(in hours),Activity
 2024-10-31, 20:00, 1, Audio class diagram convert to puml
 2024-11-01, 11:00, 4, worked on class_diagram/design and documentation
 2024-11-03, 7:00, 4, Finalize documentation for handing in
+2024-11-04, 8:45, 7, Assessment with team, standup, work on implementing savegame in engine
+2024-11-04, 20:00, 1.5, Improving savegame implementation, updating savegame design
+2024-11-05, 15:00, 3, Savegame tests / improvements, audio implementation
+2024-11-06, 9:15, 6.45, Automating test coverage reports
+2024-11-07, 10:00, 3, Added savegame tests, debugging sdl mixer runtime issues
+2024-11-08, 12:00, 4, Debugging sdl mixer issues, improving running scripts
+2024-11-09, 19:00, 1, Implementing audio
+2024-11-10,18:30, 1.5, Implementing audio
+2024-11-11, 10:00, 3, Discussed / worked on memory leak checking
+2024-11-11, 20:00, 1, Testing and improving audio implementation
+2024-11-13, 09:00, 7.5   , worked audio system improvements and memory leak checking
+2024-11-13, 19:00, 1, Directional audio testing
+2024-11-14, 9:15, 6.5, Preparing for presentation, redesigning and implementing audio sections.
+2024-11-15, 9:00, 2, Class with other groups
+2024-11-19, 9:15, 7, Worked on audio testing; helped Sean with multiplayer design; class with other groups
+2024-11-19, 20:00, 1, Finished audio tests
+2024-11-20, 9:15, 7, Validation app design; designing and implementing update queue
+2024-11-21, 9:15, 3.5, Update queue implementation.
+2024-11-21, 19:00, 2, Proceed with queue implementation.
+2024-11-22, 20:00, 0.5, Fix audio source files to follow code standard
+2024-11-26, 9:15, 6.5, Investigate physics issues related to update queue and attended project class
+2024-11-26, 20:00, 1.5, Investigate physics issues related to update queue
+2024-11-27, 9:15, 7.5, Investigate physics issues related to update queue and fixed those
+2024-11-27, 19:00, 1.25, Updated update queue to be compatible with scene changes and persistent objects
+2024-11-28, 10:00, 1.25, Updated savegame to follow code standard, added Doxygen
+2024-11-29, 9:15, 1.25, Standup; discuss issues with engine structure.
+2024-11-29, 12:00, 4, Improve update queue; add better positional audio
+2024-12-03, 9:15, 7.5, Debug issue with scene changes, update animation to follow code standard, research client-side prediction.
+2024-12-04, 9:15, 7, Fix issue with pausing music, help Sean with multiplayer implementation testing, update particle to follow code standard.
+2024-12-05, 9:15, 7, Debugging networking with Sean
+2024-12-09, 9:15, 7, Add audio doxygen; add doxygen cmake target; implement multiplayer demo enemies.
+2024-12-10, 9:15, 7, Fix multiplayer menu
+2024-12-11, 9:15, 7.5, Fix multiplayer menu, Prepare for class
+2024-12-11, 11:00, 1.5, Attend project class
+2024-12-12, 9:45, 5.25, Applying code standard
+2024-12-17, 9:15, 7.5, Various code standard fixes, preparing for assessment.
+2024-12-18, 9:15, 7.5, Updates to design document and Doxygen.
+2024-12-19, 9:15, 7, Various design document updates and Doxygen improvements.

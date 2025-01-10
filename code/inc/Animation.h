@@ -1,5 +1,9 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
+/**
+ * @file Animation.h
+ * @brief Animation class header file.
+ */
+
+#pragma once
 
 #include <iostream>
 #include <memory>
@@ -7,53 +11,68 @@
 
 #include "Sprite.h"
 
-class Animation : public Component {
+/**
+ * @class Animation
+ * @brief Animation class.
+ */
+class Animation : public Component
+{
 public:
-    Animation(std::vector<Sprite*> aAnimationFrames, int aTimeBetweenFrames, bool aIsLooping = false);
-    ~Animation();
+	Animation(std::vector<std::reference_wrapper<Sprite>> aAnimationFrames, int aTimeBetweenFrames,
+			  bool aIsLooping = false, const std::string& aTag = "defaultAnimation");
+	~Animation();
 
-    // Rule of Five
-    Animation(const Animation& other);                // Copy constructor
-    Animation& operator=(const Animation& other);     // Copy assignment operator
-    Animation(Animation&& other) noexcept;            // Move constructor
-    Animation& operator=(Animation&& other) noexcept; // Move assignment operator
+	// Rule of Five
+	Animation(const Animation& other);				  // Copy constructor
+	Animation& operator=(const Animation& other);	  // Copy assignment operator
+	Animation(Animation&& other) noexcept;			  // Move constructor
+	Animation& operator=(Animation&& other) noexcept; // Move assignment operator
 
-    // Override the clone method
-    std::unique_ptr<Component> clone() const override {
-        return std::make_unique<Animation>(*this); // Uses the copy constructor of Sprite
-    }
+	// Override the clone method
+	std::unique_ptr<Component> clone() const override;
 
-    Transform getTransform();
-    void setTransform(Transform aNewTransform);
+	Transform getTransform() const;
+	void setTransform(const Transform& aNewTransform);
 
-    Sprite* getFrame(int aFrameIndex);
-    Sprite* getCurrentFrame();
+	const Sprite& getFrame(int aFrameIndex) const;
+	const Sprite& getCurrentFrame() const;
 
-    int getTimeBetweenFrames();
-    void setTimeBetweenFrames(int aTimeBetweenFrames);
+	Color getColorFilter() const;
+	void setColorFilter(const Color& aColor);
 
-    void setFlipX(bool state);
-    bool getFlipX();
+	int getTimeBetweenFrames() const;
+	void setTimeBetweenFrames(int aTimeBetweenFrames);
 
-    void setFlipY(bool state);
-    bool getFlipY();
+	void setFlipX(bool state);
+	bool getFlipX() const;
 
-    bool isLooping();
-    void setIsLooping(bool aIsLooping);
+	void setFlipY(bool state);
+	bool getFlipY() const;
 
-    int getFrameCount();
+	bool isLooping() const;
+	void setIsLooping(bool aIsLooping);
 
-    void setLayer(int aLayer);
-    int getLayer();
+	int getFrameCount() const;
+
+	void setLayer(int aLayer);
+	int getLayer() const;
 
 private:
-    Transform mTransform;
-    bool mFlipX;
-    bool mFlipY;
-    std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
-    int mTimeBetweenFrames;
-    bool mIsLooping;
-    int mLayer = 0;
-};
+	/// @brief The transform of the animation.
+	Transform mTransform;
 
-#endif
+	/// @brief The animation frames.
+	std::vector<std::unique_ptr<Sprite>> mAnimationFrames; // Unique pointers for Sprite objects
+
+	/// @brief true if the antimation is flipped horizontally.
+	bool mFlipX;
+
+	/// @brief true if the antimation is flipped vertically.
+	bool mFlipY;
+	/// @brief the time between frames of the animation
+	int mTimeBetweenFrames;
+	/// @brief if the animation is looping
+	bool mIsLooping;
+	/// @brief the layer of the animation
+	int mLayer;
+};

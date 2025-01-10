@@ -1,3 +1,8 @@
+/**
+ * @file SceneManager.h
+ * @brief SceneManager class header file.
+ */
+
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
@@ -7,38 +12,49 @@
 #include <string>
 #include <vector>
 
-class SceneManager {
+/**
+ * @class SceneManager
+ * @brief Manages scenes.
+ */
+class SceneManager
+{
 public:
-    friend class EngineBravo;
+	friend class EngineBravo;
 
-    bool sceneChanged();
+	void update();
 
-    // int addSceneLevel(const Map& map);
-    void requestSceneChange(const std::string& sceneName);
-    void requestSceneChange(int sceneID);
+	// int addSceneLevel(const Map& map);
+	void requestSceneChange(const std::string& sceneName);
+	void requestSceneChange(int sceneID);
 
-    Scene* getCurrentScene();
-    Scene* createScene(std::string aSceneName, int aSceneID = -1);
+	Scene& getCurrentScene();
+	Scene& createScene(std::string aSceneName, int aSceneID = -1);
 
-    void removeScene(const std::string& sceneName);
-
-private:
-    void loadScene(int index);
-    void loadScene(const std::string& sceneName); // Willen we dit overloaden?
-
-    bool sceneNameExists(std::string aSceneName);
-    bool sceneIDExists(int aSceneID);
-    int getNewSceneID();
+	void removeScene(const std::string& sceneName);
 
 private:
-    SceneManager();
-    ~SceneManager();
+	bool sceneChanged();
 
-    std::vector<std::unique_ptr<Scene>> mScenes;
-    int mCurrentSceneIndex;
+	void loadScene(int index);
+	void loadScene(const std::string& sceneName);
 
-    std::string mNewSceneName;
-    int mNewSceneID;
+	bool sceneNameExists(std::string aSceneName);
+	bool sceneIDExists(int aSceneID);
+	int getNewSceneID();
+
+private:
+	SceneManager();
+	~SceneManager();
+
+	/// @brief The stored scenes
+	std::vector<std::unique_ptr<Scene>> mScenes;
+	/// @brief The current scene index
+	int mCurrentSceneIndex;
+
+	/// @brief The new scene name after request
+	std::string mNewSceneName;
+	/// @brief The new scene ID after request
+	int mNewSceneID;
 };
 
 #endif // SCENEMANAGER_H

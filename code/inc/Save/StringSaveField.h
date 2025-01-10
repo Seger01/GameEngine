@@ -1,19 +1,29 @@
+/**
+ * @file StringSaveField.h
+ *
+ * Contains the declaration of the StringSaveField class.
+ */
 #pragma once
 
 #include <string>
 
-class StringSaveField {
+/**
+ * @class StringSaveField
+ *
+ * @brief A class representing a string field in a save game. Contains a name and a value.
+ */
+class StringSaveField
+{
 public:
-    StringSaveField(std::string aName);
-    StringSaveField(std::string aName, std::string aValue);
+	StringSaveField(const std::string& aName, const std::string& aValue = "");
 
-    std::string getName() const;
-
-    void setValue(std::string aValue);
-
-    std::string getValue() const;
+	std::string getName() const;
+	void setValue(const std::string& aValue);
+	std::string getValue() const;
 
 private:
-    std::string mName;
-    std::string mValue;
+	/// @brief The name of the field. Used to identify it.
+	std::string mName;
+	/// @brief The value of the field.
+	std::string mValue;
 };

@@ -1,12 +1,27 @@
-#include "Physics/PhysicsEngine.h"
-#include "SceneManager.h"
+#ifndef PHYSICSMANAGER_H
+#define PHYSICSMANAGER_H
 
-class PhysicsManager {
+/**
+ * @file PhysicsManager.h
+ *
+ * @brief Declaration for the physics manager, used to call update loop and create functions of
+ * the physics engine
+ *
+ */
+
+#include "Physics/PhysicsEngine.h"
+
+class PhysicsManager
+{
 public:
-    PhysicsManager();
-    void startPhysicsEngine(Vector2 aGravity);
-    void updatePhysicsEngine(Scene* aScene);
+	PhysicsManager();
+	void startPhysicsEngine(const Vector2& aGravity);
+	void updatePhysicsEngine(double timeDilation);
+	PhysicsEngine& getPhysicsEngine();
 
 private:
-    PhysicsEngine mPhysicsEngine;
+	/// @brief The physics engine
+	PhysicsEngine mPhysicsEngine;
 };
+
+#endif // PHYSICSMANAGER_H

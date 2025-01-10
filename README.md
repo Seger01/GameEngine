@@ -19,7 +19,7 @@ To download and install the library, follow these steps:
 
 2. Update the submodules
 ```sh
-    git submodule update --init --recursive
+    git submodule update --init --recursive --depth 1
 ```
 
 3. Navigate to the build directory:
@@ -55,13 +55,6 @@ To build the project with debug options enabled, follow these steps:
 ```
 ```sh
     cmake --build . -- -j$(nproc)
-```
-
-# How to Run the Program
-
-To run the program, use the following command:
-```sh
-    cmake --build . --target run -- -j$(nproc)
 ```
 
 # How to Run the Program with Valgrind
@@ -113,3 +106,16 @@ Note: GoogleTest and GoogleMock libraries must be installed on your system to bu
 ```sh
     sudo make install
 ```
+
+# How to generate Doxygen documentation
+1. Go to the build folder:
+```sh
+    cd code/build
+```
+
+2. Run the Doxygen target
+```sh
+    cmake --build . --target Doxygen
+```
+
+The Doxygen output will be placed under code/build/doxygen/html. Open the index.html file to go to docs' mainpage.

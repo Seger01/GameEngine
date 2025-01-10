@@ -7,62 +7,68 @@ class AudioSource implements Component_Proxy{
     - mFileName : string
     - mPlayOnAwake : bool
     - mLoop : bool
+    - mIsMusic : bool
     - mVolume : int
+    - mMaxVolume : const static int
     - mXDirection : int
     - minXDirection : const static int
     - maxXDirection : const static int
-    - mMaxVelocity : const static int
-    - mXVelocity : int
-    + AudioSource(string aPath, bool aIsMusic=false)
+
+    + AudioSource(const string& aPath, bool aIsMusic, const string& aTag)
     + play(bool aLooping) : void
     + stop() : void 
 
+    + isMusic() : bool
     + setPlayOnWake(bool aValue) : void
     + getPlayOnWake() : bool
     + setLooping(bool aLooping) : void
     + getLooping() : bool
     + setVolume(unsigned aVolume) : void
     + getVolume() : unsigned
+    + setXDirection(int aListenerX, int aSourceX) : void
     + setXDirection(int aXDirection) : void
     + getXDirection() : int
-    + setXVelocity(int aXVelocity) : void
-    + getXVelocity() : int
+    + getFileName() : string
 }
 
 interface IAudioFacade {
-    + addSound(string path) : void
-    + playSound(string aPath, int aLooping, unsigned aVolume, int aDirection, int aVelocity) : void
-    + addMusic(string path) : void
-    + playMusic() : void
-    + stopMusic() : void
-}
-
-'This class is probably useless, because the path can be retrieved directly from the audiosource. The actual functionality it was intended for can be found in the MixerContainer::mSfx
-class ComponentPathPair {
-    - mComponent : const AudioSource&
-    - mPath : const string
+    + loadSound(const string &aPath) : virtual void
+    + loadMusic(const string &aPath) : virtual void
+    + unloadAll() : virtual void
+    + soundIsLoaded(const string &aPath) virtual bool
+    + musicIsLoaded() : virtual bool
+    
+    + playSound(const string &aPath, bool aLooping, unsigned aVolume, int aDirection) : virtual void
+    + playMusic(int aVolume) : virtual void
+	+ pauseMusic() : virtual void
+	+ resumeMusic() : virtual void
+	+ stopMusic() : virtual void
+    
+    + isPlaying(const string &aPath) : virtual bool
+    + aIsMusicPlaying() : virtual bool
 }
 
 class MixerFacade implements IAudioFacade {
     - mChannelCount : const unsigned
     - mLastUsedChannel : unsigned
     - findAvailableChannel() : int
+    - distanceToAngle(int aDirection) : int
 }
 
 class MixerContainer {
-    // string is the path
-    - mSfx : unordered_map<string, Mix_Chunk>
-    - mMusic : Mix_Music
-    + addSound(string aPath, Mix_Chunk aSound) : void
-    + getSound(string aIndex) : Mix_Chunk*
-    + addMusic(Mix_Music aMusic) : void
-    + getMusic() : Mix_Music*
-    + clear() : void
-}
+    - mSfx : unordered_map<string, Mix_Chunk*>
+    - mMusicPath : string
+    - mMusic : Mix_Music*
+    + MixerContainer()
+    + ~MixerContainer()
+    + addSound(const string& aPath, Mix_Chunk *aSound) : void
+    + getSound(const string& aIndex) : Mix_Chunk*
+    + getSound(const string& aIndex) : const Mix_Chunk*
 
-class AudioResourceManager {
-    - mPaths : vector<ComponentPathPair>
-    + getPath(const AudioSource&) : string
+    + addMusic(const string& aPath, Mix_Music *aMusic) : void
+    + getMusic() : Mix_Music*
+    + getMusic() : const Mix_Music*
+    + clear() : void
 }
 
 MixerFacade *-- MixerContainer
@@ -70,7 +76,5 @@ MixerFacade *-- MixerContainer
 }
 
 Audio *--IAudioFacade
-Audio <-- ComponentPathPair
-Audio *-- AudioResourceManager
 
 @enduml

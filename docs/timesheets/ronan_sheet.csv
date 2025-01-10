@@ -51,3 +51,41 @@ Date,Time,Duration(in hours),Activity
 2024-11-01, 11:00, 3.5, Discussed design with group
 2024-11-03, 0:00, 0.5, added some things to design document
 2024-11-03, 13:00, 1.5, worked on design document
+2024-11-04, 9:00, 1.5, preparing meeting bob and meeting with bob
+2024-11-04, 10:30, 5, working on implementation of tilemap parser
+2024-11-06, 9:15, 0.75, standup and project meeting
+2024-11-06, 10:00, 6, worked on tilemap parser and adding colliders to tiled map
+2024-11-08, 9:15, 6.5, worked on tilemap parser with adding spawnpoints and started on debugging OS performance issues
+2024-11-09, 19:00, 5, debugging OS performance issues
+2024-11-11, 10:00, 5, worked on design for validation app.
+2024-11-12, 12:00, 5.25, updated tilemapparser to parse triggerareas and worked on implementing room behaviour
+2024-11-13, 9:15, 7.5, worked on room behaviour and implementing physics for room and also updated fsconverter
+2024-11-14, 9:15, 5.5, worked on room behaviour and fixing issues for physics and prepared for presentation
+2024-11-15, 9:00, 2.25, group lesson with bob and added colliders to doors
+2024-11-16, 14:00, 3.25, worked on enemy spawning and spawning bullets
+2024-11-16, 18:30, 2.75, worked on firing bullets and shooting them in the right direction
+2024-11-19, 9:15, 7.5, worked on game template and fixing tests for tilemapparser and worked on design for validation game
+2024-11-20, 9:45, 6.75, worked on design for validation game and implementing the design
+2024-11-21, 9:15, 7, worked on level creator and level manager and fixed segfault when switching levels
+2024-11-22, 11:30, 3, worked on levelcreator and level mechanics
+2024-11-25, 14:00, 2, worked on fixing shooting and created coin prefabs
+2024-11-26, 9:15, 7.25, worked on test document and started work on AI
+2024-11-27, 9:15, 7.5, worked on AI and fixed some issues with the level creator
+2024-11-28, 17:00, 1.5, made some improvements to the pathfinding and worked on compliance with codestandard for maptograph and pathfinding
+2024-11-29, 9:45, 5.5, worked on tests for AI and MapToGraph and started work on improved TileMapParser.
+2024-11-30, 16:00, 2.5, worked on improved TileMapParser and made new branch to use it in the game
+2024-12-02, 15:45, 1.0, worked on improved TileMapParser and created new tests to improve coverage
+2024-12-03, 9:15, 7.5, worked on improved TileMapParser integration with BulletBravo and worked on Demo.
+2024-12-04, 9:15, 7.5, worked on Demo
+2024-12-05, 9:45, 6, worked on Demo
+2024-12-07, 12:00, 5, worked on Demo
+2024-12-08, 21:30, 1.5, worked on AI for Demo
+2024-12-09, 9:15, 7.25, worked on AI for Demo and fixed some issues with map to graph conversion
+2024-12-10, 9:15, 7.25, worked on AI for demo and worked on physics and particles for demo
+2024-12-11, 9:15, 7.25, worked on physics and particles for demo and added stresstest room
+2024-12-12, 11:00, 1.5, class meeting with Bob
+2024-12-16, 10:00, 2, class meeting with Bob
+2024-12-17, 9:15, 7.5, worked on demo start room/particles/enemyhitindicator and class diagram for engine stuff and updating description for demo
+2024-12-18, 9:15, 7.5, worked on LevelBuilder for 
+2024-12-19, 9:15, 6.5, worked on LevelBuilder and updating docs stuff
+2025-01-07, 9:15, 4, worked on validating the demo and updating the manual and docs

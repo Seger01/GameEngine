@@ -1,174 +1,417 @@
+/**
+ * @file NetworkManager.cpp
+ * @brief Implementation of the NetworkManager class responsible for managing network roles and operations.
+ */
+
 #include "Network/NetworkManager.h"
+
 #include "Network/NetworkObject.h"
 
 #include "Engine/EngineBravo.h"
 #include "Engine/SceneManager.h"
 
-NetworkManager::NetworkManager()
-    : mRole(NetworkRole::UNASSIGNED), mTickRate(60), mEnableSceneManagement(false), mGameObjects(nullptr) {}
+#include <stdexcept>
 
-void NetworkManager::startNetwork() {
-    if (mRole == NetworkRole::SERVER) {
-        startServer();
-    } else if (mRole == NetworkRole::CLIENT) {
-        startClient();
-    } else if (mRole == NetworkRole::HOST) {
-        startHost();
-    }
+/**
+ * @brief Constructs a NetworkManager with default role and tick rate.
+ */
+NetworkManager::NetworkManager() : mRole(NetworkRole::UNASSIGNED), mTickRate(60) {}
+
+/**
+ * @brief Starts the network based on the assigned role.
+ */
+void NetworkManager::startNetwork()
+{
+	if (mRole == NetworkRole::SERVER)
+	{
+		startServer();
+	}
+	else if (mRole == NetworkRole::CLIENT)
+	{
+		startClient();
+	}
+	else if (mRole == NetworkRole::HOST)
+	{
+		startHost();
+	}
 }
 
+/**
+ * @brief Shuts down the network manager.
+ * @throws std::runtime_error Always throws as the function is not implemented.
+ */
 void NetworkManager::shutdown() { throw std::runtime_error("NetworkManager::shutdown() not implemented"); }
 
+/**
+ * @brief Initializes the network manager by starting the network.
+ */
 void NetworkManager::initialize() { startNetwork(); }
 
-void NetworkManager::update() {
-    mGameObjects = &EngineBravo::getInstance().getSceneManager().getCurrentScene()->getGameObjects();
-    if (mGameObjects == nullptr) {
-        throw std::runtime_error("Game objects is nullptr");
-    }
-    if (mRole == NetworkRole::SERVER && mServer) {
-        mServer->update(*mGameObjects);
-    } else if (mRole == NetworkRole::CLIENT && mClient) {
-        mClient->update(*mGameObjects);
-    } else if (mRole == NetworkRole::HOST && mHost) {
-        throw std::runtime_error("NetworkManager::update() isHost not implemented");
-        // mHost->update();
-    }
+/**
+ * @brief Updates the network manager based on the current role.
+ */
+void NetworkManager::update()
+{
+	if (mRole == NetworkRole::SERVER && mServer)
+	{
+		mServer->update();
+	}
+	else if (mRole == NetworkRole::CLIENT && mClient)
+	{
+		mClient->update();
+	}
+	else if (mRole == NetworkRole::HOST && mHost)
+	{
+		mHost->update();
+	}
 }
 
-NetworkServer& NetworkManager::getServer() const {
-    if (!mServer) {
-        throw std::runtime_error("Server is not running");
-    }
-    return *mServer;
+/**
+ * @brief Gets the server instance.
+ * @return Reference to the NetworkServer.
+ * @throws std::runtime_error If the server is not running.
+ */
+NetworkServer& NetworkManager::getServer() const
+{
+	if (!mServer)
+	{
+		throw std::runtime_error("Server is not running");
+	}
+	return *mServer;
 }
 
-NetworkClient& NetworkManager::getClient() const {
-    if (!mClient) {
-        throw std::runtime_error("Client is not running");
-    }
-    return *mClient;
+/**
+ * @brief Gets the client instance.
+ * @return Reference to the NetworkClient.
+ * @throws std::runtime_error If the client is not running.
+ */
+NetworkClient& NetworkManager::getClient() const
+{
+	if (!mClient)
+	{
+		throw std::runtime_error("Client is not running");
+	}
+	return *mClient;
 }
 
-NetworkHost& NetworkManager::getHost() const {
-    if (!mHost) {
-        throw std::runtime_error("Host is not running");
-    }
-    return *mHost;
+/**
+ * @brief Gets the host instance.
+ * @return Reference to the NetworkHost.
+ * @throws std::runtime_error If the host is not running.
+ */
+NetworkHost& NetworkManager::getHost() const
+{
+	if (!mHost)
+	{
+		throw std::runtime_error("Host is not running");
+	}
+	return *mHost;
 }
 
+/**
+ * @brief Checks if the current role is server.
+ * @return True if the role is server, false otherwise.
+ */
 bool NetworkManager::isServer() const { return mRole == NetworkRole::SERVER; }
 
+/**
+ * @brief Checks if the current role is client.
+ * @return True if the role is client, false otherwise.
+ */
 bool NetworkManager::isClient() const { return mRole == NetworkRole::CLIENT; }
 
+/**
+ * @brief Checks if the current role is host.
+ * @return True if the role is host, false otherwise.
+ */
 bool NetworkManager::isHost() const { return mRole == NetworkRole::HOST; }
 
-bool NetworkManager::isConnected() const {
-    if (mRole == NetworkRole::SERVER) {
-        return mServer->isConnected();
-    } else if (mRole == NetworkRole::CLIENT) {
-        return mClient->isConnected();
-    } else if (mRole == NetworkRole::HOST) {
-        throw std::runtime_error("NetworkManager::isConnected() isHost not implemented");
-    }
-    return false;
+/**
+ * @brief Checks if the network manager is networked (server, client, or host).
+ * @return True if networked, false otherwise.
+ */
+bool NetworkManager::isNetworked() const { return isServer() || isClient() || isHost(); }
+
+/**
+ * @brief Checks if the network manager is connected.
+ * @return True if connected, false otherwise.
+ * @throws std::runtime_error If the role is host and the function is not implemented.
+ */
+bool NetworkManager::isConnected() const
+{
+	if (mRole == NetworkRole::SERVER)
+	{
+		return mServer->isConnected();
+	}
+	else if (mRole == NetworkRole::CLIENT)
+	{
+		return mClient->isConnected();
+	}
+	else if (mRole == NetworkRole::HOST)
+	{
+		throw std::runtime_error("NetworkManager::isConnected() isHost not implemented");
+	}
+	return false;
 }
 
+/**
+ * @brief Sets the tick rate for the network manager.
+ * @param aTickRate The tick rate to set.
+ */
 void NetworkManager::setTickRate(int aTickRate) { mTickRate = aTickRate; }
 
+/**
+ * @brief Gets the current tick rate.
+ * @return The current tick rate.
+ */
 int NetworkManager::getTickRate() const { return mTickRate; }
 
-void NetworkManager::setEnableSceneManagement(bool aEnableSceneManagement) {
-    mEnableSceneManagement = aEnableSceneManagement;
+/**
+ * @brief Sets the default player prefab.
+ * @param aDefaultPlayerPrefab Pointer to the default player prefab.
+ */
+void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab)
+{
+	if (!aDefaultPlayerPrefab->hasComponent<NetworkObject>())
+	{
+		NetworkObject* networkObject = new NetworkObject();
+		aDefaultPlayerPrefab->addComponent(networkObject);
+	}
+	mDefaultPlayerPrefab.reset(aDefaultPlayerPrefab);
 }
 
-bool NetworkManager::getEnableSceneManagement() const { return mEnableSceneManagement; }
-
-void NetworkManager::setDefaultPlayerPrefab(GameObject* aDefaultPlayerPrefab) {
-    if (!aDefaultPlayerPrefab->hasComponent<NetworkObject>()) {
-        NetworkObject* networkObject = new NetworkObject();
-        aDefaultPlayerPrefab->addComponent(networkObject);
-    }
-    mDefaultPlayerPrefab.reset(aDefaultPlayerPrefab);
-}
-
+/**
+ * @brief Gets the default player prefab.
+ * @return Reference to the default player prefab.
+ */
 GameObject& NetworkManager::getDefaultPlayerPrefab() const { return *mDefaultPlayerPrefab; }
 
-GameObject* NetworkManager::instantiatePlayer(SLNet::RakNetGUID playerID) {
-    if (!mDefaultPlayerPrefab) {
-        throw std::runtime_error("Player prefab not set.");
-    }
+/**
+ * @brief Instantiates a player based on the provided network packet.
+ * @param packet The network packet containing player information.
+ * @return Pointer to the instantiated player.
+ * @throws std::runtime_error If the player prefab is not set or does not have a NetworkObject component.
+ */
+GameObject* NetworkManager::instantiatePlayer(NetworkPacket packet)
+{
+	if (!mDefaultPlayerPrefab)
+	{
+		throw std::runtime_error("Player prefab not set.");
+	}
 
-    std::vector<GameObject*> persistantObjects =
-        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-    for (auto object : persistantObjects) {
-        if (!object->hasComponent<NetworkObject>()) {
-            continue;
-        }
-        NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-        if (networkObject->getClientID() == playerID) {
-            return nullptr;
-        }
-    }
+	for (auto object : mObjects)
+	{
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == packet.clientGUID) // Check if player already exists
+		{
+			return nullptr;
+		}
+	}
 
-    GameObject* player = new GameObject(*mDefaultPlayerPrefab); // Clone prefab
-    auto networkObjects = player->getComponents<NetworkObject>();
-    if (networkObjects.size() == 0) {
-        throw std::runtime_error("Player prefab does not have a NetworkObject component");
-    }
-    networkObjects[0]->setClientID(playerID); // Assign unique ID to player
-    networkObjects[0]->setPlayer(true);       // Mark as player
-    EngineBravo::getInstance().getSceneManager().getCurrentScene()->addPersistentGameObject(player);
-    return player;
+	GameObject* player = new GameObject(*mDefaultPlayerPrefab); // Clone prefab
+	auto networkObjects = player->getComponents<NetworkObject>();
+	if (networkObjects.size() == 0)
+	{
+		throw std::runtime_error("Player prefab does not have a NetworkObject component");
+	}
+	networkObjects[0].get().setClientGUID(packet.clientGUID); // Assign unique ID to player
+	if (packet.networkObjectID != UINT16_MAX)
+	{
+		networkObjects[0].get().setNetworkObjectID(packet.networkObjectID);
+	}
+	else
+	{
+		networkObjects[0].get().setNetworkObjectID(NetworkObject::networkObjectIDCounter++);
+	}
+	networkObjects[0].get().setPlayer(true); // Mark as player
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(player);
+	return player;
 }
 
-void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID) {
-    std::vector<GameObject*> persistantObjects =
-        EngineBravo::getInstance().getSceneManager().getCurrentScene()->getPersistentGameObjects();
-    for (auto object : persistantObjects) {
-        if (!object->hasComponent<NetworkObject>()) {
-            continue;
-        }
-        NetworkObject* networkObject = object->getComponents<NetworkObject>()[0];
-        if (networkObject->getClientID() == playerID) {
-            EngineBravo::getInstance().getSceneManager().getCurrentScene()->removePersistentGameObject(object);
-            break;
-        }
-    }
+/**
+ * @brief Destroys a player based on the provided player ID.
+ * @param playerID The ID of the player to destroy.
+ */
+void NetworkManager::destroyPlayer(SLNet::RakNetGUID playerID)
+{
+	for (auto object : mObjects)
+	{
+		NetworkObject& networkObject = object.get().getComponents<NetworkObject>()[0];
+		if (networkObject.getClientGUID() == playerID)
+		{
+			EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&object.get());
+			return;
+		}
+	}
 }
 
+/**
+ * @brief Sets the network role.
+ * @param aRole The role to set.
+ */
 void NetworkManager::setRole(NetworkRole aRole) { mRole = aRole; }
 
+/**
+ * @brief Gets the current network role.
+ * @return The current network role.
+ */
 NetworkRole NetworkManager::getRole() const { return mRole; }
 
-std::vector<GameObject*>& NetworkManager::getGameObjects() { return *mGameObjects; }
+/**
+ * @brief Gets the list of game objects managed by the network manager.
+ * @return Reference to the vector of game objects.
+ */
+std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getGameObjects() { return mObjects; }
 
-void NetworkManager::startServer() {
-    if (mClient || mHost) {
-        throw std::runtime_error("Cannot start server when client or host is already running");
-    }
-    if (mServer) {
-        throw std::runtime_error("Server is already running");
-    }
-    mServer = std::make_unique<NetworkServer>(mTickRate);
+/**
+ * @brief Starts the server.
+ * @throws std::runtime_error If the client or host is already running, or if the server is already running.
+ */
+void NetworkManager::startServer()
+{
+	if (mClient || mHost)
+	{
+		throw std::runtime_error("Cannot start server when client or host is already running");
+	}
+	if (mServer)
+	{
+		throw std::runtime_error("Server is already running");
+	}
+	mServer = std::make_unique<NetworkServer>(mObjects, mTickRate);
 }
 
-void NetworkManager::startClient() {
-    if (mServer || mHost) {
-        throw std::runtime_error("Cannot start client when server or host is already running");
-    }
-    if (mClient) {
-        throw std::runtime_error("Client is already running");
-    }
-    mClient = std::make_unique<NetworkClient>(mTickRate);
+/**
+ * @brief Starts the client.
+ * @throws std::runtime_error If the server or host is already running, or if the client is already running.
+ */
+void NetworkManager::startClient()
+{
+	if (mServer || mHost)
+	{
+		throw std::runtime_error("Cannot start client when server or host is already running");
+	}
+	if (mClient)
+	{
+		throw std::runtime_error("Client is already running");
+	}
+	mClient = std::make_unique<NetworkClient>(mObjects, mTickRate);
 }
 
-void NetworkManager::startHost() {
-    if (mServer || mClient) {
-        throw std::runtime_error("Cannot start host when server or client is already running");
-    }
-    if (mHost) {
-        throw std::runtime_error("Host is already running");
-    }
-    mHost = std::make_unique<NetworkHost>();
+/**
+ * @brief Starts the host.
+ * @throws std::runtime_error If the server or client is already running, or if the host is already running.
+ */
+void NetworkManager::startHost()
+{
+	if (mServer || mClient)
+	{
+		throw std::runtime_error("Cannot start host when server or client is already running");
+	}
+	if (mHost)
+	{
+		throw std::runtime_error("Host is already running");
+	}
+	mHost = std::make_unique<NetworkHost>(mObjects, mTickRate);
+}
+
+/**
+ * @brief Adds a game object to the network manager.
+ * @param aObject The game object to add.
+ */
+void NetworkManager::addObject(GameObject& aObject)
+{
+	auto it = std::find_if(mObjects.begin(), mObjects.end(),
+						   [&aObject](const std::reference_wrapper<GameObject>& wrapper)
+						   {
+							   return &wrapper.get() == &aObject; // Compare addresses
+						   });
+	if (it == mObjects.end())
+	{
+		// Object has not been added yet
+		mObjects.push_back(aObject);
+	}
+}
+
+/**
+ * @brief Removes a game object from the network manager.
+ * @param aObject The game object to remove.
+ */
+void NetworkManager::removeObject(GameObject& aObject)
+{
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
+	if (it != mObjects.end())
+	{
+		mObjects.erase(it, mObjects.end());
+	}
+}
+
+/**
+ * @brief Gets the list of game objects managed by the network manager.
+ * @return Const reference to the vector of game objects.
+ */
+const std::vector<std::reference_wrapper<GameObject>>& NetworkManager::getObjects() const { return mObjects; }
+
+/**
+ * @brief Clears all game objects managed by the network manager.
+ */
+void NetworkManager::clearObjects() { mObjects.clear(); }
+
+/**
+ * @brief Instantiates a prefab based on the provided prefab ID and transform.
+ * @param aPrefabID The ID of the prefab to instantiate.
+ * @param aTransform The transform to apply to the instantiated prefab.
+ * @return Pointer to the instantiated prefab.
+ */
+GameObject* NetworkManager::instantiate(int aPrefabID, Transform aTransform)
+{
+	if (!isServer())
+	{
+		throw std::runtime_error("Only server may call instantiate");
+	}
+	auto iNetworkprefab = NetworkRegister::Instance().CreatePrefabInstance(aPrefabID);
+	if (!iNetworkprefab)
+	{
+		throw std::runtime_error("Prefab not found");
+	}
+	GameObject* prefab = iNetworkprefab->createEnemyPrefab();
+	if (prefab->hasComponent<NetworkObject>())
+	{
+		NetworkObject& networkObject = prefab->getComponents<NetworkObject>()[0].get();
+		networkObject.setPrefabID(aPrefabID);
+		networkObject.setOwner(true);
+	}
+	else
+	{
+		throw std::runtime_error("Prefab does not have a NetworkObject component");
+	}
+	if (aTransform.position != Transform().position || aTransform.rotation != Transform().rotation ||
+		aTransform.scale != Transform().scale)
+	{
+		prefab->setTransform(aTransform);
+	}
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().addPersistentGameObject(prefab);
+	mServer->sendPrefabSpawn(*prefab);
+	return prefab;
+}
+
+/**
+ * @brief Destroys a game object based on the provided game object.
+ * @param aObject The game object to destroy.
+ */
+void NetworkManager::destroy(GameObject& aObject)
+{
+	if (!isServer())
+	{
+		throw std::runtime_error("Only server may call destroy");
+	}
+	if (aObject.hasComponent<NetworkObject>())
+	{
+		NetworkObject& networkObject = aObject.getComponents<NetworkObject>()[0].get();
+		if (networkObject.isOwner())
+		{
+			mServer->sendPrefabDespawn(networkObject);
+		}
+	}
+	EngineBravo::getInstance().getSceneManager().getCurrentScene().requestGameObjectRemoval(&aObject);
 }

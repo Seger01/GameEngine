@@ -1,39 +1,45 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+/**
+ * @file Component.h
+ *
+ * @brief This file contains the definition of the Component class.
+ */
+#pragma once
 
 #include <memory>
 #include <string>
 
 class GameObject;
 
-class Component {
+/**
+ * @class Component
+ *
+ * @brief Represents a component that can be attached to a GameObject. This is the base class for all components, and
+ * provides the basic functionality that all components should have.
+ */
+class Component
+{
 public:
-    Component() = default;
-    Component(std::string aTag);
-    virtual ~Component() = default;
+	Component(const std::string& aTag = "defaultComponent");
+	virtual ~Component() = default;
 
-    // Rule of Five
-    Component(const Component& other);                // Copy constructor
-    Component& operator=(const Component& other);     // Copy assignment operator
-    Component(Component&& other) noexcept;            // Move constructor
-    Component& operator=(Component&& other) noexcept; // Move assignment operator
+	virtual std::unique_ptr<Component> clone() const;
 
-    // Virtual factory method
-    virtual std::unique_ptr<Component> clone() const = 0;
+	void setGameObjectParent(GameObject* aParentObject);
 
-    void setGameObjectParent(GameObject* aParentObject) { mGameObject = aParentObject; }
+	bool isActive();
 
-    bool isActive() { return mActive; }
-    void setActive(bool aState) { mActive = aState; }
+	void setActive(bool aState);
 
-    std::string getTag() { return mTag; }
-    void setTag(const std::string& aTag) { mTag = aTag; }
+	std::string getTag();
+
+	void setTag(const std::string& aTag);
 
 protected:
-    GameObject* mGameObject = nullptr;
-
-    std::string mTag = "";
-    bool mActive = true;
+	/// @brief The GameObject that this component is attached to.
+	GameObject* mGameObject;
+	/// @brief The tag of the component. Can be used to identify it.
+	std::string mTag;
+	/// @brief Whether the component is active or not. If the component is not active, it does not in any way affect the
+	/// mGameObject (it should behave as if it is not there).
+	bool mActive;
 };
-
-#endif

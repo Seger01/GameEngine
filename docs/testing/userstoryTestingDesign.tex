@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{hyperref}
+
+\title{User Story Testing Design}
+\author{Project BRAVO Team}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This document outlines the approach and methodology for testing user stories in the Project BRAVO game engine. The goal is to ensure that all user stories are thoroughly tested and meet the acceptance criteria defined by the stakeholders.
+
+\section{User Story Testing Table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|p{8cm}|}
+\hline
+\textbf{Room Level} & \textbf{User Story Number} & \textbf{How to Test} \\
+\hline
+global & US04 & fps is always shown top left corner of the screen. \\
+\hline
+0 & US02 & Game starts in main menu. Player presses demo. Game starts in demo mode. \\
+\hline
+1 & US01 and US03 US08 & Verify that the character moves in the correct direction when the corresponding arrow key is pressed. A HUD is show with health \\
+\hline
+2 & US05 & Button which player presses to spawn an enemy. Works only a single time \\
+\hline
+3 & US07 & Player walks into corridor. New scene starts \\
+\hline
+4 & US09 and US10 & Player spawns in a room with animated enemies. One enemy walks top to bottom. Other enemy is spinning, scaling and moving. \\
+\hline
+4 & US06 & Player can speed up and down the sped of the engine. When player walks out of room speed is reset. \\
+\hline
+5 & US11 & Enemies are in a room. Player can move them by walking into them. A save button is on the screen, when pressed current positions of enemies are stored. When game is reloaded enemie keep their position. There is a pressure plate to reset positions (does not save). \\
+\hline
+6 & US12 & Button to start/stop music. Button to make sound effect. Button to reset music to start. \\
+\hline
+7 & US13 & Room with walls and a single enemy. Enemy uses pathfinding to follow player. Button to reset enemy to a start location. \\
+\hline
+8 & US14 & Room with multiple cells. Each cell shows differnt fysics (Cell for bouncing ball, something with friction, etc). \\
+\hline
+9 & US101 & Button to spawn fireworks. \\
+\hline
+10 & (No user story) Stress testing room & Many bullets spawn and ricochet around the room. All bullets leave a particle trail. Demo continues to run smoothly. \\
+\hline
+\end{tabular}
+\caption{User Story Testing Table}
+\label{tab:user_story_testing}
+\end{table}
+
+\section{Multiplayer}
+Multiplayer tests userstory 106. A demo multiplayer button is added to the main menu. Laptop 1 needs to run two applications. Application 1 starts with server as options. Application 2 runs normal. Laptop 2 runs application normal.
+
+\end{document}

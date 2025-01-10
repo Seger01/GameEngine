@@ -1,52 +1,65 @@
-#ifndef PHYSICSENGINE_H
-#define PHYSICSENGINE_H
-
+#pragma once
+/**
+ * @file PhysicsEngine.h
+ *
+ * @brief The general logic for the physics engine of engine bravo
+ *
+ */
 #include "GameObject.h"
 #include "IBehaviourScript.h"
-#include "Physics/BodyProxy.h"
-#include "Physics/World.h"
-#include "RigidBody.h"
+#include "World.h"
 #include <vector>
-class PhysicsEngine {
+
+class PhysicsManager; // Forward declaration of PhysicsManager
+
+class PhysicsEngine
+{
+public:
+	PhysicsEngine();
+	float getStep() const;
+	float getSubStep() const;
+	World& getWorld();
+
+	void setStep(float);
+	void setSubStep(int);
+	void setGravity(const Vector2& aGravity);
+
+	Vector2 getGravity() const;
 
 public:
-    PhysicsEngine();
-
-    void updateReferences(std::vector<GameObject*>&);
-    void update();
-    void updateFlags();
-    void updateForces();
-
-    void setSubStep(int);
-    float getSubStep() const;
-    void setStep(float);
-    float getStep() const;
-    void setgameObjects(std::vector<GameObject*>);
-    std::vector<GameObject*> getgameObjects() const;
-
-    void executeCollisionScripts(std::vector<std::pair<int, int>>);
-
-    void createBodies();
-
-    void createWorld(Vector2 aGravity);
-
-    World& getWorld();
-
-    void reset();
-
-    GameObject* getGameObjectByID(int aID);
-
-    void setCollision(int aBodyID, bool aState);
-
-    GameObject* convertFromBox2D(GameObject* aGameObject);
-    GameObject* convertToBox2D(GameObject* aGameObject);
+	void addObject(GameObject& aObject);
+	void removeObject(GameObject& aObject);
+	const std::vector<std::reference_wrapper<GameObject>>& getObjects() const;
+	void clearObjects();
 
 private:
-    World mWorld;
-    std::vector<GameObject*> mGameObjects;
+	void createWorld(const Vector2& aGravity); // The target function
 
-    float mStep;
-    int mSubStep;
+	void createBodies();
+
+	void update();
+	void updateFlags();
+
+	void setPositions();
+	void applyForces();
+
+	void executeCollisionScripts(const std::vector<std::pair<int, int>>& aBodyIDs);
+
+	void convertToBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+	void convertFromBox2D(const std::vector<std::reference_wrapper<GameObject>>& aGameObjects);
+
+	GameObject& getGameObjectByID(int aID);
+
+	friend class PhysicsManager; // PhysicsManager can access private methods like createWorld
+
+private:
+	/// @brief Vector of game objects
+	std::vector<std::reference_wrapper<GameObject>> mObjects;
+	/// @brief The world
+	World mWorld;
+
+	/// @brief The step of the physics engine
+	float mStep;
+	/// @brief The substep of the physics engine
+	int mSubStep;
 };
-
-#endif // PHYSICSENGINE_H

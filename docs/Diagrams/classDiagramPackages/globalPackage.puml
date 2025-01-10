@@ -56,11 +56,20 @@ class Color{
 }
 
 class FSConverter {
-    + FSConverter(string) : FSConverter
-    + getResourcePath(const std::string& resourceName, bool aCheckExists = false) : string
-    - findResourcesFolder() : string
-    - executablePath() : string
-    - resourceDir : string
+    + FSConverter(std::string aResourceDir = "") : FSConverter
+    + getResourcePath(const std::string& aResourceName, bool aCheckExists = false) const : std::string
+
+    - findResourcesFolder() const : std::string
+    - executablePath() const : std::string
+    - mResourceDir : std::string
+    - mCachedResourceDir : static std::string
+}
+
+class LevelBuidler {
+    +createLevel(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeigh) : void
+
+    -createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeigh) : void
+    -createTile(Scene& aScene, const TileMapData& aTileMapData, const std::string& aLayerName, int aLayerIndex, int aRowIndex, int aColIndex, int aTileWidth, int aTileHeight) : void
 }
 }
 @enduml

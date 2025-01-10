@@ -1,0 +1,110 @@
+\documentclass{article}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{longtable}
+
+\usepackage[ddmmyyyy]{datetime}
+
+\usepackage{hyperref} % allows for hyperlinks to be added to the document
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+    pdftitle={Research},
+    pdfpagemode=FullScreen
+}
+
+% Contains an explanation of how to use the demo mode of the validation app.
+
+\title{Engine Bravo Demo: User Manual}
+\author{Sean Groenenboom \and Seger Sars \and Siem Vermeulen \and Angel Villanueva \and Ronan Vlak} % Sets authors name
+\date{\today}
+
+\begin{document}
+
+\maketitle % Generates the title
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Checklist user stories}
+% \begin{table}[H]
+% \centering
+\begin{longtable}{|p{3cm}|p{3cm}|p{6cm}|p{3cm}|}
+\hline
+\textbf{What to do} & \textbf{User story number} & \textbf{Behavior} & \textbf{Checklist} \\ \hline
+Select demo and walk on the Demo button in the level &  & Demo level starts & \\ \hline
+ & US2 & The scene switches from menu to the first level & \\ \hline
+ & US1 & The first level appears & \\ \hline
+Press F to show FPS counter & & FPS counter appears on top left & \\ \hline
+ & US4 & FPS counter appears & \\ \hline
+Walk around using WASD & & Player moves around the room & \\ \hline
+& US3 & Game responds to user keyboard input: the player character moves around. & \\ \hline
+& US8 & Demo hud on bottom left moves along with camera. & \\ \hline
+Walk to the next room & & & \\ \hline
+Walk on button to spawn enemy & & Enemy appears & \\ \hline
+& US5 & Game object is spawned & \\ \hline
+Walk to the next corridor & & Next scene is loaded & \\ \hline
+& US7 & The previous level disappears, and the next level appears & \\ \hline
+& US9 & Enemy on the right of the room walks up and down, while displaying a spritesheet animation & \\ \hline
+& US10 & Enemy on the left of the room is scaling, rotating and translating & \\ \hline
+Press the 9 key (up to) 10 times & & The game objects and their animations all speed up & \\ \hline
+Prss the 3 key (up to) 20 times & & The game objects and their animations all slow down & \\ \hline
+& US6 & The game speed can be adjusted in runtime & \\ \hline
+Move to the next room & & & \\ \hline
+Move enemy by bumping into them & & Enemy responds to the player's movement & \\ \hline
+Press save button  (J )& & & \\ \hline
+Walk 5 tiles to another position & &  & \\ \hline
+Press load button (K) & & Player resets the position where the save button was pressed & \\ \hline
+& US11 & Game state and objects can be stored and loaded & \\ \hline
+Walk to the next room & & & \\ \hline
+Walk on the PLAY/STOP button & & Music starts playing & \\ \hline
+Walk on the PLAY/STOP button again & & Music stops playing & \\ \hline
+Walk on the SFX button & & A sound effect is played & \\ \hline
+Walk on the PLAY/STOP button & & The music reumes playing & \\ \hline
+Walk on the RESET button and walk on the PLAY/STOP button again & & The music starts at the beginning & \\ \hline
+& US12 & Music and sound effects can be played, music can be stopped & \\ \hline
+Walk to the next room & & & \\ \hline
+Move away from the enemy & & The enemy follows the player & \\ \hline
+& US13 & Engine supports basic AI & \\ \hline
+Walk to the next room & & & \\ \hline
+Walk on the buttons next to the cells & & The physics interact with various game objects in different ways & \\ \hline
+% Add pressure plate instead of button?
+& US14 & The game engine supports various physics features, such as collision detection and bounces & \\ \hline
+Walk to the next room & & & \\ \hline
+Walk on the fireworks button & & Firework particles appear & \\ \hline
+& US101 & Engine supports particle system & \\ \hline
+Restart the game and click on Demo again. In the initial starting room, walk on the stress test button & & & \\ \hline
+& (No user story) & Many bullets spawn and ricochet around the room. All bullets leave a particle trail. Demo continues to run smoothly. & \\ \hline
+
+\caption{Checklist for user stories}
+\label{tab:user_stories}
+\end{longtable}
+
+
+\section{Checklist for user stories (multiplayer)}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{3cm}|p{3cm}|p{6cm}|p{3cm}|}
+    \hline
+    \textbf{What to do} & \textbf{User story number} & \textbf{Behavior} & \textbf{Checklist} \\ \hline
+    Ask the handsome young man next to the laptop to start the multiplayer server & & & \\ \hline
+    Start the multiplayer demo on another laptop, press on the client button. & & The multiplayer demo selection menu appears & \\ \hline
+    Press the search for severs button and select the server IP. & & The multiplayer demo level appears & \\ \hline
+    Start the multiplayer demo on another laptop, press on the client button. & & The multiplayer demo selection menu appears & \\ \hline
+    Press the search for severs button and select the server IP. & & The multiplayer demo level appears & \\ \hline
+    Both clients: move around & & Both players visibly move around & \\ \hline
+    Ask the handsome young man to spawn some enemies & & Enemies spawn and can be pushed around & \\ \hline
+    On one client close and restart application. Join server again & & Enemies should still be there & \\ \hline
+    Ask the handsome young man to despawn the enemies & 106 & Enemies should disappear one by one & \\ \hline
+
+    \end{tabular}
+    \caption{Checklist for user stories (multiplayer)}
+    \label{tab:user_stories}
+    \end{table}
+
+\end{document}

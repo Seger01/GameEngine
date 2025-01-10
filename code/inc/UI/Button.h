@@ -1,42 +1,79 @@
+/**
+ * @file Button.h
+ * @brief Defines the Button class, responsible for managing and rendering buttons in the game.
+ */
+
 #ifndef BUTTON_H
 #define BUTTON_H
 
 #include "UIObject.h"
+#include "Vector2.h"
+#include <functional> // For std::function
 
-// define bounding box
-// define interactable
+/**
+ * @struct BoundingBox
+ * @brief Represents a bounding box in 2D space.
+ */
+struct BoundingBox
+{
+	Vector2 topLeft;
+	Vector2 bottomRight;
 
-struct BoundingBox {
-    Vector2 topLeft;
-    Vector2 bottomRight;
-
-    bool contains(Vector2 aPoint) {
-        return aPoint.x >= topLeft.x && aPoint.x <= bottomRight.x && aPoint.y >= topLeft.y && aPoint.y <= bottomRight.y;
-    }
+	bool contains(Vector2 aPoint) const
+	{
+		return aPoint.x >= topLeft.x && aPoint.x <= bottomRight.x && aPoint.y >= topLeft.y && aPoint.y <= bottomRight.y;
+	}
 };
 
-class Button : public UIObject {
+/**
+ * @class Button
+ * @brief Represents a button in the game.
+ */
+class Button : public UIObject
+{
 public:
-    Button();
-    ~Button();
-    void OnClick();
+	Button();
 
-    void setWidth(float aWidth);
-    float getWidth() const;
+	// Set callback for button click
+	void setOnClickCallback(const std::function<void()>& callback);
+	void activateOnClickCallback();
 
-    void setHeight(float aHeight);
-    float getHeight() const;
+	// Set callback for button click
+	void setOnReleaseCallback(const std::function<void()>& callback);
+	void activateOnReleaseCallback();
 
-    void setInteractable(bool aInteractable);
-    bool interactable() const;
+	bool isHovered() const;
+	void setHovered(bool aHovered);
 
-    BoundingBox getBoundingBox() const;
+	// Width and height management
+	void setWidth(float aWidth);
+	float getWidth() const;
+
+	void setHeight(float aHeight);
+	float getHeight() const;
+
+	// Interactable state management
+	void setInteractable(bool aInteractable);
+	bool interactable() const;
+
+	// Get the button's bounding box
+	BoundingBox getBoundingBox() const;
 
 private:
-    float mWidth;
-    float mHeight;
+	/// @brief The width of the button
+	float mWidth;
+	/// @brief The height of the button
+	float mHeight;
+	/// @brief Whether the button is interactable
+	bool mInteractable;
 
-    bool mInteractable;
+	/// @brief Whether the button is hovered
+	bool mHovered;
+
+	/// @brief The callback to be called when the button is clicked
+	std::function<void()> mOnClickCallback;
+	/// @brief The callback to be called when the button is released
+	std::function<void()> mOnReleaseCallback;
 };
 
 #endif // BUTTON_H

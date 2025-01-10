@@ -1,72 +1,95 @@
-#ifndef BODYPROXY_H
-#define BODYPROXY_H
+#pragma once
+
+/**
+ * @file BodyProxy.h
+ *
+ * @brief This file contains the declaration of the BodyProxy class which is used to
+ * temporarily store the properties of a body and send it to the world
+ *
+ */
 
 #include "BodyType.h"
 #include "Components/BoxCollider.h"
 #include "Components/CircleCollider.h"
 #include "Components/Collider.h"
+
 #include "GameObject.h"
-#include "Point.h"
 #include "RigidBody.h"
 #include "Vector2.h"
 #include <iostream>
 #include <vector>
-class BodyProxy {
+
+class BodyProxy
+{
 public:
-    BodyProxy(GameObject* aGameObject);
-    ~BodyProxy();
+	BodyProxy(const std::reference_wrapper<GameObject>& aGameObject);
+	~BodyProxy();
 
-    void processBodyType();
+	void processBodyType();
 
-    Vector2 getPosition() const;
-    Vector2 getSize() const;
+	Vector2 getPosition() const;
+	float getRotation() const;
 
-    bool getHasGravity() const;
-    bool getIsMoveableByForce() const;
-    bool getCanRotate() const;
-    BodyType getBodyType() const;
+	Vector2 getScale() const;
 
-    float getLinearDamping() const;
-    float getAngularDamping() const;
+	bool getHasGravity() const;
+	bool getIsMoveableByForce() const;
+	bool getCanRotate() const;
+	BodyType getBodyType() const;
 
-    float getDensity() const;
-    float getFriction() const;
-    float getRestitution() const;
+	float getLinearDamping() const;
+	float getAngularDamping() const;
 
-    float getMass() const;
-    float getGravityScale() const;
+	float getDensity() const;
+	float getFriction() const;
+	float getRestitution() const;
 
-    bool getCanCollide() const;
+	float getMass() const;
+	float getGravityScale() const;
 
-    int getBodyID() const;
+	bool getCanCollide() const;
 
-    std::vector<BoxCollider*> getBoxColliders() const;
-    std::vector<CircleCollider*> getCircleColliders() const;
+	std::vector<std::reference_wrapper<BoxCollider>> getBoxColliders() const;
+	std::vector<std::reference_wrapper<CircleCollider>> getCircleColliders() const;
 
 private:
-    Vector2 mPosition;
-    Vector2 mSize;
+	/// @brief Position of the body
+	Vector2 mPosition;
+	/// @brief Rotation of the body
+	float mRotation;
+	/// @brief Scale of the body
+	Vector2 mScale;
 
-    bool mHasGravity;
-    bool mIsMoveableByForce;
-    bool mCanRotate;
-    bool mCanCollide;
-    BodyType mBodyType;
+	/// @brief Whether the body has gravity
+	bool mHasGravity;
+	/// @brief Whether the body is moveable by force
+	bool mIsMoveableByForce;
+	/// @brief Whether the body can rotate
+	bool mCanRotate;
+	/// @brief Whether the body can collide
+	bool mCanCollide;
+	/// @brief The body type
+	BodyType mBodyType;
 
-    float mLinearDamping;
-    float mAngularDamping;
+	/// @brief Linear damping of the body
+	float mLinearDamping;
+	/// @brief Angular damping of the body
+	float mAngularDamping;
 
-    float mDensity;
-    float mFriction;
-    float mRestitution;
+	/// @brief Density of the body
+	float mDensity;
+	/// @brief Friction of the body
+	float mFriction;
+	/// @brief Restitution of the body
+	float mRestitution;
 
-    float mMass;
-    float mGravityScale;
+	/// @brief Mass of the body
+	float mMass;
+	/// @brief Gravity scale of the body
+	float mGravityScale;
 
-    std::vector<BoxCollider*> mBoxColliders;
-    std::vector<CircleCollider*> mCircleColliders;
-
-    int mBodyID;
+	/// @brief Box colliders of the body
+	std::vector<std::reference_wrapper<BoxCollider>> mBoxColliders;
+	/// @brief Circle colliders of the body
+	std::vector<std::reference_wrapper<CircleCollider>> mCircleColliders;
 };
-
-#endif // BODYPROXY_H

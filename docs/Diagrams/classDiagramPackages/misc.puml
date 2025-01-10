@@ -57,20 +57,4 @@ class Camera implements GameObject{
 
 }
 
-class TileMap {
-    + loadMap(const string& aPath): bool
-    + getWidth(): int
-    + getHeight(): int
-    + getTileWidth(): int
-    + getTileHeight(): int
-    + getTileLayers(): std::vector<tmx::TileLayer>
-    + getObjects(): std::vector<tmx::Object>
-    + getTilesets(): std::vector<tmx::Tileset>
-
-    - mMap : tmx::Map
-    - mTilesets : std::vector<tmx::Tileset>
-    - mTileLayers : std::vector<tmx::TileLayer>
-    - mObjects : std::vector<tmx::Object>
-}
-
 @enduml
