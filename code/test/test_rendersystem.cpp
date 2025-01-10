@@ -1,8 +1,12 @@
+#include "EngineBravo.h"
+#define protected public
+#define private public
+
 #include "Animation.h"
 #include "Camera.h"
 #include "Color.h"
-#include "EngineBravo.h"
 #include "GameObject.h"
+#include "Particle.h"
 #include "ParticleEmitter.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
@@ -11,6 +15,10 @@
 #include "SpriteDefUtil.h"
 #include "Text.h"
 #include "Window.h"
+
+#undef protected
+#undef private
+
 #include <gtest/gtest.h>
 
 class RenderSystemTest : public ::testing::Test
