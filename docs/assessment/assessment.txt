@@ -34,26 +34,26 @@ Stakeholders:
     + Discussed with customer about what features are added to the Engine
     - Could have discussed more about features with customer
 
-Samenworking:
+Collaboration:
     + Every development day started with a Standup
     + Notes about every meeting
     + Hours worked on project are even
-    - Taakverdeling
+    - Task assignment
 
-Professionele werkhouding:
+Professionalism:
     + Communicated important design choices to client on time either in person or via email/Teams
     + Asked questions and acted profesionally during contact hours
     + Prepared for the presentations for contact hours when needed
     - Project documentation in regards to the reasoning behind certain design choices.
 
-Product vs verwachting technisch:
+Product vs expectation technical:
     + Design following API
     + When design does not follow API, this is discussed with client
     + Engine follows proper C++ techniques
     + Algorithm present for pathfinding
     + Design patterns present where necessary
 
-Product vs verwachting functioneel:
+Product vs expectation functional:
     + All user stories implemented that were a must-have.
     + Engine supports different types of games instead of only a single genre of game
     + Unit tests present
@@ -62,3 +62,35 @@ Product vs verwachting functioneel:
     + Posibility for callgrind and generating coverage reports with gcovr
     + Can generate doxygen
     - No real game present, only a demo for singleplayer and multiplayer
+
+Engine maintainability arguments:
+    + Code is well documented(Doxygen, class diagram)
+    + Code is programmed to a consistent coding standard
+    + Code is implemented following the API provided by the customer
+    + Engine functionality is very modular, well seperated and low coupling
+    + It is easy to add new systems into the engine
+    + Used Facade pattern for third party libraries
+
+
+Engine extendibility arguments:
+    + Code is well documented(Doxygen, class diagram)
+    + Engine functionality is very modular, well seperated and low coupling(class diagram easy to remove systems)
+    + Used Facade pattern for third party libraries
+
+Engine user friendlyness arguments:
+    + Code is well documented(Doxygen, class diagram)
+    + No memory management needed from the user
+    + Easy to use setup templates
+    + Easy access to the engine through the EngineBravo class 
+    + Nice to have features: Multiple cameras, screen shake, particle system, collision filters, tiled support, draw graph support, visualize colliders
+    + Game engine not made for single genre of games
+
+
+
+
+
+
+
+
+
+
