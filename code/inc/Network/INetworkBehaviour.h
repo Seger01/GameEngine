@@ -8,6 +8,7 @@
 
 #include "Components/IBehaviourScript.h"
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

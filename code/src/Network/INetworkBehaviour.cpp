@@ -23,7 +23,7 @@ INetworkBehaviour::INetworkBehaviour(const std::string& aTag)
 	: IBehaviourScript(aTag), mIsOwner(false), mIsOwnerSet(false)
 {
 	mNetworkVariables.clear();
-	mNetworkBehaviourID = mNetworkBehaviourIDCounter++;
+	// mNetworkBehaviourID = mNetworkBehaviourIDCounter++;
 }
 
 /**
