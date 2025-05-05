@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name and version
-project(Engine_BRAVO VERSION 0.1)
+project(GameEngine VERSION 0.1)
 
 set(PROJECT_EXECUTABLE ${PROJECT_NAME}_exec)
 set(TESTS ${PROJECT_NAME}_tests)
