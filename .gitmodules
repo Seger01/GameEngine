@@ -25,3 +25,6 @@
 [submodule "code/external/FreeType"]
 	path = code/external/FreeType
 	url = https://github.com/freetype/freetype.git
+[submodule "code/external/renderer"]
+	path = code/external/renderer
+	url = https://github.com/Seger01/renderer.git
