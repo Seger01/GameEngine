@@ -12,7 +12,7 @@
 
 #include "EventManager.h"
 #include "Scene.h"
-#include "UIObject.h"
+#include "UI/UIObject.h"
 
 /**
  * @class UIManager

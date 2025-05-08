@@ -1,8 +1,8 @@
 #pragma once
-#include "BodyID.h"
 #include "BodyType.h"
 #include "Component.h"
 #include "Structs/BodyFlags.h"
+#include "Structs/BodyID.h"
 #include "Structs/BodyProperties.h"
 #include "Transform.h"
 #include "Vector2.h"

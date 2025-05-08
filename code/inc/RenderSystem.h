@@ -9,12 +9,12 @@
 
 #include <memory>
 
-#include "Button.h"
+#include "Components/Sprite.h"
 #include "Particle.h"
 #include "Point.h"
 #include "Renderer.h"
 #include "Scene.h"
-#include "Sprite.h"
+#include "UI/Button.h"
 #include "Window.h"
 
 /**

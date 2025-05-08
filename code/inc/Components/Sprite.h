@@ -7,8 +7,8 @@
 
 #include <string>
 
-#include "Color.h"
 #include "Component.h"
+#include "Global/Color.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Transform.h"

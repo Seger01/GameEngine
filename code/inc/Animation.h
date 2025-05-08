@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include "Sprite.h"
+#include "Components/Sprite.h"
 
 /**
  * @class Animation

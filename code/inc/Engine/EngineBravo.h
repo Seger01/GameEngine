@@ -20,17 +20,17 @@
 
 #pragma once
 
-#include "AudioManager.h"
+#include "Audio/AudioManager.h"
 #include "Engine/ResourceManager.h"
 #include "Engine/SaveGameManager.h"
 #include "EventManager.h"
+#include "Global/Time.h"
 #include "Network/NetworkManager.h"
 #include "ParticleSystem.h"
 #include "PhysicsManager.h"
 #include "RenderSystem.h"
 #include "Renderer.h"
 #include "SceneManager.h"
-#include "Time.h"
 #include "UIManager.h"
 #include "UpdateQueue.h"
 #include <queue>

@@ -3,7 +3,7 @@
  *
  * @brief This file contains the implementation of the MixerContainer class
  */
-#include "MixerContainer.h"
+#include "Audio/MixerContainer.h"
 #include <stdexcept>
 
 /**

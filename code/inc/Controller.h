@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
-#include "InputStructs.h"
+#include "Input/InputStructs.h"
 
 class Controller
 {

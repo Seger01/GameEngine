@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "Component.h"
+#include "Components/Component.h"
 #include "Transform.h"
 #include <algorithm>
 #include <iostream>
@@ -82,8 +82,7 @@ public:
 	{
 		// If the lambda function returns true at least one time (i.e. there is a component of type T), then the
 		// std::any_of function returns true.
-		return std::any_of(mComponents.begin(), mComponents.end(),
-						   [](const std::unique_ptr<Component>& component)
+		return std::any_of(mComponents.begin(), mComponents.end(), [](const std::unique_ptr<Component>& component)
 						   { return dynamic_cast<T*>(component.get()) != nullptr; });
 	}
 

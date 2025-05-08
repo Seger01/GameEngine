@@ -1,4 +1,4 @@
-#include "Collider.h"
+#include "Components/Collider.h"
 
 Collider::Collider(const std::string& aTag) : Component(aTag)
 {

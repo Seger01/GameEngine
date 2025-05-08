@@ -4,8 +4,8 @@
 #include <iostream>
 #include <memory>
 
-#include "Component.h"
-#include "EngineBravo.h"
+#include "Components/Component.h"
+#include "Engine/EngineBravo.h"
 
 /**
  * @brief Default constructor for GameObject.

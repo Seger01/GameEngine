@@ -6,15 +6,13 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include <SDL.h>
-#include <SDL_image.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+#include "Components/Sprite.h"
 #include "Renderer.h"
-#include "Sprite.h"
 #include "SpriteDef.h"
 #include "Texture.h"
 

@@ -3,9 +3,9 @@
  *
  * @brief This file contains the implementation of the AudioSource class
  */
-#include "AudioSource.h"
-#include "EngineBravo.h"
-#include "FSConverter.h"
+#include "Components/AudioSource.h"
+#include "Engine/EngineBravo.h"
+#include "Global/FSConverter.h"
 #include <iostream>
 #include <stdexcept>
 

@@ -4,12 +4,12 @@
  */
 
 #include "LevelBuilder.h"
-#include "AudioSource.h"
-#include "BoxCollider.h"
-#include "EngineBravo.h"
-#include "RigidBody.h"
+#include "Components/AudioSource.h"
+#include "Components/BoxCollider.h"
+#include "Components/RigidBody.h"
+#include "Components/Sprite.h"
+#include "Engine/EngineBravo.h"
 #include "Scene.h"
-#include "Sprite.h"
 
 /**
  * @brief This function creates a level from the parsed json data
@@ -38,7 +38,8 @@ void LevelBuilder::createLevel(Scene& aScene, const TileMapData& aTileMapData, i
  * @param tileMapData
  * @throw runtime_error if tile not found in tileInfoMap
  */
-void LevelBuilder::createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth, int aTileHeight) const
+void LevelBuilder::createTileLayers(Scene& aScene, const TileMapData& aTileMapData, int aTileWidth,
+									int aTileHeight) const
 {
 	for (size_t layerIndex = 0; layerIndex < aTileMapData.mLayers.size(); ++layerIndex)
 	{
@@ -64,7 +65,7 @@ void LevelBuilder::createTileLayers(Scene& aScene, const TileMapData& aTileMapDa
 					auto it = aTileMapData.mTileInfoMap.find(tile);
 					if (it != aTileMapData.mTileInfoMap.end())
 					{
-						//Don't create game objects for graph layers
+						// Don't create game objects for graph layers
 						if (!isGraphLayer)
 						{
 							createTile(aScene, it->second, aTileMapData.mLayerNames[layerIndex], layerIndex, rowIndex,
@@ -97,7 +98,8 @@ void LevelBuilder::createTile(Scene& aScene, const TileInfo& aTileInfo, const st
 	EngineBravo& engine = EngineBravo::getInstance();
 
 	SpriteDef spriteDef = {aTileInfo.mTilesetName,
-						   Rect{aTileInfo.mCoordinates.first, aTileInfo.mCoordinates.second, aTileWidth, aTileHeight}, static_cast<float>(aTileWidth), static_cast<float>(aTileHeight)};
+						   Rect{aTileInfo.mCoordinates.first, aTileInfo.mCoordinates.second, aTileWidth, aTileHeight},
+						   static_cast<float>(aTileWidth), static_cast<float>(aTileHeight)};
 
 	GameObject* gameObject = new GameObject;
 

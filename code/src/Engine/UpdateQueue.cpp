@@ -3,14 +3,14 @@
  *
  * @brief Contains the implementation of the UpdateQueue class
  */
-#include "UpdateQueue.h"
+#include "Engine/UpdateQueue.h"
 
 #include "Animation.h"
-#include "EngineBravo.h"
+#include "Components/ParticleEmitter.h"
+#include "Engine/EngineBravo.h"
 #include "GameObject.h"
-#include "NetworkObject.h"
-#include "ParticleEmitter.h"
-#include "Text.h"
+#include "Network/NetworkObject.h"
+#include "UI/Text.h"
 #include <functional>
 #include <vector>
 

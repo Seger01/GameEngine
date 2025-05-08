@@ -3,7 +3,7 @@
  * @brief Implementation of the NetworkServer class for handling server-side network operations.
  */
 
-#include "NetworkServer.h"
+#include "Network/NetworkServer.h"
 
 #include "Network/INetworkBehaviour.h"
 #include "Network/NetworkInformation.h"

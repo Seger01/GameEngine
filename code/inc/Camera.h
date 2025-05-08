@@ -6,9 +6,9 @@
 #pragma once
 
 #include "CameraDebugOverlay.h"
-#include "Color.h"
 #include "FRect.h"
 #include "GameObject.h"
+#include "Global/Color.h"
 
 /**
  * @class Camera

@@ -5,12 +5,12 @@
 
 #include "Engine/UIManager.h"
 
-#include "Button.h"
 #include "Components/IButtonBehaviourScript.h"
 #include "Engine/EngineBravo.h"
 #include "EventManager.h"
-#include "Input.h"
+#include "Input/Input.h"
 #include "Scene.h"
+#include "UI/Button.h"
 
 /**
  * @brief UIManager class constructor

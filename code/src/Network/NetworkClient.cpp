@@ -3,7 +3,7 @@
  * @brief Implementation of the NetworkClient class.
  */
 
-#include "NetworkClient.h"
+#include "Network/NetworkClient.h"
 
 #include "Network/INetworkBehaviour.h"
 #include "Network/NetworkInformation.h"

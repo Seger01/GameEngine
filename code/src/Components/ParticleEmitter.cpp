@@ -3,14 +3,14 @@
  * @brief ParticleEmitter class implementation file.
  */
 
-#include "ParticleEmitter.h"
+#include "Components/ParticleEmitter.h"
 
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 
 #include "GameObject.h"
-#include "Time.h"
+#include "Global/Time.h"
 
 /**
  * @brief ParticleEmitter class constructor

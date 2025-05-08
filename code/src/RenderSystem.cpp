@@ -9,13 +9,13 @@
 #include <memory>
 
 #include "Animation.h"
-#include "BoxCollider.h"
-#include "CircleCollider.h"
-#include "Color.h"
-#include "ParticleEmitter.h"
-#include "Sprite.h"
-#include "Text.h"
-#include "Time.h"
+#include "Components/BoxCollider.h"
+#include "Components/CircleCollider.h"
+#include "Components/ParticleEmitter.h"
+#include "Components/Sprite.h"
+#include "Global/Color.h"
+#include "Global/Time.h"
+#include "UI/Text.h"
 
 /**
  * @brief Constructor for the RenderSystem class. Initializes the window, renderer, and default settings.

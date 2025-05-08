@@ -3,7 +3,7 @@
  *
  * @brief This file contains the implementation of the Component class
  */
-#include "Component.h"
+#include "Components/Component.h"
 
 /**
  * @brief Component constructor. Sets the tag to the argument value, and sets the component to active.

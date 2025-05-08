@@ -3,7 +3,7 @@
  * @brief Defines the Button class, responsible for managing and rendering buttons in the game.
  */
 
-#include "Button.h"
+#include "UI/Button.h"
 
 /**
  * @brief Default constructor for the Button class.

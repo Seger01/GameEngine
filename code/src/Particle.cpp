@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include "Time.h"
+#include "Global/Time.h"
 
 /**
  * @brief Constructor for the Particle class.

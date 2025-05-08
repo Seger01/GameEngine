@@ -5,9 +5,9 @@
  * @brief The general logic for the physics engine of engine bravo
  *
  */
+#include "Components/IBehaviourScript.h"
 #include "GameObject.h"
-#include "IBehaviourScript.h"
-#include "World.h"
+#include "Physics/World.h"
 #include <vector>
 
 class PhysicsManager; // Forward declaration of PhysicsManager

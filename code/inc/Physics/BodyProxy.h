@@ -8,13 +8,13 @@
  *
  */
 
-#include "BodyType.h"
+#include "Components/BodyType.h"
 #include "Components/BoxCollider.h"
 #include "Components/CircleCollider.h"
 #include "Components/Collider.h"
 
+#include "Components/RigidBody.h"
 #include "GameObject.h"
-#include "RigidBody.h"
 #include "Vector2.h"
 #include <iostream>
 #include <vector>

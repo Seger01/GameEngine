@@ -3,12 +3,12 @@
  * @brief ResourceManager class implementation file.
  */
 
-#include "ResourceManager.h"
+#include "Engine/ResourceManager.h"
 
 #include <iostream>
 
 #include "Animation.h"
-#include "FSConverter.h"
+#include "Global/FSConverter.h"
 
 /**
  * @brief ResourceManager class default constructor
@@ -28,7 +28,8 @@ ResourceManager::~ResourceManager()
 {
 	for (auto& texture : mTextureMap)
 	{
-		SDL_DestroyTexture(texture.second->getSDLTexture());
+		// SDL_DestroyTexture(texture.second->getSDLTexture());
+		delete texture.second->getSMLTexture();
 	}
 	mTextureMap.clear();
 }
@@ -58,21 +59,23 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 		// Return the already loaded texture
 		return it->second.get();
 	}
-
-	// Load the texture from the specified path
-	// SDL_Texture* loadedTexture = IMG_LoadTexture(engine.getRenderSystem().getRenderer().getSDLRenderer(), );
-	SDL_Texture* sdlTexture =
-		IMG_LoadTexture(mRenderer->getSDLRenderer(), FSConverter().getResourcePath(aPngPath).c_str());
-	if (!sdlTexture)
-	{
-		std::cerr << "Failed to load texture from " << aPngPath << ": " << SDL_GetError() << std::endl;
-		return nullptr;
-	}
+	//
+	// // Load the texture from the specified path
+	// // SDL_Texture* loadedTexture = IMG_LoadTexture(engine.getRenderSystem().getRenderer().getSDLRenderer(), );
+	// * sdlTexture =
+	// 	IMG_LoadTexture(mRenderer->getSDLRenderer(), FSConverter().getResourcePath(aPngPath).c_str());
+	// if (!sdlTexture)
+	// {
+	// 	std::cerr << "Failed to load texture from " << aPngPath << ": " << SDL_GetError() << std::endl;
+	// 	return nullptr;
+	// }
 
 	static int textureIDCounter = 0;
 	textureIDCounter++;
+
+	SML::Texture* texture_resource = new SML::Texture(aPngPath);
 	// Create a new Texture object
-	auto texture = std::make_unique<Texture>(sdlTexture, textureIDCounter);
+	auto texture = std::make_unique<Texture>(texture_resource, textureIDCounter);
 
 	// Store the texture in the map and return its pointer
 	Texture* texturePtr = texture.get();

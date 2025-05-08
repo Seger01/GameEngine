@@ -1,4 +1,4 @@
-#include "RigidBody.h"
+#include "Components/RigidBody.h"
 
 /**
  * @file RigidBody.cpp

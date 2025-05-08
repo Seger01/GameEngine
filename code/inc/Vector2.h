@@ -3,8 +3,7 @@
  * @brief Defines the Vector2 struct.
  */
 
-#ifndef VECTOR2_H
-#define VECTOR2_H
+#pragma once
 
 /**
  * @struct Vector2
@@ -105,5 +104,3 @@ struct Vector2
 		return *this;
 	}
 };
-
-#endif

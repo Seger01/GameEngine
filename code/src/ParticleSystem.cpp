@@ -4,8 +4,8 @@
  */
 
 #include "ParticleSystem.h"
+#include "Components/ParticleEmitter.h"
 #include "GameObject.h"
-#include "ParticleEmitter.h"
 
 /**
  * @brief Constructor for the ParticleSystem class.

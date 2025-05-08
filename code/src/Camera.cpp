@@ -4,7 +4,7 @@
  */
 #include "Camera.h"
 
-#include "Time.h"
+#include "Global/Time.h"
 
 /**
  * @brief Constructor. Sets the width and height to 800*600 by default.

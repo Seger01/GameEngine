@@ -61,23 +61,21 @@ file(GLOB SUBDIRS RELATIVE ${PROJECT_SOURCE_DIR}/inc ${PROJECT_SOURCE_DIR}/inc/*
 # Add the root include directory
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc)
 
-# Add each subdirectory under the include directory
-foreach(subdir ${SUBDIRS})
-    if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/inc/${subdir})
-        target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc/${subdir})
-    endif()
-endforeach()
+# # Add each subdirectory under the include directory
+# foreach(subdir ${SUBDIRS})
+#     if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/inc/${subdir})
+#         target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc/${subdir})
+#     endif()
+# endforeach()
 
 # Automatically search for subdirectories in external dependencies and add them
 file(GLOB EXTERNAL_INCLUDE_DIRS
-    ${PROJECT_SOURCE_DIR}/external/BehaviorTree/include/behaviortree_cpp
     ${PROJECT_SOURCE_DIR}/external/box2d/include
-    ${PROJECT_SOURCE_DIR}/external/FreeType/include
     ${PROJECT_SOURCE_DIR}/external/nlohmann_json/include
     ${PROJECT_SOURCE_DIR}/external/SDL/include
-    ${PROJECT_SOURCE_DIR}/external/SDL_image/include
+    # ${PROJECT_SOURCE_DIR}/external/SDL_image/include
     ${PROJECT_SOURCE_DIR}/external/SDL_mixer/include
-    ${PROJECT_SOURCE_DIR}/external/SDL_ttf
+    # ${PROJECT_SOURCE_DIR}/external/SDL_ttf
     ${PROJECT_SOURCE_DIR}/external/SLikeNet/Source
 )
 
@@ -89,7 +87,7 @@ foreach(ext_dir ${EXTERNAL_INCLUDE_DIRS})
 endforeach()
 
 # Define the libraries to link against
-set(LINK_LIBRARIES RakNetLibStatic SDL2 SDL2_mixer SDL2_image SDL2_ttf box2d nlohmann_json::nlohmann_json behaviortree_cpp)
+set(LINK_LIBRARIES SDL SDL_Mixer RakNetLibStatic box2d nlohmann_json::nlohmann_json renderer)
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})

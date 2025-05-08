@@ -3,7 +3,7 @@
  *
  * @brief Implementation of the EngineBravo class.
  */
-#include "EngineBravo.h"
+#include "Engine/EngineBravo.h"
 
 #include <SDL.h>
 #include <chrono>
@@ -13,14 +13,14 @@
 #include "slikenet/sleep.h"
 
 #include "Animation.h"
-#include "IBehaviourScript.h"
-#include "Input.h"
-#include "NetworkObject.h"
-#include "ParticleEmitter.h"
+#include "Components/IBehaviourScript.h"
+#include "Components/ParticleEmitter.h"
+#include "Components/Sprite.h"
+#include "Global/ScopedTimer.h"
+#include "Input/Input.h"
+#include "Network/NetworkObject.h"
 #include "Renderer.h"
-#include "ScopedTimer.h"
-#include "Sprite.h"
-#include "Text.h"
+#include "UI/Text.h"
 
 /**
  * @brief Construct a new EngineBravo::EngineBravo object. Sets framre rate limit to 60.

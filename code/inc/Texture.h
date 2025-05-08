@@ -8,8 +8,7 @@
 
 #include <string>
 
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SML/Texture.h>
 
 /**
  * @class Texture
@@ -19,10 +18,10 @@
 class Texture
 {
 public:
-	Texture(SDL_Texture* aTexture, int aID = 0);
+	Texture(SML::Texture* aTexture, int aID = 0);
 	~Texture();
 
-	SDL_Texture* getSDLTexture() const;
+	SML::Texture* getSMLTexture() const;
 
 	int getID() const { return mID; }
 
@@ -30,7 +29,7 @@ private:
 	/// @brief The texture id
 	int mID = 0;
 	/// @brief The SDL texture
-	SDL_Texture* mTexture = nullptr;
+	SML::Texture* mTexture = nullptr;
 
 	/// @brief Whether the texture is loaded
 	bool mTextureLoaded = false;

@@ -5,7 +5,7 @@
 
 #include "Animation.h"
 #include "GameObject.h"
-#include "Time.h"
+#include "Global/Time.h"
 
 /**
  * @brief Animation class constructor

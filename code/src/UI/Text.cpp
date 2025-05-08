@@ -3,7 +3,7 @@
  * @brief Defines the Text class, responsible for managing and rendering text in the game.
  */
 
-#include "Text.h"
+#include "UI/Text.h"
 
 /**
  * @brief Default constructor for the Text class.

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CollisionFilters.h"
 #include "Component.h"
+#include "Structs/CollisionFilters.h"
 #include "Transform.h"
 #include "vector"
 

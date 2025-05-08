@@ -3,11 +3,11 @@
  *
  * @brief This file contains the implementation of the AudioManager class
  */
-#include "AudioManager.h"
-#include "AudioSource.h"
+#include "Audio/AudioManager.h"
+#include "Audio/IAudioFacade.h"
+#include "Audio/MixerFacade.h"
+#include "Components/AudioSource.h"
 #include "GameObject.h"
-#include "IAudioFacade.h"
-#include "MixerFacade.h"
 #include <stdexcept>
 
 /**
@@ -170,9 +170,8 @@ void AudioManager::addObject(GameObject& aObject)
  */
 void AudioManager::removeObject(GameObject& aObject)
 {
-	auto it =
-		std::remove_if(mObjects.begin(), mObjects.end(),
-					   [&aObject](const std::reference_wrapper<GameObject>& obj) { return &obj.get() == &aObject; });
+	auto it = std::remove_if(mObjects.begin(), mObjects.end(), [&aObject](const std::reference_wrapper<GameObject>& obj)
+							 { return &obj.get() == &aObject; });
 	if (it != mObjects.end())
 	{
 		mObjects.erase(it, mObjects.end());

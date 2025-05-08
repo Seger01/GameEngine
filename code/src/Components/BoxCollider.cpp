@@ -1,4 +1,4 @@
-#include "BoxCollider.h"
+#include "Components/BoxCollider.h"
 
 /**
  * @brief Constructs a BoxCollider instance with the specified tag.

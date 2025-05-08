@@ -8,8 +8,8 @@
 
 #include <string>
 
-#include "Color.h"
-#include "UIObject.h"
+#include "Global/Color.h"
+#include "UI/UIObject.h"
 #include "Vector2.h"
 
 /**

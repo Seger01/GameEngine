@@ -3,9 +3,9 @@
  *
  * @brief This file contains the implementation of the MixerFacade class
  */
-#include "MixerFacade.h"
-#include "FSConverter.h"
-#include <SDL2/SDL.h>
+#include "Audio/MixerFacade.h"
+#include "Global/FSConverter.h"
+#include <SDL.h>
 #include <SDL_mixer.h>
 #include <iostream>
 #include <stdexcept>
