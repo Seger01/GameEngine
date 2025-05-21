@@ -2,34 +2,24 @@
  * @file Renderer.cpp
  * @brief Implementation of the Renderer class, responsible for rendering textures, shapes, and text.
  */
+#include "Renderer.h"
 
 #include <iostream>
-
-#include <SDL_render.h>
 
 #include "Animation.h"
 #include "Point.h"
 #include "Rect.h"
-#include "Renderer.h"
 #include "Window.h"
+
+#include "Global/FSConverter.h"
 
 /**
  * @brief Constructor for the Renderer class. Initializes the renderer and font.
  * @param window The window to render to.
  */
 Renderer::Renderer(Window& window)
+	: mRenderer(window.getWindow()), mFont(FSConverter().getResourcePath("font/MinimalPixel.ttf"), 20)
 {
-	// // Create renderer
-	// mRenderer = SDL_CreateRenderer(window.getSDLWindow(), -1, SDL_RENDERER_ACCELERATED);
-	// if (mRenderer == NULL)
-	// {
-	// 	printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
-	// 	return;
-	// }
-	//
-	// if (SDL_RenderSetVSync(mRenderer, 1) != 0) {
-	//     std::cerr << "Warning: V-Sync is not supported or failed to enable!" << std::endl;
-	// }
 }
 
 /**
@@ -52,8 +42,13 @@ Renderer::~Renderer() {}
 
 void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, const Vector2& aLocation,
 							 const int aWidth, const int aHeight, const bool aFlipX, const bool aFlipY,
-							 const float aRotation, const Color& aColor, const Point& aRotationalCenter) const
+							 const float aRotation, const Color& aColor, const Point& aRotationalCenter)
 {
+	const SML::Rect sourceRect = SML::Rect(aSourceRect.x, aSourceRect.y, aSourceRect.w, aSourceRect.h);
+	const SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
+	const SML::SML_Point rotationalCenter = SML::SML_Point(aRotationalCenter.x, aRotationalCenter.y);
+	mRenderer.drawTexture(*aTexture.getSMLTexture(), sourceRect, aLocation.x, aLocation.y, aWidth, aHeight, aFlipX,
+						  aFlipY, aRotation, color, rotationalCenter);
 	// // Get the SDL_Texture from the Texture class
 	// SDL_Texture* sdlTexture = aTexture.getSDLTexture();
 	//
@@ -115,8 +110,12 @@ void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, c
  * @param aFill Whether to fill the square.
  */
 void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const int aHeight, const float rotation,
-							const Color& aColor, const bool aFill, const Point& aRotationalCenter) const
+							const Color& aColor, const bool aFill, const Point& aRotationalCenter)
 {
+	const SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
+	mRenderer.drawRect(aLocation.x, aLocation.y, aWidth, aHeight, color, aFill, rotation,
+					   SML::SML_Point(aRotationalCenter.x, aRotationalCenter.y));
+
 	// // Create a rectangle to define the size and position
 	// SDL_Rect rect;
 	// rect.x = static_cast<int>(aLocation.x);
@@ -192,8 +191,10 @@ void Renderer::renderSquare(const Vector2& aLocation, const int aWidth, const in
  * @param aColor The color of the circle.
  * @param aFill Whether to fill the circle.
  */
-void Renderer::drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill) const
+void Renderer::drawCircle(const Vector2& center, const int radius, const Color& aColor, const bool aFill)
 {
+	const SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
+	mRenderer.drawCircle(center.x, center.y, radius, color, aFill, 2);
 	// // Set the render color
 	// SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a);
 	//
@@ -255,8 +256,11 @@ void Renderer::drawCircle(const Vector2& center, const int radius, const Color& 
  * @param scaleY The vertical scale of the text.
  */
 void Renderer::renderText(const std::string& aText, const Vector2& aLocation, const Color& aColor, const float scaleX,
-						  const float scaleY) const
+						  const float scaleY)
 {
+	const SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
+	mRenderer.renderText(mFont, aText, aLocation.x, aLocation.y, scaleX, color);
+
 	// // Determine if text is fully opaque
 	// bool isOpaque = (aColor.a == 255);
 	//
@@ -335,16 +339,19 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	// 	std::cerr << "Failed to calculate text size: " << TTF_GetError() << std::endl;
 	// 	return false;
 	// }
+	return false;
 }
 
 /**
  * @brief Sets the viewport of the renderer.
  * @param viewport The viewport to set.
  */
-void Renderer::setViewport(const Rect& viewport) const
+void Renderer::setViewport(const Rect& viewport)
 {
 	// SDL_Rect rect = ((SDL_Rect)viewport);
 	// SDL_RenderSetViewport(mRenderer, &rect);
+	const SML::Rect rect = SML::Rect(viewport.x, viewport.y, viewport.w, viewport.h);
+	mRenderer.setViewport(rect);
 }
 
 /**
@@ -355,12 +362,14 @@ void Renderer::clear(const Color& aColor) const
 {
 	// SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 	// SDL_RenderClear(mRenderer);
+	SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
+	mRenderer.clear(color);
 }
 
 /**
  * @brief Presents the renderer to the screen.
  */
-void Renderer::show() const { /*  SDL_RenderPresent(mRenderer);  */ }
+void Renderer::show() const { mRenderer.show(); }
 
 /**
  * @brief Retrieves the SDL renderer.

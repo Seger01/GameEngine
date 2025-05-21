@@ -75,6 +75,7 @@ file(GLOB EXTERNAL_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/external/SDL/include
     # ${PROJECT_SOURCE_DIR}/external/SDL_image/include
     ${PROJECT_SOURCE_DIR}/external/SDL_mixer/include
+    ${PROJECT_SOURCE_DIR}/external/renderer/inc
     # ${PROJECT_SOURCE_DIR}/external/SDL_ttf
     ${PROJECT_SOURCE_DIR}/external/SLikeNet/Source
 )
@@ -87,10 +88,10 @@ foreach(ext_dir ${EXTERNAL_INCLUDE_DIRS})
 endforeach()
 
 # Define the libraries to link against
-set(LINK_LIBRARIES SDL SDL_Mixer RakNetLibStatic box2d nlohmann_json::nlohmann_json renderer)
+set(LINK_LIBRARIES SDL2 SDL2_mixer RakNetLibStatic box2d nlohmann_json::nlohmann_json renderer)
 
 # Link libraries to library
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
 
 if(ENABLE_TESTS)
     # Add the test subdirectory

@@ -1,43 +1,23 @@
 #include "Window.h"
-#include "SDL_video.h"
+// #include "SDL_video.h"
 #include <stdexcept>
+
+#include <iostream>
 
 /**
  * @brief Constructor for the Window class. Initializes the window with a specified width and height.
  * @param aWindowWidth The width of the window.
  * @param aWindowHeight The height of the window.
  */
-Window::Window(int aWindowWidth, int aWindowHeight)
+Window::Window(int aWindowWidth, int aWindowHeight) : mWindow(aWindowWidth, aWindowHeight)
 {
-	// // Initialize SDL if not already done
-	// if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	// {
-	// 	throw std::runtime_error("SDL could not initialize! SDL_Error: " + std::string(SDL_GetError()));
-	// }
-	//
-	// // Create the window
-	// mWindow = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, aWindowWidth,
-	// 						   aWindowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN);
-	//
-	// if (mWindow == nullptr)
-	// {
-	// 	throw std::runtime_error("Window could not be created! SDL_Error: " + std::string(SDL_GetError()));
-	// }
+	std::cout << "Window constructor engine called" << std::endl;
 }
 
 /**
  * @brief Destructor for the Window class. Destroys the window and quits SDL subsystems.
  */
-Window::~Window()
-{
-	// // Destroy window
-	// if (mWindow != nullptr)
-	// {
-	// 	SDL_DestroyWindow(mWindow);
-	// }
-	// // Quit SDL subsystems
-	// SDL_Quit();
-}
+Window::~Window() {}
 
 /**
  * @brief Shows the window.
@@ -50,9 +30,11 @@ void Window::showWindow() { /*  SDL_ShowWindow(mWindow);  */ }
  */
 Vector2 Window::getSize()
 {
-	// int width, height;
-	// SDL_GetWindowSize(mWindow, &width, &height);
-	// return Vector2(width, height);
+	SML::SML_Point size = mWindow.getWindowSize();
+
+	Vector2 sizeVector(size.x, size.y);
+
+	return sizeVector;
 }
 
 /**
@@ -95,9 +77,3 @@ void Window::toggleFullFloating()
 	// 	setFullScreen();
 	// }
 }
-
-/**
- * @brief Retrieves the SDL window.
- * @return The SDL window.
- */
-SDL_Window* Window::getSDLWindow() { /*  return mWindow;  */ }

@@ -47,11 +47,6 @@ void ResourceManager::setRenderer(Renderer* aRenderer) { mRenderer = aRenderer; 
  */
 Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 {
-	if (mRenderer == nullptr)
-	{
-		std::cout << "Geen renderer ingeladen bij Resource manager" << std::endl;
-		return nullptr;
-	}
 	// Check if the texture is already loaded
 	auto it = mTextureMap.find(aPngPath);
 	if (it != mTextureMap.end())
@@ -73,7 +68,7 @@ Texture* ResourceManager::loadTexture(const std::string& aPngPath)
 	static int textureIDCounter = 0;
 	textureIDCounter++;
 
-	SML::Texture* texture_resource = new SML::Texture(aPngPath);
+	SML::Texture* texture_resource = new SML::Texture(FSConverter().getResourcePath(aPngPath).c_str());
 	// Create a new Texture object
 	auto texture = std::make_unique<Texture>(texture_resource, textureIDCounter);
 

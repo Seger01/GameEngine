@@ -22,30 +22,30 @@ const int DPadRight = 3;
 
 Controller::Controller(int index) : joystickIndex(index), joystick(nullptr), connected(false)
 {
-	if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
-	{
-		std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
-		return;
-	}
-
-	if (SDL_NumJoysticks() > joystickIndex)
-	{
-		joystick = SDL_JoystickOpen(joystickIndex);
-		if (joystick)
-		{
-			connected = true;
-			axisValues.resize(SDL_JoystickNumAxes(joystick), 0);
-			buttonStates.resize(SDL_JoystickNumButtons(joystick), false);
-		}
-		else
-		{
-			std::cerr << "Failed to open joystick: " << SDL_GetError() << std::endl;
-		}
-	}
-	else
-	{
-		std::cerr << "No joystick connected at index " << joystickIndex << std::endl;
-	}
+	// if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
+	// {
+	// 	std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
+	// 	return;
+	// }
+	//
+	// if (SDL_NumJoysticks() > joystickIndex)
+	// {
+	// 	joystick = SDL_JoystickOpen(joystickIndex);
+	// 	if (joystick)
+	// 	{
+	// 		connected = true;
+	// 		axisValues.resize(SDL_JoystickNumAxes(joystick), 0);
+	// 		buttonStates.resize(SDL_JoystickNumButtons(joystick), false);
+	// 	}
+	// 	else
+	// 	{
+	// 		std::cerr << "Failed to open joystick: " << SDL_GetError() << std::endl;
+	// 	}
+	// }
+	// else
+	// {
+	// 	std::cerr << "No joystick connected at index " << joystickIndex << std::endl;
+	// }
 }
 
 Controller::~Controller()

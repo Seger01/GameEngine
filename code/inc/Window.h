@@ -6,7 +6,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <SDL.h>
+#include "SML/Window.h"
 
 #include "Vector2.h"
 
@@ -32,11 +32,10 @@ public:
 	void setFloating();
 	void toggleFullFloating();
 
-	SDL_Window* getSDLWindow();
+	SML::Window& getWindow() { return mWindow; }
 
 private:
-	/// @brief The SDL window.
-	SDL_Window* mWindow = nullptr;
+	SML::Window mWindow;
 };
 
 #endif

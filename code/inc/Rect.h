@@ -2,9 +2,7 @@
  * @file Rect.h
  * @brief Defines the Rect struct.
  */
-
-#ifndef RECT_H
-#define RECT_H
+#pragma once
 
 /**
  * @struct Rect
@@ -24,5 +22,3 @@ struct Rect
 	// overload the == operator for Rect
 	bool operator==(const Rect& other) const { return x == other.x && y == other.y && w == other.w && h == other.h; }
 };
-
-#endif
