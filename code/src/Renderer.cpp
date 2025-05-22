@@ -9,6 +9,7 @@
 #include "Animation.h"
 #include "Point.h"
 #include "Rect.h"
+#include "SML/Point.h"
 #include "Window.h"
 
 #include "Global/FSConverter.h"
@@ -18,7 +19,7 @@
  * @param window The window to render to.
  */
 Renderer::Renderer(Window& window)
-	: mRenderer(window.getWindow()), mFont(FSConverter().getResourcePath("font/MinimalPixel.ttf"), 20)
+	: mRenderer(window.getWindow()), mFont(FSConverter().getResourcePath("font/joystixmonospace.otf"), 20)
 {
 }
 
@@ -47,6 +48,11 @@ void Renderer::renderTexture(const Texture& aTexture, const Rect& aSourceRect, c
 	const SML::Rect sourceRect = SML::Rect(aSourceRect.x, aSourceRect.y, aSourceRect.w, aSourceRect.h);
 	const SML::Color color = SML::Color(aColor.r, aColor.g, aColor.b, aColor.a);
 	const SML::SML_Point rotationalCenter = SML::SML_Point(aRotationalCenter.x, aRotationalCenter.y);
+
+	// print debug info
+	// std::cout << "Rendering texture at: " << aLocation.x << ", " << aLocation.y << " with size: " << aWidth << "x"
+	// 		  << aHeight << " and rotation: " << aRotation << std::endl;
+
 	mRenderer.drawTexture(*aTexture.getSMLTexture(), sourceRect, aLocation.x, aLocation.y, aWidth, aHeight, aFlipX,
 						  aFlipY, aRotation, color, rotationalCenter);
 	// // Get the SDL_Texture from the Texture class
@@ -339,7 +345,13 @@ bool Renderer::calculateTextSize(const std::string& font, const std::string& tex
 	// 	std::cerr << "Failed to calculate text size: " << TTF_GetError() << std::endl;
 	// 	return false;
 	// }
-	return false;
+	// width = text.length() * 10;
+	//
+	// height = 20;
+	SML::SML_Point textSize = mRenderer.calculateTextSize(mFont, text);
+	width = textSize.x;
+	height = textSize.y;
+	return true;
 }
 
 /**

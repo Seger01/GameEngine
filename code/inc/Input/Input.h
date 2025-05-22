@@ -34,6 +34,8 @@ class Input
 
 	Input()
 	{
+		SDL_InitSubSystem(SDL_INIT_EVENTS);
+
 		this->updateCurrentKeys();
 		this->updatePreviousKeys();
 	}
