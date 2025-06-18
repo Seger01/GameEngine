@@ -31,7 +31,7 @@ public:
 	Renderer(Window& window);
 	~Renderer();
 
-	void clear(const Color& aColor) const;
+	void clear(const Color& aColor);
 	void show() const;
 	void setViewport(const Rect& viewport);
 

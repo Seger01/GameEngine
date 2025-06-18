@@ -370,7 +370,7 @@ void Renderer::setViewport(const Rect& viewport)
  * @brief Clears the renderer with a specified color.
  * @param aColor The color to clear the renderer with.
  */
-void Renderer::clear(const Color& aColor) const
+void Renderer::clear(const Color& aColor)
 {
 	// SDL_SetRenderDrawColor(mRenderer, aColor.r, aColor.g, aColor.b, aColor.a); // Red
 	// SDL_RenderClear(mRenderer);
