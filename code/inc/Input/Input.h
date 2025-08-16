@@ -20,7 +20,9 @@
 
 #include <SDL.h>
 
+#include "Engine/EngineBravo.h"
 #include "InputStructs.h"
+#include "Window.h"
 
 /**
  * @brief Input class that handles all input from the user.
@@ -32,13 +34,7 @@
 class Input
 {
 
-	Input()
-	{
-		SDL_InitSubSystem(SDL_INIT_EVENTS);
-
-		this->updateCurrentKeys();
-		this->updatePreviousKeys();
-	}
+	Input() { /* this->updateCurrentKeys();  */ }
 
 public:
 	// Get the singleton instance
@@ -54,73 +50,44 @@ public:
 
 	void update()
 	{
-		this->updateCurrentKeys();
+		mWindow.updateEvents();
+
 		this->updateUpKeys();
 		this->updateDownKeys();
-		this->updateHeldKeys();
+		this->updateCurrentKeys();
 
 		this->updateMouse();
-		this->updatePreviousKeys();
 	}
 
-	std::vector<Key>& getHeldKeys() { return mHeldKeys; }
+	bool* getDownKeys() { return mDownKeys; }
 
-	std::vector<Key>& getDownKeys() { return mDownKeys; }
-
-	std::vector<Key>& getUpKeys() { return mUpKeys; }
-
-	bool AnyKey()
-	{
-		if (mHeldKeys.size() == 0)
-			return false;
-
-		return true;
-	}
-
-	bool AnyKeyDown()
-	{
-		if (mDownKeys.size() == 0)
-			return false;
-
-		return true;
-	}
+	bool* getUpKeys() { return mUpKeys; }
 
 	Point MousePosition() { return mCurrentMouse.position; }
 
 	bool GetKey(Key key)
 	{
-		for (const auto& heldKey : mHeldKeys)
+		if (mCurrentKeys[(int)key] == 1)
 		{
-			if (heldKey == key)
-			{
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
 
 	bool GetKeyDown(Key key)
 	{
-		if (mDownKeys.size() != 0)
-
-			for (int i = 0; i < mDownKeys.size(); i++)
-			{
-				if (mDownKeys[i] == key)
-				{
-					return true;
-				}
-			}
+		if (mDownKeys[(int)key] == 1)
+		{
+			return true;
+		}
 		return false;
 	}
 
 	bool GetKeyUp(Key key)
 	{
-		for (const auto& upKey : mUpKeys)
+		if (mUpKeys[(int)key] == 1)
 		{
-			if (upKey == key)
-			{
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
@@ -214,108 +181,80 @@ public:
 	}
 
 private:
-	void updatePreviousKeys()
-	{
-		mPreviousKeys.resize(mCurrentKeys.size());
-		for (int i = 0; i < mCurrentKeys.size(); i++)
-		{
-			mPreviousKeys[i] = (Key)mCurrentKeys[i];
-		}
-	}
-
 	void updateCurrentKeys()
 	{
-		int numKeys = 0;
-		const Uint8* currentKeys = SDL_GetKeyboardState(&numKeys);
-
-		mCurrentKeys.resize(numKeys);
-
-		for (int i = 0; i < numKeys; i++)
+		for (int i = 0; i < 512; i++)
 		{
-			mCurrentKeys[i] = currentKeys[i];
+			if (mDownKeys[i] == true)
+			{
+				mCurrentKeys[i] = true;
+			}
+			else if (mUpKeys[i] == true)
+			{
+				mCurrentKeys[i] = false;
+			}
 		}
 	}
 
 	void updateDownKeys()
 	{
-		mDownKeys.resize(0);
-		// std::cout << "mPreviousKeys.size(): " << mPreviousKeys.size() << std::endl;
-		for (int i = 0; i < mPreviousKeys.size(); i++)
+		bool* downKeys = mWindow.getKeyPresses();
+
+		for (int i = 0; i < 512; i++)
 		{
-			if (mCurrentKeys[i] == 1 && (int)mPreviousKeys[i] == 0)
-			{
-				mDownKeys.push_back((Key)i);
-			}
+			mDownKeys[i] = downKeys[i];
 		}
 	}
 
 	void updateUpKeys()
 	{
-		mUpKeys.resize(0);
+		bool* upKeys = mWindow.getKeyReleases();
 
-		for (int i = 0; i < mPreviousKeys.size(); i++)
+		for (int i = 0; i < 512; i++)
 		{
-			if (mCurrentKeys[i] == 0 && (int)mPreviousKeys[i] == 1)
-			{
-				mUpKeys.push_back((Key)i);
-			}
-		}
-	}
-
-	void updateHeldKeys()
-	{
-		mHeldKeys.resize(0);
-
-		for (int i = 0; i < mCurrentKeys.size(); i++)
-		{
-			if (mCurrentKeys[i])
-			{
-
-				mHeldKeys.push_back((Key)i);
-			}
+			mUpKeys[i] = upKeys[i];
 		}
 	}
 
 	void updateMouse()
 	{
-		mPreviousMouse = mCurrentMouse;
-
-		mCurrentMouse = Mouse();
-
-		int mouseX, mouseY;
-		Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
-
-		mCurrentMouse.position.x = mouseX;
-		mCurrentMouse.position.y = mouseY;
-
-		if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
-		{
-			mCurrentMouse.left = true;
-		}
-
-		// Check if the right mouse button is pressed
-		if (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT))
-		{
-			mCurrentMouse.right = true;
-		}
-
-		// Check if the middle mouse button is pressed
-		if (mouseState & SDL_BUTTON(SDL_BUTTON_MIDDLE))
-		{
-			mCurrentMouse.middle = true;
-		}
+		// mPreviousMouse = mCurrentMouse;
+		//
+		// mCurrentMouse = Mouse();
+		//
+		// int mouseX, mouseY;
+		// Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
+		//
+		// mCurrentMouse.position.x = mouseX;
+		// mCurrentMouse.position.y = mouseY;
+		//
+		// if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
+		// {
+		// 	mCurrentMouse.left = true;
+		// }
+		//
+		// // Check if the right mouse button is pressed
+		// if (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT))
+		// {
+		// 	mCurrentMouse.right = true;
+		// }
+		//
+		// // Check if the middle mouse button is pressed
+		// if (mouseState & SDL_BUTTON(SDL_BUTTON_MIDDLE))
+		// {
+		// 	mCurrentMouse.middle = true;
+		// }
 	}
 
 private:
 	Mouse mCurrentMouse;
 	Mouse mPreviousMouse;
 
-	std::vector<int> mCurrentKeys;
+	bool mCurrentKeys[512] = {0};
+	bool mDownKeys[512] = {0};
+	bool mUpKeys[512] = {0};
 
-	std::vector<Key> mPreviousKeys;
-	std::vector<Key> mDownKeys;
-	std::vector<Key> mUpKeys;
-	std::vector<Key> mHeldKeys;
+	Window& mWindow = EngineBravo::getInstance().getRenderSystem().getWindow();
 };
 
 #endif

@@ -42,6 +42,8 @@ public:
 					 const Vector2& aScale) const;
 	Vector2 screenToWorldPos(const Point& aScreenpos, const Camera& aCurrentCamera) const;
 
+	bool applicationShouldClose();
+
 public:
 	void addObject(GameObject& aObject);
 	void removeObject(GameObject& aObject);

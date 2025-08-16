@@ -47,206 +47,130 @@ struct Mouse
  */
 enum class Key
 {
-	Key_UNKNOWN = 0,
+	Key_UNKNOWN = -1,
 
-	/**
-	 *  \name Usage page 0x07
-	 *
-	 *  These values are from usage page 0x07 (USB keyboard page).
-	 */
-	/*  */
+	// Letters
+	Key_A = 65,
+	Key_B = 66,
+	Key_C = 67,
+	Key_D = 68,
+	Key_E = 69,
+	Key_F = 70,
+	Key_G = 71,
+	Key_H = 72,
+	Key_I = 73,
+	Key_J = 74,
+	Key_K = 75,
+	Key_L = 76,
+	Key_M = 77,
+	Key_N = 78,
+	Key_O = 79,
+	Key_P = 80,
+	Key_Q = 81,
+	Key_R = 82,
+	Key_S = 83,
+	Key_T = 84,
+	Key_U = 85,
+	Key_V = 86,
+	Key_W = 87,
+	Key_X = 88,
+	Key_Y = 89,
+	Key_Z = 90,
 
-	Key_A = 4,
-	Key_B = 5,
-	Key_C = 6,
-	Key_D = 7,
-	Key_E = 8,
-	Key_F = 9,
-	Key_G = 10,
-	Key_H = 11,
-	Key_I = 12,
-	Key_J = 13,
-	Key_K = 14,
-	Key_L = 15,
-	Key_M = 16,
-	Key_N = 17,
-	Key_O = 18,
-	Key_P = 19,
-	Key_Q = 20,
-	Key_R = 21,
-	Key_S = 22,
-	Key_T = 23,
-	Key_U = 24,
-	Key_V = 25,
-	Key_W = 26,
-	Key_X = 27,
-	Key_Y = 28,
-	Key_Z = 29,
+	// Numbers
+	Key_0 = 48,
+	Key_1 = 49,
+	Key_2 = 50,
+	Key_3 = 51,
+	Key_4 = 52,
+	Key_5 = 53,
+	Key_6 = 54,
+	Key_7 = 55,
+	Key_8 = 56,
+	Key_9 = 57,
 
-	Key_1 = 30,
-	Key_2 = 31,
-	Key_3 = 32,
-	Key_4 = 33,
-	Key_5 = 34,
-	Key_6 = 35,
-	Key_7 = 36,
-	Key_8 = 37,
-	Key_9 = 38,
-	Key_0 = 39,
-
-	Key_Enter = 40,
-	Key_Escape = 41,
-	Key_Backspace = 42,
-	Key_Tab = 43,
-	Key_Space = 44,
-
+	// Printable keys
+	Key_Space = 32,
+	Key_Apostrophe = 39,
+	Key_Comma = 44,
 	Key_Minus = 45,
-	Key_Equals = 46,
-	Key_LeftBracket = 47,
-	Key_RightBracket = 48,
-	Key_Backslash = 49, /**< Located at the lower left of the return
-						 *   key on ISO keyboards and at the right end
-						 *   of the QWERTY row on ANSI keyboards.
-						 *   Produces REVERSE SOLIDUS (backslash) and
-						 *   VERTICAL LINE in a US layout, REVERSE
-						 *   SOLIDUS and VERTICAL LINE in a UK Mac
-						 *   layout, NUMBER SIGN and TILDE in a UK
-						 *   Windows layout, DOLLAR SIGN and POUND SIGN
-						 *   in a Swiss German layout, NUMBER SIGN and
-						 *   APOSTROPHE in a German layout, GRAVE
-						 *   ACCENT and POUND SIGN in a French Mac
-						 *   layout, and ASTERISK and MICRO SIGN in a
-						 *   French Windows layout.
-						 */
-	Key_NONUSHASH = 50, /**< ISO USB keyboards actually use this code
-						 *   instead of 49 for the same key, but all
-						 *   OSes I've seen treat the two codes
-						 *   identically. So, as an implementor, unless
-						 *   your keyboard generates both of those
-						 *   codes and your OS treats them differently,
-						 *   you should generate Key_BACKSLASH
-						 *   instead of this code. As a user, you
-						 *   should not rely on this code because SDL
-						 *   will never generate it with most (all?)
-						 *   keyboards.
-						 */
-	Key_Semicolon = 51,
-	Key_Apostrophe = 52,
-	Key_Grave = 53, /**< Located in the top left corner (on both ANSI
-					 *   and ISO keyboards). Produces GRAVE ACCENT and
-					 *   TILDE in a US Windows layout and in US and UK
-					 *   Mac layouts on ANSI keyboards, GRAVE ACCENT
-					 *   and NOT SIGN in a UK Windows layout, SECTION
-					 *   SIGN and PLUS-MINUS SIGN in US and UK Mac
-					 *   layouts on ISO keyboards, SECTION SIGN and
-					 *   DEGREE SIGN in a Swiss German layout (Mac:
-					 *   only on ISO keyboards), CIRCUMFLEX ACCENT and
-					 *   DEGREE SIGN in a German layout (Mac: only on
-					 *   ISO keyboards), SUPERSCRIPT TWO and TILDE in a
-					 *   French Windows layout, COMMERCIAL AT and
-					 *   NUMBER SIGN in a French Mac layout on ISO
-					 *   keyboards, and LESS-THAN SIGN and GREATER-THAN
-					 *   SIGN in a Swiss German, German, or French Mac
-					 *   layout on ANSI keyboards.
-					 */
-	Key_Comma = 54,
-	Key_Period = 55,
-	Key_Slash = 56,
+	Key_Period = 46,
+	Key_Slash = 47,
+	Key_Semicolon = 59,
+	Key_Equals = 61,
+	Key_LeftBracket = 91,
+	Key_Backslash = 92,
+	Key_RightBracket = 93,
+	Key_Grave = 96,
 
-	Key_CapsLock = 57,
+	// Function keys
+	Key_Escape = 256,
+	Key_Enter = 257,
+	Key_Tab = 258,
+	Key_Backspace = 259,
+	Key_Insert = 260,
+	Key_Delete = 261,
+	Key_Right = 262,
+	Key_Left = 263,
+	Key_Down = 264,
+	Key_Up = 265,
+	Key_PageUp = 266,
+	Key_PageDown = 267,
+	Key_Home = 268,
+	Key_End = 269,
 
-	Key_F1 = 58,
-	Key_F2 = 59,
-	Key_F3 = 60,
-	Key_F4 = 61,
-	Key_F5 = 62,
-	Key_F6 = 63,
-	Key_F7 = 64,
-	Key_F8 = 65,
-	Key_F9 = 66,
-	Key_F10 = 67,
-	Key_F11 = 68,
-	Key_F12 = 69,
+	// Locks & Print
+	Key_CapsLock = 280,
+	Key_ScrollLock = 281,
+	Key_NumLock = 282,
+	Key_PrintScreen = 283,
+	Key_Pause = 284,
 
-	Key_PrintScreen = 70,
-	Key_ScrollLock = 71,
-	Key_Pause = 72,
-	Key_Insert = 73, /**< insert on PC, help on some Mac keyboards (but
-								   does send code 73, not 117) */
-	Key_Home = 74,
-	Key_PageUp = 75,
-	Key_Delete = 76,
-	Key_End = 77,
-	Key_PageDown = 78,
-	Key_Right = 79,
-	Key_Left = 80,
-	Key_Down = 81,
-	Key_Up = 82,
+	// F-keys
+	Key_F1 = 290,
+	Key_F2 = 291,
+	Key_F3 = 292,
+	Key_F4 = 293,
+	Key_F5 = 294,
+	Key_F6 = 295,
+	Key_F7 = 296,
+	Key_F8 = 297,
+	Key_F9 = 298,
+	Key_F10 = 299,
+	Key_F11 = 300,
+	Key_F12 = 301,
 
-	Key_NUMLOCKCLEAR = 83, /**< num lock on PC, clear on Mac keyboards
-							*/
-	Key_NumDivide = 84,
-	Key_NumMultiply = 85,
-	Key_NumMinus = 86,
-	Key_NumPlus = 87,
-	Key_NumEnter = 88,
-	Key_Num1 = 89,
-	Key_Num2 = 90,
-	Key_Num3 = 91,
-	Key_Num4 = 92,
-	Key_Num5 = 93,
-	Key_Num6 = 94,
-	Key_Num7 = 95,
-	Key_Num8 = 96,
-	Key_Num9 = 97,
-	Key_Num0 = 98,
-	Key_KP_PERIOD = 99,
+	// Keypad
+	Key_KP_0 = 320,
+	Key_KP_1 = 321,
+	Key_KP_2 = 322,
+	Key_KP_3 = 323,
+	Key_KP_4 = 324,
+	Key_KP_5 = 325,
+	Key_KP_6 = 326,
+	Key_KP_7 = 327,
+	Key_KP_8 = 328,
+	Key_KP_9 = 329,
+	Key_KP_Decimal = 330,
+	Key_KP_Divide = 331,
+	Key_KP_Multiply = 332,
+	Key_KP_Subtract = 333,
+	Key_KP_Add = 334,
+	Key_KP_Enter = 335,
+	Key_KP_Equal = 336,
 
-	Key_LControl = 224,
-	Key_LShift = 225,
-	Key_LAlt = 226, /**< alt, option */
-	Key_LGui = 227, /**< windows, command (apple), meta */
-	Key_RControl = 228,
-	Key_RShift = 229,
-	Key_RAlt = 230, /**< alt gr, option */
-	Key_RGui = 231, /**< windows, command (apple), meta */
+	// Modifiers
+	Key_LShift = 340,
+	Key_LControl = 341,
+	Key_LAlt = 342,
+	Key_LSuper = 343,
+	Key_RShift = 344,
+	Key_RControl = 345,
+	Key_RAlt = 346,
+	Key_RSuper = 347,
+	Key_Menu = 348,
 
-	// Mouse buttons
-	Mouse_LeftButton,
-	Mouse_RightButton,
-	Mouse_MiddleButton,
-
-	// Controller buttons
-	Controller_Cross = 300,
-	Controller_Circle,
-	Controller_Triangle,
-	Controller_Square,
-	Controller_L1,
-	Controller_L2,
-	Controller_R1,
-	Controller_R2,
-	Controller_Options,
-	Controller_Share,
-	Controller_L3,
-	Controller_R3,
-	Controller_DPad_Up,
-	Controller_DPad_Down,
-	Controller_DPad_Left,
-	Controller_DPad_Right,
-
-	Controller_LeftStick_Up,
-	Controller_LeftStick_Left,
-	Controller_LeftStick_Down,
-	Controller_LeftStick_Right,
-
-	Controller_RightStick_Up,
-	Controller_RightStick_Left,
-	Controller_RightStick_Down,
-	Controller_RightStick_Right,
-
-	Key_NumberOfKeys = 512 /**< not a key, just marks the number of scancodes
-								 for array bounds */
-
+	Key_NumberOfKeys = 512
 };
 
 #endif

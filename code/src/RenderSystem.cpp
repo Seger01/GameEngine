@@ -580,6 +580,12 @@ void RenderSystem::renderDebugInfo(const Scene& aScene, const Camera& aCurrentCa
 }
 
 /**
+ * @brief Checks if the application should close.
+ * @return True if the application should close, false otherwise.
+ */
+bool RenderSystem::applicationShouldClose() { return mWindow->shouldClose(); }
+
+/**
  * @brief Retrieves the renderer.
  * @return The renderer.
  */

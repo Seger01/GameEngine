@@ -77,3 +77,36 @@ void Window::toggleFullFloating()
 	// 	setFullScreen();
 	// }
 }
+
+void Window::updateEvents() { mWindow.updateEvents(); }
+
+bool Window::shouldClose()
+{
+	// Check if the window should close
+	return mWindow.shouldClose();
+}
+
+bool* Window::getKeyPresses()
+{
+	// Get the current key states
+	return mWindow.getKeyPresses();
+}
+
+bool* Window::getKeyReleases()
+{
+	// Get the current key release states
+	return mWindow.getKeyReleases();
+}
+
+bool* Window::getMouseButtonsStates()
+{
+	// Get the current mouse button states
+	return mWindow.getMouseButtonsStates();
+}
+
+Vector2 Window::getMousePosition()
+{
+	// Get the current mouse position
+	SML::Vector2 mousePos = mWindow.getMousePosition();
+	return Vector2(mousePos.x, mousePos.y);
+}

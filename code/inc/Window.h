@@ -34,6 +34,16 @@ public:
 
 	SML::Window& getWindow() { return mWindow; }
 
+	void updateEvents();
+	bool shouldClose();
+
+	bool* getKeyPresses();
+	bool* getKeyReleases();
+
+	bool* getMouseButtonsStates();
+
+	Vector2 getMousePosition();
+
 private:
 	SML::Window mWindow;
 };

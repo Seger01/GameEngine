@@ -109,6 +109,11 @@ void EngineBravo::run()
 		limitFrameRate(mFrameRateLimit);
 
 		mUpdateQueue.updateRemovals();
+
+		if (mRenderSystem.applicationShouldClose())
+		{
+			mRunning = false;
+		}
 	}
 }
 
@@ -124,17 +129,7 @@ void EngineBravo::setFrameRateLimit(int aFrameRate) { mFrameRateLimit = aFrameRa
  *
  * @param aEvent The event to handle.
  */
-void EngineBravo::handleEvent(const Event& aEvent)
-{
-	switch (aEvent.type)
-	{
-	case EventType::Quit:
-		mRunning = false;
-		break;
-	default:
-		break;
-	}
-}
+void EngineBravo::handleEvent(const Event& aEvent) {}
 
 /**
  * @brief function that limits frame rate by keeping track of the time it takes to render a frame and delaying the next
