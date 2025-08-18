@@ -73,6 +73,8 @@ private:
 
 	void updateLayerRange(GameObject& aObject);
 
+	Rect getScreenViewPort(const Camera& aCamera) const;
+
 private:
 	/// @brief Collection of game objects managed by the system.
 	std::vector<std::reference_wrapper<GameObject>> mObjects;

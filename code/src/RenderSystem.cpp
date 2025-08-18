@@ -372,6 +372,33 @@ void RenderSystem::sortCamerasByRenderOrder(std::vector<Camera*>& aCameras) cons
 			  [](Camera* a, Camera* b) { return a->getRenderOrder() < b->getRenderOrder(); });
 }
 
+Rect RenderSystem::getScreenViewPort(const Camera& aCamera) const
+{
+	FRect cameraViewport = aCamera.getViewport();
+
+	Rect screenViewPort = Rect{static_cast<int>(cameraViewport.x * mWindow->getSize().x),
+							   static_cast<int>(cameraViewport.y * mWindow->getSize().y),
+							   static_cast<int>(cameraViewport.w * mWindow->getSize().x),
+							   static_cast<int>(cameraViewport.h * mWindow->getSize().y)};
+
+	if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Letterbox
+		int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
+		screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * cameraViewport.y);
+		screenViewPort.h = newHeight * cameraViewport.h;
+	}
+	else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
+	{
+		// Pillarbox
+		int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
+		screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * cameraViewport.x);
+		screenViewPort.w = newWidth * cameraViewport.w;
+	}
+
+	return screenViewPort;
+}
+
 /**
  * @brief Renders the scene.
  * @param aScene The scene to render.
@@ -390,27 +417,7 @@ void RenderSystem::render(const Scene& aScene) const
 	{
 		camera->update();
 
-		FRect cameraViewport = camera->getViewport();
-
-		Rect screenViewPort = Rect{static_cast<int>(cameraViewport.x * mWindow->getSize().x),
-								   static_cast<int>(cameraViewport.y * mWindow->getSize().y),
-								   static_cast<int>(cameraViewport.w * mWindow->getSize().x),
-								   static_cast<int>(cameraViewport.h * mWindow->getSize().y)};
-
-		if ((mWindow->getSize().x / mAspectRatio.x) < (mWindow->getSize().y / mAspectRatio.y))
-		{
-			// Letterbox
-			int newHeight = mWindow->getSize().x / mAspectRatio.x * mAspectRatio.y;
-			screenViewPort.y = ((mWindow->getSize().y - newHeight) / 2) + (newHeight * cameraViewport.y);
-			screenViewPort.h = newHeight * cameraViewport.h;
-		}
-		else if ((mWindow->getSize().x / mAspectRatio.x) > (mWindow->getSize().y / mAspectRatio.y))
-		{
-			// Pillarbox
-			int newWidth = mWindow->getSize().y / mAspectRatio.y * mAspectRatio.x;
-			screenViewPort.x = ((mWindow->getSize().x - newWidth) / 2) + (newWidth * cameraViewport.x);
-			screenViewPort.w = newWidth * cameraViewport.w;
-		}
+		Rect screenViewPort = getScreenViewPort(*camera);
 
 		mRenderer->setViewport(screenViewPort);
 
@@ -420,6 +427,13 @@ void RenderSystem::render(const Scene& aScene) const
 
 		// Render objects visible to this camera
 		renderForCamera(aScene, *camera, screenViewPort);
+	}
+
+	// Set renderer viewport to the first camera's viewport
+	if (!cameras.empty())
+	{
+		Rect firstCameraViewport = getScreenViewPort(*cameras.front());
+		mRenderer->setViewport(firstCameraViewport);
 	}
 
 	mRenderer->show();

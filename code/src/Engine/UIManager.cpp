@@ -29,10 +29,10 @@ void UIManager::init()
 {
 	EventManager& eventManager = EngineBravo::getInstance().getEventManager();
 
-	eventManager.subscribe(std::bind(&UIManager::handleMouseDownEvent, this, std::placeholders::_1),
-						   EventType::MouseButtonDown);
-	eventManager.subscribe(std::bind(&UIManager::handleMouseUpEvent, this, std::placeholders::_1),
-						   EventType::MouseButtonUp);
+	// eventManager.subscribe(std::bind(&UIManager::handleMouseDownEvent, this, std::placeholders::_1),
+	// 					   EventType::MouseButtonDown);
+	// eventManager.subscribe(std::bind(&UIManager::handleMouseUpEvent, this, std::placeholders::_1),
+	// 					   EventType::MouseButtonUp);
 }
 
 /**
@@ -62,10 +62,10 @@ void UIManager::update(const Scene& aScene)
 		{
 			return;
 		}
-
-		for (Event event : mMouseDownEventQueue)
+		Input& input = Input::getInstance();
+		if (input.GetMouseButtonDown(MouseButton::LEFT))
 		{
-			Point mouseScreenPos = event.mouse.position;
+			Point mouseScreenPos = input.MousePosition();
 
 			Vector2 worldMousePos =
 				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
@@ -79,23 +79,20 @@ void UIManager::update(const Scene& aScene)
 				{
 					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 					{
-						if (event.type == EventType::MouseButtonDown)
+						for (IButtonBehaviourScript& buttonBehaviourScript :
+							 button.getComponents<IButtonBehaviourScript>())
 						{
-							for (IButtonBehaviourScript& buttonBehaviourScript :
-								 button.getComponents<IButtonBehaviourScript>())
-							{
-								buttonBehaviourScript.onButtonPressed();
-								button.activateOnClickCallback();
-							}
+							buttonBehaviourScript.onButtonPressed();
+							button.activateOnClickCallback();
 						}
 					}
 				}
 			}
 		}
 
-		for (Event event : mMouseUpEventQueue)
+		if (input.GetMouseButtonUp(MouseButton::LEFT))
 		{
-			Point mouseScreenPos = event.mouse.position;
+			Point mouseScreenPos = input.MousePosition();
 
 			Vector2 worldMousePos =
 				EngineBravo::getInstance().getRenderSystem().screenToWorldPos(mouseScreenPos, *currentCamera);
@@ -109,14 +106,11 @@ void UIManager::update(const Scene& aScene)
 				{
 					if (button.getComponents<IButtonBehaviourScript>().size() > 0)
 					{
-						if (event.type == EventType::MouseButtonUp)
+						for (IButtonBehaviourScript& buttonBehaviourScript :
+							 button.getComponents<IButtonBehaviourScript>())
 						{
-							for (IButtonBehaviourScript& buttonBehaviourScript :
-								 button.getComponents<IButtonBehaviourScript>())
-							{
-								buttonBehaviourScript.onButtonReleased();
-								button.activateOnReleaseCallback();
-							}
+							buttonBehaviourScript.onButtonReleased();
+							button.activateOnReleaseCallback();
 						}
 					}
 				}

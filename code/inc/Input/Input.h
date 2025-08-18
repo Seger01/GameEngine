@@ -218,32 +218,20 @@ private:
 
 	void updateMouse()
 	{
-		// mPreviousMouse = mCurrentMouse;
-		//
-		// mCurrentMouse = Mouse();
-		//
-		// int mouseX, mouseY;
-		// Uint32 mouseState = SDL_GetMouseState(&mouseX, &mouseY);
-		//
-		// mCurrentMouse.position.x = mouseX;
-		// mCurrentMouse.position.y = mouseY;
-		//
-		// if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT))
-		// {
-		// 	mCurrentMouse.left = true;
-		// }
-		//
-		// // Check if the right mouse button is pressed
-		// if (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT))
-		// {
-		// 	mCurrentMouse.right = true;
-		// }
-		//
-		// // Check if the middle mouse button is pressed
-		// if (mouseState & SDL_BUTTON(SDL_BUTTON_MIDDLE))
-		// {
-		// 	mCurrentMouse.middle = true;
-		// }
+		mPreviousMouse = mCurrentMouse;
+
+		mCurrentMouse = Mouse();
+
+		Vector2 mousePosition = mWindow.getMousePosition();
+
+		mCurrentMouse.position.x = mousePosition.x;
+		mCurrentMouse.position.y = mousePosition.y;
+
+		bool* mouseButtons = mWindow.getMouseButtonsStates();
+
+		mCurrentMouse.left = mouseButtons[0];
+		mCurrentMouse.right = mouseButtons[1];
+		mCurrentMouse.middle = mouseButtons[2];
 	}
 
 private:
