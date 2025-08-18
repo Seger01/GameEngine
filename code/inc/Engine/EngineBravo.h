@@ -21,18 +21,17 @@
 #pragma once
 
 #include "Audio/AudioManager.h"
-#include "Engine/ResourceManager.h"
-#include "Engine/SaveGameManager.h"
-#include "EventManager.h"
+#include "Events/EventManager.h"
 #include "Global/Time.h"
-#include "Network/NetworkManager.h"
-#include "ParticleSystem.h"
-#include "PhysicsManager.h"
-#include "RenderSystem.h"
-#include "Renderer.h"
-#include "SceneManager.h"
-#include "UIManager.h"
-#include "UpdateQueue.h"
+#include "Particles/ParticleSystem.h"
+#include "Physics/PhysicsManager.h"
+#include "Rendering/RenderSystem.h"
+#include "Rendering/Renderer.h"
+#include "ResourceManager/ResourceManager.h"
+#include "Save/SaveGameManager.h"
+#include "Scenes/SceneManager.h"
+#include "UI/UIManager.h"
+#include "UpdateQueue/UpdateQueue.h"
 #include <queue>
 
 /**
@@ -56,7 +55,6 @@ public:
 	RenderSystem& getRenderSystem();
 	ResourceManager& getResourceManager();
 	ParticleSystem& getParticleSystem();
-	NetworkManager& getNetworkManager();
 	SaveGameManager& getSaveGameManager();
 	AudioManager& getAudioManager();
 	EventManager& getEventManager();
@@ -95,8 +93,6 @@ private:
 	ResourceManager mResourceManager;
 	/// @brief Particle system: responsible for creating and destroying particles
 	ParticleSystem mParticleSystem;
-	/// @brief Network manager: responsible for network communication
-	NetworkManager mNetworkManager;
 	/// @brief Event manager: responsible for handling user input events
 	EventManager mEventManager;
 	/// @brief Save game manager: responsible for saving and loading save games

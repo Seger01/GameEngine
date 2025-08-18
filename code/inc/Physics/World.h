@@ -7,7 +7,7 @@
  */
 
 #include "Physics/BodyProxy.h"
-#include "Vector2.h"
+#include "Structs/Vector2.h"
 #include "box2d/box2d.h"
 #include "box2d/id.h"
 #include <vector>

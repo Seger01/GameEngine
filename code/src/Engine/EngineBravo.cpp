@@ -10,16 +10,14 @@
 #include <thread>
 
 #include "box2d/types.h"
-#include "slikenet/sleep.h"
 
-#include "Animation.h"
-#include "Components/IBehaviourScript.h"
-#include "Components/ParticleEmitter.h"
-#include "Components/Sprite.h"
+#include "BehaviourScripts/IBehaviourScript.h"
 #include "Global/ScopedTimer.h"
 #include "Input/Input.h"
-#include "Network/NetworkObject.h"
-#include "Renderer.h"
+#include "Particles/ParticleEmitter.h"
+#include "Rendering/Animation.h"
+#include "Rendering/Renderer.h"
+#include "Rendering/Sprite.h"
 #include "UI/Text.h"
 
 /**
@@ -42,15 +40,13 @@ EngineBravo& EngineBravo::getInstance()
 
 /**
  * @brief Initialize the engine. Sets the renderer for the resource manager, updates the scene manager, initializes the
- * network manager, initializes the time, initializes the UI manager, starts the physics engine.
+ * initializes the time, initializes the UI manager, starts the physics engine.
  */
 void EngineBravo::initialize()
 {
 	mResourceManager.setRenderer(&mRenderSystem.getRenderer());
 
 	mSceneManager.update();
-
-	mNetworkManager.initialize();
 
 	Time::initialize();
 
@@ -61,8 +57,8 @@ void EngineBravo::initialize()
 
 /**
  * @brief Run the engine. This function is the main loop of the engine. It handles input, updates the scene, runs
- * behaviour scripts, updates the physics engine, updates the particle system, renders the scene, updates the network
- * manager, limits the frame rate.
+ * behaviour scripts, updates the physics engine, updates the particle system, renders the scene, updates the
+ * , limits the frame rate.
  */
 void EngineBravo::run()
 {
@@ -103,8 +99,6 @@ void EngineBravo::run()
 
 		mParticleSystem.update();
 		mRenderSystem.render(mSceneManager.getCurrentScene());
-
-		mNetworkManager.update();
 
 		limitFrameRate(mFrameRateLimit);
 
@@ -173,8 +167,6 @@ AudioManager& EngineBravo::getAudioManager() { return mAudioManager; }
 EventManager& EngineBravo::getEventManager() { return mEventManager; }
 
 UIManager& EngineBravo::getUIManager() { return mUIManager; }
-
-NetworkManager& EngineBravo::getNetworkManager() { return mNetworkManager; }
 
 /**
  * @brief Start the behaviour scripts of all objects in the current scene. This function is called at the start of the

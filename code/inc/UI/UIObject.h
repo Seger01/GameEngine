@@ -1,12 +1,13 @@
 #ifndef UIOBJECT_H
 #define UIOBJECT_H
 
-#include "GameObject.h"
+#include "GameObject/GameObject.h"
 
-class UIObject : public GameObject {
+class UIObject : public GameObject
+{
 public:
-    UIObject();
-    virtual ~UIObject();
+	UIObject();
+	virtual ~UIObject();
 };
 
 #endif // UIOBJECT_H

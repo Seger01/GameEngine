@@ -4,10 +4,10 @@
  * @brief This file contains the implementation of the AudioManager class
  */
 #include "Audio/AudioManager.h"
+#include "Audio/AudioSource.h"
 #include "Audio/IAudioFacade.h"
 #include "Audio/MixerFacade.h"
-#include "Components/AudioSource.h"
-#include "GameObject.h"
+#include "GameObject/GameObject.h"
 #include <stdexcept>
 
 /**

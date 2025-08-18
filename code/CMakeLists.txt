@@ -5,21 +5,11 @@ cmake_minimum_required(VERSION 3.10)
 project(GameEngine VERSION 0.1)
 
 set(PROJECT_EXECUTABLE ${PROJECT_NAME}_exec)
-set(TESTS ${PROJECT_NAME}_tests)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-# Option to enable or disable building tests
-option(ENABLE_TESTS "Enable building tests" OFF)
-
-if(ENABLE_TESTS)
-    # Set coverage compile and link flags
-    add_compile_options(--coverage)
-    add_link_options(--coverage)
-endif()
 
 # Set architecture-specific flags
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
@@ -61,13 +51,6 @@ file(GLOB SUBDIRS RELATIVE ${PROJECT_SOURCE_DIR}/inc ${PROJECT_SOURCE_DIR}/inc/*
 # Add the root include directory
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc)
 
-# # Add each subdirectory under the include directory
-# foreach(subdir ${SUBDIRS})
-#     if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/inc/${subdir})
-#         target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/inc/${subdir})
-#     endif()
-# endforeach()
-
 # Automatically search for subdirectories in external dependencies and add them
 file(GLOB EXTERNAL_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/external/box2d/include
@@ -77,7 +60,6 @@ file(GLOB EXTERNAL_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/external/SDL_mixer/include
     ${PROJECT_SOURCE_DIR}/external/renderer/inc
     # ${PROJECT_SOURCE_DIR}/external/SDL_ttf
-    ${PROJECT_SOURCE_DIR}/external/SLikeNet/Source
 )
 
 # Include each external library directory
@@ -88,15 +70,10 @@ foreach(ext_dir ${EXTERNAL_INCLUDE_DIRS})
 endforeach()
 
 # Define the libraries to link against
-set(LINK_LIBRARIES SDL2 SDL2_mixer RakNetLibStatic box2d nlohmann_json::nlohmann_json renderer)
+set(LINK_LIBRARIES SDL2 SDL2_mixer box2d nlohmann_json::nlohmann_json renderer soloud)
 
 # Link libraries to library
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
-
-if(ENABLE_TESTS)
-    # Add the test subdirectory
-    add_subdirectory(test)
-endif()
 
 # Add a custom target for Doxygen
 find_package(Doxygen REQUIRED)

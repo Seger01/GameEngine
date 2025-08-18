@@ -5,8 +5,8 @@
  */
 #pragma once
 
+#include "Audio/AudioSource.h"
 #include "Audio/IAudioFacade.h"
-#include "Components/AudioSource.h"
 #include <memory>
 #include <vector>
 

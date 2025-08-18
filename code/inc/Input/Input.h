@@ -22,7 +22,7 @@
 
 #include "Engine/EngineBravo.h"
 #include "InputStructs.h"
-#include "Window.h"
+#include "Rendering/Window.h"
 
 /**
  * @brief Input class that handles all input from the user.
@@ -63,9 +63,9 @@ public:
 
 	bool* getUpKeys() { return mUpKeys; }
 
-	Point MousePosition() { return mCurrentMouse.position; }
+	Point mousePosition() { return mCurrentMouse.position; }
 
-	bool GetKey(Key key)
+	bool getKey(Key key)
 	{
 		if (mCurrentKeys[(int)key] == 1)
 		{
@@ -74,7 +74,7 @@ public:
 		return false;
 	}
 
-	bool GetKeyDown(Key key)
+	bool getKeyDown(Key key)
 	{
 		if (mDownKeys[(int)key] == 1)
 		{
@@ -83,7 +83,7 @@ public:
 		return false;
 	}
 
-	bool GetKeyUp(Key key)
+	bool getKeyUp(Key key)
 	{
 		if (mUpKeys[(int)key] == 1)
 		{
@@ -92,7 +92,7 @@ public:
 		return false;
 	}
 
-	bool GetMouseButton(MouseButton which)
+	bool getMouseButton(MouseButton which)
 	{
 		switch (which)
 		{
@@ -112,7 +112,7 @@ public:
 		return false;
 	}
 
-	bool GetMouseButtonDown(MouseButton which)
+	bool getMouseButtonDown(MouseButton which)
 	{
 		switch (which)
 		{
@@ -148,7 +148,7 @@ public:
 	 * @brief Returns true during the frame the user releases the given mouse button.
 	 * @spicapi
 	 */
-	bool GetMouseButtonUp(MouseButton which)
+	bool getMouseButtonUp(MouseButton which)
 	{
 		switch (which)
 		{

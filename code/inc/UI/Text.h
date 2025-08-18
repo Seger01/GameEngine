@@ -9,8 +9,8 @@
 #include <string>
 
 #include "Global/Color.h"
+#include "Structs/Vector2.h"
 #include "UI/UIObject.h"
-#include "Vector2.h"
 
 /**
  * @class Text

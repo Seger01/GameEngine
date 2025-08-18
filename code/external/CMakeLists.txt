@@ -1,9 +1,3 @@
-# Set options for SlikeNet
-set(RAKNET_ENABLE_SAMPLES OFF CACHE BOOL "Generate RakNet sample projects if true." FORCE)
-set(RAKNET_ENABLE_DLL OFF CACHE BOOL "Generate the DLL project if true." FORCE)
-set(RAKNET_ENABLE_STATIC ON CACHE BOOL "Generate the static library project if true." FORCE)
-set(RAKNET_GENERATE_INCLUDE_ONLY_DIR OFF CACHE BOOL "Setup a include/RakNet/ directory in which all the headers are copied." FORCE)
-
 # Set options for SDL
 set(SDL_SHARED ON CACHE BOOL "Build SDL as a shared library" FORCE)
 set(SDL_STATIC OFF CACHE BOOL "Build SDL as a static library" FORCE)
@@ -153,7 +147,6 @@ set(FT_WITH_BROTLI OFF CACHE BOOL "Enable Brotli support" FORCE)
 set(FT_WITH_GZIP OFF CACHE BOOL "Enable Gzip support" FORCE)
 
 # Add the external libraries
-add_subdirectory(SLikeNet)
 add_subdirectory(SDL)
 add_subdirectory(SDL_mixer)
 # add_subdirectory(SDL_image)
@@ -161,4 +154,25 @@ add_subdirectory(SDL_mixer)
 add_subdirectory(renderer)
 add_subdirectory(box2d)
 add_subdirectory(nlohmann_json)
+# add_subdirectory(soloud)
 # add_subdirectory(BehaviorTree)
+# Add SoLoud source files (adjust the paths as needed)
+file(GLOB_RECURSE SOLOUD_SRC
+    soloud/src/audiosource/*
+    soloud/src/c_api/*
+    soloud/src/core/*
+    soloud/src/filter/*
+    soloud/src/backend/alsa/*
+)
+
+add_library(soloud STATIC ${SOLOUD_SRC})
+target_include_directories(soloud PUBLIC
+    soloud/include
+    soloud/src
+)
+
+target_compile_definitions(soloud PUBLIC WITH_ALSA)
+
+find_package(ALSA REQUIRED)
+target_link_libraries(soloud PRIVATE ALSA::ALSA)
+

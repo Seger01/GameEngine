@@ -6,8 +6,8 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "UIObject.h"
-#include "Vector2.h"
+#include "Structs/Vector2.h"
+#include "UI/UIObject.h"
 #include <functional> // For std::function
 
 /**

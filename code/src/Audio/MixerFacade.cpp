@@ -1,180 +1,109 @@
-/**
- * @file MixerFacade.cpp
- *
- * @brief This file contains the implementation of the MixerFacade class
- */
 #include "Audio/MixerFacade.h"
-#include "Global/FSConverter.h"
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <iostream>
+#include <soloud_wav.h>
+#include <soloud_wavstream.h>
 #include <stdexcept>
 
-/**
- * @brief Construct a new MixerFacade::MixerFacade object. Initializes SDL and SDL_mixer
- */
-MixerFacade::MixerFacade() : mChannelCount(MIX_CHANNELS), mLastUsedChannel(0)
-{
-	// Initialize SDL with audio support
-	if (SDL_Init(SDL_INIT_AUDIO) < 0)
-	{
-		std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << "\n";
-	}
+MixerFacade::MixerFacade() : mMusicHandle(0) { mEngine.init(); }
 
-	// Initialize SDL_mixer
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{
-		std::cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << "\n";
-	}
+MixerFacade::~MixerFacade()
+{
+	mEngine.deinit();
+	unloadAll();
 }
 
 void MixerFacade::loadSound(const std::string& aPath)
 {
-	// Check if the sound is already loaded
-	if (audioIsLoaded(aPath))
+	if (!audioIsLoaded(aPath))
 	{
-		return;
+		auto* wav = new SoLoud::Wav();
+		if (wav->load(aPath.c_str()) != SoLoud::SO_NO_ERROR)
+		{
+			delete wav;
+			throw std::runtime_error("Failed to load sound: " + aPath);
+		}
+		mMixerContainer.addSound(aPath, wav);
 	}
-	// Load the sound
-	Mix_Chunk* sound = Mix_LoadWAV(aPath.c_str());
-	if (sound == nullptr)
-	{
-		throw std::runtime_error("Failed to load sound. SDL_Mixer error: " + std::string(Mix_GetError()));
-	}
-	mMixerContainer.addSound(aPath, sound);
 }
 
 void MixerFacade::loadMusic(const std::string& aPath)
 {
-	Mix_Music* music = Mix_LoadMUS(aPath.c_str());
-	if (music == nullptr)
+	if (!musicIsLoaded())
 	{
-		throw std::runtime_error("Failed to load music. SDL_Mixer error: " + std::string(Mix_GetError()));
+		auto* stream = new SoLoud::WavStream();
+		if (stream->load(aPath.c_str()) != SoLoud::SO_NO_ERROR)
+		{
+			delete stream;
+			throw std::runtime_error("Failed to load music: " + aPath);
+		}
+		mMixerContainer.addMusic(aPath, stream);
 	}
-	mMixerContainer.addMusic(aPath, music);
 }
 
-void MixerFacade::unloadAll() { mMixerContainer.clear(); }
-
-bool MixerFacade::audioIsLoaded(const std::string& aPath) const
+void MixerFacade::unloadAll()
 {
-	std::string wholePath = FSConverter().getResourcePath(aPath);
-	return mMixerContainer.getSound(wholePath) != nullptr;
+	mEngine.stopAll();
+	mMixerContainer.clear();
+	mSoundHandles.clear();
+	mMusicHandle = 0;
 }
+
+bool MixerFacade::audioIsLoaded(const std::string& aPath) const { return mMixerContainer.getSound(aPath) != nullptr; }
 
 bool MixerFacade::musicIsLoaded() const { return mMixerContainer.getMusic() != nullptr; }
 
 void MixerFacade::playSound(const std::string& aPath, bool aLooping, unsigned aVolume, int aDirection)
 {
-	// Pointer, because sdl mixer does not work with references
-	Mix_Chunk* sound = mMixerContainer.getSound(aPath);
-	if (sound == nullptr)
-	{
-		throw std::runtime_error("Sound not found: " + aPath);
-	}
-
-	int channel = findAvailableChannel();
-	Mix_Volume(channel, aVolume);
-
-	Mix_SetPosition(channel, distanceToAngle(aDirection), std::abs(aDirection));
-	Mix_PlayChannel(channel, sound, aLooping ? -1 : 0);
+	SoLoud::Wav* wav = mMixerContainer.getSound(aPath);
+	if (!wav)
+		return;
+	SoLoud::handle handle = mEngine.play(*wav, aVolume / 100.0f, 0.0f, 0.0f, aLooping ? 1 : 0);
+	mSoundHandles[aPath] = handle;
 }
 
 void MixerFacade::playMusic(int aVolume)
 {
-	Mix_Music* music = mMixerContainer.getMusic();
-	if (music == nullptr)
-	{
-		throw std::runtime_error("Music not found.");
-	}
-
-	if (aVolume > 0)
-	{
-		Mix_VolumeMusic(aVolume);
-	}
-
-	if (Mix_PlayingMusic() == 0)
-	{
-		Mix_PlayMusic(music, -1);
-	}
+	SoLoud::WavStream* music = mMixerContainer.getMusic();
+	if (!music)
+		return;
+	mMusicHandle = mEngine.play(*music, aVolume / 100.0f);
 }
 
-void MixerFacade::pauseMusic() { Mix_PauseMusic(); }
+void MixerFacade::pauseMusic()
+{
+	if (mMusicHandle != 0)
+		mEngine.setPause(mMusicHandle, true);
+}
 
 void MixerFacade::resumeMusic()
 {
-	if (!Mix_PlayingMusic())
-	{
-		playMusic(-1);
-	}
-	else
-	{
-
-		Mix_ResumeMusic();
-	}
+	if (mMusicHandle != 0)
+		mEngine.setPause(mMusicHandle, false);
 }
 
-void MixerFacade::stopMusic() { Mix_HaltMusic(); }
-
-bool MixerFacade::isPlaying(const std::string& aPath) const
+void MixerFacade::stopMusic()
 {
-	std::string wholePath = FSConverter().getResourcePath(aPath);
-	const Mix_Chunk* chunk = mMixerContainer.getSound(wholePath);
-	int numChannels = Mix_AllocateChannels(-1); // Get the number of allocated channels
-	for (int i = 0; i < numChannels; ++i)
+	if (mMusicHandle != 0)
 	{
-		if (Mix_Playing(i) && Mix_GetChunk(i) == chunk)
-		{
-			return true; // The chunk is playing on this channel
-		}
+		mEngine.stop(mMusicHandle);
+		mMusicHandle = 0;
 	}
-	return false; // The chunk is not playing on any channel
 }
 
-bool MixerFacade::isMusicPlaying() const { return Mix_PlayingMusic(); }
+bool MixerFacade::isPlaying(const std::string& aPath)
+{
+	auto it = mSoundHandles.find(aPath);
+	if (it != mSoundHandles.end())
+		return mEngine.getPause(it->second) == 0 && mEngine.isValidVoiceHandle(it->second);
+	return false;
+}
 
-/**
- * @brief Convert a direction to an angle. The greater the argument, the further away the sound. This is simulated by
- * increasing the angle, up to a maximum of 90 degrees for the right, and -90 degrees for the left.
- *
- * @param aDirection The direction to convert. Negative is left, positive is right, 0 is center. Shuold be between -90
- * and 90. If it is not, it will be clamped to these values.
- *
- * @return The angle of the direction.
- */
+bool MixerFacade::isMusicPlaying()
+{
+	return mMusicHandle != 0 && mEngine.getPause(mMusicHandle) == 0 && mEngine.isValidVoiceHandle(mMusicHandle);
+}
+
 int MixerFacade::distanceToAngle(int aDirection) const
 {
-	if (aDirection >= 0)
-	{
-		// Play to the right
-		return std::min(aDirection, 90);
-	}
-	// Play to the left
-	return std::max(aDirection, -90);
-}
-
-/**
- * @brief Find the next available channel to play a sound effect
- *
- * If all channels are playing, the next channel is the last used channel + 1.
- * If the last used channel is the last channel, the next channel is the first channel.
- * Sets the last used channel to whichever channel is returned.
- *
- * @return The channel number
- */
-int MixerFacade::findAvailableChannel()
-{
-	for (int i = 0; i < mChannelCount; i++)
-	{
-		if (!Mix_Playing(i))
-		{
-			mLastUsedChannel = i;
-			return i;
-		}
-	}
-
-	int nextChannel = mLastUsedChannel + 1;
-	nextChannel = nextChannel % mChannelCount;
-	mLastUsedChannel = nextChannel;
-	return nextChannel;
+	// Stub: implement spatialization as needed for your game
+	return aDirection;
 }

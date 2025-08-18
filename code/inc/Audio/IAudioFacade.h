@@ -84,11 +84,11 @@ public:
 	 *
 	 * @return true if the sound effect is playing. False otherwise.
 	 */
-	virtual bool isPlaying(const std::string& aPath) const = 0;
+	virtual bool isPlaying(const std::string& aPath) = 0;
 	/**
 	 * @brief Check if music is playing
 	 *
 	 * @return true if any music is playing. False otherwise.
 	 */
-	virtual bool isMusicPlaying() const = 0;
+	virtual bool isMusicPlaying() = 0;
 };

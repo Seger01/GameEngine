@@ -5,23 +5,22 @@
  */
 #pragma once
 
-#include "IAudioFacade.h"
-#include "MixerContainer.h"
-#include <SDL_mixer.h>
+#include "Audio/IAudioFacade.h"
+#include "Audio/MixerContainer.h"
+#include <soloud.h>
+#include <string>
 
 /**
  * @class MixerFacade
  *
- * @brief This class implements the IAudioFacade interface, and is responsible for interacting with the SDL mixer
- * library, and performing all audio operations (such as playing, stopping and loading). This class is also responsible
- * for managing which track (in SDL known as channel) to play audio on (because this is not handled by SLD mixer).
+ * @brief Implements IAudioFacade, using SoLoud for all audio operations.
  */
 class MixerFacade : public IAudioFacade
 {
 public:
 	MixerFacade();
+	virtual ~MixerFacade();
 
-public:
 	void loadSound(const std::string& aPath) override;
 	void loadMusic(const std::string& aPath) override;
 	void unloadAll() override;
@@ -34,17 +33,14 @@ public:
 	void resumeMusic() override;
 	void stopMusic() override;
 
-	bool isPlaying(const std::string& aPath) const override;
-	bool isMusicPlaying() const override;
+	bool isPlaying(const std::string& aPath) override;
+	bool isMusicPlaying() override;
 
 	int distanceToAngle(int aDirection) const;
-	int findAvailableChannel();
 
 private:
-	/// @brief The number of channels to use. Defaults to 8.
-	const unsigned mChannelCount;
-	/// @brief The last channel on which a sound effect was played. To help with finding the next available channel
-	unsigned mLastUsedChannel;
-	/// @brief The container for all sound effects and music
+	SoLoud::Soloud mEngine;
 	MixerContainer mMixerContainer;
+	std::unordered_map<std::string, SoLoud::handle> mSoundHandles;
+	SoLoud::handle mMusicHandle;
 };

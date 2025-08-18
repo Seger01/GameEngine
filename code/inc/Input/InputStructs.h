@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "Point.h"
+#include "Structs/Point.h"
 
 /**
  * @brief Enum class for all mouse buttons.

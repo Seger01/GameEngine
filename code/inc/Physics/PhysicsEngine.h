@@ -5,8 +5,9 @@
  * @brief The general logic for the physics engine of engine bravo
  *
  */
-#include "Components/IBehaviourScript.h"
-#include "GameObject.h"
+
+#include "BehaviourScripts/IBehaviourScript.h"
+#include "GameObject/GameObject.h"
 #include "Physics/World.h"
 #include <vector>
 
